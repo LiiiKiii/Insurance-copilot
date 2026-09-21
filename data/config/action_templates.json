@@ -1,0 +1,15 @@
+{
+  "hkd_actions": [
+    {"priority": "P0", "template": "Maintain daily production of HKD {daily_premium_needed:,} and prioritise high-value policies"},
+    {"priority": "P0", "template": "Review the three clients most likely to close at 09:00 each day and follow up with each one"},
+    {"priority": "P0", "template": "Contact every quoted client who has not been followed up within 30 days this week and ask about their concerns"},
+    {"priority": "P1", "template": "Ask each existing client for one referral and explain the current competition target"},
+    {"priority": "P1", "template": "Update case progress before the end of each workday and confirm the day's outcomes"},
+    {"priority": "P2", "template": "Collaborate with a colleague on cases and introduce prospective clients to each other"}
+  ],
+  "non_hkd_actions": [
+    {"priority": "P0", "template": "Submit {per_week} {unit} this week and contact at least two prospective clients each day"},
+    {"priority": "P0", "template": "Prioritise clients who have already expressed interest and move their applications towards completion"},
+    {"priority": "P1", "template": "Confirm the day's outcomes before the end of each workday"}
+  ]
+}
