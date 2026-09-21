@@ -1,0 +1,83 @@
+.worktrees/
+.assets
+.docs
+.env
+*.pyc
+dist/
+build/
+*.egg-info/
+*.egg
+*.pycs
+*.pyo
+*.pyd
+*.pyw
+*.pyz
+*.pywz
+*.pyzz
+.venv/
+venv/
+__pycache__/
+poetry.lock
+.pytest_cache/
+botpy.log
+nano.*.save
+.DS_Store
+uv.lock
+
+# Frontend
+web/node_modules/
+web/.next/
+web/out/
+
+# Temp files
+/tmp/
+*.log
+REVIEW_TASK.md
+data/db/
+sessions/
+admin/data/kb/
+
+# Lint / type-check caches
+.mypy_cache/
+.ruff_cache/
+.pyre/
+.pytype/
+.dmypy.json
+
+# Test / coverage
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/
+.tox/
+.nox/
+
+# Frontend extras
+web/.turbo/
+web/.vercel/
+web/coverage/
+.next/
+
+# Project-local data
+data/chat_uploads/
+
+# Local env files (Next.js convention)
+.env.local
+.env.*.local
+
+# Secrets
+*.pem
+*.key
+
+# Editors / IDE
+.idea/
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+*.swp
+*.swo
+*~
+
+# OS files
+Thumbs.db
+Desktop.ini
