@@ -1,0 +1,95 @@
+[
+  {
+    "agent_id": "AGT001",
+    "name_zh": "Chan Chi Ming",
+    "name_en": "Chan Chi Ming",
+    "nickname": "Chi Ming",
+    "rank": "Senior Business Manager",
+    "rank_en": "Senior Business Manager",
+    "title": "Senior Business Manager",
+    "team": "Elite Team 1",
+    "team_en": "Elite Team 1",
+    "region": "Hong Kong Island",
+    "region_en": "Hong Kong Island",
+    "join_date": "2019-03-15",
+    "join_year": 2019,
+    "license_no": "IA-20190315-001",
+    "email": "cm.chan@example.com",
+    "phone": "+852-9123-4567",
+    "last_mdrt": 2026,
+    "career_highlights": [
+      "2026 MDRT member",
+      "2024 Avenue of Stars Silver Award",
+      "2023 Quarterly Sprint champion"
+    ]
+  },
+  {
+    "agent_id": "AGT002",
+    "name_zh": "Lam Ka Yan",
+    "name_en": "Lam Ka Yan",
+    "nickname": "Ka Yan",
+    "rank": "Business Manager",
+    "rank_en": "Business Manager",
+    "title": "Business Manager",
+    "team": "Excellence Team 2",
+    "team_en": "Excellence Team 2",
+    "region": "Kowloon",
+    "region_en": "Kowloon",
+    "join_date": "2021-07-01",
+    "join_year": 2021,
+    "license_no": "IA-20210701-042",
+    "email": "ky.lam@example.com",
+    "phone": "+852-9234-5678",
+    "last_mdrt": null,
+    "career_highlights": [
+      "2026 Rising Star Award",
+      "Achieved the 2024 Q4 Sprint target"
+    ]
+  },
+  {
+    "agent_id": "AGT003",
+    "name_zh": "Wong Chun Kit",
+    "name_en": "Wong Chun Kit",
+    "nickname": "Chun Kit",
+    "rank": "Business Executive",
+    "rank_en": "Business Executive",
+    "title": "Junior Business Representative",
+    "team": "Rising Star Team 3",
+    "team_en": "Rising Star Team 3",
+    "region": "New Territories",
+    "region_en": "New Territories",
+    "join_date": "2024-09-01",
+    "join_year": 2024,
+    "license_no": "IA-20240901-118",
+    "email": "ck.wong@example.com",
+    "phone": "+852-9345-6789",
+    "last_mdrt": null,
+    "career_highlights": [
+      "Outstanding performance in 2026 Q1 new-agent training"
+    ]
+  },
+  {
+    "agent_id": "AGT_TL01",
+    "name_zh": "Wong Tai Wai",
+    "name_en": "Wong Tai Wai",
+    "nickname": "Tai Wai",
+    "rank": "Team Lead",
+    "rank_en": "Team Lead",
+    "title": "Team Lead",
+    "team": "Elite Team 1",
+    "team_en": "Elite Team 1",
+    "region": "Hong Kong Island",
+    "region_en": "Hong Kong Island",
+    "join_date": "2015-06-01",
+    "join_year": 2015,
+    "license_no": "IA-20150601-001",
+    "email": "tw.wong@example.com",
+    "phone": "+852-9111-2222",
+    "last_mdrt": 2026,
+    "career_highlights": [
+      "2026 Court of the Table member",
+      "2024 Team Champion",
+      "2023 Avenue of Stars Gold Award"
+    ]
+  }
+]

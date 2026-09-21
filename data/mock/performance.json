@@ -1,0 +1,382 @@
+{
+  "AGT001": {
+    "agent_id": "AGT001",
+    "period": "2026-01-01 to 2026-03-18",
+    "metrics": {
+      "protection_premium": {
+        "label": "Protection Premium",
+        "current": 3150000,
+        "target": 3200000,
+        "rate": 0.984,
+        "unit": "HKD",
+        "description": "Year-to-date protection premium income"
+      },
+      "pending_premium": {
+        "label": "Pending Protection Premium",
+        "current": 320000,
+        "target": null,
+        "rate": null,
+        "unit": "HKD",
+        "description": "Premium submitted but not yet approved by underwriting"
+      },
+      "avg_case_size": {
+        "label": "Average Case Size",
+        "current": 28000,
+        "target": 50000,
+        "rate": 0.56,
+        "unit": "HKD",
+        "peer_avg": 42000,
+        "description": "Average premium per policy"
+      },
+      "submission_count": {
+        "label": "Recent Submissions",
+        "current": 112,
+        "target": 120,
+        "rate": 0.933,
+        "unit": "policies",
+        "description": "Number of new policies submitted this year"
+      },
+      "conversion_rate": {
+        "label": "Conversion Rate",
+        "current": 0.42,
+        "target": 0.75,
+        "rate": 0.56,
+        "unit": "%",
+        "peer_avg": 0.61,
+        "description": "Conversion rate from client meeting to successful policy application"
+      },
+      "new_clients": {
+        "label": "New Clients",
+        "current": 18,
+        "target": 25,
+        "rate": 0.72,
+        "unit": "clients",
+        "description": "Number of new clients acquired this year"
+      },
+      "client_retention": {
+        "label": "Client Retention",
+        "current": 0.91,
+        "target": 0.95,
+        "rate": 0.958,
+        "unit": "%",
+        "description": "Renewal rate among existing clients"
+      },
+      "ai_training_usage": {
+        "label": "AI Training Usage",
+        "current": 6,
+        "target": 12,
+        "rate": 0.5,
+        "unit": "sessions",
+        "description": "Number of completed AI-assisted sales simulation sessions"
+      },
+      "fyc": {
+        "label": "First-Year Commission (FYC)",
+        "current": 567000,
+        "target": 800000,
+        "rate": 1.5838,
+        "unit": "HKD",
+        "description": "HKD 3,150,000 protection premium at an 18% FYC rate"
+      }
+    },
+    "ranking": {
+      "team_rank": 2,
+      "team_total": 8,
+      "team_percentile": 75,
+      "region_rank": 12,
+      "region_total": 45,
+      "top_performer_premium": 4200000
+    },
+    "history": {
+      "last_year_protection_premium": 2650000,
+      "last_quarter_protection_premium": 520000,
+      "last_month_protection_premium": 185000
+    }
+  },
+  "AGT002": {
+    "agent_id": "AGT002",
+    "period": "2026-01-01 to 2026-03-18",
+    "metrics": {
+      "protection_premium": {
+        "label": "Protection Premium",
+        "current": 980000,
+        "target": 2000000,
+        "rate": 0.49,
+        "unit": "HKD",
+        "description": "Year-to-date protection premium income"
+      },
+      "pending_premium": {
+        "label": "Pending Protection Premium",
+        "current": 150000,
+        "target": null,
+        "rate": null,
+        "unit": "HKD",
+        "description": "Premium submitted but not yet approved by underwriting"
+      },
+      "avg_case_size": {
+        "label": "Average Case Size",
+        "current": 35000,
+        "target": 45000,
+        "rate": 0.778,
+        "unit": "HKD",
+        "peer_avg": 42000,
+        "description": "Average premium per policy"
+      },
+      "submission_count": {
+        "label": "Recent Submissions",
+        "current": 14,
+        "target": 20,
+        "rate": 0.7,
+        "unit": "policies",
+        "description": "Number of new policies submitted in the last three months"
+      },
+      "conversion_rate": {
+        "label": "Conversion Rate",
+        "current": 0.62,
+        "target": 0.7,
+        "rate": 0.886,
+        "unit": "%",
+        "peer_avg": 0.61,
+        "description": "Conversion rate from client meeting to successful policy application"
+      },
+      "new_clients": {
+        "label": "New Clients",
+        "current": 9,
+        "target": 16,
+        "rate": 0.563,
+        "unit": "clients",
+        "description": "Number of new clients acquired this year"
+      },
+      "client_retention": {
+        "label": "Client Retention",
+        "current": 0.88,
+        "target": 0.93,
+        "rate": 0.946,
+        "unit": "%",
+        "description": "Renewal rate among existing clients"
+      },
+      "ai_training_usage": {
+        "label": "AI Training Usage",
+        "current": 5,
+        "target": 12,
+        "rate": 0.417,
+        "unit": "sessions",
+        "description": "Number of completed AI-assisted sales simulation sessions"
+      },
+      "fyc": {
+        "label": "First-Year Commission (FYC)",
+        "current": 166600,
+        "target": 800000,
+        "rate": 0.4654,
+        "unit": "HKD",
+        "description": "HKD 980,000 protection premium at a 17% FYC rate"
+      }
+    },
+    "ranking": {
+      "team_rank": 3,
+      "team_total": 8,
+      "team_percentile": 62,
+      "region_rank": 18,
+      "region_total": 45,
+      "top_performer_premium": 4200000
+    },
+    "history": {
+      "last_year_protection_premium": 850000,
+      "last_quarter_protection_premium": 280000,
+      "last_month_protection_premium": 95000
+    }
+  },
+  "AGT003": {
+    "agent_id": "AGT003",
+    "period": "2026-01-01 to 2026-03-18",
+    "metrics": {
+      "protection_premium": {
+        "label": "Protection Premium",
+        "current": 280000,
+        "target": 800000,
+        "rate": 0.35,
+        "unit": "HKD",
+        "description": "Year-to-date protection premium income"
+      },
+      "pending_premium": {
+        "label": "Pending Protection Premium",
+        "current": 75000,
+        "target": null,
+        "rate": null,
+        "unit": "HKD",
+        "description": "Premium submitted but not yet approved by underwriting"
+      },
+      "avg_case_size": {
+        "label": "Average Case Size",
+        "current": 28000,
+        "target": 35000,
+        "rate": 0.8,
+        "unit": "HKD",
+        "peer_avg": 42000,
+        "description": "Average premium per policy"
+      },
+      "submission_count": {
+        "label": "Recent Submissions",
+        "current": 10,
+        "target": 15,
+        "rate": 0.667,
+        "unit": "policies",
+        "description": "Number of new policies submitted in the last three months"
+      },
+      "conversion_rate": {
+        "label": "Conversion Rate",
+        "current": 0.55,
+        "target": 0.65,
+        "rate": 0.846,
+        "unit": "%",
+        "peer_avg": 0.61,
+        "description": "Conversion rate from client meeting to successful policy application"
+      },
+      "new_clients": {
+        "label": "New Clients",
+        "current": 7,
+        "target": 12,
+        "rate": 0.583,
+        "unit": "clients",
+        "description": "Number of new clients acquired this year"
+      },
+      "client_retention": {
+        "label": "Client Retention",
+        "current": 0.85,
+        "target": 0.9,
+        "rate": 0.944,
+        "unit": "%",
+        "description": "Renewal rate among existing clients"
+      },
+      "ai_training_usage": {
+        "label": "AI Training Usage",
+        "current": 3,
+        "target": 10,
+        "rate": 0.3,
+        "unit": "sessions",
+        "description": "Number of completed AI-assisted sales simulation sessions"
+      },
+      "fyc": {
+        "label": "First-Year Commission (FYC)",
+        "current": 47600,
+        "target": 800000,
+        "rate": 0.133,
+        "unit": "HKD",
+        "description": "HKD 280,000 protection premium at a 17% FYC rate"
+      }
+    },
+    "ranking": {
+      "team_rank": 8,
+      "team_total": 8,
+      "team_percentile": 12,
+      "region_rank": 40,
+      "region_total": 45,
+      "top_performer_premium": 4200000
+    },
+    "history": {
+      "last_year_protection_premium": 180000,
+      "last_quarter_protection_premium": 85000,
+      "last_month_protection_premium": 42000
+    }
+  },
+  "AGT_TL01": {
+    "agent_id": "AGT_TL01",
+    "period": "2026-01-01 to 2026-03-18",
+    "metrics": {
+      "protection_premium": {
+        "label": "Protection Premium",
+        "current": 5200000,
+        "target": 6000000,
+        "rate": 0.867,
+        "unit": "HKD",
+        "description": "Year-to-date protection premium income, including HKD 790,000 personal and HKD 4,410,000 from the subordinate team"
+      },
+      "pending_premium": {
+        "label": "Pending Protection Premium",
+        "current": 450000,
+        "target": null,
+        "rate": null,
+        "unit": "HKD",
+        "description": "Premium submitted but not yet approved by underwriting"
+      },
+      "avg_case_size": {
+        "label": "Average Case Size",
+        "current": 65000,
+        "target": 60000,
+        "rate": 1.083,
+        "unit": "HKD",
+        "description": "Average premium per policy"
+      },
+      "submission_count": {
+        "label": "Recent Submissions",
+        "current": 45,
+        "target": 50,
+        "rate": 0.9,
+        "unit": "policies",
+        "description": "Number of new policies submitted in the last three months"
+      },
+      "conversion_rate": {
+        "label": "Conversion Rate",
+        "current": 0.8,
+        "target": 0.8,
+        "rate": 1.0,
+        "unit": "%",
+        "description": "Conversion rate from client meeting to successful policy application"
+      },
+      "new_clients": {
+        "label": "New Clients",
+        "current": 18,
+        "target": 20,
+        "rate": 0.9,
+        "unit": "clients",
+        "description": "Number of new clients acquired this year"
+      },
+      "client_retention": {
+        "label": "Client Retention",
+        "current": 0.96,
+        "target": 0.95,
+        "rate": 1.011,
+        "unit": "%",
+        "description": "Renewal rate among existing clients"
+      },
+      "ai_training_usage": {
+        "label": "AI Training Usage",
+        "current": 15,
+        "target": 15,
+        "rate": 1.0,
+        "unit": "sessions",
+        "description": "Number of completed AI-assisted sales simulation sessions"
+      },
+      "fyc": {
+        "label": "First-Year Commission (FYC - Personal)",
+        "current": 142200,
+        "target": 800000,
+        "rate": 0.3972,
+        "unit": "HKD",
+        "description": "TL01 personal premium of HKD 790,000 at an 18% FYC rate"
+      }
+    },
+    "ranking": {
+      "team_rank": 1,
+      "team_total": 4,
+      "team_percentile": 100,
+      "region_rank": 3,
+      "region_total": 45,
+      "top_performer_premium": 6500000
+    },
+    "history": {
+      "last_year_protection_premium": 4800000,
+      "last_quarter_protection_premium": 1350000,
+      "last_month_protection_premium": 480000
+    },
+    "team_breakdown": {
+      "personal_premium": 790000,
+      "subordinate_premium": 4410000,
+      "total_premium": 5200000,
+      "subordinates": {
+        "AGT001": 3150000,
+        "AGT002": 980000,
+        "AGT003": 280000
+      }
+    }
+  }
+}
