@@ -22,29 +22,9 @@ Current development stage:
 
 **A0 — Repository Skeleton**
 
-This stage establishes the shared repository structure, development configuration, project conventions, and the initial M3 knowledge corpus.
+This stage establishes the shared repository structure, development configuration, and project conventions.
 
-### A0 Deliverables
-
-The repository currently includes:
-
-- the base project structure and development configuration;
-- initial mock data and business configuration directories;
-- a minimal Markdown knowledge base under `data/knowledge/`;
-- four competition rule documents;
-- MDRT and COT qualification rules;
-- insurance sales scripts for common customer-facing scenarios.
-
-### Knowledge Base Contents
-
-| Category | Documents |
-| -------- | --------- |
-| Competition rules | `competition_starlight.md`, `competition_elite_challenge.md`, `competition_quarterly_sprint.md`, `competition_rookie_king.md` |
-| Qualification rules | `mdrt_rules.md`, `cot_rules.md` |
-| Sales guidance | `sales_scripts.md` |
-
-At the A0 stage, these documents are source knowledge assets only. Knowledge search, relevance ranking, source citation, and retrieval evaluation will be introduced in subsequent development stages.
-
+Implementation modules will be introduced incrementally in subsequent development stages.
 
 ## Development Environment
 
