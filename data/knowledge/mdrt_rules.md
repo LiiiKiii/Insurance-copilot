@@ -1,95 +1,95 @@
-# MDRT 百萬圓桌會議 2026年資格標準
+# MDRT Million Dollar Round Table 2026 Qualification Standards
 
-## 概述
+## Overview
 
-MDRT（Million Dollar Round Table，百萬圓桌會議）是全球壽險及金融服務業的頂級專業組織，成立於1927年。會員資格代表行業內最高的專業標準和道德準則。
+MDRT (Million Dollar Round Table) is a leading global professional organisation for the life insurance and financial services industry, founded in 1927. Membership represents the industry's highest professional and ethical standards.
 
-## 2026年入會資格要求（香港地區）
+## 2026 Membership Qualification Requirements for Hong Kong
 
-### 基本會員（MDRT Member）
+### Basic Membership (MDRT Member)
 
-需滿足以下**任一**標準：
+Applicants must meet **any one** of the following standards:
 
-| 指標 | 要求金額 (HKD) | 說明 |
+| Metric | Required Amount (HKD) | Description |
 |------|---------------|------|
-| FYC（首年佣金） | ≥ 800,000 | First Year Commission，首年度佣金收入 |
-| FYP（首年保費） | ≥ 4,000,000 | First Year Premium，首年度保費收入 |
-| 收入（Income） | ≥ 1,200,000 | 來自保險及金融產品的年度總收入 |
+| FYC (First Year Commission) | ≥ 800,000 | Commission income earned in the first policy year |
+| FYP (First Year Premium) | ≥ 4,000,000 | Premium income received in the first policy year |
+| Income | ≥ 1,200,000 | Total annual income from insurance and financial products |
 
-### COT 超級會員（Court of the Table）
+### COT Membership (Court of the Table)
 
-| 指標 | 要求金額 (HKD) | 倍數 |
+| Metric | Required Amount (HKD) | Multiple |
 |------|---------------|------|
-| FYC | ≥ 2,400,000 | 3倍基本MDRT |
-| FYP | ≥ 12,000,000 | 3倍基本MDRT |
-| 收入 | ≥ 3,600,000 | 3倍基本MDRT |
+| FYC | ≥ 2,400,000 | 3 times basic MDRT |
+| FYP | ≥ 12,000,000 | 3 times basic MDRT |
+| Income | ≥ 3,600,000 | 3 times basic MDRT |
 
-### TOT 頂尖會員（Top of the Table）
+### TOT Membership (Top of the Table)
 
-| 指標 | 要求金額 (HKD) | 倍數 |
+| Metric | Required Amount (HKD) | Multiple |
 |------|---------------|------|
-| FYC | ≥ 4,800,000 | 6倍基本MDRT |
-| FYP | ≥ 24,000,000 | 6倍基本MDRT |
-| 收入 | ≥ 7,200,000 | 6倍基本MDRT |
+| FYC | ≥ 4,800,000 | 6 times basic MDRT |
+| FYP | ≥ 24,000,000 | 6 times basic MDRT |
+| Income | ≥ 7,200,000 | 6 times basic MDRT |
 
-## 計算規則
+## Calculation Rules
 
-### 合資格產品
-- 人壽保險（定期、終身、萬能壽險）
-- 醫療保險及危疾保險
-- 年金產品
-- 投資相連壽險（ILAS）
-- 合資格的退休保障計劃
+### Eligible Products
+- Life insurance, including term, whole life, and universal life insurance
+- Medical and critical illness insurance
+- Annuity products
+- Investment-linked assurance schemes (ILAS)
+- Eligible retirement protection plans
 
-### 不合資格項目
-- 團體保險
-- 一般保險（車險、火險等）
-- 純投資產品（基金、股票等）
-- 銀行產品
+### Ineligible Items
+- Group insurance
+- General insurance, including motor and fire insurance
+- Pure investment products, including funds and shares
+- Banking products
 
-### 計算期間
-- **生產年度**：2026年1月1日 至 2026年12月31日
-- **申請截止**：2027年3月31日
-- FYC 以核保通過並已收取首期保費為準
-- 待批保單的保費不計入FYC
+### Calculation Period
+- **Production Year**: January 1, 2026 to December 31, 2026
+- **Application Deadline**: March 31, 2027
+- FYC counts only after underwriting approval and receipt of the first premium
+- Premium from pending policies does not count towards FYC
 
-### 待批保費處理
-- 已遞交但未核保的保單保費**不計入**MDRT資格計算
-- 核保通過但客戶尚未繳付首期保費的保單**不計入**
-- 僅當保單正式生效（issued & paid）後方可計入
+### Treatment of Pending Premium
+- Premium from submitted but not yet underwritten policies **does not count** towards MDRT qualification
+- Policies approved by underwriting but awaiting payment of the first premium **do not count**
+- A policy counts only after it is formally in force (issued & paid)
 
-## 會員權益
+## Membership Benefits
 
 ### MDRT Member
-- 參加MDRT年度大會（2026年於洛杉磯舉行）
-- 使用MDRT專屬標誌
-- 加入全球精英網絡
-- 存取MDRT學習資源庫
+- Attend the MDRT Annual Meeting, held in Los Angeles in 2026
+- Use the exclusive MDRT designation
+- Join a global network of leading professionals
+- Access the MDRT learning resource library
 
-### COT 超級會員額外權益
-- COT專屬研討會及交流活動
-- 高級商務及培訓資源
-- COT專屬標誌使用權
+### Additional Benefits for COT Members
+- COT-exclusive seminars and networking events
+- Advanced business and training resources
+- Right to use the exclusive COT designation
 
-### TOT 頂尖會員額外權益
-- TOT專屬活動及私人晚宴
-- 頂級商務網絡平台
-- TOT專屬標誌使用權
+### Additional Benefits for TOT Members
+- TOT-exclusive events and private dinners
+- Premier business networking platform
+- Right to use the exclusive TOT designation
 
-## 道德及專業要求
+## Ethical and Professional Requirements
 
-- 持有有效的保險中介人牌照
-- 無重大合規紀錄
-- 遵守MDRT職業道德守則
-- 每年完成規定的持續專業發展（CPD）時數
+- Hold a valid insurance intermediary licence
+- Have no record of serious compliance violations
+- Comply with the MDRT Code of Ethics
+- Complete the required annual Continuing Professional Development (CPD) hours
 
-## 常見問題
+## Frequently Asked Questions
 
-**Q: 如果今年FYC達到480,000，還差多少才能達標？**
-A: 距離MDRT基本資格（800,000）尚差 320,000 HKD。
+**Q: If my FYC reaches 480,000 this year, how much more do I need to qualify?**
+A: You need another HKD 320,000 to reach the basic MDRT qualification threshold of 800,000.
 
-**Q: 待批保費可以計入嗎？**
-A: 不可以。只有核保通過並已收取首期保費的保單才計入FYC。
+**Q: Can pending premium be counted?**
+A: No. Only policies that have received underwriting approval and the first premium count towards FYC.
 
-**Q: COT和TOT可以同時申請嗎？**
-A: 達到TOT標準自動包含COT和MDRT資格，只需提交一次申請。
+**Q: Can I apply for COT and TOT at the same time?**
+A: Meeting the TOT standard automatically includes COT and MDRT qualification, so only one application is required.
