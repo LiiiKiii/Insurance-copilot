@@ -1,76 +1,76 @@
-# 保險銷售話術庫
+# Insurance Sales Script Library
 
-## 場景1：客戶說「我考慮一下」的異議處理
+## Scenario 1: Handling the “I Need to Think About It” Objection
 
-這是最常見的異議，通常意味著有未解決的顧慮，而非真正的拒絕。
+This is the most common objection. It usually indicates unresolved concerns rather than a genuine rejection.
 
-**回法A — 澄清顧慮法（首選）**：
-> 「沒問題，[客戶姓名]，這是大事當然要考慮清楚。通常客人說考慮，是有一些具體問題還沒解決——是方案的費用方面，還是保障內容，還是覺得時機未到？你可以告訴我是哪一個嗎？」
+**Response A — Clarify the Concern (Preferred)**:
+> “No problem, [Customer Name]. This is an important decision, so of course you should consider it carefully. When customers say they need to think, there is usually a specific concern that remains unresolved. Is it the cost of the plan, the coverage, or does the timing not feel right? Could you tell me which one it is?”
 
-*目的*：找出真實顧慮，有針對性地解決，而非讓客戶帶著疑問離開。
+*Purpose*: Identify and address the customer's real concern instead of allowing the customer to leave with unanswered questions.
 
-**回法B — 緊迫感法（適合截止日臨近時）**：
-> 「當然，這確實需要思考。不過我想提醒您，您現在的健康狀況非常適合投保，而且這個保費費率在本月底可能會調整。我們可以先把方案「鎖定」，30天內如果改變主意還可以取消，您覺得這樣可以嗎？」
+**Response B — Create Urgency (Suitable When a Deadline Is Approaching)**:
+> “Of course, this does require careful thought. However, I would like to remind you that your current health condition is very suitable for applying, and the premium rate may change at the end of this month. We can secure the plan first, and you can still cancel within 30 days if you change your mind. Would that work for you?”
 
-*注意*：只在費率真的會調整時使用，避免誤導。
+*Note*: Use this only when the premium rate will actually change to avoid misleading the customer.
 
-**回法C — 假設成交法（適合已有明確需求的客戶）**：
-> 「好的，那我把方案的細節整理成一份文件發給您，方便您回顧。假設您最終決定投保，您希望受保人是寫您太太還是小朋友呢？」
+**Response C — Assumptive Close (Suitable for Customers with a Clear Need)**:
+> “All right. I will organise the plan details into a document and send it to you for review. Assuming you eventually decide to proceed, would you prefer the insured person to be your wife or your child?”
 
-*目的*：讓客戶開始思考細節，心理上向成交靠近。
+*Purpose*: Encourage the customer to consider the details and move psychologically closer to a decision.
 
-**處理「太貴了」異議**：
-> 「[客戶姓名]，我理解費用是一個重要考量。讓我換個角度給您看：這份保障每天的費用大約是 HKD [X]，相當於一杯咖啡的錢。但如果真的發生重疾，一次醫院帳單可能就是幾十萬。您覺得這個保費相對於它提供的保障，值不值？」
-
----
-
-## 場景2：保障型產品需求挖掘（FABE話術）
-
-在客戶猶豫是否需要保障型產品時，用 FABE 框架展示價值。
-
-**FABE 框架示例（重疾險）**：
-
-- **F（Feature特點）**：「這份危疾保障涵蓋100種重大疾病，包括癌症、心臟病、中風。」
-
-- **A（Advantage優勢）**：「跟醫療險不同，危疾險是確診即賠，不需要等治療完畢才報銷。拿到賠款可以自由支配——用於治療費用、收入補貼，甚至出國就醫。」
-
-- **B（Benefit利益）**：「意味著您一旦確診，馬上有一筆錢處理收入中斷和家庭支出，不需要動用儲蓄或向家人借錢。」
-
-- **E（Evidence佐證）**：「去年我有一位客戶確診了早期乳癌，確診後兩週就收到了賠款，讓她可以全身心治療，沒有財務壓力。」
-
-**需求挖掘核心問題（按順序問）**：
-1. 「如果您明天突然不能工作，家庭每月的支出怎麼繼續？」
-2. 「您現在公司醫療卡的最高賠付是多少？知道一個癌症療程的費用大概是多少嗎？」
-3. 「如果發生意外，您希望給家人留下什麼？」
+**Handling the “It Is Too Expensive” Objection**:
+> “[Customer Name], I understand that cost is an important consideration. Let me show you another perspective: this coverage costs approximately HKD [X] per day, which is about the price of a cup of coffee. But if a critical illness occurs, a single hospital bill could cost hundreds of thousands. Do you think the premium is worthwhile relative to the protection it provides?”
 
 ---
 
-## 場景3：老客戶加保與轉介紹
+## Scenario 2: Identifying Needs for Protection Products (FABE Script)
 
-**加保開場白**：
-> 「[客戶姓名]您好，距離您上次投保已經[X]年了，這段時間您的家庭狀況有沒有一些變化？（等候回答）其實我一直有關注您的保障需求，現在有一個方案很適合您現在的階段，想佔您10分鐘時間聊一下，您這週什麼時候方便？」
+When a customer is unsure whether protection products are necessary, use the FABE framework to demonstrate value.
 
-**轉介紹開場白（直接法）**：
-> 「[客戶姓名]，我最近在幫一些跟您情況相似的朋友做保障規劃，效果很好。您身邊有沒有最近剛結婚、生了小孩、或者剛買房的朋友？我想為他們提供一個免費的保障評估，10分鐘就好。」
+**FABE Framework Example (Critical Illness Insurance)**:
 
-**轉介紹開場白（MDRT衝刺版）**：
-> 「[客戶姓名]，我今年快到一個行業里程碑了——MDRT，這是全球壽險精英的認可。您一直是我最重要的客戶，我想問問您，身邊有沒有需要保障規劃的朋友，讓我有機會幫幫他們？介紹成功的話，我也會給您一份小禮物表示感謝。」
+- **F (Feature)**: “This critical illness plan covers 100 serious illnesses, including cancer, heart disease, and stroke.”
 
-**轉介紹跟進**：
-- 收到轉介紹後，24小時內聯繫
-- 第一句話：「[客戶姓名]叫我聯繫您，他說您最近[結婚/生了小孩/買了房]，恭喜！我是他的保障顧問，想請問...」
+- **A (Advantage)**: “Unlike medical insurance, critical illness insurance pays upon diagnosis, so you do not need to wait until treatment is complete before making a claim. You may use the payment freely for treatment costs, income replacement, or even overseas medical care.”
+
+- **B (Benefit)**: “This means that once you receive a diagnosis, you immediately have funds to manage lost income and household expenses without using your savings or borrowing from family members.”
+
+- **E (Evidence)**: “Last year, one of my customers was diagnosed with early-stage breast cancer. She received the payment within two weeks of diagnosis, allowing her to focus fully on treatment without financial pressure.”
+
+**Core Needs-Discovery Questions in Order**:
+1. “If you suddenly could not work tomorrow, how would your family continue paying its monthly expenses?”
+2. “What is the maximum benefit under your current company medical plan? Do you know approximately how much a course of cancer treatment costs?”
+3. “If an accident occurred, what would you want to leave for your family?”
 
 ---
 
-## 場景4：促成話術（臨門一腳）
+## Scenario 3: Additional Coverage for Existing Customers and Referrals
 
-當客戶已有意向但還沒下決定時：
+**Opening for Additional Coverage**:
+> “Hello [Customer Name]. It has been [X] years since you last purchased a policy. Have there been any changes in your family situation during that time? (Wait for the response.) I have continued to pay attention to your protection needs, and there is now a plan that fits your current stage of life. I would like ten minutes to discuss it with you. When would be convenient this week?”
 
-**直接促成法**：
-> 「[客戶姓名]，我覺得這個方案很適合您現在的需求，您的健康狀況也很理想。我們今天就把投保申請填一下，有什麼問題我可以繼續解答。」
+**Referral Opening (Direct Approach)**:
+> “[Customer Name], I have recently been helping people in situations similar to yours with protection planning, and the results have been very positive. Do you know anyone who recently got married, had a child, or bought a home? I would like to offer them a free ten-minute protection assessment.”
 
-**二選一法**：
-> 「您是希望保費年繳比較方便，還是月繳？」（讓客戶選方式而非選是否投保）
+**Referral Opening (MDRT Sprint Version)**:
+> “[Customer Name], I am close to reaching an industry milestone this year: MDRT, a global recognition for leading life insurance professionals. You have always been one of my most important customers. Do you know anyone who needs help with protection planning and might give me an opportunity to assist them? If the referral is successful, I will also give you a small gift as thanks.”
 
-**小步成交法（針對猶豫型客戶）**：
-> 「我們先把申請表填好，交了之後還有一個醫療核保的過程，您考慮一下再決定要不要繼續，好嗎？」
+**Referral Follow-up**:
+- Contact the referred prospect within 24 hours
+- Opening sentence: “[Customer Name] asked me to contact you. They mentioned that you recently [got married/had a child/bought a home]. Congratulations! I am their protection adviser, and I would like to ask...”
+
+---
+
+## Scenario 4: Closing Scripts
+
+When a customer is interested but has not yet made a decision:
+
+**Direct Close**:
+> “[Customer Name], I believe this plan fits your current needs well, and your health condition is also ideal. Let us complete the application today, and I can continue answering any questions you have.”
+
+**Alternative-Choice Close**:
+> “Would annual premium payments or monthly payments be more convenient for you?” (Allow the customer to choose the payment method rather than whether to purchase.)
+
+**Small-Step Close (For Hesitant Customers)**:
+> “Let us complete the application form first. After submission, there will still be a medical underwriting process, and you can consider it before deciding whether to continue. Would that be all right?”

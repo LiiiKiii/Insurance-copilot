@@ -1,91 +1,91 @@
-# 新人王大賽 2026
+# Rookie King Competition 2026
 
-## 競賽概要
+## Competition Overview
 
-| 項目 | 詳情 |
+| Item | Details |
 |------|------|
-| 競賽名稱 | 2026年度新人王大賽 (Rookie King Competition) |
-| 主辦單位 | 人才發展部 |
-| 競賽期間 | 2026年1月1日 — 2026年8月31日 |
-| 公佈結果 | 2026年9月15日 |
-| 頒獎典禮 | 2026年10月年度培訓大會 |
+| Competition Name | 2026 Rookie King Competition |
+| Organiser | Talent Development Department |
+| Competition Period | January 1, 2026 — August 31, 2026 |
+| Results Announcement | September 15, 2026 |
+| Awards Ceremony | Annual Training Conference in October 2026 |
 
-## 參賽資格
+## Eligibility
 
-- **入職日期**：2024年9月1日之後入職（入職未滿2年）
-- 持有有效保險中介人牌照
-- 已完成公司新人培訓計劃（Onboarding Program）
-- 無重大合規違規記錄
-- 符合資格者自動參賽
+- **Employment Date**: Joined after September 1, 2024 (less than two years of service)
+- Holds a valid insurance intermediary licence
+- Completed the company's Onboarding Program
+- No record of serious compliance violations
+- Eligible agents participate automatically
 
-## 競賽規則
+## Competition Rules
 
-### 綜合評分制
+### Composite Scoring System
 
-新人王大賽採用**綜合評分制**，兼顧業績與成長：
+The Rookie King Competition uses a **composite scoring system** that considers both performance and growth:
 
-| 維度 | 權重 | 指標 | 說明 |
+| Dimension | Weight | Metric | Description |
 |------|------|------|------|
-| 保費業績 | 40% | 保障保費達成率 | 以職級目標為基準 |
-| 學習成長 | 25% | AI陪練完成度 + 培訓出席率 | 體現學習積極性 |
-| 客戶開發 | 20% | 新客戶數量 | 展示開拓能力 |
-| 服務品質 | 15% | 客戶滿意度 + 投訴率 | 確保服務質素 |
+| Premium Performance | 40% | Protection premium attainment rate | Based on the target for the agent's rank |
+| Learning and Growth | 25% | AI practice completion + training attendance rate | Reflects commitment to learning |
+| Customer Acquisition | 20% | Number of new customers | Demonstrates business development ability |
+| Service Quality | 15% | Customer satisfaction + complaint rate | Ensures service quality |
 
-### 保費目標
+### Premium Targets
 
-新人王大賽統一使用**業務主任級別**目標：
+The Rookie King Competition applies the **Business Officer-level** target to all participants:
 
-| 指標 | 目標值 | 說明 |
+| Metric | Target | Description |
 |------|--------|------|
-| 保障保費 (Protection Premium) | 600,000 HKD | 8個月累計 |
-| 月均保費 | 75,000 HKD | 參考指標 |
+| Protection Premium | HKD 600,000 | Cumulative over 8 months |
+| Average Monthly Premium | HKD 75,000 | Reference metric |
 
-### 合資格產品
+### Eligible Products
 
-- 與星光大道競賽相同
-- 以保障型產品為主（定期壽險、終身壽險、危疾、醫療、意外）
-- 儲蓄型及投連險不計入
+- Same as the Starlight Avenue Competition
+- Primarily protection products, including term life, whole life, critical illness, medical, and accident insurance
+- Savings and investment-linked insurance are excluded
 
-## 獎勵方案
+## Rewards
 
-### 個人獎
-- **新人王（第1名）**：新人王獎盃 + 培訓資助金 HKD 30,000 + 海外培訓機會（新加坡3天）
-- **新人之星（第2-3名）**：獎盃 + 培訓資助金 HKD 20,000
-- **優秀新人（第4-10名）**：證書 + 培訓資助金 HKD 10,000
-- **達標新人（100%目標）**：達標證書 + HKD 5,000
+### Individual Awards
+- **Rookie King (1st Place)**: Rookie King Trophy + HKD 30,000 training grant + overseas training opportunity (3 days in Singapore)
+- **Rookie Stars (2nd–3rd Place)**: Trophy + HKD 20,000 training grant
+- **Outstanding Rookies (4th–10th Place)**: Certificate + HKD 10,000 training grant
+- **Target-Achieving Rookies (100% Target)**: Achievement Certificate + HKD 5,000
 
-### 特別獎項
-- **最佳學習獎**：AI陪練完成度最高者，HKD 8,000
-- **最快首單獎**：入職後最短時間完成首單者，HKD 5,000
-- **客戶好評獎**：客戶滿意度最高者，HKD 5,000
+### Special Awards
+- **Best Learning Award**: Highest AI practice completion, HKD 8,000
+- **Fastest First Policy Award**: Shortest time to complete the first policy after joining, HKD 5,000
+- **Customer Acclaim Award**: Highest customer satisfaction, HKD 5,000
 
-### 導師獎
-- 新人王的指定導師：優秀導師獎 + HKD 10,000
+### Mentor Award
+- Designated mentor of the Rookie King: Outstanding Mentor Award + HKD 10,000
 
-## 成長路徑建議
+## Recommended Growth Path
 
-### 新人常見挑戰及對策
+### Common Challenges for New Agents and Recommended Responses
 
-| 挑戰 | 建議對策 |
+| Challenge | Recommended Response |
 |------|---------|
-| 客源不足 | 善用公司分配線索，積極參與客戶活動 |
-| 產品不熟 | 每週完成2次AI陪練，聚焦2-3款核心產品 |
-| 拒絕恐懼 | 增加面談量，設定每週最低面談數（建議8次） |
-| 銷售技巧弱 | 跟隨導師觀摩，參加公司每週銷售研討會 |
-| 時間管理差 | 使用CRM系統規劃每日行程，設定優先級 |
+| Insufficient customer sources | Make good use of company-assigned leads and actively participate in customer events |
+| Limited product knowledge | Complete two AI practice sessions each week and focus on 2–3 core products |
+| Fear of rejection | Increase the number of meetings and set a minimum weekly target of 8 meetings |
+| Weak sales skills | Shadow a mentor and attend the company's weekly sales seminar |
+| Poor time management | Use the CRM system to plan daily schedules and set priorities |
 
-## 注意事項
+## Notes
 
-1. 符合入職時間的代理人自動參賽，無需報名
-2. 競賽期間如晉升至業務經理，仍可繼續參賽
-3. 培訓出席率低於70%將被取消參賽資格
-4. 新人王大賽成績可作為試用期考核的重要參考
-5. 導師的指導記錄將作為「學習成長」維度的輔助評分依據
-6. 結果以人才發展部最終核實為準
+1. Agents who meet the employment-date requirement participate automatically without registration
+2. Agents promoted to Business Manager during the competition may continue participating
+3. Training attendance below 70% results in disqualification
+4. Rookie King results may serve as an important reference for probation assessment
+5. Mentor guidance records support scoring in the “Learning and Growth” dimension
+6. Final results are subject to verification by the Talent Development Department
 
-## 往屆數據參考
+## Historical Data Reference
 
-- 2026年參賽人數：85人
-- 2026年達標率：35%
-- 2026年新人王業績：HKD 920,000（8個月）
-- 2026年新人平均保費：HKD 380,000（8個月）
+- Number of participants in 2026: 85
+- 2026 attainment rate: 35%
+- 2026 Rookie King performance: HKD 920,000 over 8 months
+- Average rookie premium in 2026: HKD 380,000 over 8 months
