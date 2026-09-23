@@ -1,84 +1,84 @@
-# 年度精英挑戰賽 2026
+# Annual Elite Challenge 2026
 
-## 競賽概要
+## Competition Overview
 
-| 項目 | 詳情 |
+| Item | Details |
 |------|------|
-| 競賽名稱 | 2026年度精英挑戰賽 (Annual Elite Challenge) |
-| 主辦單位 | 業務發展部 |
-| 競賽期間 | 2026年1月1日 — 2026年9月30日 |
-| 公佈結果 | 2026年10月15日 |
-| 頒獎典禮 | 2026年11月年度大會 |
+| Competition Name | 2026 Annual Elite Challenge |
+| Organiser | Business Development Department |
+| Competition Period | January 1, 2026 — September 30, 2026 |
+| Results Announcement | October 15, 2026 |
+| Awards Ceremony | Annual Conference in November 2026 |
 
-## 參賽資格
+## Eligibility
 
-- 入職滿1年以上的在職持牌代理人
-- 上一年度業績達到基本考核標準（年度保費 ≥ 500,000 HKD）
-- 無重大合規違規記錄
+- Active licensed agents with at least one year of service
+- Performance in the previous year met the basic assessment standard (annual premium ≥ HKD 500,000)
+- No record of serious compliance violations
 
-## 競賽規則
+## Competition Rules
 
-### 綜合積分制
+### Composite Scoring System
 
-精英挑戰賽採用**多維度綜合積分制**，綜合考量業績和客戶服務：
+The Elite Challenge uses a **multidimensional composite scoring system** that considers both performance and customer service:
 
-| 維度 | 權重 | 指標 |
+| Dimension | Weight | Metric |
 |------|------|------|
-| 保費業績 | 50% | 保障保費達成率 |
-| 新客開發 | 20% | 新客戶數量 |
-| 客戶留存 | 15% | 老客戶續保率 |
-| 專業發展 | 15% | 培訓出席率 + AI陪練完成度 |
+| Premium Performance | 50% | Protection premium attainment rate |
+| New Customer Acquisition | 20% | Number of new customers |
+| Customer Retention | 15% | Existing customer renewal rate |
+| Professional Development | 15% | Training attendance rate + AI practice completion |
 
-### 保費目標（按職級）
+### Premium Targets by Rank
 
-| 職級 | 目標保費 (HKD) |
+| Rank | Target Premium (HKD) |
 |------|---------------|
-| 業務主任 | 1,500,000 |
-| 業務經理 | 2,800,000 |
-| 高級業務經理 | 4,000,000 |
-| 區域總監 | 6,000,000 |
+| Business Officer | 1,500,000 |
+| Business Manager | 2,800,000 |
+| Senior Business Manager | 4,000,000 |
+| Regional Director | 6,000,000 |
 
-### 合資格產品
-- 所有個人壽險及健康險產品
-- 包含保障型、儲蓄型、投連險
-- 團單不計入
-- 以核保通過並繳付首期保費為準
+### Eligible Products
+- All individual life and health insurance products
+- Includes protection, savings, and investment-linked insurance
+- Group policies are excluded
+- Policies count only after underwriting approval and payment of the first premium
 
-## 獎勵方案
+## Rewards
 
-### 個人獎
-- **全公司前10名**：精英獎章 + 特別花紅（相當於1個月底薪） + 晉升加分（年度考核加5分）
-- **全公司前30名**：卓越獎章 + 特別花紅（相當於半個月底薪）
-- **達標（100%）**：達標證書 + 精英徽章
+### Individual Awards
+- **Company-wide Top 10**: Elite Medal + special bonus equivalent to one month of base salary + 5 points in the annual promotion assessment
+- **Company-wide Top 30**: Excellence Medal + special bonus equivalent to half a month of base salary
+- **Target Achieved (100%)**: Achievement Certificate + Elite Badge
 
-### 突破獎
-- 較上年同期業績增長 ≥ 50%：突破新星獎 + HKD 15,000
-- 較上年同期業績增長 ≥ 100%：超越極限獎 + HKD 30,000
+### Breakthrough Awards
+- Performance growth of ≥ 50% compared with the same period last year: Breakthrough Rising Star Award + HKD 15,000
+- Performance growth of ≥ 100% compared with the same period last year: Beyond the Limit Award + HKD 30,000
 
-### 團隊獎
-- 團隊綜合積分最高的前3組：精英團隊獎盃 + 團隊建設基金 HKD 80,000
+### Team Awards
+- Top 3 teams by composite score: Elite Team Trophy + HKD 80,000 team-building fund
 
-## 晉升加分規則
+## Promotion Bonus Point Rules
 
-精英挑戰賽成績可作為年度晉升考核的加分項：
+Elite Challenge results may contribute bonus points to the annual promotion assessment:
 
-| 排名 | 加分 |
+| Ranking | Bonus Points |
 |------|------|
-| 前10名 | +5分 |
-| 前30名 | +3分 |
-| 達標 | +1分 |
+| Top 10 | +5 points |
+| Top 30 | +3 points |
+| Target Achieved | +1 point |
 
-## 注意事項
+## Notes
 
-1. 積分以季度為單位結算，每季公佈一次排名
-2. Q1、Q2、Q3 各季度保費達成率不低於 20% 方有效
-3. 競賽期間嚴禁不正當銷售行為
-4. 精算部每月5日前更新上月數據
-5. 如有爭議，以業務發展部最終裁決為準
+1. Scores are settled quarterly, and rankings are announced once per quarter
+2. The premium attainment rate in each of Q1, Q2, and Q3 must be at least 20% to remain valid
+3. Improper sales practices are strictly prohibited during the competition
+4. The Actuarial Department updates the previous month's data before the fifth day of each month
+5. In case of dispute, the final decision of the Business Development Department shall prevail
 
-## 往屆數據參考
+## Historical Data Reference
 
-- 2026年達標率：28%
-- 2026年冠軍綜合積分：96.5分
-- 2026年參賽人數：310人
-- 2026年前10名門檻綜合積分：82分
+- 2026 attainment rate: 28%
+- 2026 champion composite score: 96.5 points
+- Number of participants in 2026: 310
+- 2026 Top 10 composite-score threshold: 82 points
