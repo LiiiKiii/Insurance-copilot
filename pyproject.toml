@@ -4,3 +4,10 @@ version = "0.1.0"
 description = "Hybrid intelligent reasoning system for insurance performance gap diagnosis and action planning"
 requires-python = ">=3.11"
 dependencies = []
+
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = []
