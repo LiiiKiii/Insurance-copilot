@@ -20,11 +20,19 @@ The system will progressively integrate data-driven diagnosis, deterministic bus
 
 Current development stage:
 
-**A0 — Repository Skeleton**
+**A1 Platform Foundation (In Progress)**
 
-This stage establishes the shared repository structure, development configuration, project conventions, and the initial M3 knowledge corpus.
+The A0 repository foundation and initial knowledge corpus remain available. A1 is establishing the reusable runtime building blocks for the later agent system; basic local tests pass, but no real LLM API calls have been made.
 
-### A0 Deliverables
+### A1 Platform Foundation
+
+The following foundation modules are currently implemented:
+
+- **MessageBus**: `InboundMessage`, `OutboundMessage`, and asynchronous inbound/outbound message queues.
+- **Provider Foundation**: the `LLMProvider` interface, `OpenAICompatProvider`, and an OpenRouter provider registry.
+- **Runtime Configuration**: configuration schema, JSON loader/saver, and runtime path helpers.
+
+### A0 Foundation Assets
 
 The repository currently includes:
 
@@ -43,16 +51,29 @@ The repository currently includes:
 | Qualification rules | `mdrt_rules.md`, `cot_rules.md` |
 | Sales guidance | `sales_scripts.md` |
 
-At the A0 stage, these documents are source knowledge assets only. Knowledge search, relevance ranking, source citation, and retrieval evaluation will be introduced in subsequent development stages.
+These documents are source knowledge assets only. Knowledge search, relevance ranking, source citation, and retrieval evaluation will be introduced in subsequent development stages.
 
 
 ## Development Environment
 
 - Python 3.11+
-- Environment-specific configuration is managed through `.env`
+- Install the local project and its declared dependencies with:
+
+  ```powershell
+  python -m pip install -e .
+  ```
+
+- The default provider is OpenRouter and the default model is `openai/gpt-4o-mini`.
+- Configure an OpenRouter key in PowerShell when needed for a future provider call:
+
+  ```powershell
+  $env:NANOBOT_PROVIDERS__OPENROUTER__API_KEY = "<your-openrouter-api-key>"
+  ```
+
+- `.env` files are not loaded automatically at this stage; use the nested `NANOBOT_` environment variable shown above for runtime configuration.
 - Local secrets and runtime data must not be committed to version control
 - Project dependencies will be introduced together with their corresponding modules
 
 ## Development
 
-Detailed setup, architecture, API, deployment, and usage instructions will be added as the corresponding system components are implemented.
+Agent Loop orchestration, insurance business rules, application APIs, database persistence, and frontend integration are not implemented in A1. Detailed setup, architecture, deployment, and usage instructions will be added as the corresponding system components are implemented.
