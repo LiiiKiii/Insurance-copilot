@@ -20,9 +20,9 @@ The system will progressively integrate data-driven diagnosis, deterministic bus
 
 Current development stage:
 
-**A1 Platform Foundation (In Progress)**
+**A1 Platform Foundation (Completed)**
 
-The A0 repository foundation and initial knowledge corpus remain available. A1 is establishing the reusable runtime building blocks for the later agent system; basic local tests pass, but no real LLM API calls have been made.
+The A0 repository foundation and initial knowledge corpus remain available. A1 establishes reusable runtime building blocks for the later agent system. Offline integration tests use a Mock Provider; no real OpenRouter API call has been made.
 
 ### A1 Platform Foundation
 
@@ -31,6 +31,7 @@ The following foundation modules are currently implemented:
 - **MessageBus**: `InboundMessage`, `OutboundMessage`, and asynchronous inbound/outbound message queues.
 - **Provider Foundation**: the `LLMProvider` interface, `OpenAICompatProvider`, and an OpenRouter provider registry.
 - **Runtime Configuration**: configuration schema, JSON loader/saver, and runtime path helpers.
+- **Minimal Agent Runtime**: `ContextBuilder` assembles the system prompt, runtime context, and current user message; `AgentLoop` connects MessageBus, ContextBuilder, and LLMProvider for minimal text interaction with basic error handling, stopping, and task cancellation.
 
 ### A0 Foundation Assets
 
@@ -71,9 +72,10 @@ These documents are source knowledge assets only. Knowledge search, relevance ra
   ```
 
 - `.env` files are not loaded automatically at this stage; use the nested `NANOBOT_` environment variable shown above for runtime configuration.
+- `save_config()` may store API keys as plaintext in a local JSON configuration file. Prefer environment variables, protect local files containing keys, and never commit them to Git.
 - Local secrets and runtime data must not be committed to version control
 - Project dependencies will be introduced together with their corresponding modules
 
 ## Development
 
-Agent Loop orchestration, insurance business rules, application APIs, database persistence, and frontend integration are not implemented in A1. Detailed setup, architecture, deployment, and usage instructions will be added as the corresponding system components are implemented.
+The Minimal AgentLoop is implemented in A1. Tool execution, session persistence, Memory, Skills, MCP, Subagents, business reasoning, advanced agent orchestration, application APIs, database persistence, and frontend integration remain outside the current scope. Detailed setup, architecture, deployment, and usage instructions will be added as the corresponding system components are implemented.
