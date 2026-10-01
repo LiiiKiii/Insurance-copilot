@@ -4,11 +4,14 @@ version = "0.1.0"
 description = "Hybrid intelligent reasoning system for insurance performance gap diagnosis and action planning"
 requires-python = ">=3.11"
 dependencies = [
+    "aiosqlite>=0.20.0,<1.0.0",
     "json-repair>=0.57.0,<1.0.0",
     "loguru>=0.7.3,<1.0.0",
     "openai>=2.8.0",
     "pydantic>=2.12,<3.0",
     "pydantic-settings>=2.12,<3.0",
+    "python-dotenv>=1.0.0,<2.0.0",
+    "sqlalchemy>=2.0.0,<3.0.0",
 ]
 
 [build-system]
@@ -16,4 +19,4 @@ requires = ["setuptools>=68", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages.find]
-include = ["nanobot*"]
+include = ["admin*", "nanobot*"]
