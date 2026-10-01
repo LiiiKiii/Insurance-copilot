@@ -1,0 +1,279 @@
+{
+  "AGT001": {
+    "agent_id": "AGT001",
+    "period": "2026-01-01 to 2026-03-17",
+    "key_metrics": {
+      "label": "Key Behaviour Metrics",
+      "dimensions": [
+        {
+          "name": "Lead Follow-up Rate",
+          "name_en": "Lead Follow-up Rate",
+          "current": 0.45,
+          "peer_avg": 0.68,
+          "unit": "%",
+          "insight": "33% below the peer average, indicating substantial lead loss"
+        },
+        {
+          "name": "Monthly Client Meetings",
+          "name_en": "Monthly Client Meetings",
+          "current": 6,
+          "peer_avg": 9,
+          "unit": "meetings/month",
+          "insight": "33% below the peer average, indicating insufficient meeting volume"
+        },
+        {
+          "name": "Average Case Size",
+          "name_en": "Average Case Size",
+          "current": 42500,
+          "peer_avg": 38000,
+          "unit": "HKD",
+          "insight": "12% above the peer average, demonstrating strength in larger cases"
+        },
+        {
+          "name": "New Client Acquisition",
+          "name_en": "New Client Acquisition",
+          "current": 12,
+          "peer_avg": 18,
+          "unit": "clients",
+          "insight": "33% below the peer average, indicating insufficient new-client sources"
+        }
+      ]
+    },
+    "policy_type": {
+      "label": "Policy Type Distribution",
+      "data": {
+        "Protection": {"count": 22, "premium": 1200000, "ratio": 0.55},
+        "Savings": {"count": 15, "premium": 780000, "ratio": 0.35},
+        "Investment-Linked": {"count": 5, "premium": 190000, "ratio": 0.10}
+      },
+      "peer_avg": {
+        "Protection": 0.45,
+        "Savings": 0.40,
+        "Investment-Linked": 0.15
+      },
+      "insight": "The protection share is above the peer average, indicating a healthy product mix"
+    },
+    "lead_followup": {
+      "label": "Lead Follow-up Performance",
+      "data": {
+        "new_lead_response_hours": 4.2,
+        "avg_followup_count": 3.8,
+        "lead_conversion_rate": 0.32,
+        "total_leads": 58,
+        "converted_leads": 19
+      },
+      "peer_avg": {
+        "new_lead_response_hours": 6.5,
+        "avg_followup_count": 2.9,
+        "lead_conversion_rate": 0.25
+      },
+      "insight": "Lead response and conversion outperform peers, with 31% more follow-ups"
+    },
+    "activity": {
+      "label": "Activity Participation",
+      "data": {
+        "client_events_attended": 6,
+        "seminars_hosted": 2,
+        "referral_events": 3,
+        "online_campaigns": 4
+      },
+      "peer_avg": {
+        "client_events_attended": 4,
+        "seminars_hosted": 1.5,
+        "referral_events": 2,
+        "online_campaigns": 3
+      },
+      "insight": "Participation is above the peer average, led by the number of hosted seminars"
+    },
+    "training": {
+      "label": "AI Training Usage",
+      "data": {
+        "sessions_completed": 8,
+        "total_practice_hours": 6.5,
+        "skill_score_improvement": 0.15,
+        "last_session_date": "2026-03-10",
+        "modules_completed": ["Product Introduction", "Objection Handling", "Needs Analysis"]
+      },
+      "peer_avg": {
+        "sessions_completed": 5,
+        "total_practice_hours": 3.8,
+        "skill_score_improvement": 0.10
+      },
+      "insight": "AI training usage is above average and skill scores improved by 15%"
+    },
+    "peer_comparison": {
+      "label": "Peer Comparison Overview",
+      "rank_in_team": 2,
+      "team_size": 15,
+      "rank_in_region": 8,
+      "region_size": 65,
+      "top10_threshold": {
+        "protection_premium": 2200000,
+        "submission_count": 22,
+        "conversion_rate": 0.78
+      },
+      "percentile": 0.72,
+      "insight": "Overall performance ranks in the team's top 15%, with an HKD 350,000 premium gap to the regional top 10"
+    }
+  },
+  "AGT002": {
+    "agent_id": "AGT002",
+    "period": "2026-01-01 to 2026-03-17",
+    "policy_type": {
+      "label": "Policy Type Distribution",
+      "data": {
+        "Protection": {"count": 12, "premium": 480000, "ratio": 0.40},
+        "Savings": {"count": 14, "premium": 420000, "ratio": 0.45},
+        "Investment-Linked": {"count": 4, "premium": 80000, "ratio": 0.15}
+      },
+      "peer_avg": {
+        "Protection": 0.45,
+        "Savings": 0.40,
+        "Investment-Linked": 0.15
+      },
+      "insight": "The savings share is high; increase protection sales to improve FYC"
+    },
+    "lead_followup": {
+      "label": "Lead Follow-up Performance",
+      "data": {
+        "new_lead_response_hours": 8.5,
+        "avg_followup_count": 2.3,
+        "lead_conversion_rate": 0.20,
+        "total_leads": 42,
+        "converted_leads": 8
+      },
+      "peer_avg": {
+        "new_lead_response_hours": 6.5,
+        "avg_followup_count": 2.9,
+        "lead_conversion_rate": 0.25
+      },
+      "insight": "Response time is slower and follow-up volume is lower than peers, leaving room to improve conversion"
+    },
+    "activity": {
+      "label": "Activity Participation",
+      "data": {
+        "client_events_attended": 3,
+        "seminars_hosted": 1,
+        "referral_events": 1,
+        "online_campaigns": 2
+      },
+      "peer_avg": {
+        "client_events_attended": 4,
+        "seminars_hosted": 1.5,
+        "referral_events": 2,
+        "online_campaigns": 3
+      },
+      "insight": "Participation is below the peer average; referral events and online marketing need improvement"
+    },
+    "training": {
+      "label": "AI Training Usage",
+      "data": {
+        "sessions_completed": 5,
+        "total_practice_hours": 3.2,
+        "skill_score_improvement": 0.08,
+        "last_session_date": "2026-02-28",
+        "modules_completed": ["Product Introduction", "Needs Analysis"]
+      },
+      "peer_avg": {
+        "sessions_completed": 5,
+        "total_practice_hours": 3.8,
+        "skill_score_improvement": 0.10
+      },
+      "insight": "AI training usage is near average; more objection-handling practice is recommended"
+    },
+    "peer_comparison": {
+      "label": "Peer Comparison Overview",
+      "rank_in_team": 6,
+      "team_size": 12,
+      "rank_in_region": 28,
+      "region_size": 65,
+      "top10_threshold": {
+        "protection_premium": 2200000,
+        "submission_count": 22,
+        "conversion_rate": 0.78
+      },
+      "percentile": 0.50,
+      "insight": "Overall performance is mid-table; improve follow-up efficiency and activity participation"
+    }
+  },
+  "AGT003": {
+    "agent_id": "AGT003",
+    "period": "2026-01-01 to 2026-03-17",
+    "policy_type": {
+      "label": "Policy Type Distribution",
+      "data": {
+        "Protection": {"count": 6, "premium": 168000, "ratio": 0.50},
+        "Savings": {"count": 5, "premium": 90000, "ratio": 0.38},
+        "Investment-Linked": {"count": 1, "premium": 22000, "ratio": 0.12}
+      },
+      "peer_avg": {
+        "Protection": 0.45,
+        "Savings": 0.40,
+        "Investment-Linked": 0.15
+      },
+      "insight": "The product mix is balanced, with a slightly higher protection share and good early-career performance"
+    },
+    "lead_followup": {
+      "label": "Lead Follow-up Performance",
+      "data": {
+        "new_lead_response_hours": 12.0,
+        "avg_followup_count": 1.8,
+        "lead_conversion_rate": 0.15,
+        "total_leads": 35,
+        "converted_leads": 5
+      },
+      "peer_avg": {
+        "new_lead_response_hours": 6.5,
+        "avg_followup_count": 2.9,
+        "lead_conversion_rate": 0.25
+      },
+      "insight": "As a new agent, response time and follow-up volume have substantial room for improvement; conversion is 60% of the peer average"
+    },
+    "activity": {
+      "label": "Activity Participation",
+      "data": {
+        "client_events_attended": 2,
+        "seminars_hosted": 0,
+        "referral_events": 1,
+        "online_campaigns": 1
+      },
+      "peer_avg": {
+        "client_events_attended": 4,
+        "seminars_hosted": 1.5,
+        "referral_events": 2,
+        "online_campaigns": 3
+      },
+      "insight": "Participation is notably low and no seminars have been hosted; shadowing an experienced colleague is recommended"
+    },
+    "training": {
+      "label": "AI Training Usage",
+      "data": {
+        "sessions_completed": 3,
+        "total_practice_hours": 2.0,
+        "skill_score_improvement": 0.05,
+        "last_session_date": "2026-03-05",
+        "modules_completed": ["Product Introduction"]
+      },
+      "peer_avg": {
+        "sessions_completed": 5,
+        "total_practice_hours": 3.8,
+        "skill_score_improvement": 0.10
+      },
+      "insight": "AI training usage is low; at least two sessions per week are recommended to accelerate development"
+    },
+    "peer_comparison": {
+      "label": "Peer Comparison Overview",
+      "rank_in_team": 8,
+      "team_size": 10,
+      "rank_in_region": 52,
+      "region_size": 65,
+      "top10_threshold": {
+        "protection_premium": 2200000,
+        "submission_count": 22,
+        "conversion_rate": 0.78
+      },
+      "percentile": 0.25,
+      "insight": "The ranking is expected for an agent with under two years of service; focus on the Rookie of the Year competition"
+    }
+  }
+}

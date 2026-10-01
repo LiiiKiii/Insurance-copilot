@@ -1,0 +1,98 @@
+{
+  "AGT001": {
+    "agent_id": "AGT001",
+    "total_pending_premium": 420000,
+    "total_count": 3,
+    "policies": [
+      {
+        "policy_id": "POL_001",
+        "client_name": "Cheung Wai Ming",
+        "premium": 180000,
+        "unit": "HKD",
+        "product": "Whole Life Protection Plan",
+        "product_en": "Whole Life Protection Plan",
+        "status": "Underwriting",
+        "status_en": "Underwriting",
+        "status_detail": "Awaiting underwriting approval",
+        "submit_date": "2026-03-10",
+        "estimated_approval_days_min": 5,
+        "estimated_approval_days_max": 7,
+        "agent_notes": "The client is in good health and qualifies for standard underwriting"
+      },
+      {
+        "policy_id": "POL_002",
+        "client_name": "Chan Mei Ling",
+        "premium": 150000,
+        "unit": "HKD",
+        "product": "Critical Illness Protection Plan",
+        "product_en": "Critical Illness Protection Plan",
+        "status": "Underwriting",
+        "status_en": "Underwriting",
+        "status_detail": "Awaiting medical report",
+        "submit_date": "2026-03-05",
+        "estimated_approval_days_min": 10,
+        "estimated_approval_days_max": 14,
+        "agent_notes": "The client has been asked to provide the outstanding medical report"
+      },
+      {
+        "policy_id": "POL_003",
+        "client_name": "Lee Kin Kwok",
+        "premium": 90000,
+        "unit": "HKD",
+        "product": "Term Life Insurance",
+        "product_en": "Term Life Insurance",
+        "status": "Underwriting",
+        "status_en": "Underwriting",
+        "status_detail": "Document review in progress",
+        "submit_date": "2026-03-14",
+        "estimated_approval_days_min": 3,
+        "estimated_approval_days_max": 5,
+        "agent_notes": "All documents are complete and a prompt approval is expected"
+      }
+    ]
+  },
+  "AGT002": {
+    "agent_id": "AGT002",
+    "total_pending_premium": 150000,
+    "total_count": 1,
+    "policies": [
+      {
+        "policy_id": "POL_004",
+        "client_name": "Ho Ka Fai",
+        "premium": 150000,
+        "unit": "HKD",
+        "product": "Savings Protection Plan",
+        "product_en": "Savings Protection Plan",
+        "status": "Underwriting",
+        "status_en": "Underwriting",
+        "status_detail": "Awaiting financial evidence",
+        "submit_date": "2026-03-12",
+        "estimated_approval_days_min": 7,
+        "estimated_approval_days_max": 10,
+        "agent_notes": "The high-sum application requires financial verification"
+      }
+    ]
+  },
+  "AGT003": {
+    "agent_id": "AGT003",
+    "total_pending_premium": 75000,
+    "total_count": 1,
+    "policies": [
+      {
+        "policy_id": "POL_005",
+        "client_name": "Choi Siu Man",
+        "premium": 75000,
+        "unit": "HKD",
+        "product": "Accident Protection Plan",
+        "product_en": "Accident Protection Plan",
+        "status": "Underwriting",
+        "status_en": "Underwriting",
+        "status_detail": "Document review in progress",
+        "submit_date": "2026-03-15",
+        "estimated_approval_days_min": 3,
+        "estimated_approval_days_max": 5,
+        "agent_notes": "The straightforward application is expected to be approved promptly"
+      }
+    ]
+  }
+}
