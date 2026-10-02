@@ -8,11 +8,9 @@ import {
   type Locale,
   type MessageKey,
 } from './types'
-import { messages as zhHK } from './messages.zh-HK'
 import { messages as en } from './messages.en'
 
 const TABLES: Record<Locale, Record<MessageKey, string>> = {
-  'zh-HK': zhHK,
   en,
 }
 
@@ -40,8 +38,7 @@ function detectInitial(): Locale {
   } catch {
     /* private mode / disabled — fall through to navigator */
   }
-  const nav = window.navigator?.language?.toLowerCase() ?? ''
-  return nav.startsWith('en') ? 'en' : DEFAULT_LOCALE
+  return DEFAULT_LOCALE
 }
 
 interface LocaleProviderProps {
