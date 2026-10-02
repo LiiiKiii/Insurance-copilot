@@ -94,15 +94,15 @@ class SearchKnowledgeBaseTool(Tool):
 
         def _search() -> str:
             with sync_engine.connect() as conn:
-                # 分詞用於匹配
+                # Tokenise the query for matching
                 keywords = [kw.strip() for kw in query.split() if len(kw.strip()) >= 2]
 
-                # 嘗試 FTS5（僅 SQLite 支持，PG 下跳過）
+                # Try FTS5 (supported only by SQLite; skip for PostgreSQL)
                 rows = None
                 if keywords and _is_sqlite:
                     rows = _search_fts(conn, keywords, kb_name, top_k)
 
-                # 回退到 LIKE 查詢（PG 和 SQLite 均兼容）
+                # Fall back to a LIKE query (compatible with PostgreSQL and SQLite)
                 if not rows:
                     where_clauses: list[str] = []
                     params: dict = {"limit_val": top_k}
@@ -132,7 +132,7 @@ class SearchKnowledgeBaseTool(Tool):
                     """)
                     rows = conn.execute(sql, params).fetchall()
 
-                # 獲取 KB 列表供上下文參考
+                # Retrieve the KB list for contextual reference
                 kb_list = conn.execute(
                     text("SELECT name, document_count FROM knowledge_bases WHERE status = 'active'")
                 ).fetchall()
@@ -168,6 +168,6 @@ class SearchKnowledgeBaseTool(Tool):
             logger.error("Knowledge base search failed: %s", e, exc_info=True)
             return json.dumps({
                 "found": False,
-                "error": "知識庫查詢失敗",
+                "error": "Knowledge base query failed",
                 "results": [],
             }, ensure_ascii=False)
