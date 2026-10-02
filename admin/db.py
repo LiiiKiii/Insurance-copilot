@@ -98,7 +98,13 @@ async def init_db() -> None:
         if database_path and database_path != ":memory:":
             Path(database_path).expanduser().resolve().parent.mkdir(parents=True, exist_ok=True)
 
-    from admin.models import agent_data, competition, performance_target  # noqa: F401
+    from admin.models import (  # noqa: F401
+        agent_data,
+        competition,
+        knowledge,
+        performance_target,
+        tenant,
+    )
 
     async with engine.begin() as connection:
         await connection.run_sync(Base.metadata.create_all)

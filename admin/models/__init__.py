@@ -8,7 +8,9 @@ from admin.models.agent_data import (
     AgentProfile,
 )
 from admin.models.competition import Competition, CompetitionEntry
+from admin.models.knowledge import Document, DocumentChunk, KnowledgeBase
 from admin.models.performance_target import PerformanceTarget
+from admin.models.tenant import Tenant
 
 __all__ = [
     "AgentAttribution",
@@ -18,5 +20,9 @@ __all__ = [
     "AgentProfile",
     "Competition",
     "CompetitionEntry",
+    "Document",
+    "DocumentChunk",
+    "KnowledgeBase",
     "PerformanceTarget",
+    "Tenant",
 ]
