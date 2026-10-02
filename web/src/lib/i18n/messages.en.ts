@@ -1,13 +1,9 @@
 /**
- * English (en) message map.
- *
- * Typed as `Record<MessageKey, string>` against the canonical zh-HK
- * catalogue — missing keys become compile errors at the next
- * `tsc --noEmit` run.
+ * English (en) message map — the canonical catalogue. `MessageKey` in
+ * `./types` is derived from the keys declared here.
  */
-import type { MessageKey } from './types'
 
-export const messages: Record<MessageKey, string> = {
+export const messages = {
   'common.confirm': 'Confirm',
   'common.cancel': 'Cancel',
   'common.close': 'Close',
