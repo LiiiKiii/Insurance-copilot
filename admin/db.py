@@ -11,7 +11,7 @@ import os
 from pathlib import Path
 
 from dotenv import load_dotenv
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, text
 from sqlalchemy.engine import make_url
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 from sqlalchemy.orm import DeclarativeBase, Session, sessionmaker
@@ -108,6 +108,27 @@ async def init_db() -> None:
 
     async with engine.begin() as connection:
         await connection.run_sync(Base.metadata.create_all)
+
+    if _is_sqlite:
+        async with engine.begin() as connection:
+            await connection.execute(
+                text(
+                    """CREATE VIRTUAL TABLE IF NOT EXISTS knowledge_fts USING fts5(
+                        doc_id, title, content, tokenize='unicode61'
+                    )"""
+                )
+            )
+
+    # Background document processing cannot survive a process restart. Mark
+    # interrupted jobs explicitly so they can be retried or investigated.
+    async with engine.begin() as connection:
+        await connection.execute(
+            text(
+                "UPDATE documents "
+                "SET status='failed', error_message='interrupted by restart' "
+                "WHERE status IN ('pending', 'processing')"
+            )
+        )
 
 
 async def close_db() -> None:
