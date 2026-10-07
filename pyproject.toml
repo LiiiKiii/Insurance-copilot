@@ -5,13 +5,18 @@ description = "Hybrid intelligent reasoning system for insurance performance gap
 requires-python = ">=3.11"
 dependencies = [
     "aiosqlite>=0.20.0,<1.0.0",
+    "fastapi>=0.115.0,<1.0.0",
     "json-repair>=0.57.0,<1.0.0",
     "loguru>=0.7.3,<1.0.0",
     "openai>=2.8.0",
     "pydantic>=2.12,<3.0",
     "pydantic-settings>=2.12,<3.0",
+    "pymupdf>=1.24.0,<2.0.0",
+    "python-multipart>=0.0.9,<1.0.0",
     "python-dotenv>=1.0.0,<2.0.0",
+    "rapidocr-onnxruntime>=1.3.0,<2.0.0",
     "sqlalchemy[asyncio]>=2.0.0,<3.0.0",
+    "tiktoken>=0.12.0,<1.0.0",
 ]
 
 [build-system]
