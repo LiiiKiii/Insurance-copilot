@@ -135,3 +135,24 @@ For A0, M4 delivers this module-boundary document only. The following items are 
 - reporting Precision@K or NDCG@K results.
 
 These items will be introduced incrementally in later rounds after the required data, reasoning, and integration foundations are available.
+
+## A2 Chase-Plan Baseline
+
+The A2-M4 deliverable validates the existing `GenerateChasePlanTool` before the
+coursework optimisation model is introduced. The tool consumes competition and
+performance records supplied by the data layer, applies the authoritative net
+gap from the reasoning layer, and produces:
+
+- an equal week-by-week breakdown of the remaining gap;
+- the corresponding daily production requirement;
+- configurable P0, P1, and P2 action-template text; and
+- stable messages for covered targets, missing competitions, and data failures.
+
+Baseline unit tests cover HKD gap deduction, weekly target construction,
+automatic selection of the most urgent open competition, a fully covered gap,
+an unknown competition identifier, and a failed competition query.
+
+This milestone does not add candidate scoring, customer or policy ranking,
+Top-K selection, new priority rules, or evaluation metrics. Those remain later
+optimisation deliverables and must be tested separately from this template-based
+planning baseline.
