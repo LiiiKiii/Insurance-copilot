@@ -1,4 +1,10 @@
-"""Planning Layer: generate_chase_plan — week-by-week catch-up plan."""
+"""Generate the existing template-based week-by-week catch-up plan.
+
+This module is the A2 planning baseline.  It converts an already calculated
+competition gap into equal weekly targets and a configurable action checklist.
+It deliberately does not score customer opportunities, rank policies, or
+implement the optimisation model planned for a later coursework round.
+"""
 import json
 import logging
 import time
@@ -6,7 +12,6 @@ from datetime import date, timedelta
 from pathlib import Path
 from typing import Any
 from nanobot.agent.tools.base import Tool
-from nanobot.agent.tools.insurance.enrichment import enrich_competitions
 from nanobot.agent.tools.insurance.reasoning_layer.gap_analysis import compute_gap_analysis
 from nanobot.agent.tools.insurance.reasoning_layer.run_rate import compute_run_rate
 from nanobot.agent.tools.insurance.data_layer._db import load_competitions_from_db, load_performance_row
@@ -98,7 +103,7 @@ class GenerateChasePlanTool(Tool):
 
         # Load competitions from DB
         try:
-            competitions = enrich_competitions(load_competitions_from_db(self._workspace, agent_id))
+            competitions = load_competitions_from_db(self._workspace, agent_id)
         except Exception:
             return json.dumps({"error": "Data query failed"}, ensure_ascii=False)
 
