@@ -25,6 +25,7 @@ from typing import Any
 from fastapi import FastAPI
 
 from api.state import RuntimeState
+from api.ws import router as websocket_router
 
 
 RuntimeFactory = Callable[[], RuntimeState]
@@ -82,6 +83,7 @@ def create_app(
     )
     application.state.runtime = runtime
     application.state.runtime_factory = factory
+    application.include_router(websocket_router)
 
     @application.get("/api/health")
     async def health() -> dict[str, Any]:
