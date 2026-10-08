@@ -1,6 +1,7 @@
 'use client'
 
 import { KPIRingCard } from "@/components/KPIRingCard"
+import { AlertBanner } from "@/components/AlertBanner"
 import { useTranslation } from "@/lib/i18n"
 
 const baselineMetrics = [
@@ -57,6 +58,11 @@ export default function Home() {
             {t("app.metaDescription")}
           </p>
         </header>
+
+        <AlertBanner
+          agentId="AGT001"
+          className="mb-6 rounded-lg border shadow-sm"
+        />
 
         <section aria-labelledby="performance-overview-heading">
           <div className="mb-4 flex items-end justify-between gap-4">
