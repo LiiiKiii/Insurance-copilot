@@ -2,6 +2,7 @@
 
 import { formatDate } from '@/lib/utils'
 import { MarkdownRenderer } from './MarkdownRenderer'
+import { ResultCard } from './ResultCards'
 import type { ChatMessage } from '@/lib/chatTypes'
 import { useTranslation, type MessageKey } from '@/lib/i18n'
 
@@ -145,6 +146,11 @@ export function MessageBubble({ message }: MessageBubbleProps) {
             <div className="markdown-content text-sm text-slate-700 dark:text-slate-200 leading-relaxed">
               <MarkdownRenderer content={content} />
             </div>
+            {message.result && (
+              <div className="mt-3">
+                <ResultCard result={message.result} />
+              </div>
+            )}
           </div>
           <p className="text-[10px] text-slate-400 dark:text-slate-500 mt-1 ml-1">{formatDate(timestamp, locale)}</p>
       </div>
