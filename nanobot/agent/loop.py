@@ -10,6 +10,7 @@ from typing import Awaitable, Callable
 from loguru import logger
 
 from nanobot.agent.context import ContextBuilder
+from nanobot.agent.tools.registry import ToolRegistry
 from nanobot.bus.events import InboundMessage, OutboundMessage
 from nanobot.bus.queue import MessageBus
 from nanobot.providers.base import LLMProvider
@@ -24,11 +25,18 @@ class AgentLoop:
         provider: LLMProvider,
         workspace: Path,
         model: str | None = None,
+        tool_registry: ToolRegistry | None = None,
+        max_tool_iterations: int = 4,
     ):
+        if max_tool_iterations < 0:
+            raise ValueError("max_tool_iterations must not be negative.")
+
         self.bus = bus
         self.provider = provider
         self.workspace = workspace
         self.model = model or provider.get_default_model()
+        self.tool_registry = tool_registry or ToolRegistry()
+        self.max_tool_iterations = max_tool_iterations
 
         self.context = ContextBuilder(workspace)
 
@@ -136,18 +144,54 @@ class AgentLoop:
             chat_id=msg.chat_id,
         )
 
-        response = await self.provider.chat_with_retry(
-            messages=messages,
-            tools=None,
-            model=self.model,
-        )
+        tool_definitions = self.tool_registry.get_definitions() or None
+        tool_iterations = 0
 
-        if response.has_tool_calls:
-            final_content = (
-                "Tool calls are not supported in A1."
+        while True:
+            response = await self.provider.chat_with_retry(
+                messages=messages,
+                tools=tool_definitions,
+                model=self.model,
             )
 
-        elif response.finish_reason == "error":
+            if not response.has_tool_calls:
+                break
+
+            if tool_iterations >= self.max_tool_iterations:
+                return OutboundMessage(
+                    channel=msg.channel,
+                    chat_id=msg.chat_id,
+                    content=(
+                        "Sorry, I couldn't complete the requested tool operations."
+                    ),
+                    metadata=dict(msg.metadata or {}),
+                )
+
+            self.context.add_assistant_message(
+                messages,
+                response.content,
+                tool_calls=[
+                    tool_call.to_openai_tool_call()
+                    for tool_call in response.tool_calls
+                ],
+                reasoning_content=response.reasoning_content,
+                thinking_blocks=response.thinking_blocks,
+            )
+            for tool_call in response.tool_calls:
+                result = await self.tool_registry.execute(
+                    tool_call.name,
+                    tool_call.arguments,
+                )
+                self.context.add_tool_result(
+                    messages,
+                    tool_call.id,
+                    tool_call.name,
+                    result,
+                )
+
+            tool_iterations += 1
+
+        if response.finish_reason == "error":
             final_content = (
                 response.content
                 or "Sorry, I encountered an error calling the AI model."
