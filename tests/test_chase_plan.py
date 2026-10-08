@@ -1,4 +1,4 @@
-"""Baseline contract tests for the template-based chase-plan tool."""
+"""Contract tests for the template-based chase-plan tool."""
 
 import json
 import tempfile
