@@ -1,6 +1,6 @@
 """Generate the existing template-based week-by-week catch-up plan.
 
-This module is the A2 planning baseline.  It converts an already calculated
+This module is the A2 template-based planning component. It converts a calculated
 competition gap into equal weekly targets and a configurable action checklist.
 It deliberately does not score customer opportunities, rank policies, or
 implement the optimisation model planned for a later coursework round.

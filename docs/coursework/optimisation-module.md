@@ -4,15 +4,15 @@
 
 M4 owns the business optimisation and recommendation module. The module will convert verified performance gaps, diagnostic evidence, and eligible customer opportunities into a ranked follow-up list and a practical action plan.
 
-This A0 deliverable documents the boundary between the existing planning baseline and the optimisation work proposed for the coursework. It does not introduce a new optimisation algorithm.
+This A0 deliverable defines the boundary between template-based planning and the optimisation work proposed for the coursework. It does not introduce a new optimisation algorithm.
 
-## Existing Prototype Baseline
+## Template-Based Planning Scope
 
-The existing prototype used as a reference contains two planning tools. Their source code will be introduced in a later development round rather than copied into A0.
+The system design includes two template-based planning tools. Their implementation is scheduled for a later development round and is outside the A0 scope.
 
 ### Chase Plan Generation
 
-The existing `GenerateChasePlanTool`:
+`GenerateChasePlanTool`:
 
 - selects a specified competition or the most urgent competition with an open gap;
 - uses the performance gap after pending-premium deduction;
@@ -25,7 +25,7 @@ This tool provides a deterministic catch-up schedule, but it does not rank indiv
 
 ### Improvement Advice Generation
 
-The existing `GenerateImprovementAdviceTool`:
+`GenerateImprovementAdviceTool`:
 
 - reads performance-attribution results;
 - identifies metrics that are below their peer benchmark;
@@ -33,17 +33,17 @@ The existing `GenerateImprovementAdviceTool`:
 - assigns P0 to the first weakness, P1 to the next two, and P2 to the remaining weaknesses;
 - converts each weakness into template-based improvement advice.
 
-This tool prioritises diagnostic weaknesses by their existing order. It does not calculate a customer-level priority score or solve a constrained optimisation problem.
+This tool prioritises diagnostic weaknesses by their input order. It does not calculate a customer-level priority score or solve a constrained optimisation problem.
 
 ## Current Functional Boundary
 
-The existing planning baseline can answer:
+The template-based planning module can answer:
 
 - how much production is required each week or day;
 - which diagnosed weaknesses should receive attention first;
 - which generic actions correspond to each priority level.
 
-The existing planning baseline cannot yet answer:
+The template-based planning module cannot yet answer:
 
 - which customer or pending policy should be followed up first;
 - how much each candidate contributes to closing the performance gap;
@@ -51,7 +51,7 @@ The existing planning baseline cannot yet answer:
 - which Top-K recommendations best satisfy business constraints;
 - whether the ranking performs better than a simple baseline.
 
-The P0, P1, and P2 labels in the existing prototype are rule and template labels. They must not be presented as the result of a new optimisation algorithm.
+The P0, P1, and P2 labels are rule and template labels. They must not be presented as the result of a new optimisation algorithm.
 
 ## Planned Optimisation Workflow
 
@@ -127,7 +127,7 @@ The final path and schema will be agreed during the API and integration round.
 
 For A0, M4 delivers this module-boundary document only. The following items are intentionally deferred:
 
-- copying the existing planning tools into the new repository;
+- implementing the template-based planning tools;
 - implementing the priority-score model;
 - adding customer-ranking APIs or database models;
 - generating Top-K recommendations;
@@ -136,9 +136,9 @@ For A0, M4 delivers this module-boundary document only. The following items are 
 
 These items will be introduced incrementally in later rounds after the required data, reasoning, and integration foundations are available.
 
-## A2 Chase-Plan Baseline
+## A2 Chase-Plan Validation
 
-The A2-M4 deliverable validates the existing `GenerateChasePlanTool` before the
+The A2-M4 deliverable validates `GenerateChasePlanTool` before the
 coursework optimisation model is introduced. The tool consumes competition and
 performance records supplied by the data layer, applies the authoritative net
 gap from the reasoning layer, and produces:
@@ -148,11 +148,11 @@ gap from the reasoning layer, and produces:
 - configurable P0, P1, and P2 action-template text; and
 - stable messages for covered targets, missing competitions, and data failures.
 
-Baseline unit tests cover HKD gap deduction, weekly target construction,
+A2 unit tests cover HKD gap deduction, weekly target construction,
 automatic selection of the most urgent open competition, a fully covered gap,
 an unknown competition identifier, and a failed competition query.
 
 This milestone does not add candidate scoring, customer or policy ranking,
 Top-K selection, new priority rules, or evaluation metrics. Those remain later
 optimisation deliverables and must be tested separately from this template-based
-planning baseline.
+planning workflow.

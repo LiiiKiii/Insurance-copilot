@@ -1,8 +1,8 @@
 """Agent business-data models.
 
 The tables cover performance metrics, pending policies, attribution snapshots,
-client records, and agent profiles. They replace the legacy raw-SQL data layer
-with database-independent SQLAlchemy models.
+client records, and agent profiles through database-independent SQLAlchemy
+models.
 """
 from __future__ import annotations
 
