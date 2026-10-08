@@ -4,7 +4,7 @@ import { KPIRingCard } from "@/components/KPIRingCard"
 import { AlertBanner } from "@/components/AlertBanner"
 import { useTranslation } from "@/lib/i18n"
 
-const baselineMetrics = [
+const performanceMetrics = [
   {
     label: "Protection Premium",
     current: 3_150_000,
@@ -39,8 +39,8 @@ const baselineMetrics = [
   },
 ]
 
-// A1 baseline page. These static values mirror AGT001 in data/mock/performance.json;
-// API-backed tabs replace the baseline data as integration progresses.
+// A1 dashboard page. These static values represent AGT001 in
+// data/mock/performance.json; API-backed tabs are connected during integration.
 export default function Home() {
   const { t } = useTranslation()
 
@@ -71,14 +71,14 @@ export default function Home() {
                 Performance Overview
               </h2>
               <p className="text-sm text-slate-500 dark:text-slate-400">
-                Static baseline data for AGT001
+                Static performance data for AGT001
               </p>
             </div>
             <span className="text-xs text-slate-400">2026 Q1</span>
           </div>
 
           <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-            {baselineMetrics.map(metric => (
+            {performanceMetrics.map(metric => (
               <KPIRingCard key={metric.label} {...metric} />
             ))}
           </div>

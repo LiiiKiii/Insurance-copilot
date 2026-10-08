@@ -41,7 +41,7 @@ const TOOL_CONFIG: Record<string, ToolConfig> = {
   // Planning Layer
   generate_chase_plan:         { icon: <ClipboardIcon className="w-3 h-3" size={12} />, labelKey: 'tool.label.chasePlan',            layer: 'planning' },
   generate_improvement_advice: { icon: <ClipboardIcon className="w-3 h-3" size={12} />, labelKey: 'tool.label.improvement',          layer: 'planning' },
-  // Legacy / aliases
+  // Tool-name aliases
   get_attribution_data:        { icon: <SearchIcon className="w-3 h-3" size={12} />,    labelKey: 'tool.label.attribution',          layer: 'data' },
   get_team_ranking:            { icon: <BarChartIcon className="w-3 h-3" size={12} />,  labelKey: 'tool.label.ranking',              layer: 'data' },
   performance_query:           { icon: <BarChartIcon className="w-3 h-3" size={12} />,  labelKey: 'tool.label.performanceQuery',     layer: 'data' },
