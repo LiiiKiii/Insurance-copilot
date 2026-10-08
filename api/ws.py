@@ -9,6 +9,8 @@ from uuid import uuid4
 
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect
 
+from api.compliance import apply_compliance
+
 
 router = APIRouter()
 logger = logging.getLogger(__name__)
@@ -153,11 +155,13 @@ async def chat(websocket: WebSocket) -> None:
             )
             continue
 
+        processed_content, _, _ = apply_compliance(content)
+
         try:
             await websocket.send_json(
                 {
                     "type": "response",
-                    "content": content,
+                    "content": processed_content,
                     "session_id": session_id,
                     "turn_id": turn_id,
                 }
