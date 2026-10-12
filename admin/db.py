@@ -1,6 +1,6 @@
 """Database connection and session management for the administrative backend.
 
-The A1 data layer provides asynchronous sessions for future API routes and
+The staged data layer provides asynchronous sessions for API routes and
 synchronous sessions for business tools. SQLite is used by default, while a
 custom ``ADMIN_DATABASE_URL`` can select another SQLAlchemy-supported backend.
 """
@@ -92,7 +92,7 @@ async def get_db():
 
 
 async def init_db() -> None:
-    """Create the A1 business-data tables that are currently available."""
+    """Create all business-data tables available through A3."""
     if _is_sqlite:
         database_path = make_url(DATABASE_URL).database
         if database_path and database_path != ":memory:":
@@ -101,9 +101,12 @@ async def init_db() -> None:
     from admin.models import (  # noqa: F401
         agent_data,
         competition,
+        inbox,
         knowledge,
+        model_config,
         performance_target,
         tenant,
+        user,
     )
 
     async with engine.begin() as connection:
