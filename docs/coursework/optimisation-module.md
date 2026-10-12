@@ -4,15 +4,15 @@
 
 M4 owns the business optimisation and recommendation module. The module will convert verified performance gaps, diagnostic evidence, and eligible customer opportunities into a ranked follow-up list and a practical action plan.
 
-This A0 deliverable defines the boundary between template-based planning and the optimisation work proposed for the coursework. It does not introduce a new optimisation algorithm.
+This A0 deliverable documents the boundary between the existing template-based planning baseline and the optimisation work proposed for the coursework. It does not introduce a new optimisation algorithm.
 
-## Template-Based Planning Scope
+## Existing Template-Based Planning Baseline
 
-The system design includes two template-based planning tools. Their implementation is scheduled for a later development round and is outside the A0 scope.
+The existing prototype contains two template-based planning tools. Their implementation is scheduled for a later development round and is outside the A0 scope.
 
 ### Chase Plan Generation
 
-`GenerateChasePlanTool`:
+The existing `GenerateChasePlanTool`:
 
 - selects a specified competition or the most urgent competition with an open gap;
 - uses the performance gap after pending-premium deduction;
@@ -25,7 +25,7 @@ This tool provides a deterministic catch-up schedule, but it does not rank indiv
 
 ### Improvement Advice Generation
 
-`GenerateImprovementAdviceTool`:
+The existing `GenerateImprovementAdviceTool`:
 
 - reads performance-attribution results;
 - identifies metrics that are below their peer benchmark;
@@ -37,13 +37,13 @@ This tool prioritises diagnostic weaknesses by their input order. It does not ca
 
 ## Current Functional Boundary
 
-The template-based planning module can answer:
+The existing template-based planning baseline can answer:
 
 - how much production is required each week or day;
 - which diagnosed weaknesses should receive attention first;
 - which generic actions correspond to each priority level.
 
-The template-based planning module cannot yet answer:
+The existing template-based planning baseline cannot yet answer:
 
 - which customer or pending policy should be followed up first;
 - how much each candidate contributes to closing the performance gap;
@@ -51,7 +51,7 @@ The template-based planning module cannot yet answer:
 - which Top-K recommendations best satisfy business constraints;
 - whether the ranking performs better than a simple baseline.
 
-The P0, P1, and P2 labels are rule and template labels. They must not be presented as the result of a new optimisation algorithm.
+The P0, P1, and P2 labels in the existing prototype are rule and template labels. They must not be presented as the result of a new optimisation algorithm.
 
 ## Planned Optimisation Workflow
 
@@ -127,7 +127,7 @@ The final path and schema will be agreed during the API and integration round.
 
 For A0, M4 delivers this module-boundary document only. The following items are intentionally deferred:
 
-- implementing the template-based planning tools;
+- introducing the template-based planning tools into the new repository;
 - implementing the priority-score model;
 - adding customer-ranking APIs or database models;
 - generating Top-K recommendations;
