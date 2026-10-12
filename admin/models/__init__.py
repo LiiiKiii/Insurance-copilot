@@ -1,4 +1,4 @@
-"""Business-data models available in the A1 platform foundation."""
+"""Business-data models available through the A3 integration stage."""
 
 from admin.models.agent_data import (
     AgentAttribution,
@@ -9,8 +9,11 @@ from admin.models.agent_data import (
 )
 from admin.models.competition import Competition, CompetitionEntry
 from admin.models.knowledge import Document, DocumentChunk, KnowledgeBase
+from admin.models.inbox import BriefingSettings, DailyBriefing, InboxMessage
+from admin.models.model_config import ModelConfig
 from admin.models.performance_target import PerformanceTarget
 from admin.models.tenant import Tenant
+from admin.models.user import Permission, Role, User
 
 __all__ = [
     "AgentAttribution",
@@ -23,6 +26,13 @@ __all__ = [
     "Document",
     "DocumentChunk",
     "KnowledgeBase",
+    "BriefingSettings",
+    "DailyBriefing",
+    "InboxMessage",
+    "ModelConfig",
     "PerformanceTarget",
     "Tenant",
+    "Permission",
+    "Role",
+    "User",
 ]

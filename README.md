@@ -20,11 +20,11 @@ The system progressively integrates data-driven diagnosis, deterministic busines
 
 Current migration stage:
 
-**A2 — Business Reasoning and Knowledge**
+**A3 — API, Sessions, and System Integration**
 
-A2 adds domain-specific data access, deterministic reasoning, planning modules, and the M3 business knowledge layer on top of the A1 platform and data foundations.
+A3 begins the integration of the independently developed A2 modules through API and runtime boundaries. The M3 contribution in this round exposes daily briefing operations, converts business notifications into English knowledge-guided prompts, and keeps compliance warnings deterministic and separate from LLM output.
 
-The source modules in this stage remain separately testable building blocks. Registration in the agent runtime, application-wide API mounting, frontend integration, and end-to-end answer generation are introduced only when their corresponding integration stages are reached.
+Chat-session orchestration and application-wide server composition are shared integration responsibilities and are not included in this M3 baseline.
 
 ### A0 Deliverables Retained
 
@@ -40,9 +40,9 @@ The source modules in this stage remain separately testable building blocks. Reg
 - SQLAlchemy models for knowledge bases, documents, and document chunks;
 - `SearchKnowledgeBaseTool` for database-backed keyword lookup using SQLite FTS5 with a SQL `LIKE` fallback.
 
-### A2 M3 Deliverables
+### A2 M3 Deliverables Retained
 
-The M3 contribution introduces three specialised file-based knowledge tools:
+The M3 contribution includes three specialised file-based knowledge tools:
 
 | Tool | Source | Purpose |
 | ---- | ------ | ------- |
@@ -52,9 +52,21 @@ The M3 contribution introduces three specialised file-based knowledge tools:
 
 The knowledge layer package also exports the A1 `SearchKnowledgeBaseTool` so the four retrieval tools share one package boundary.
 
+### A3 M3 Deliverables
+
+- `api/routers/briefing.py` with tenant-aware inbox ingestion, daily briefing, acknowledgement, message-state, settings, warmup, and administrative message endpoints;
+- `api/briefing/llm_generator.py` with an English briefing prompt, OpenAI-compatible and Anthropic adapters, structured action-item extraction, and a deterministic fallback;
+- `api/briefing/compliance.py` with rule-based training and practice warnings that remain visible when LLM generation is unavailable;
+- `api/briefing/scheduler.py` with tenant-scoped briefing warmup only;
+- inbox, daily briefing, briefing settings, user, role, permission, and model configuration persistence models;
+- a stage-scoped model configuration bridge for selecting the enabled default LLM;
+- database registration and package metadata required by the new API package.
+
+The completed project's unrelated upload-cleanup job is deliberately excluded from the A3 M3 scheduler. Chat uploads, frontend views, and full application bootstrap remain outside this round.
+
 ## Knowledge Corpus
 
-The A2 corpus consists of the A0 documents plus the following additions:
+The retained corpus consists of the A0 documents plus the following A2 additions:
 
 | Category | Documents |
 | -------- | --------- |
@@ -90,27 +102,45 @@ The upload route uses the knowledge-specific services under `admin/services/pdf/
 
 Uploaded runtime files are stored outside version control. Repository knowledge documents remain version-controlled source assets.
 
+## Daily Briefing API
+
+`api/routers/briefing.py` defines the M3 API boundary for turning structured customer notifications into a prioritised daily briefing.
+
+| Area | Routes |
+| ---- | ------ |
+| Inbox ingestion | `POST /api/briefing/inbox/ingest` |
+| Daily briefing | `GET /api/briefing/today/summary`, `GET /api/briefing/today`, `POST /api/briefing/today/regenerate`, `POST /api/briefing/today/acknowledge` |
+| Message state | `GET /api/briefing/messages/{message_id}`, `POST /api/briefing/messages/{message_id}/read`, `POST /api/briefing/messages/{message_id}/handled` |
+| Tenant administration | Briefing settings, manual warmup, agent listing, and message CRUD under `/api/briefing/admin/` |
+
+The generator groups notifications into P0, P1, and P2 sections. Its English prompt requests a top-three action list, complete notification context, concrete next steps, and a suggested customer-facing script. The parser extracts a short structured action preview from the generated Markdown. If no usable model configuration or API key exists, a deterministic English summary is returned instead.
+
+Compliance checks do not rely on the language model. They read the latest agent performance record and return structured training or practice warnings beside the briefing response.
+
+The scheduler polls tenant briefing settings and can pre-generate eligible agents' briefings at the configured Asia/Shanghai time. It is supplied as an integration module but is not started automatically by this migration round.
+
 ## Integration Status
 
-The A2 M3 source boundary includes the specialised retrieval tools, expanded knowledge corpus, knowledge router, and its PDF ingestion services.
+The A3 M3 source boundary includes the A2 knowledge components plus the briefing router, briefing services, persistence models, model selection bridge, and scheduler.
 
-The following shared prerequisites must be supplied by the platform integration before the router is executable:
+The following shared integration work remains outside this contribution:
 
-- FastAPI application and router mounting;
-- `admin.dependencies` authentication and role dependencies;
-- user and tenant identity models;
-- initialized knowledge tables and database session factories;
-- stage-appropriate package dependencies.
+- mounting the briefing and knowledge routers in the shared FastAPI application;
+- starting and stopping the briefing scheduler from the application lifespan;
+- connecting shared authentication and chat-session context to the briefing routes;
+- registering knowledge tools in the final agent runtime;
+- integrating frontend briefing views and notification channels;
+- evaluating retrieval and citation quality with labelled Recall@K and Precision@K data.
 
-The current minimal AgentLoop does not register or execute the A2 knowledge tools. That registration belongs to the later agent-integration stage.
-
-Tool results contain source filenames or database source metadata. Answer-level citation composition, citation correctness measurement, relevance-labelled evaluation data, and Recall@K/Precision@K evaluation are not yet implemented.
+No full server bootstrap, chat-session implementation, frontend module, or deployment configuration is introduced in this M3 baseline.
 
 ## Development Environment
 
 - Python 3.11+
 - SQLAlchemy 2.x with `aiosqlite`
-- FastAPI for the knowledge management router
+- FastAPI for the knowledge and briefing routers
+- OpenAI-compatible and Anthropic clients for optional briefing generation
+- APScheduler for configurable briefing warmup
 - PyMuPDF for PDF rasterisation
 - RapidOCR ONNX Runtime for OCR
 - `tiktoken` for token-aware chunking
@@ -125,11 +155,14 @@ Environment-specific configuration is managed through environment variables and 
 
 ## Development
 
-The knowledge modules can be validated independently from the final application flow:
+The A3 modules can be validated independently from the final application flow:
 
 - run file-based searches against the version-controlled knowledge corpus;
 - initialize temporary knowledge tables and test database keyword lookup;
 - test PDF rasterisation, OCR adaptation, layout recovery, chunking, processing, and indexing with isolated fixtures;
-- verify tenant and role enforcement when the shared admin dependencies are available.
+- verify tenant and role enforcement when the shared admin dependencies are available;
+- build an English prompt from representative P0, P1, and P2 messages;
+- verify deterministic briefing output with no configured LLM key;
+- exercise briefing storage, acknowledgement, compliance warnings, and warmup scheduling against a temporary database.
 
-Application-wide tool orchestration, answer generation, knowledge management UI, source-citation evaluation, vector retrieval, and end-to-end deployment remain subsequent-stage work.
+Application-wide server composition, chat-session orchestration, frontend integration, source-citation evaluation, vector retrieval, and end-to-end deployment remain subsequent-stage work.
