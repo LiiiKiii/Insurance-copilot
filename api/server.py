@@ -25,6 +25,7 @@ from typing import Any
 from fastapi import FastAPI
 
 from api.routers.config import router as config_router
+from api.routers.planning import router as planning_router
 from api.state import RuntimeState
 from api.ws import router as websocket_router
 
@@ -85,6 +86,7 @@ def create_app(
     application.state.runtime = runtime
     application.state.runtime_factory = factory
     application.include_router(config_router)
+    application.include_router(planning_router)
     application.include_router(websocket_router)
 
     @application.get("/api/health")
