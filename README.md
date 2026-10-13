@@ -22,7 +22,7 @@ Current migration stage:
 
 **A3 — API, Sessions, and System Integration**
 
-A3 begins the integration of the independently developed A2 modules through API and runtime boundaries. The M3 contribution in this round exposes daily briefing operations, converts business notifications into English knowledge-guided prompts, and keeps compliance warnings deterministic and separate from LLM output.
+A3 begins the integration of the independently developed A2 modules through API and runtime boundaries. The M3 contribution exposes daily briefing operations, converts business notifications into English knowledge-guided prompts, and keeps compliance warnings deterministic and separate from LLM output. The M4 contribution exposes the existing template-based planning tools through a focused business API and fixes the interface contract for future candidate prioritisation without implementing the later ranking model.
 
 Chat-session orchestration and application-wide server composition are shared integration responsibilities and are not included in this M3 baseline.
 
@@ -63,6 +63,14 @@ The knowledge layer package also exports the A1 `SearchKnowledgeBaseTool` so the
 - database registration and package metadata required by the new API package.
 
 The completed project's unrelated upload-cleanup job is deliberately excluded from the A3 M3 scheduler. Chat uploads, frontend views, and full application bootstrap remain outside this round.
+
+### A3 M4 Deliverables
+
+- `api/routers/planning.py` exposes the existing chase-plan and improvement-advice tools through validated planning endpoints;
+- the planning router is mounted by the shared FastAPI application without changing either tool's calculations or priority rules;
+- the chase-plan tool now consumes the current competition data-layer contract directly instead of importing the completed prototype's former enrichment module;
+- `docs/coursework/prioritization-interface.md` defines the future candidate input, ranked output, ownership, deterministic tie-breaking, and validation boundary;
+- no customer scoring, Top-K selection, optimisation endpoint, or new ranking algorithm is introduced in A3.
 
 ## Knowledge Corpus
 
