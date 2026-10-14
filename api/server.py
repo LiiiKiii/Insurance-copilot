@@ -25,6 +25,8 @@ from typing import Any
 from fastapi import FastAPI
 
 from admin.routers.auth import router as admin_auth_router
+from admin.routers.config import router as admin_config_router
+from admin.routers.models import router as admin_models_router
 from api.routers.config import router as config_router
 from api.routers.planning import router as planning_router
 from api.state import RuntimeState
@@ -87,6 +89,8 @@ def create_app(
     application.state.runtime = runtime
     application.state.runtime_factory = factory
     application.include_router(admin_auth_router)
+    application.include_router(admin_models_router)
+    application.include_router(admin_config_router)
     application.include_router(config_router)
     application.include_router(planning_router)
     application.include_router(websocket_router)
