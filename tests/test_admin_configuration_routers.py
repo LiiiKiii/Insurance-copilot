@@ -267,10 +267,10 @@ class AdminConfigurationRouterTests(unittest.IsolatedAsyncioTestCase):
         status, body = await self._request("GET", "/api/admin/configs/ui.title", token=self.super_token)
         self.assertEqual((status, body["detail"]["error"]["code"]), (404, "NOT_FOUND"))
 
-    async def test_provider_test_endpoint_is_deferred_and_no_network_is_performed(self) -> None:
+    async def test_model_provider_test_route_keeps_not_found_contract(self) -> None:
         status, body = await self._request("POST", "/api/admin/model-configs/not-real/test", token=self.admin_a_token)
         self.assertEqual(status, 404)
-        self.assertEqual(body["detail"], "Not Found")
+        self.assertEqual(body["detail"]["error"]["code"], "NOT_FOUND")
 
     async def test_failed_commit_rolls_back_without_invalidating_cache(self) -> None:
         observed = {"rolled_back": False}

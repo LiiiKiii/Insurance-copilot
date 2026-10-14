@@ -3,7 +3,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from fastapi import APIRouter, status
+from fastapi import APIRouter, Depends, status
 from pydantic import BaseModel, ConfigDict, Field
 from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
@@ -11,7 +11,13 @@ from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 from admin.dependencies import DB, RoleAdmin, SuperAdmin, _error
 from admin.models.model_config import ModelConfig
 from admin.models.user import User
-from admin.services.crypto_service import EncryptionConfigurationError, encrypt_if_not_empty
+from admin.services.crypto_service import (
+    CredentialDecryptionError,
+    EncryptionConfigurationError,
+    decrypt_if_not_empty,
+    encrypt_if_not_empty,
+)
+from admin.services.provider_test_service import ProviderTestService, get_provider_test_service
 
 
 router = APIRouter(prefix="/api/admin/model-configs", tags=["admin-model-configs"])
@@ -278,3 +284,30 @@ async def toggle_model_active(model_id: str, current_user: RoleAdmin, db: DB) ->
         row.is_default = False
     await _commit(db)
     return {"ok": True, "data": _payload(row)}
+
+
+@router.post("/{model_id}/test")
+async def test_model_provider(
+    model_id: str,
+    current_user: RoleAdmin,
+    db: DB,
+    service: ProviderTestService = Depends(get_provider_test_service),
+) -> dict[str, Any]:
+    """Test a tenant-visible stored credential without changing persistent state."""
+
+    row = await _get_visible(model_id, current_user, db)
+    if not row.api_key_encrypted:
+        return {"ok": False, "message": "No stored API credential is available."}
+    try:
+        api_key = decrypt_if_not_empty(row.api_key_encrypted)
+    except (CredentialDecryptionError, EncryptionConfigurationError):
+        return {"ok": False, "message": "Stored credential cannot be used."}
+    if not api_key:
+        return {"ok": False, "message": "No stored API credential is available."}
+    result = await service.test(
+        provider=row.provider,
+        model=row.model_id,
+        api_key=api_key,
+        base_url=row.base_url,
+    )
+    return {"ok": result.ok, "message": result.message}

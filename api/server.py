@@ -27,6 +27,7 @@ from fastapi import FastAPI
 from admin.routers.auth import router as admin_auth_router
 from admin.routers.config import router as admin_config_router
 from admin.routers.models import router as admin_models_router
+from admin.services.provider_test_service import ProviderTestService
 from api.routers.config import router as config_router
 from api.routers.planning import router as planning_router
 from api.state import RuntimeState
@@ -41,6 +42,7 @@ def create_app(
     runtime: RuntimeState | None = None,
     *,
     runtime_factory: RuntimeFactory | None = None,
+    provider_test_service: ProviderTestService | None = None,
 ) -> FastAPI:
     """Create an application with exactly one lazily-resolved RuntimeState.
 
@@ -52,6 +54,7 @@ def create_app(
         raise ValueError("Provide either runtime or runtime_factory, not both.")
 
     factory = runtime_factory or RuntimeState
+    test_service = provider_test_service or ProviderTestService()
 
     @asynccontextmanager
     async def lifespan(application: FastAPI) -> AsyncIterator[None]:
@@ -73,14 +76,18 @@ def create_app(
                     # A cleanup failure must not disguise the original startup
                     # error, but it remains observable to server operators.
                     logger.exception("RuntimeState cleanup after startup failure failed")
+            await test_service.aclose()
             raise
 
         try:
             yield
         finally:
-            # This runs for normal shutdown and when an exception unwinds the
-            # application lifespan after request handling.
-            await active_runtime.stop()
+            try:
+                # This runs for normal shutdown and when an exception unwinds the
+                # application lifespan after request handling.
+                await active_runtime.stop()
+            finally:
+                await test_service.aclose()
 
     application = FastAPI(
         title="Insurance Performance Intelligence Copilot",
@@ -88,6 +95,7 @@ def create_app(
     )
     application.state.runtime = runtime
     application.state.runtime_factory = factory
+    application.state.provider_test_service = test_service
     application.include_router(admin_auth_router)
     application.include_router(admin_models_router)
     application.include_router(admin_config_router)
