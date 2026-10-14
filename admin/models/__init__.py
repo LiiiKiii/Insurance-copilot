@@ -8,6 +8,7 @@ from admin.models.agent_data import (
     AgentProfile,
 )
 from admin.models.competition import Competition, CompetitionEntry
+from admin.models.config import SystemConfig
 from admin.models.knowledge import Document, DocumentChunk, KnowledgeBase
 from admin.models.inbox import BriefingSettings, DailyBriefing, InboxMessage
 from admin.models.model_config import ModelConfig
@@ -23,6 +24,7 @@ __all__ = [
     "AgentProfile",
     "Competition",
     "CompetitionEntry",
+    "SystemConfig",
     "Document",
     "DocumentChunk",
     "KnowledgeBase",

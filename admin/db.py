@@ -101,6 +101,7 @@ async def init_db() -> None:
     from admin.models import (  # noqa: F401
         agent_data,
         competition,
+        config,
         inbox,
         knowledge,
         model_config,
