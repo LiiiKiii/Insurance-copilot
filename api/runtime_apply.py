@@ -4,6 +4,7 @@ from __future__ import annotations
 import asyncio
 import logging
 from contextlib import asynccontextmanager
+from collections.abc import Awaitable, Callable
 from typing import AsyncIterator
 
 from api.state import RuntimeState
@@ -100,7 +101,14 @@ class RuntimeApplyCoordinator:
         except asyncio.TimeoutError:
             logger.error("Timed out waiting for previous runtime retirement during shutdown")
 
-    async def replace(self, application, candidate: RuntimeState) -> bool:  # type: ignore[no-untyped-def]
+    async def replace(
+        self,
+        application,  # type: ignore[no-untyped-def]
+        candidate: RuntimeState,
+        *,
+        before_publish: Callable[[], Awaitable[None]] | None = None,
+        on_unpublished_failure: Callable[[], Awaitable[None]] | None = None,
+    ) -> bool:
         """Publish a started candidate after draining old direct turns.
 
         Candidate and old runtimes have independent MessageBus instances.  The
@@ -114,6 +122,8 @@ class RuntimeApplyCoordinator:
             gated = False
             try:
                 await candidate.start()
+                if before_publish is not None:
+                    await before_publish()
                 await self._gate_and_drain()
                 gated = True
                 old = application.state.runtime
@@ -127,6 +137,8 @@ class RuntimeApplyCoordinator:
                 return True
             except BaseException:
                 if not published:
+                    if on_unpublished_failure is not None:
+                        await on_unpublished_failure()
                     await candidate.stop()
                 raise
             finally:

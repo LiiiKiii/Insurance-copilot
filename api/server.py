@@ -29,6 +29,7 @@ from admin.routers.config import router as admin_config_router
 from admin.routers.models import router as admin_models_router
 from admin.services.provider_test_service import ProviderTestService
 from api.runtime_apply import RuntimeApplyCoordinator
+from api.feature_models import load_feature_models_from_db
 from api.routers.config import feature_router, router as config_router
 from api.routers.planning import router as planning_router
 from api.state import RuntimeState
@@ -62,6 +63,9 @@ def create_app(
         active_runtime: RuntimeState | None = application.state.runtime
 
         try:
+            # Feature overrides are best-effort configuration and must not
+            # make an otherwise valid runtime unavailable.
+            load_feature_models_from_db()
             if active_runtime is None:
                 active_runtime = application.state.runtime_factory()
                 application.state.runtime = active_runtime

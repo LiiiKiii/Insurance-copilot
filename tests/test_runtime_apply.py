@@ -108,6 +108,85 @@ class RuntimeApplyCoordinatorTests(unittest.IsolatedAsyncioTestCase):
         async with coordinator.turn():
             pass
 
+    async def test_prepublication_persistence_failure_restores_before_candidate_cleanup(self) -> None:
+        coordinator, old, candidate = RuntimeApplyCoordinator(), FakeRuntime(), FakeRuntime()
+        app = SimpleNamespace(state=SimpleNamespace(runtime=old))
+        restored: list[str] = []
+
+        async def persist() -> None:
+            raise RuntimeError("persistence failed")
+
+        async def restore() -> None:
+            restored.append("restored")
+
+        with self.assertRaisesRegex(RuntimeError, "persistence failed"):
+            await coordinator.replace(
+                app, candidate, before_publish=persist, on_unpublished_failure=restore  # type: ignore[arg-type]
+            )
+        self.assertEqual(restored, ["restored"])
+        self.assertIs(app.state.runtime, old)
+        self.assertEqual(candidate.stopped, 1)
+
+    async def test_cancellation_after_persistence_before_publication_restores(self) -> None:
+        coordinator, entered, release = RuntimeApplyCoordinator(), asyncio.Event(), asyncio.Event()
+        old, candidate = FakeRuntime(), FakeRuntime()
+        app = SimpleNamespace(state=SimpleNamespace(runtime=old))
+        events: list[str] = []
+
+        async def active_turn() -> None:
+            async with coordinator.turn():
+                entered.set()
+                await release.wait()
+
+        async def persist() -> None:
+            events.append("persist")
+
+        async def restore() -> None:
+            events.append("restore")
+
+        turn = asyncio.create_task(active_turn())
+        await entered.wait()
+        replacement = asyncio.create_task(
+            coordinator.replace(
+                app, candidate, before_publish=persist, on_unpublished_failure=restore  # type: ignore[arg-type]
+            )
+        )
+        await asyncio.sleep(0)
+        self.assertEqual(events, ["persist"])
+        replacement.cancel()
+        with self.assertRaises(asyncio.CancelledError):
+            await replacement
+        self.assertEqual(events, ["persist", "restore"])
+        self.assertIs(app.state.runtime, old)
+        self.assertEqual(candidate.stopped, 1)
+        release.set()
+        await turn
+
+    async def test_prepublication_callbacks_are_serialized_with_apply(self) -> None:
+        coordinator = RuntimeApplyCoordinator()
+        app = SimpleNamespace(state=SimpleNamespace(runtime=FakeRuntime()))
+        first, second = FakeRuntime(), FakeRuntime()
+        entered, release = asyncio.Event(), asyncio.Event()
+        events: list[str] = []
+
+        async def first_persist() -> None:
+            events.append("first")
+            entered.set()
+            await release.wait()
+
+        async def second_persist() -> None:
+            events.append("second")
+
+        first_apply = asyncio.create_task(coordinator.replace(app, first, before_publish=first_persist))  # type: ignore[arg-type]
+        await entered.wait()
+        second_apply = asyncio.create_task(coordinator.replace(app, second, before_publish=second_persist))  # type: ignore[arg-type]
+        await asyncio.sleep(0)
+        self.assertEqual(events, ["first"])
+        release.set()
+        await asyncio.gather(first_apply, second_apply)
+        self.assertEqual(events, ["first", "second"])
+        self.assertIs(app.state.runtime, second)
+
     async def test_failed_old_retirement_keeps_published_candidate(self) -> None:
         coordinator, old, candidate = RuntimeApplyCoordinator(), FakeRuntime(fail_stop=True), FakeRuntime()
         app = SimpleNamespace(state=SimpleNamespace(runtime=old))
@@ -184,7 +263,9 @@ class RuntimeApplyCoordinatorTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(candidate.started, 0)
 
     def test_feature_slug_catalog_is_explicit(self) -> None:
-        self.assertIn("chat", _FEATURE_SLUGS)
+        self.assertIn("gap_analysis", _FEATURE_SLUGS)
+        self.assertIn("general", _FEATURE_SLUGS)
+        self.assertNotIn("chat", _FEATURE_SLUGS)
         self.assertNotIn("unknown", _FEATURE_SLUGS)
 
 
