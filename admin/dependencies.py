@@ -5,7 +5,7 @@ from __future__ import annotations
 from collections.abc import Callable
 from typing import Annotated
 
-from fastapi import Depends, HTTPException, Security, status
+from fastapi import Depends, HTTPException, Request, Security, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from sqlalchemy import select
 from sqlalchemy.exc import SQLAlchemyError
@@ -104,6 +104,7 @@ async def _load_current_user(user_id: str, db: AsyncSession) -> User:
 
 
 async def get_current_user(
+    request: Request,
     credentials: Annotated[
         HTTPAuthorizationCredentials | None, Security(_bearer_scheme)
     ],
@@ -150,7 +151,10 @@ async def get_current_user(
             "Authentication credentials are invalid.",
             bearer=True,
         )
-    return await _load_current_user(user_id, db)
+    user = await _load_current_user(user_id, db)
+    # Scope state is controlled by the verified auth dependency, never headers.
+    request.state.audit_principal = (user.id, user.tenant_id)
+    return user
 
 
 async def require_admin_auth(current_user: Annotated[User, Depends(get_current_user)]) -> User:

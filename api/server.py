@@ -25,6 +25,8 @@ from typing import Any
 from fastapi import FastAPI
 
 from admin.routers.auth import router as admin_auth_router
+from admin.routers.audit import router as admin_audit_router
+from admin.middleware import AdminAuditMiddleware
 from admin.routers.config import router as admin_config_router
 from admin.routers.models import router as admin_models_router
 from admin.services.provider_test_service import ProviderTestService
@@ -100,11 +102,13 @@ def create_app(
         title="Insurance Performance Intelligence Copilot",
         lifespan=lifespan,
     )
+    application.add_middleware(AdminAuditMiddleware)
     application.state.runtime = runtime
     application.state.runtime_factory = factory
     application.state.provider_test_service = test_service
     application.state.runtime_apply_coordinator = RuntimeApplyCoordinator()
     application.include_router(admin_auth_router)
+    application.include_router(admin_audit_router)
     application.include_router(admin_models_router)
     application.include_router(admin_config_router)
     application.include_router(config_router)
