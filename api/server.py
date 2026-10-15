@@ -28,7 +28,8 @@ from admin.routers.auth import router as admin_auth_router
 from admin.routers.config import router as admin_config_router
 from admin.routers.models import router as admin_models_router
 from admin.services.provider_test_service import ProviderTestService
-from api.routers.config import router as config_router
+from api.runtime_apply import RuntimeApplyCoordinator
+from api.routers.config import feature_router, router as config_router
 from api.routers.planning import router as planning_router
 from api.state import RuntimeState
 from api.ws import router as websocket_router
@@ -83,9 +84,11 @@ def create_app(
             yield
         finally:
             try:
-                # This runs for normal shutdown and when an exception unwinds the
-                # application lifespan after request handling.
-                await active_runtime.stop()
+                # Serialize shutdown with Apply so this always retires the
+                # currently published runtime, not the startup-local instance.
+                await application.state.runtime_apply_coordinator.shutdown(application)
+            except Exception:
+                logger.exception("Runtime cleanup during shutdown failed")
             finally:
                 await test_service.aclose()
 
@@ -96,10 +99,12 @@ def create_app(
     application.state.runtime = runtime
     application.state.runtime_factory = factory
     application.state.provider_test_service = test_service
+    application.state.runtime_apply_coordinator = RuntimeApplyCoordinator()
     application.include_router(admin_auth_router)
     application.include_router(admin_models_router)
     application.include_router(admin_config_router)
     application.include_router(config_router)
+    application.include_router(feature_router)
     application.include_router(planning_router)
     application.include_router(websocket_router)
 

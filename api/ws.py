@@ -122,20 +122,21 @@ async def chat(websocket: WebSocket) -> None:
             continue
 
         connection_session_id = session_id
-        agent_loop = _get_agent_loop(websocket)
-        if agent_loop is None:
-            await websocket.send_json(
-                _error("Agent runtime is unavailable.", turn_id)
-            )
-            continue
-
         try:
-            result = await agent_loop.process_direct(
-                content=message,
-                session_key=session_id,
-                channel="websocket",
-                chat_id=agent_id,
-            )
+            coordinator = getattr(websocket.app.state, "runtime_apply_coordinator", None)
+            if coordinator is None:
+                agent_loop = _get_agent_loop(websocket)
+                if agent_loop is None:
+                    await websocket.send_json(_error("Agent runtime is unavailable.", turn_id))
+                    continue
+                result = await agent_loop.process_direct(content=message, session_key=session_id, channel="websocket", chat_id=agent_id)
+            else:
+                async with coordinator.turn():
+                    agent_loop = _get_agent_loop(websocket)
+                    if agent_loop is None:
+                        await websocket.send_json(_error("Agent runtime is unavailable.", turn_id))
+                        continue
+                    result = await agent_loop.process_direct(content=message, session_key=session_id, channel="websocket", chat_id=agent_id)
         except WebSocketDisconnect:
             return
         except Exception as exc:
