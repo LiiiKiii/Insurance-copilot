@@ -9,7 +9,7 @@ import unittest
 from pathlib import Path
 from types import SimpleNamespace
 from typing import Any
-from unittest.mock import patch
+from unittest.mock import AsyncMock, patch
 
 from api import compliance
 from api.compliance import apply_compliance
@@ -54,6 +54,10 @@ class WebSocketHarness:
         accepted = await self.outgoing.get()
         if accepted["type"] != "websocket.accept":
             raise AssertionError(f"Expected accept, received {accepted!r}")
+        await self.incoming.put({"type": "websocket.receive", "text": json.dumps({"type": "auth", "token": "test-token"})})
+        authenticated = await self.outgoing.get()
+        if authenticated["type"] != "websocket.send" or json.loads(authenticated["text"]) != {"type": "auth_ok"}:
+            raise AssertionError(f"Expected auth_ok, received {authenticated!r}")
 
     async def send_json(self, payload: object) -> dict[str, Any]:
         await self.incoming.put(
@@ -123,13 +127,14 @@ class ComplianceTests(unittest.IsolatedAsyncioTestCase):
 
         runtime = SimpleNamespace(is_running=True, agent_loop=FakeAgentLoop())
         socket = WebSocketHarness(create_app(runtime=runtime))
-        await socket.connect()
-        try:
-            event = await socket.send_json(
-                {"message": "Explain", "agent_id": "AGT001", "turn_id": "turn:1"}
-            )
-        finally:
-            await socket.disconnect()
+        with patch("api.ws._verified_user", new=AsyncMock(return_value=SimpleNamespace(id="user", tenant_id="tenant", username="AGT001"))), patch("api.ws.log_flow_step", new=AsyncMock()), patch("api.ws.log_ai_audit", new=AsyncMock()):
+            await socket.connect()
+            try:
+                event = await socket.send_json(
+                    {"message": "Explain", "agent_id": "AGT001", "turn_id": "turn:1"}
+                )
+            finally:
+                await socket.disconnect()
 
         disclaimer = compliance._load_policy()[1]
         self.assertEqual(event["type"], "response")
@@ -140,13 +145,14 @@ class ComplianceTests(unittest.IsolatedAsyncioTestCase):
     async def test_websocket_error_response_is_unchanged(self) -> None:
         runtime = SimpleNamespace(is_running=False, agent_loop=None)
         socket = WebSocketHarness(create_app(runtime=runtime))
-        await socket.connect()
-        try:
-            event = await socket.send_json(
-                {"message": "Explain", "agent_id": "AGT001", "turn_id": "turn:2"}
-            )
-        finally:
-            await socket.disconnect()
+        with patch("api.ws._verified_user", new=AsyncMock(return_value=SimpleNamespace(id="user", tenant_id="tenant", username="AGT001"))), patch("api.ws.log_flow_step", new=AsyncMock()):
+            await socket.connect()
+            try:
+                event = await socket.send_json(
+                    {"message": "Explain", "agent_id": "AGT001", "turn_id": "turn:2"}
+                )
+            finally:
+                await socket.disconnect()
 
         self.assertEqual(
             event,

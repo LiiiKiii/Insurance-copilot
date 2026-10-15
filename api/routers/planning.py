@@ -15,6 +15,7 @@ from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field
 
 from admin.utils import get_workspace
+from admin.dependencies import CurrentUser
 
 
 router = APIRouter(prefix="/api/planning", tags=["planning"])
@@ -77,8 +78,10 @@ def _decode_tool_result(result: str) -> dict[str, Any]:
 
 
 @router.post("/chase-plan")
-async def generate_chase_plan(request: ChasePlanRequest) -> dict[str, Any]:
+async def generate_chase_plan(request: ChasePlanRequest, current_user: CurrentUser) -> dict[str, Any]:
     """Generate the existing deterministic competition catch-up plan."""
+    if request.agent_id != current_user.username:
+        raise HTTPException(status_code=403, detail="Agent access denied")
     tool = _build_chase_plan_tool(get_workspace())
     result = await tool.execute(
         agent_id=request.agent_id,
@@ -90,8 +93,11 @@ async def generate_chase_plan(request: ChasePlanRequest) -> dict[str, Any]:
 @router.post("/improvement-advice")
 async def generate_improvement_advice(
     request: ImprovementAdviceRequest,
+    current_user: CurrentUser,
 ) -> dict[str, Any]:
     """Generate the existing template-based diagnostic advice."""
+    if request.agent_id != current_user.username:
+        raise HTTPException(status_code=403, detail="Agent access denied")
     tool = _build_improvement_advice_tool(get_workspace())
     result = await tool.execute(
         agent_id=request.agent_id,

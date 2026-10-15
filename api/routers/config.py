@@ -7,7 +7,7 @@ from typing import Any
 
 from fastapi import APIRouter, Depends, Request
 from pydantic import BaseModel, ConfigDict, Field
-from admin.dependencies import DB, RoleAdmin
+from admin.dependencies import DB, RoleAdmin, SuperAdmin
 from admin.services.provider_test_service import ProviderTestService, get_provider_test_service
 from api.feature_models import (
     FEATURE_META,
@@ -84,7 +84,7 @@ async def test_runtime_provider(
 
 @router.post("/apply")
 async def apply_runtime_provider(
-    request: Request, _: RoleAdmin, db: DB, body: ApiConfigRequest | None = None
+    request: Request, _: SuperAdmin, db: DB, body: ApiConfigRequest | None = None
 ) -> dict[str, str | bool]:
     """Persist then publish a validated runtime without plaintext key storage."""
     snapshot: RuntimePersistenceSnapshot | None = None
@@ -146,7 +146,7 @@ async def list_feature_models(_: RoleAdmin) -> dict[str, Any]:
 
 
 @feature_router.post("")
-async def update_feature_model(body: FeatureModelRequest, _: RoleAdmin, db: DB) -> dict[str, Any]:
+async def update_feature_model(body: FeatureModelRequest, _: SuperAdmin, db: DB) -> dict[str, Any]:
     slug = body.slug
     if slug not in _FEATURE_SLUGS:
         return {"ok": False, "error": f"Unknown feature slug: {slug}"}
@@ -160,7 +160,7 @@ async def update_feature_model(body: FeatureModelRequest, _: RoleAdmin, db: DB) 
 
 
 @feature_router.post("/reset")
-async def reset_feature_models(_: RoleAdmin, db: DB) -> dict[str, Any]:
+async def reset_feature_models(_: SuperAdmin, db: DB) -> dict[str, Any]:
     try:
         await reset_all_feature_models(db)
     except Exception:

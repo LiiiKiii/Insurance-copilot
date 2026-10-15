@@ -7,7 +7,7 @@ from typing import Annotated
 
 from fastapi import Depends, HTTPException, Request, Security, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
-from sqlalchemy import select
+from sqlalchemy import func, select
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
@@ -78,6 +78,21 @@ async def _load_current_user(user_id: str, db: AsyncSession) -> User:
                 bearer=True,
             )
 
+        # Login refuses ambiguous usernames. Recheck for already-issued tokens
+        # because business agent IDs are currently keyed by username.
+        matching_names = (
+            await db.execute(
+                select(func.count()).select_from(User).where(User.username == user.username)
+            )
+        ).scalar_one()
+        if matching_names != 1:
+            raise _error(
+                status.HTTP_401_UNAUTHORIZED,
+                "UNAUTHORIZED",
+                "Authentication credentials are invalid.",
+                bearer=True,
+            )
+
         tenant = await db.get(Tenant, user.tenant_id)
     except HTTPException:
         raise
@@ -120,8 +135,16 @@ async def get_current_user(
             bearer=True,
         )
 
+    user = await authenticate_access_token(credentials.credentials, db)
+    # Scope state is controlled by the verified auth dependency, never headers.
+    request.state.audit_principal = (user.id, user.tenant_id)
+    return user
+
+
+async def authenticate_access_token(token: str, db: AsyncSession) -> User:
+    """Resolve a live user for HTTP or WebSocket access-token authentication."""
     try:
-        claims = decode_token(credentials.credentials)
+        claims = decode_token(token)
     except TokenValidationError as exc:
         raise _error(
             status.HTTP_401_UNAUTHORIZED,
@@ -151,10 +174,7 @@ async def get_current_user(
             "Authentication credentials are invalid.",
             bearer=True,
         )
-    user = await _load_current_user(user_id, db)
-    # Scope state is controlled by the verified auth dependency, never headers.
-    request.state.audit_principal = (user.id, user.tenant_id)
-    return user
+    return await _load_current_user(user_id, db)
 
 
 async def require_admin_auth(current_user: Annotated[User, Depends(get_current_user)]) -> User:
