@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import unittest
+from types import SimpleNamespace
 from unittest.mock import patch
 
 try:
@@ -67,7 +68,8 @@ class PlanningApiTests(unittest.IsolatedAsyncioTestCase):
             return_value=tool,
         ):
             result = await generate_chase_plan(
-                ChasePlanRequest(agent_id="AGT001", competition_id="COMP-1")
+                ChasePlanRequest(agent_id="AGT001", competition_id="COMP-1"),
+                SimpleNamespace(username="AGT001"),
             )
 
         self.assertEqual(result["competition_id"], "COMP-1")
@@ -84,7 +86,8 @@ class PlanningApiTests(unittest.IsolatedAsyncioTestCase):
             return_value=tool,
         ):
             result = await generate_improvement_advice(
-                ImprovementAdviceRequest(agent_id="AGT001", top_n=3)
+                ImprovementAdviceRequest(agent_id="AGT001", top_n=3),
+                SimpleNamespace(username="AGT001"),
             )
 
         self.assertEqual(result, {"agent_id": "AGT001", "advice": []})

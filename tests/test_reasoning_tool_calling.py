@@ -10,6 +10,7 @@ import unittest
 from pathlib import Path
 from types import SimpleNamespace
 from typing import Any
+from unittest.mock import AsyncMock, patch
 
 from api.server import create_app
 from nanobot.agent.loop import AgentLoop
@@ -84,6 +85,9 @@ class WebSocketHarness:
         )
         await self.incoming.put({"type": "websocket.connect"})
         self.assertEqual((await self.outgoing.get())["type"], "websocket.accept")
+        await self.incoming.put({"type": "websocket.receive", "text": json.dumps({"type": "auth", "token": "test-token"})})
+        authenticated = await self.outgoing.get()
+        self.assertEqual(json.loads(authenticated["text"]), {"type": "auth_ok"})
 
     async def request(self, payload: dict[str, str]) -> dict[str, str]:
         await self.incoming.put({"type": "websocket.receive", "text": json.dumps(payload)})
@@ -167,13 +171,14 @@ class ReasoningToolCallingTests(unittest.IsolatedAsyncioTestCase):
         provider = self._tool_then_answer_provider()
         runtime = SimpleNamespace(is_running=True, agent_loop=self._loop(provider))
         socket = WebSocketHarness(create_app(runtime=runtime))
-        await socket.connect()
-        try:
-            event = await socket.request(
-                {"message": "Assess my supplied performance", "agent_id": "AGT001"}
-            )
-        finally:
-            await socket.close()
+        with patch("api.ws._verified_user", new=AsyncMock(return_value=SimpleNamespace(id="user", tenant_id="tenant", username="AGT001"))), patch("api.ws.log_flow_step", new=AsyncMock()), patch("api.ws.log_ai_audit", new=AsyncMock()):
+            await socket.connect()
+            try:
+                event = await socket.request(
+                    {"message": "Assess my supplied performance", "agent_id": "AGT001"}
+                )
+            finally:
+                await socket.close()
 
         self.assertEqual(event["type"], "response")
         self.assertEqual(event["content"], "The supplied performance is behind pace.")

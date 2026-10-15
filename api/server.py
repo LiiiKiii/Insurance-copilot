@@ -24,7 +24,15 @@ from typing import Any
 
 from fastapi import FastAPI
 
-from api.routers.config import router as config_router
+from admin.routers.auth import router as admin_auth_router
+from admin.routers.audit import router as admin_audit_router
+from admin.middleware import AdminAuditMiddleware
+from admin.routers.config import router as admin_config_router
+from admin.routers.models import router as admin_models_router
+from admin.services.provider_test_service import ProviderTestService
+from api.runtime_apply import RuntimeApplyCoordinator
+from api.feature_models import load_feature_models_from_db
+from api.routers.config import feature_router, router as config_router
 from api.routers.planning import router as planning_router
 from api.state import RuntimeState
 from api.ws import router as websocket_router
@@ -38,6 +46,7 @@ def create_app(
     runtime: RuntimeState | None = None,
     *,
     runtime_factory: RuntimeFactory | None = None,
+    provider_test_service: ProviderTestService | None = None,
 ) -> FastAPI:
     """Create an application with exactly one lazily-resolved RuntimeState.
 
@@ -49,12 +58,16 @@ def create_app(
         raise ValueError("Provide either runtime or runtime_factory, not both.")
 
     factory = runtime_factory or RuntimeState
+    test_service = provider_test_service or ProviderTestService()
 
     @asynccontextmanager
     async def lifespan(application: FastAPI) -> AsyncIterator[None]:
         active_runtime: RuntimeState | None = application.state.runtime
 
         try:
+            # Feature overrides are best-effort configuration and must not
+            # make an otherwise valid runtime unavailable.
+            load_feature_models_from_db()
             if active_runtime is None:
                 active_runtime = application.state.runtime_factory()
                 application.state.runtime = active_runtime
@@ -70,22 +83,36 @@ def create_app(
                     # A cleanup failure must not disguise the original startup
                     # error, but it remains observable to server operators.
                     logger.exception("RuntimeState cleanup after startup failure failed")
+            await test_service.aclose()
             raise
 
         try:
             yield
         finally:
-            # This runs for normal shutdown and when an exception unwinds the
-            # application lifespan after request handling.
-            await active_runtime.stop()
+            try:
+                # Serialize shutdown with Apply so this always retires the
+                # currently published runtime, not the startup-local instance.
+                await application.state.runtime_apply_coordinator.shutdown(application)
+            except Exception:
+                logger.exception("Runtime cleanup during shutdown failed")
+            finally:
+                await test_service.aclose()
 
     application = FastAPI(
         title="Insurance Performance Intelligence Copilot",
         lifespan=lifespan,
     )
+    application.add_middleware(AdminAuditMiddleware)
     application.state.runtime = runtime
     application.state.runtime_factory = factory
+    application.state.provider_test_service = test_service
+    application.state.runtime_apply_coordinator = RuntimeApplyCoordinator()
+    application.include_router(admin_auth_router)
+    application.include_router(admin_audit_router)
+    application.include_router(admin_models_router)
+    application.include_router(admin_config_router)
     application.include_router(config_router)
+    application.include_router(feature_router)
     application.include_router(planning_router)
     application.include_router(websocket_router)
 
