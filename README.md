@@ -16,6 +16,8 @@ Current migration stage:
 
 A4 adds the smallest usable administration path for the M3 knowledge subsystem. Administrators can authenticate, manage tenant-scoped knowledge bases, upload PDF documents for OCR and indexing, inspect generated chunks, and import project-local text documents through English administration tools.
 
+The stage also retains the A3 integration delivered by the other workstreams: M3 daily briefing and compliance services, plus M4 planning endpoints and the interface contract for later candidate prioritisation.
+
 Unrelated administration areas such as user management, tenant management, model configuration, audit dashboards, usage analytics, channels, and general database tools are intentionally excluded from this stage.
 
 ### A0 Deliverables Retained
@@ -44,11 +46,23 @@ The file-based tools use deterministic English keyword and section matching. The
 
 ### A3 M3 Deliverables Retained
 
-- daily briefing ingestion, generation, acknowledgement, and message-state routes;
-- English LLM prompts with a deterministic fallback;
-- rule-based compliance warnings kept separate from model output;
-- tenant-scoped briefing warmup scheduling;
-- inbox, briefing, user, role, permission, and model-configuration persistence models.
+- `api/routers/briefing.py` with tenant-aware inbox ingestion, daily briefing, acknowledgement, message-state, settings, warmup, and administrative message endpoints;
+- `api/briefing/llm_generator.py` with an English briefing prompt, OpenAI-compatible and Anthropic adapters, structured action-item extraction, and a deterministic fallback;
+- `api/briefing/compliance.py` with rule-based training and practice warnings that remain visible when LLM generation is unavailable;
+- `api/briefing/scheduler.py` with tenant-scoped briefing warmup only;
+- inbox, daily briefing, briefing settings, user, role, permission, and model-configuration persistence models;
+- a stage-scoped model-configuration bridge for selecting the enabled default LLM;
+- database registration and package metadata required by the API package.
+
+The completed project's unrelated upload-cleanup job remains outside the A3 M3 scheduler.
+
+### A3 M4 Deliverables Retained
+
+- `api/routers/planning.py` exposes the existing chase-plan and improvement-advice tools through validated planning endpoints;
+- the planning router is mounted by the shared FastAPI application without changing either tool's calculations or priority rules;
+- the chase-plan tool consumes the current competition data-layer contract directly instead of importing the completed prototype's former enrichment module;
+- `docs/coursework/prioritization-interface.md` defines the future candidate input, ranked output, ownership, deterministic tie-breaking, and validation boundary;
+- no customer scoring, Top-K selection, optimisation endpoint, or new ranking algorithm is introduced in A3.
 
 ### A4 M3 Deliverables
 
@@ -131,7 +145,7 @@ python -m pip install -e .
 Configure A4 authentication in `.env` before starting the server or creating the first administrator:
 
 ```text
-ADMIN_SECRET_KEY=<long-random-signing-secret>
+ADMIN_SECRET_KEY=<random-signing-secret-of-at-least-32-bytes>
 ADMIN_DEFAULT_PASSWORD=<initial-admin-password>
 ```
 
