@@ -24,19 +24,23 @@ from typing import Any
 
 from fastapi import FastAPI
 
-from admin.routers.auth import router as admin_auth_router
-from admin.routers.audit import router as admin_audit_router
 from admin.middleware import AdminAuditMiddleware
+from admin.routers.assessments import router as admin_assessments_router
+from admin.routers.audit import router as admin_audit_router
+from admin.routers.auth import router as admin_auth_router
+from admin.routers.competitions import router as admin_competitions_router
 from admin.routers.config import router as admin_config_router
 from admin.routers.models import router as admin_models_router
+from admin.routers.targets import router as admin_targets_router
+from admin.routers.users import router as admin_users_router
 from admin.services.provider_test_service import ProviderTestService
-from api.runtime_apply import RuntimeApplyCoordinator
 from api.feature_models import load_feature_models_from_db
-from api.routers.config import feature_router, router as config_router
+from api.routers.config import feature_router
+from api.routers.config import router as config_router
 from api.routers.planning import router as planning_router
+from api.runtime_apply import RuntimeApplyCoordinator
 from api.state import RuntimeState
 from api.ws import router as websocket_router
-
 
 RuntimeFactory = Callable[[], RuntimeState]
 logger = logging.getLogger(__name__)
@@ -108,9 +112,13 @@ def create_app(
     application.state.provider_test_service = test_service
     application.state.runtime_apply_coordinator = RuntimeApplyCoordinator()
     application.include_router(admin_auth_router)
+    application.include_router(admin_users_router)
     application.include_router(admin_audit_router)
     application.include_router(admin_models_router)
     application.include_router(admin_config_router)
+    application.include_router(admin_targets_router)
+    application.include_router(admin_competitions_router)
+    application.include_router(admin_assessments_router)
     application.include_router(config_router)
     application.include_router(feature_router)
     application.include_router(planning_router)
