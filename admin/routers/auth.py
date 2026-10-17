@@ -1,11 +1,11 @@
-"""Administrative authentication endpoints."""
+"""Administrative authentication endpoints for the A4 admin console."""
 
 from __future__ import annotations
 
-from datetime import datetime, timezone
 from typing import Any
 
 from fastapi import APIRouter, status
+from jose import JWTError
 from pydantic import BaseModel, Field
 from sqlalchemy import select
 from sqlalchemy.exc import SQLAlchemyError
@@ -18,20 +18,33 @@ from admin.dependencies import (
     _error,
     _load_current_user,
     has_admin_access,
+    is_admin_role,
 )
 from admin.models.tenant import Tenant
 from admin.models.user import User
 from admin.services.auth_service import (
-    AuthenticationConfigurationError,
-    TokenValidationError,
     create_access_token,
     create_refresh_token,
     decode_token,
     verify_password,
 )
+from admin.utils import now_beijing
+
+try:
+    from admin.services.auth_service import (
+        AuthenticationConfigurationError as _AuthenticationConfigurationError,
+        TokenValidationError as _TokenValidationError,
+    )
+except ImportError:
+    # The staged A4 service exposes the underlying exception types. These
+    # aliases also support the hardened integration-branch implementation.
+    _AuthenticationConfigurationError = RuntimeError
+    _TokenValidationError = JWTError
 
 
-router = APIRouter(prefix="/api/admin/auth", tags=["admin-auth"])
+# The parent registry supplies /api/admin/auth. Keeping this router unprefixed
+# prevents duplicate paths when it is included by the stage-scoped registry.
+router = APIRouter()
 
 
 class LoginRequest(BaseModel):
@@ -43,7 +56,8 @@ class RefreshRequest(BaseModel):
     refresh_token: str = Field(min_length=1)
 
 
-def _user_payload(user: User) -> dict[str, Any]:
+def _user_schema(user: User) -> dict[str, Any]:
+    """Return the stable user contract consumed by the A4 frontend."""
     roles = sorted(
         {
             role.name
@@ -58,15 +72,14 @@ def _user_payload(user: User) -> dict[str, Any]:
         "display_name": user.display_name,
         "tenant_id": user.tenant_id,
         "is_superadmin": bool(user.is_superadmin),
-        "is_admin": has_admin_access(user),
-        "tier": user.tier,
+        "is_admin": is_admin_role(user),
+        "tier": user.tier or "agent",
         "roles": roles,
     }
 
 
 async def _login_user(username: str, db: DB) -> User:
-    """Resolve one username without selecting arbitrarily among duplicates."""
-
+    """Resolve exactly one username without selecting among duplicates."""
     try:
         result = await db.execute(
             select(User)
@@ -91,6 +104,7 @@ async def _login_user(username: str, db: DB) -> User:
 
 
 async def _validate_login_account(user: User, db: DB) -> None:
+    """Check live account, tenant, and administrative-access state."""
     try:
         tenant = await db.get(Tenant, user.tenant_id)
     except SQLAlchemyError as exc:
@@ -120,11 +134,23 @@ async def _validate_login_account(user: User, db: DB) -> None:
         )
 
 
-def _create_tokens(user: User) -> tuple[str, str]:
+def _create_login_tokens(user: User) -> tuple[str, str]:
+    """Create an access/refresh pair without embedding mutable role claims."""
     try:
         payload = {"sub": user.id}
         return create_access_token(payload), create_refresh_token(payload)
-    except AuthenticationConfigurationError as exc:
+    except _AuthenticationConfigurationError as exc:
+        raise _error(
+            status.HTTP_503_SERVICE_UNAVAILABLE,
+            "AUTH_SERVICE_UNAVAILABLE",
+            "Authentication service is unavailable.",
+        ) from exc
+
+
+def _create_refreshed_access_token(user: User) -> str:
+    try:
+        return create_access_token({"sub": user.id})
+    except _AuthenticationConfigurationError as exc:
         raise _error(
             status.HTTP_503_SERVICE_UNAVAILABLE,
             "AUTH_SERVICE_UNAVAILABLE",
@@ -133,15 +159,14 @@ def _create_tokens(user: User) -> tuple[str, str]:
 
 
 async def _commit_login(user: User, db: DB) -> None:
-    user.last_login_at = datetime.now(timezone.utc)
+    user.last_login_at = now_beijing()
     try:
         await db.commit()
     except SQLAlchemyError as exc:
         try:
             await db.rollback()
         except Exception:
-            # The commit failure remains the client-safe outcome even if the
-            # connection is no longer usable enough to roll the session back.
+            # Preserve the client-safe commit error when rollback is impossible.
             pass
         raise _error(
             status.HTTP_503_SERVICE_UNAVAILABLE,
@@ -153,14 +178,23 @@ async def _commit_login(user: User, db: DB) -> None:
 @router.post("/login")
 async def login(body: LoginRequest, db: DB) -> dict[str, Any]:
     user = await _login_user(body.username, db)
-    if not await run_in_threadpool(verify_password, body.password, user.password_hash):
+    try:
+        password_matches = await run_in_threadpool(
+            verify_password,
+            body.password,
+            user.password_hash,
+        )
+    except (TypeError, ValueError):
+        password_matches = False
+    if not password_matches:
         raise _error(
             status.HTTP_401_UNAUTHORIZED,
             "INVALID_CREDENTIALS",
             "Invalid username or password.",
         )
+
     await _validate_login_account(user, db)
-    access_token, refresh_token = _create_tokens(user)
+    access_token, refresh_token = _create_login_tokens(user)
     await _commit_login(user, db)
     return {
         "ok": True,
@@ -168,7 +202,7 @@ async def login(body: LoginRequest, db: DB) -> dict[str, Any]:
             "access_token": access_token,
             "refresh_token": refresh_token,
             "token_type": "bearer",
-            "user": _user_payload(user),
+            "user": _user_schema(user),
         },
     }
 
@@ -177,17 +211,17 @@ async def login(body: LoginRequest, db: DB) -> dict[str, Any]:
 async def refresh(body: RefreshRequest, db: DB) -> dict[str, Any]:
     try:
         claims = decode_token(body.refresh_token)
-    except TokenValidationError as exc:
-        raise _error(
-            status.HTTP_401_UNAUTHORIZED,
-            "INVALID_TOKEN",
-            "Authentication credentials are invalid.",
-        ) from exc
-    except AuthenticationConfigurationError as exc:
+    except _AuthenticationConfigurationError as exc:
         raise _error(
             status.HTTP_503_SERVICE_UNAVAILABLE,
             "AUTH_SERVICE_UNAVAILABLE",
             "Authentication service is unavailable.",
+        ) from exc
+    except (_TokenValidationError, JWTError, ValueError) as exc:
+        raise _error(
+            status.HTTP_401_UNAUTHORIZED,
+            "INVALID_TOKEN",
+            "Authentication credentials are invalid.",
         ) from exc
 
     user_id = claims.get("sub")
@@ -205,24 +239,22 @@ async def refresh(body: RefreshRequest, db: DB) -> dict[str, Any]:
             "NO_ADMIN_ACCESS",
             "Administrative access is required.",
         )
-    try:
-        access_token = create_access_token({"sub": user.id})
-    except AuthenticationConfigurationError as exc:
-        raise _error(
-            status.HTTP_503_SERVICE_UNAVAILABLE,
-            "AUTH_SERVICE_UNAVAILABLE",
-            "Authentication service is unavailable.",
-        ) from exc
-    return {"ok": True, "data": {"access_token": access_token, "token_type": "bearer"}}
+
+    return {
+        "ok": True,
+        "data": {
+            "access_token": _create_refreshed_access_token(user),
+            "token_type": "bearer",
+        },
+    }
 
 
 @router.post("/logout")
 async def logout(_: CurrentUser) -> dict[str, Any]:
-    """Acknowledge client logout; stateless JWTs remain valid until expiry."""
-
+    """Acknowledge logout; stateless tokens remain valid until expiry."""
     return {"ok": True, "data": {"message": "Logged out"}}
 
 
 @router.get("/me")
 async def me(current_user: CurrentUser) -> dict[str, Any]:
-    return {"ok": True, "data": _user_payload(current_user)}
+    return {"ok": True, "data": _user_schema(current_user)}

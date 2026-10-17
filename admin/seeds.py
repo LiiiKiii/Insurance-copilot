@@ -1,14 +1,16 @@
-"""Idempotent seed data for the A3 business database."""
+"""Idempotent seed data for the A4 business and administration database."""
 
 from __future__ import annotations
 
 import asyncio
 import json
+import os
+import uuid
 from datetime import date
 from pathlib import Path
 from typing import Any
 
-from sqlalchemy import select
+from sqlalchemy import insert, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from admin.db import AsyncSessionFactory, close_db, init_db
@@ -21,11 +23,23 @@ from admin.models.agent_data import (
 from admin.models.competition import Competition, CompetitionEntry
 from admin.models.performance_target import PerformanceTarget
 from admin.models.tenant import Tenant
+from admin.models.user import Permission, Role, User, role_permissions, user_roles
+from admin.services.auth_service import hash_password
 
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_MOCK_DIR = PROJECT_ROOT / "data" / "mock"
 DEFAULT_TENANT_ID = "00000000-0000-0000-0000-000000000001"
+
+
+def _require_env(name: str) -> str:
+    """Read a required seed secret without supplying an insecure default."""
+    value = os.environ.get(name)
+    if not value:
+        raise RuntimeError(
+            f"{name} must be set before the initial admin account can be created."
+        )
+    return value
 
 
 def _read_json(mock_dir: Path, filename: str) -> Any:
@@ -148,6 +162,114 @@ async def _seed_tenant(session: AsyncSession) -> int:
         },
     )
     return 1
+
+
+async def _seed_admin_access(
+    session: AsyncSession,
+    tenant_id: str,
+) -> tuple[int, int, int]:
+    """Create the A4 knowledge-management permissions, roles, and first admin."""
+    permission_defs = {
+        "read": "View knowledge bases and imported documents",
+        "write": "Create knowledge bases and import documents",
+        "delete": "Delete knowledge bases and documents",
+    }
+    permissions: dict[str, Permission] = {}
+    for action, description in permission_defs.items():
+        permission = await session.scalar(
+            select(Permission).where(
+                Permission.resource == "knowledge_bases",
+                Permission.action == action,
+            )
+        )
+        if permission is None:
+            permission = Permission(
+                id=str(uuid.uuid4()),
+                resource="knowledge_bases",
+                action=action,
+                description=description,
+            )
+            session.add(permission)
+            await session.flush()
+        permissions[action] = permission
+
+    role_defs = {
+        "super_admin": ("Full A4 administration access", tuple(permissions)),
+        "admin": ("Knowledge-base administration", tuple(permissions)),
+        "agent_manager": ("Knowledge-base editing", ("read", "write")),
+        "readonly": ("Read-only knowledge access", ("read",)),
+    }
+    roles: dict[str, Role] = {}
+    for name, (description, actions) in role_defs.items():
+        role = await session.scalar(
+            select(Role).where(Role.tenant_id == tenant_id, Role.name == name)
+        )
+        if role is None:
+            role = Role(
+                id=str(uuid.uuid4()),
+                tenant_id=tenant_id,
+                name=name,
+                description=description,
+                is_system=True,
+            )
+            session.add(role)
+            await session.flush()
+        roles[name] = role
+
+        for action in actions:
+            permission = permissions[action]
+            link = (
+                await session.execute(
+                    select(role_permissions).where(
+                        role_permissions.c.role_id == role.id,
+                        role_permissions.c.permission_id == permission.id,
+                    )
+                )
+            ).first()
+            if link is None:
+                await session.execute(
+                    insert(role_permissions).values(
+                        role_id=role.id,
+                        permission_id=permission.id,
+                    )
+                )
+
+    admin = await session.scalar(
+        select(User).where(User.tenant_id == tenant_id, User.username == "admin")
+    )
+    if admin is None:
+        admin = User(
+            id=str(uuid.uuid4()),
+            tenant_id=tenant_id,
+            username="admin",
+            email="admin@insurance-copilot.local",
+            password_hash=hash_password(_require_env("ADMIN_DEFAULT_PASSWORD")),
+            display_name="System Administrator",
+            is_superadmin=True,
+            is_active=True,
+            tier="director",
+        )
+        session.add(admin)
+        await session.flush()
+
+    super_admin_role = roles["super_admin"]
+    user_role_link = (
+        await session.execute(
+            select(user_roles).where(
+                user_roles.c.user_id == admin.id,
+                user_roles.c.role_id == super_admin_role.id,
+            )
+        )
+    ).first()
+    if user_role_link is None:
+        await session.execute(
+            insert(user_roles).values(
+                user_id=admin.id,
+                role_id=super_admin_role.id,
+            )
+        )
+
+    return len(permissions), len(roles), 1
 
 
 async def _seed_profiles(session: AsyncSession, agents: list[dict[str, Any]]) -> int:
@@ -327,7 +449,7 @@ async def _seed_competitions(
 
 
 async def seed(mock_dir: Path = DEFAULT_MOCK_DIR) -> dict[str, int]:
-    """Create or update the A3 business seed records."""
+    """Create or update the A4 business and admin seed records."""
     agents = _read_json(mock_dir, "agents.json")
     performance = _read_json(mock_dir, "performance.json")
     policies = _read_json(mock_dir, "policies.json")
@@ -338,6 +460,13 @@ async def seed(mock_dir: Path = DEFAULT_MOCK_DIR) -> dict[str, int]:
     async with AsyncSessionFactory() as session:
         try:
             tenant_count = await _seed_tenant(session)
+            tenant = await session.scalar(select(Tenant).where(Tenant.slug == "default"))
+            if tenant is None:
+                raise RuntimeError("Default tenant was not created")
+            permission_count, role_count, admin_count = await _seed_admin_access(
+                session,
+                tenant.id,
+            )
             profile_count = await _seed_profiles(session, agents)
             performance_count, target_count = await _seed_performance(session, performance)
             policy_count = await _seed_policies(
@@ -353,6 +482,9 @@ async def seed(mock_dir: Path = DEFAULT_MOCK_DIR) -> dict[str, int]:
 
     return {
         "tenants": tenant_count,
+        "knowledge_permissions": permission_count,
+        "admin_roles": role_count,
+        "admin_users": admin_count,
         "agent_profiles": profile_count,
         "performance_rows": performance_count,
         "performance_targets": target_count,

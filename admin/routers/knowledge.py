@@ -5,11 +5,12 @@ import asyncio
 import logging
 import os
 import uuid
+from pathlib import Path
 
 from fastapi import APIRouter, File, HTTPException, Query, UploadFile
 from starlette.concurrency import run_in_threadpool
 from pydantic import BaseModel
-from sqlalchemy import delete, func, select
+from sqlalchemy import delete, func, select, text
 
 from admin.dependencies import DB, RoleAdmin, RoleManager, RoleAny
 from admin.models.knowledge import Document, DocumentChunk, KnowledgeBase
@@ -17,14 +18,15 @@ from admin.services.pdf import get_document_processor
 
 router = APIRouter()
 logger = logging.getLogger(__name__)
+MAX_UPLOAD_BYTES = 20 * 1024 * 1024
 
 
 async def _run_document_processor(doc_id: str) -> None:
     """Fire-and-forget wrapper so processing detaches from the request lifecycle.
 
-    `process_document` 本身是 async（内部使用 async DB session），必须 await；
-    但首次构造 DocumentProcessor 会同步加载 RapidOCR ONNX 模型，CPU 密集，
-    所以把构造放线程池，避免阻塞事件循环导致 upload 响应卡住。
+    ``process_document`` owns an asynchronous database session and must be
+    awaited. Constructing the processor may load the RapidOCR ONNX model, so
+    that CPU-heavy first-time setup runs in a worker thread.
     """
     try:
         processor = await run_in_threadpool(get_document_processor)
@@ -58,6 +60,34 @@ def _kb_dict(kb: KnowledgeBase) -> dict:
         "status": kb.status, "document_count": kb.document_count, "chunk_count": kb.chunk_count,
         "created_at": kb.created_at.isoformat() if kb.created_at else None,
     }
+
+
+async def _authorise_kb(kb_id: str, current_user, db) -> KnowledgeBase:
+    """Load a knowledge base and enforce tenant isolation."""
+    result = await db.execute(select(KnowledgeBase).where(KnowledgeBase.id == kb_id))
+    kb = result.scalar_one_or_none()
+    if not kb:
+        raise HTTPException(
+            404,
+            detail={"ok": False, "error": {"code": "NOT_FOUND", "message": "Knowledge base not found"}},
+        )
+    if not current_user.is_superadmin and kb.tenant_id != current_user.tenant_id:
+        raise HTTPException(
+            403,
+            detail={"ok": False, "error": {"code": "FORBIDDEN", "message": "Access denied"}},
+        )
+    return kb
+
+
+async def _delete_fts_rows(db, document_ids: list[str]) -> None:
+    """Remove SQLite FTS rows before their chunk rowids can be reused."""
+    if db.get_bind().dialect.name != "sqlite":
+        return
+    for document_id in document_ids:
+        await db.execute(
+            text("DELETE FROM knowledge_fts WHERE doc_id = :document_id"),
+            {"document_id": document_id},
+        )
 
 
 @router.get("/")
@@ -95,23 +125,13 @@ async def create_kb(body: KBRequest, current_user: RoleManager, db: DB):
 
 @router.get("/{kb_id}")
 async def get_kb(kb_id: str, current_user: RoleAny, db: DB):
-    result = await db.execute(select(KnowledgeBase).where(KnowledgeBase.id == kb_id))
-    kb = result.scalar_one_or_none()
-    if not kb:
-        raise HTTPException(404, detail={"ok": False, "error": {"code": "NOT_FOUND", "message": "Knowledge base not found"}})
-    if not current_user.is_superadmin and kb.tenant_id != current_user.tenant_id:
-        raise HTTPException(403, detail={"ok": False, "error": {"code": "FORBIDDEN", "message": "Access denied"}})
+    kb = await _authorise_kb(kb_id, current_user, db)
     return {"ok": True, "data": _kb_dict(kb)}
 
 
 @router.put("/{kb_id}")
 async def update_kb(kb_id: str, body: KBRequest, current_user: RoleManager, db: DB):
-    result = await db.execute(select(KnowledgeBase).where(KnowledgeBase.id == kb_id))
-    kb = result.scalar_one_or_none()
-    if not kb:
-        raise HTTPException(404, detail={"ok": False, "error": {"code": "NOT_FOUND", "message": "Knowledge base not found"}})
-    if not current_user.is_superadmin and kb.tenant_id != current_user.tenant_id:
-        raise HTTPException(403, detail={"ok": False, "error": {"code": "FORBIDDEN", "message": "Access denied"}})
+    kb = await _authorise_kb(kb_id, current_user, db)
     for k, v in body.model_dump().items():
         setattr(kb, k, v)
     await db.commit()
@@ -120,12 +140,13 @@ async def update_kb(kb_id: str, body: KBRequest, current_user: RoleManager, db: 
 
 @router.delete("/{kb_id}")
 async def delete_kb(kb_id: str, current_user: RoleAdmin, db: DB):
-    result = await db.execute(select(KnowledgeBase).where(KnowledgeBase.id == kb_id))
-    kb = result.scalar_one_or_none()
-    if not kb:
-        raise HTTPException(404, detail={"ok": False, "error": {"code": "NOT_FOUND", "message": "Knowledge base not found"}})
-    if not current_user.is_superadmin and kb.tenant_id != current_user.tenant_id:
-        raise HTTPException(403, detail={"ok": False, "error": {"code": "FORBIDDEN", "message": "Access denied"}})
+    kb = await _authorise_kb(kb_id, current_user, db)
+    document_ids = list((await db.execute(
+        select(Document.id).where(Document.knowledge_base_id == kb_id)
+    )).scalars().all())
+    await _delete_fts_rows(db, document_ids)
+    await db.execute(delete(DocumentChunk).where(DocumentChunk.knowledge_base_id == kb_id))
+    await db.execute(delete(Document).where(Document.knowledge_base_id == kb_id))
     await db.delete(kb)
     await db.commit()
     return {"ok": True, "data": {"message": "Knowledge base deleted"}}
@@ -134,6 +155,7 @@ async def delete_kb(kb_id: str, current_user: RoleAdmin, db: DB):
 @router.get("/{kb_id}/documents")
 async def list_documents(kb_id: str, current_user: RoleAny, db: DB,
                          page: int = Query(1, ge=1), page_size: int = Query(20, ge=1, le=100)):
+    await _authorise_kb(kb_id, current_user, db)
     q = select(Document).where(Document.knowledge_base_id == kb_id)
     total = (await db.execute(select(func.count()).select_from(q.subquery()))).scalar()
     result = await db.execute(q.offset((page - 1) * page_size).limit(page_size))
@@ -150,10 +172,7 @@ async def list_documents(kb_id: str, current_user: RoleAny, db: DB,
 
 @router.post("/{kb_id}/documents")
 async def add_document(kb_id: str, body: DocumentRequest, current_user: RoleManager, db: DB):
-    result = await db.execute(select(KnowledgeBase).where(KnowledgeBase.id == kb_id))
-    kb = result.scalar_one_or_none()
-    if not kb:
-        raise HTTPException(404, detail={"ok": False, "error": {"code": "NOT_FOUND", "message": "Knowledge base not found"}})
+    kb = await _authorise_kb(kb_id, current_user, db)
     doc = Document(
         knowledge_base_id=kb_id,
         tenant_id=current_user.tenant_id,
@@ -170,16 +189,15 @@ async def add_document(kb_id: str, body: DocumentRequest, current_user: RoleMana
 
 @router.delete("/{kb_id}/documents/{doc_id}")
 async def delete_document(kb_id: str, doc_id: str, current_user: RoleAdmin, db: DB):
+    kb = await _authorise_kb(kb_id, current_user, db)
     result = await db.execute(select(Document).where(Document.id == doc_id, Document.knowledge_base_id == kb_id))
     doc = result.scalar_one_or_none()
     if not doc:
         raise HTTPException(404, detail={"ok": False, "error": {"code": "NOT_FOUND", "message": "Document not found"}})
-    # Update KB count
-    result2 = await db.execute(select(KnowledgeBase).where(KnowledgeBase.id == kb_id))
-    kb = result2.scalar_one_or_none()
-    if kb:
-        kb.document_count = max((kb.document_count or 1) - 1, 0)
-    # 先删除关联的 chunks，避免外键约束冲突
+    kb.document_count = max((kb.document_count or 1) - 1, 0)
+    kb.chunk_count = max((kb.chunk_count or 0) - (doc.chunk_count or 0), 0)
+    await _delete_fts_rows(db, [doc_id])
+    # Remove child chunks before deleting the document row.
     await db.execute(delete(DocumentChunk).where(DocumentChunk.document_id == doc_id))
     await db.delete(doc)
     await db.commit()
@@ -189,7 +207,11 @@ async def delete_document(kb_id: str, doc_id: str, current_user: RoleAdmin, db: 
 @router.get("/{kb_id}/documents/{doc_id}/chunks")
 async def list_chunks(kb_id: str, doc_id: str, current_user: RoleAny, db: DB,
                       page: int = Query(1, ge=1), page_size: int = Query(20, ge=1, le=50)):
-    q = select(DocumentChunk).where(DocumentChunk.document_id == doc_id).order_by(DocumentChunk.chunk_index)
+    await _authorise_kb(kb_id, current_user, db)
+    q = select(DocumentChunk).where(
+        DocumentChunk.document_id == doc_id,
+        DocumentChunk.knowledge_base_id == kb_id,
+    ).order_by(DocumentChunk.chunk_index)
     total = (await db.execute(select(func.count()).select_from(q.subquery()))).scalar()
     result = await db.execute(q.offset((page - 1) * page_size).limit(page_size))
     chunks = result.scalars().all()
@@ -213,27 +235,38 @@ async def upload_document(
     Returns immediately with ``status='pending'``. The actual extraction
     and indexing happen in a BackgroundTask via DocumentProcessor.
     """
-    # Verify KB exists & tenant access
-    result = await db.execute(select(KnowledgeBase).where(KnowledgeBase.id == kb_id))
-    kb = result.scalar_one_or_none()
-    if not kb:
+    kb = await _authorise_kb(kb_id, current_user, db)
+
+    filename = Path(file.filename or f"upload_{uuid.uuid4().hex[:8]}").name
+    if Path(filename).suffix.lower() != ".pdf":
         raise HTTPException(
-            404,
-            detail={"ok": False, "error": {"code": "NOT_FOUND", "message": "Knowledge base not found"}},
+            415,
+            detail={"ok": False, "error": {"code": "UNSUPPORTED_FILE", "message": "Only PDF uploads are supported"}},
         )
-    if not current_user.is_superadmin and kb.tenant_id != current_user.tenant_id:
+
+    content_bytes = await file.read(MAX_UPLOAD_BYTES + 1)
+    if len(content_bytes) > MAX_UPLOAD_BYTES:
         raise HTTPException(
-            403,
-            detail={"ok": False, "error": {"code": "FORBIDDEN", "message": "Access denied"}},
+            413,
+            detail={"ok": False, "error": {"code": "FILE_TOO_LARGE", "message": "The PDF exceeds the 20 MB upload limit"}},
         )
 
     # Save file to disk
     _project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     upload_dir = os.path.join(_project_root, "data", "kb", kb_id)
     os.makedirs(upload_dir, exist_ok=True)
-    filename = file.filename or f"upload_{uuid.uuid4().hex[:8]}"
     file_path = os.path.join(upload_dir, filename)
-    content_bytes = await file.read()
+    duplicate = (await db.execute(
+        select(Document.id).where(
+            Document.knowledge_base_id == kb_id,
+            Document.filename == filename,
+        )
+    )).scalar_one_or_none()
+    if duplicate or os.path.exists(file_path):
+        raise HTTPException(
+            409,
+            detail={"ok": False, "error": {"code": "DUPLICATE_FILE", "message": "A document with this filename already exists"}},
+        )
     with open(file_path, "wb") as f:
         f.write(content_bytes)
 

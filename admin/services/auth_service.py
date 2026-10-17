@@ -1,9 +1,8 @@
-"""Small, fail-closed primitives for the future authentication API.
+"""Fail-closed JWT and password primitives for administrative authentication.
 
-This module intentionally has no database, FastAPI, or import-time configuration
-side effects.  Authentication configuration is read when a token operation is
-requested so that unrelated application components remain usable until the
-authentication router is introduced.
+The module has no database, FastAPI, or import-time configuration side effects.
+Configuration is validated when a token operation is requested, allowing
+unrelated application components to remain importable without auth secrets.
 """
 
 from __future__ import annotations
@@ -33,23 +32,16 @@ class TokenValidationError(ValueError):
 def hash_password(password: str) -> str:
     """Return a newly salted bcrypt hash for ``password``.
 
-    bcrypt accepts at most 72 password bytes.  Rejecting oversized passwords is
-    deliberate: silently truncating a newly chosen password can make two
-    different passwords authenticate as the same credential.
+    bcrypt accepts at most 72 password bytes. Oversized values are rejected
+    instead of silently truncated so distinct passwords cannot become the same
+    credential.
     """
-
     password_bytes = _password_bytes(password)
     return bcrypt.hashpw(password_bytes, bcrypt.gensalt()).decode("ascii")
 
 
 def verify_password(plain: str, hashed: str) -> bool:
-    """Safely check a plaintext password against a stored bcrypt hash.
-
-    Invalid input, malformed stored values, and over-limit inputs produce a
-    normal authentication failure rather than exposing bcrypt implementation
-    details.  Existing valid bcrypt hashes remain supported.
-    """
-
+    """Check a plaintext password without exposing malformed-hash details."""
     try:
         plain_bytes = _password_bytes(plain)
         if not isinstance(hashed, str):
@@ -61,24 +53,28 @@ def verify_password(plain: str, hashed: str) -> bool:
 
 def create_access_token(payload: dict[str, Any]) -> str:
     """Create an HS256 access token with the configured expiration."""
-
-    return _create_token(payload, token_type="access", expires_in=_access_lifetime())
+    return _create_token(
+        payload,
+        token_type="access",
+        expires_in=_access_lifetime(),
+    )
 
 
 def create_refresh_token(payload: dict[str, Any]) -> str:
     """Create an HS256 refresh token with the configured expiration."""
-
-    return _create_token(payload, token_type="refresh", expires_in=_refresh_lifetime())
+    return _create_token(
+        payload,
+        token_type="refresh",
+        expires_in=_refresh_lifetime(),
+    )
 
 
 def decode_token(token: str) -> dict[str, Any]:
     """Validate and decode a token signed by this application.
 
-    Only HS256 is accepted.  Callers remain responsible for checking whether a
-    valid token is appropriate for a particular operation (for example, access
-    versus refresh token use) when those routes are added later.
+    Only HS256 is accepted. Callers remain responsible for enforcing access or
+    refresh token type at the route boundary.
     """
-
     if not isinstance(token, str) or not token:
         raise TokenValidationError("Token is invalid.")
 
@@ -100,7 +96,10 @@ def decode_token(token: str) -> dict[str, Any]:
 
 
 def _create_token(
-    payload: dict[str, Any], *, token_type: str, expires_in: timedelta
+    payload: dict[str, Any],
+    *,
+    token_type: str,
+    expires_in: timedelta,
 ) -> str:
     if not isinstance(payload, dict):
         raise TypeError("Token payload must be a dictionary.")
@@ -130,7 +129,9 @@ def _password_bytes(password: str) -> bytes:
 def _signing_secret() -> str:
     secret = os.getenv("ADMIN_SECRET_KEY")
     if secret is None or not secret.strip():
-        raise AuthenticationConfigurationError("ADMIN_SECRET_KEY must be configured.")
+        raise AuthenticationConfigurationError(
+            "ADMIN_SECRET_KEY must be configured."
+        )
     if len(secret.encode("utf-8")) < MINIMUM_SECRET_BYTES:
         raise AuthenticationConfigurationError(
             "ADMIN_SECRET_KEY must be at least 32 bytes long."
@@ -139,11 +140,21 @@ def _signing_secret() -> str:
 
 
 def _access_lifetime() -> timedelta:
-    return timedelta(minutes=_positive_setting("ADMIN_ACCESS_TOKEN_MINUTES", ACCESS_TOKEN_MINUTES))
+    return timedelta(
+        minutes=_positive_setting(
+            "ADMIN_ACCESS_TOKEN_MINUTES",
+            ACCESS_TOKEN_MINUTES,
+        )
+    )
 
 
 def _refresh_lifetime() -> timedelta:
-    return timedelta(days=_positive_setting("ADMIN_REFRESH_TOKEN_DAYS", REFRESH_TOKEN_DAYS))
+    return timedelta(
+        days=_positive_setting(
+            "ADMIN_REFRESH_TOKEN_DAYS",
+            REFRESH_TOKEN_DAYS,
+        )
+    )
 
 
 def _positive_setting(name: str, default: int) -> int:
@@ -157,5 +168,7 @@ def _positive_setting(name: str, default: int) -> int:
             f"{name} must be a positive integer."
         ) from exc
     if value <= 0:
-        raise AuthenticationConfigurationError(f"{name} must be a positive integer.")
+        raise AuthenticationConfigurationError(
+            f"{name} must be a positive integer."
+        )
     return value
