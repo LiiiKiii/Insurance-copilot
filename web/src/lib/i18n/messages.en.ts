@@ -1137,7 +1137,7 @@ export const messages = {
   'admin.knowledge.field.kbName': 'Knowledge base name',
   'admin.knowledge.field.description': 'Description',
   'admin.knowledge.field.upload': 'Upload file',
-  'admin.knowledge.field.uploadHint': 'Supports PDF, TXT, MD, CSV, HTML, DOCX',
+  'admin.knowledge.field.uploadHint': 'PDF files only, up to 20 MB',
   'admin.knowledge.field.orManual': 'or enter manually',
   'admin.knowledge.field.filename': 'Filename',
   'admin.knowledge.field.content': 'Content',

@@ -24,6 +24,8 @@ from typing import Any
 
 from fastapi import FastAPI
 
+from admin.db import close_db, init_db
+from admin.routers import admin_router
 from api.routers.config import router as config_router
 from api.state import RuntimeState
 from api.ws import router as websocket_router
@@ -54,6 +56,7 @@ def create_app(
         active_runtime: RuntimeState | None = application.state.runtime
 
         try:
+            await init_db()
             if active_runtime is None:
                 active_runtime = application.state.runtime_factory()
                 application.state.runtime = active_runtime
@@ -69,6 +72,7 @@ def create_app(
                     # A cleanup failure must not disguise the original startup
                     # error, but it remains observable to server operators.
                     logger.exception("RuntimeState cleanup after startup failure failed")
+            await close_db()
             raise
 
         try:
@@ -76,7 +80,10 @@ def create_app(
         finally:
             # This runs for normal shutdown and when an exception unwinds the
             # application lifespan after request handling.
-            await active_runtime.stop()
+            try:
+                await active_runtime.stop()
+            finally:
+                await close_db()
 
     application = FastAPI(
         title="Insurance Performance Intelligence Copilot",
@@ -86,6 +93,7 @@ def create_app(
     application.state.runtime_factory = factory
     application.include_router(config_router)
     application.include_router(websocket_router)
+    application.include_router(admin_router, prefix="/api/admin")
 
     @application.get("/api/health")
     async def health() -> dict[str, Any]:
