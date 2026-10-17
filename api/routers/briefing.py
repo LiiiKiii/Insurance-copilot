@@ -9,6 +9,7 @@ from datetime import date, datetime
 from fastapi import APIRouter, Body, HTTPException, Path, Query
 from pydantic import BaseModel, Field
 
+from admin.config_bridge import DefaultModelConfigurationError
 from admin.db import get_sync_db
 from admin.models.inbox import BriefingSettings, DailyBriefing, InboxMessage
 from admin.models.user import User
@@ -18,6 +19,8 @@ from api.briefing.llm_generator import generate_briefing
 
 logger = logging.getLogger(__name__)
 router = APIRouter()
+
+MODEL_CONFIGURATION_UNAVAILABLE = "MODEL_CONFIGURATION_UNAVAILABLE"
 
 
 # ── Pydantic schemas ─────────────────────────────────────────────────────────
@@ -200,7 +203,23 @@ async def _generate_and_save(tenant_id: str, agent_id: str, messages: list[Inbox
     and returned in the API response payload, not embedded in the briefing markdown.
     """
     payload = [_serialize_message(m) for m in messages]
-    result = await generate_briefing(payload)
+    try:
+        result = await generate_briefing(payload)
+    except DefaultModelConfigurationError as exc:
+        # Stored credential failures and ambiguous global defaults must be
+        # visible as a controlled outage, never converted into a provider-key
+        # fallback.  Do not log ``exc``: even exception chains must remain an
+        # internal diagnostic channel.
+        logger.warning("Briefing model configuration is unavailable.")
+        raise HTTPException(
+            status_code=503,
+            detail={
+                "error": {
+                    "code": MODEL_CONFIGURATION_UNAVAILABLE,
+                    "message": "Model configuration is unavailable.",
+                }
+            },
+        ) from exc
 
     today = _today_beijing()
     p0, p1, p2 = _count_priorities(messages)

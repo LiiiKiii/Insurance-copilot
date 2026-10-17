@@ -10,7 +10,7 @@ export const messages = {
   'common.delete': 'Delete',
   'common.logout': 'Sign out',
   'app.title': 'Insurance Copilot',
-  'app.subtitle': 'China Life Overseas (HK)',
+  'app.subtitle': 'Smart Performance Diagnostics',
   'app.metaTitle': 'Insurance Copilot | Business Advisory',
   'app.metaDescription': 'Insurance business advisory platform',
   'locale.toggle.aria': 'Switch language',

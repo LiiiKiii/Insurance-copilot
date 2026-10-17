@@ -113,7 +113,10 @@ The proposed implementation location is:
 nanobot/agent/tools/insurance/planning_layer/prioritization.py
 ```
 
-The final path and schema will be agreed during the API and integration round.
+The A3 interface contract fixes this path and defines the proposed request,
+response, deterministic tie-breaking, ownership, and validation boundaries in
+[`prioritization-interface.md`](prioritization-interface.md). The interface is
+documented but not implemented in A3.
 
 ## Module Ownership Boundary
 
@@ -156,3 +159,22 @@ This milestone does not add candidate scoring, customer or policy ranking,
 Top-K selection, new priority rules, or evaluation metrics. Those remain later
 optimisation deliverables and must be tested separately from this template-based
 planning workflow.
+
+## A3 Planning API Integration
+
+The A3-M4 deliverable exposes the existing planning baseline through two
+business API routes:
+
+- `POST /api/planning/chase-plan` calls `GenerateChasePlanTool`;
+- `POST /api/planning/improvement-advice` calls
+  `GenerateImprovementAdviceTool`.
+
+The API layer validates request fields and converts each tool's existing JSON
+result into an HTTP response without changing planning calculations, action
+templates, or priority rules. It also removes the chase-plan dependency on the
+completed prototype's former `enrichment.py`; the current data-layer loader
+already supplies the competition fields needed by the planning tool.
+
+No prioritisation route is registered in A3. The future contract is documented
+separately so later ranking work can be integrated without presenting the
+current template labels as optimisation output.

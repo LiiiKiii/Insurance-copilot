@@ -16,7 +16,6 @@ from sqlalchemy.engine import make_url
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 from sqlalchemy.orm import DeclarativeBase, Session, sessionmaker
 
-
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_DB_PATH = PROJECT_ROOT / "data" / "db" / "admin.db"
 
@@ -92,7 +91,7 @@ async def get_db():
 
 
 async def init_db() -> None:
-    """Create all business-data tables available through A3."""
+    """Create all administrative and business-data tables available through A4."""
     if _is_sqlite:
         database_path = make_url(DATABASE_URL).database
         if database_path and database_path != ":memory:":
@@ -100,7 +99,9 @@ async def init_db() -> None:
 
     from admin.models import (  # noqa: F401
         agent_data,
+        assessment,
         competition,
+        config,
         inbox,
         knowledge,
         model_config,

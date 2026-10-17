@@ -10,11 +10,11 @@ from nanobot.agent.tools.insurance.reasoning_layer.composition import (
     build_reasoning_registry,
 )
 from nanobot.bus.queue import MessageBus
-from nanobot.config.loader import load_config
 from nanobot.config.schema import Config
 from nanobot.providers import OpenAICompatProvider
 from nanobot.providers.base import LLMProvider
 from nanobot.providers.registry import find_by_name
+from api.runtime_config import resolve_startup_runtime_config
 
 
 class RuntimeState:
@@ -30,7 +30,10 @@ class RuntimeState:
         provider: LLMProvider | None = None,
         workspace: Path | None = None,
     ) -> None:
-        self.config = config or load_config()
+        # Explicit configurations are used by tests and controlled callers;
+        # normal application startup resolves default, persisted, and
+        # environment configuration in that documented order.
+        self.config = config or resolve_startup_runtime_config()
         self.workspace = workspace or self.config.workspace_path
         self.bus = MessageBus()
         self.provider = provider or self._create_provider()

@@ -6,6 +6,7 @@ import asyncio
 import json
 import unittest
 from types import SimpleNamespace
+from unittest.mock import AsyncMock, patch
 
 try:
     from api.server import create_app
@@ -49,7 +50,7 @@ class WebSocketChatTests(unittest.IsolatedAsyncioTestCase):
             self.outgoing: asyncio.Queue[dict] = asyncio.Queue()
             self.task: asyncio.Task[None] | None = None
 
-        async def connect(self) -> None:
+        async def connect(self, *, authenticate: bool = True, headers: list[tuple[bytes, bytes]] | None = None) -> None:
             async def receive() -> dict:
                 return await self.incoming.get()
 
@@ -65,7 +66,7 @@ class WebSocketChatTests(unittest.IsolatedAsyncioTestCase):
                         "path": "/ws/chat",
                         "raw_path": b"/ws/chat",
                         "query_string": b"",
-                        "headers": [],
+                        "headers": headers or [],
                         "client": ("127.0.0.1", 12345),
                         "server": ("testserver", 80),
                         "subprotocols": [],
@@ -78,6 +79,11 @@ class WebSocketChatTests(unittest.IsolatedAsyncioTestCase):
             accepted = await self.outgoing.get()
             if accepted["type"] != "websocket.accept":
                 raise AssertionError(f"Expected accept, received {accepted!r}")
+            if authenticate:
+                await self.send_json({"type": "auth", "token": "test-access-token"})
+                event = await self.receive_json()
+                if event != {"type": "auth_ok"}:
+                    raise AssertionError(f"Expected auth_ok, received {event!r}")
 
         async def send_json(self, payload: object) -> None:
             await self.incoming.put(
@@ -106,11 +112,21 @@ class WebSocketChatTests(unittest.IsolatedAsyncioTestCase):
         self.runtime = self.FakeRuntime()
         self.application = create_app(runtime=self.runtime)
         self.socket = self.WebSocketHarness(self.application)
+        self.auth_patch = patch("api.ws._verified_user", new_callable=AsyncMock)
+        self.auth_mock = self.auth_patch.start()
+        self.auth_mock.return_value = SimpleNamespace(id="user-1", tenant_id="tenant-1", username="AGT001")
+        self.flow_patch = patch("api.ws.log_flow_step", new_callable=AsyncMock)
+        self.flow_mock = self.flow_patch.start()
+        self.ai_patch = patch("api.ws.log_ai_audit", new_callable=AsyncMock)
+        self.ai_mock = self.ai_patch.start()
         await self.socket.connect()
 
     async def asyncTearDown(self) -> None:
         if self.socket.task is not None and not self.socket.task.done():
             await self.socket.disconnect()
+        self.ai_patch.stop()
+        self.flow_patch.stop()
+        self.auth_patch.stop()
 
     async def test_route_is_registered(self) -> None:
         websocket_route = next(
@@ -163,7 +179,8 @@ class WebSocketChatTests(unittest.IsolatedAsyncioTestCase):
         )
         event = await self.socket.receive_json()
 
-        self.assertEqual(event["session_id"], "ws:fixed")
+        self.assertTrue(event["session_id"].startswith("ws:"))
+        self.assertNotEqual(event["session_id"], "ws:fixed")
         self.assertEqual(event["turn_id"], "turn:fixed")
 
     async def test_invalid_json_returns_safe_error(self) -> None:
