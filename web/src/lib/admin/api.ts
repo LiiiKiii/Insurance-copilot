@@ -1,4 +1,4 @@
-/** A4 admin API client limited to authentication and knowledge management. */
+/** A4 admin API client: authentication, knowledge and business management. */
 
 import { API_CONFIG } from '@/config'
 
@@ -41,6 +41,79 @@ export interface AdminUser {
   is_admin: boolean
   tier: string
   roles: (string | { id: string; name: string })[]
+  is_active: boolean
+  supervisor_id: string | null
+  daily_call_limit: number
+  last_login_at: string | null
+  created_at: string
+}
+
+export interface ModelConfig {
+  id: string; provider: string; model_id: string; display_name: string
+  model_type: string; category: string; base_url: string | null; is_default: boolean; enabled: boolean
+  max_tokens: number; temperature: number; price_per_1k_input: number; price_per_1k_output: number
+  tenant_id: string | null; created_at: string
+}
+export interface SystemConfig {
+  id: string; config_key: string; config_value: string; config_type: string
+  description: string; is_public: boolean; tenant_id: string | null; updated_at: string
+}
+export interface RequestLog {
+  id: string; tenant_id: string | null; user_id: string | null
+  endpoint: string; method: string; status_code: number; latency_ms: number
+  ip_address: string | null; created_at: string
+}
+export interface AiLog {
+  id: string; session_id: string | null; agent_id: string | null
+  user_query: string; ai_response: string; model_id: string | null
+  prompt_tokens: number | null; completion_tokens: number | null
+  has_compliance_issue: boolean; compliance_notes: string | null; created_at: string
+}
+export interface ErrorLog {
+  id: string; tenant_id: string | null; level: string
+  message: string; stack_trace: string | null; created_at: string
+}
+
+export interface CompetitionDef {
+  id: string
+  tenant_id: string | null
+  name: string
+  name_en: string
+  type: string
+  target_metric: string
+  target_value: number | null
+  unit: string
+  deadline: string
+  reward: string
+  description: string
+  is_active: boolean
+  created_at: string | null
+}
+
+export interface CompetitionEntryDef {
+  id: string
+  competition_id: string
+  agent_id: string
+  current_value: number | null
+  gap: number | null
+  status: string
+  created_at: string | null
+}
+
+export interface PerformanceTarget {
+  id: string
+  tenant_id: string | null
+  agent_id: string
+  metric_key: string
+  metric_label: string
+  target_value: number
+  unit: string
+  period_type: string
+  period_start: string
+  period_end: string
+  created_by: string | null
+  created_at: string | null
+  updated_at: string | null
 }
 
 export interface KnowledgeBase {
@@ -206,5 +279,84 @@ export const adminApi = {
     chunks: (kbId: string, docId: string, page = 1) =>
       apiFetch<DocumentChunk[]>(`/knowledge-bases/${kbId}/documents/${docId}/chunks?page=${page}&page_size=50`),
     uploadDoc: uploadDocument,
+  },
+
+  users: {
+    list: (page = 1, pageSize = 20, search?: string) =>
+      apiFetch<AdminUser[]>(`/users/?page=${page}&page_size=${pageSize}${search ? `&search=${encodeURIComponent(search)}` : ''}`),
+    get: (id: string) => apiFetch<AdminUser>(`/users/${id}`),
+    create: (body: unknown) => apiFetch<AdminUser>('/users/', { method: 'POST', body: JSON.stringify(body) }),
+    update: (id: string, body: unknown) => apiFetch<AdminUser>(`/users/${id}`, { method: 'PUT', body: JSON.stringify(body) }),
+    delete: (id: string) => apiFetch(`/users/${id}`, { method: 'DELETE' }),
+  },
+
+  models: {
+    list: () => apiFetch<ModelConfig[]>('/model-configs/'),
+    create: (body: unknown) => apiFetch<ModelConfig>('/model-configs/', { method: 'POST', body: JSON.stringify(body) }),
+    update: (id: string, body: unknown) => apiFetch<ModelConfig>(`/model-configs/${id}`, { method: 'PUT', body: JSON.stringify(body) }),
+    delete: (id: string) => apiFetch(`/model-configs/${id}`, { method: 'DELETE' }),
+    test: (id: string) => apiFetch<{ latency_ms: number; model: string }>(`/model-configs/${id}/test`, { method: 'POST' }),
+    setDefault: (id: string) => apiFetch<ModelConfig>(`/model-configs/${id}/set-default`, { method: 'POST' }),
+  },
+
+  config: {
+    list: (search?: string) => apiFetch<SystemConfig[]>(`/configs/${search ? `?search=${encodeURIComponent(search)}` : ''}`),
+    update: (id: string, body: unknown) =>
+      apiFetch<SystemConfig>(`/configs/${id}`, { method: 'PUT', body: JSON.stringify(body) }),
+    create: (body: unknown) => apiFetch<SystemConfig>('/configs/', { method: 'POST', body: JSON.stringify(body) }),
+    delete: (id: string) => apiFetch(`/configs/${id}`, { method: 'DELETE' }),
+  },
+
+  audit: {
+    requests: (
+      page = 1,
+      pageSize = 50,
+      filters?: { method?: string; status_code?: number; endpoint?: string },
+    ) => {
+      const q = new URLSearchParams({
+        page: String(page),
+        page_size: String(pageSize),
+      })
+      if (filters?.method) q.set('method', filters.method)
+      if (typeof filters?.status_code === 'number') q.set('status_code', String(filters.status_code))
+      if (filters?.endpoint) q.set('endpoint', filters.endpoint)
+      return apiFetch<RequestLog[]>(`/logs/requests?${q.toString()}`)
+    },
+    aiAudit: (page = 1) => apiFetch<AiLog[]>(`/logs/ai-audit?page=${page}`),
+    errors: (page = 1) => apiFetch<ErrorLog[]>(`/logs/errors?page=${page}`),
+  },
+
+  targets: {
+    list: (agentId?: string) =>
+      apiFetch<PerformanceTarget[]>(`/targets/${agentId ? `?agent_id=${agentId}` : ''}`),
+    create: (body: unknown) =>
+      apiFetch<PerformanceTarget>('/targets/', { method: 'POST', body: JSON.stringify(body) }),
+    batchCreate: (targets: unknown[]) =>
+      apiFetch<PerformanceTarget[]>('/targets/batch', { method: 'POST', body: JSON.stringify(targets) }),
+    update: (id: string, body: unknown) =>
+      apiFetch<PerformanceTarget>(`/targets/${id}`, { method: 'PUT', body: JSON.stringify(body) }),
+    delete: (id: string) =>
+      apiFetch(`/targets/${id}`, { method: 'DELETE' }),
+  },
+
+  competitions: {
+    list: (isActive?: boolean) =>
+      apiFetch<CompetitionDef[]>(`/competitions/${isActive !== undefined ? `?is_active=${isActive}` : ''}`),
+    get: (id: string) =>
+      apiFetch<CompetitionDef>(`/competitions/${id}`),
+    create: (body: unknown) =>
+      apiFetch<CompetitionDef>('/competitions/', { method: 'POST', body: JSON.stringify(body) }),
+    update: (id: string, body: unknown) =>
+      apiFetch<CompetitionDef>(`/competitions/${id}`, { method: 'PUT', body: JSON.stringify(body) }),
+    delete: (id: string) =>
+      apiFetch(`/competitions/${id}`, { method: 'DELETE' }),
+    entries: (compId: string) =>
+      apiFetch<CompetitionEntryDef[]>(`/competitions/${compId}/entries`),
+    createEntry: (body: unknown) =>
+      apiFetch<CompetitionEntryDef>('/competitions/entries', { method: 'POST', body: JSON.stringify(body) }),
+    updateEntry: (entryId: string, body: unknown) =>
+      apiFetch<CompetitionEntryDef>(`/competitions/entries/${entryId}`, { method: 'PUT', body: JSON.stringify(body) }),
+    deleteEntry: (entryId: string) =>
+      apiFetch(`/competitions/entries/${entryId}`, { method: 'DELETE' }),
   },
 }
