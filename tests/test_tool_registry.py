@@ -50,6 +50,44 @@ class SlowTool(ExampleTool):
         return "late"
 
 
+class NestedSchemaTool(Tool):
+    def __init__(self) -> None:
+        self.received: list[dict[str, Any]] = []
+
+    @property
+    def name(self) -> str:
+        return "nested"
+
+    @property
+    def description(self) -> str:
+        return "Validate nested business inputs."
+
+    @property
+    def parameters(self) -> dict[str, Any]:
+        return {
+            "type": "object",
+            "properties": {
+                "mode": {"type": "string", "enum": ["quote", "renew"]},
+                "enabled": {"type": "boolean"},
+                "ratio": {"type": "number", "minimum": 0, "maximum": 1},
+                "note": {"type": ["string", "null"], "minLength": 3},
+                "items": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {"amount": {"type": "integer", "minimum": 1}},
+                        "required": ["amount"],
+                    },
+                },
+            },
+            "required": ["mode", "items"],
+        }
+
+    async def execute(self, **kwargs: Any) -> Any:
+        self.received.append(kwargs)
+        return {"accepted": len(kwargs["items"])}
+
+
 class ToolRegistryTests(unittest.IsolatedAsyncioTestCase):
     async def test_register_retrieve_unregister_and_reject_duplicates(self) -> None:
         registry = ToolRegistry()
@@ -120,6 +158,82 @@ class ToolRegistryTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(
             await registry.execute("slow", {"count": 1}),
             "Tool execution timed out.",
+        )
+
+    async def test_nested_casting_and_unknown_fields_preserve_valid_input(self) -> None:
+        tool = NestedSchemaTool()
+        registry = ToolRegistry()
+        registry.register(tool)
+
+        result = await registry.execute(
+            "nested",
+            {
+                "mode": "quote",
+                "enabled": "yes",
+                "ratio": "0.5",
+                "note": None,
+                "items": [{"amount": "2", "external_id": "record-1"}],
+                "correlation_id": "request-1",
+            },
+        )
+
+        self.assertEqual(result, '{"accepted": 1}')
+        self.assertEqual(
+            tool.received,
+            [{
+                "mode": "quote",
+                "enabled": True,
+                "ratio": 0.5,
+                "note": None,
+                "items": [{"amount": 2, "external_id": "record-1"}],
+                "correlation_id": "request-1",
+            }],
+        )
+
+    async def test_nested_schema_rejects_invalid_values_without_executing(self) -> None:
+        tool = NestedSchemaTool()
+        registry = ToolRegistry()
+        registry.register(tool)
+        cases = (
+            ({"items": []}, "missing required mode"),
+            ({"mode": "other", "items": []}, "mode must be one of"),
+            ({"mode": "quote", "items": [{}]}, "missing required items[0].amount"),
+            ({"mode": "quote", "items": [{"amount": 0}]}, "items[0].amount must be >= 1"),
+            ({"mode": "quote", "items": [], "ratio": 1.1}, "ratio must be <= 1"),
+            ({"mode": "quote", "items": [], "note": "ab"}, "note must be at least 3 chars"),
+            ({"mode": "quote", "items": [], "enabled": "maybe"}, "enabled should be boolean"),
+            ({"mode": "quote", "items": "one"}, "items should be array"),
+            ({"mode": "quote", "items": [{"amount": True}]}, "items[0].amount should be integer"),
+        )
+        for params, expected_error in cases:
+            with self.subTest(params=params):
+                cast = tool.cast_params(params)
+                self.assertTrue(
+                    any(expected_error in error for error in tool.validate_params(cast))
+                )
+                self.assertEqual(
+                    await registry.execute("nested", params),
+                    "Tool arguments are invalid.",
+                )
+        self.assertEqual(tool.received, [])
+
+    def test_boolean_never_validates_as_number_or_integer(self) -> None:
+        class NumericTool(ExampleTool):
+            @property
+            def parameters(self) -> dict[str, Any]:
+                return {
+                    "type": "object",
+                    "properties": {
+                        "count": {"type": "integer"},
+                        "ratio": {"type": "number"},
+                    },
+                    "required": ["count", "ratio"],
+                }
+
+        tool = NumericTool()
+        self.assertEqual(
+            tool.validate_params(tool.cast_params({"count": True, "ratio": False})),
+            ["count should be integer", "ratio should be number"],
         )
 
 
