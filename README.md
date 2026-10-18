@@ -90,6 +90,17 @@ The completed project's unrelated upload-cleanup job remains outside the A3 M3 s
 - a minimal A4 navigation shell that exposes only the knowledge area;
 - an API client with token refresh and role-aware controls.
 
+### A4 M4 Deliverables
+
+- the existing English action templates are seeded as the non-public
+  `planning.action_templates` system configuration;
+- super administrators can manage the templates through the protected system
+  configuration API already introduced in A4;
+- the chase-plan tool consumes the managed value without changing its weekly
+  target calculations or priority rules;
+- the version-controlled JSON file and built-in English templates remain safe
+  fallbacks when the administration database is unavailable or invalid.
+
 ## Knowledge Corpus
 
 The version-controlled corpus contains:
