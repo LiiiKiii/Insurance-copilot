@@ -3,16 +3,13 @@ from __future__ import annotations
 
 from datetime import datetime
 
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, HTTPException, Query
 from sqlalchemy import func, select
 
-from admin.dependencies import DB, RoleAny, require_admin_auth, is_admin_role
+from admin.dependencies import DB, RoleAny, is_admin_role
 from admin.models.audit import AiAuditLog, ErrorLog, RequestLog
 
-router = APIRouter(
-    prefix="/api/admin/logs", tags=["Admin - Audit"],
-    dependencies=[Depends(require_admin_auth)],
-)
+router = APIRouter(prefix="/api/admin/logs", tags=["Admin - Audit"])
 
 
 def _date(value: str | None) -> datetime | None:
