@@ -111,6 +111,18 @@ The completed project's unrelated upload-cleanup job remains outside the A3 M3 s
 - unit tests for PDF rasterisation, OCR extraction, layout recovery, Markdown chunking, indexing, and end-to-end document status transitions;
 - isolated temporary databases, files, and mocked OCR adapters so the baseline does not require production data or external services.
 
+### A5 M4 Deliverables
+
+#### Planning-tool baseline acceptance
+
+- chase-plan coverage for pending-premium deduction, equal weekly targets,
+  urgent competition selection, managed-template fallback, and stable errors;
+- improvement-advice coverage for data errors, invalid attribution snapshots,
+  Top-N handling, P0/P1/P2 assignment, known templates, and generic advice;
+- deterministic tests that isolate database access and attribution calculations;
+- no customer scoring, ranking, Top-K selection, or optimisation algorithm is
+  added by this test round.
+
 ## Knowledge Corpus
 
 The version-controlled corpus contains:
@@ -196,6 +208,19 @@ The acceptance scope covers the following baseline:
 | Document processing | Rasterisation, OCR, layout recovery, chunking, indexing, and failure states are tested |
 
 These tests exercise only features already available through A4. They do not introduce vector search, retrieval scoring datasets, production OCR benchmarks, or later-stage end-to-end workflows.
+
+Run the A5 M4 planning acceptance scope with:
+
+```powershell
+python -m unittest tests/test_chase_plan.py tests/test_insurance_tools.py tests/test_planning_api.py -v
+```
+
+The chase-plan tests execute the current planning logic with isolated business
+data and action templates. The improvement-advice tests inject deterministic
+attribution-gap results because the corresponding attribution calculation
+module is not part of the current codebase. This preserves the implemented
+planning behavior while recording the missing runtime dependency as a known
+baseline limitation.
 
 ## A5 Boundary
 
