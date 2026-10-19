@@ -1,8 +1,6 @@
 # Web Frontend
 
-Next.js frontend for Insurance Performance Intelligence Copilot.
-
-At the A0 stage this directory contains only the frontend skeleton: project configuration, global styles, the root layout, the i18n package (English by default), and a placeholder home page. Chat, dashboard, and admin components will be migrated in later rounds.
+Next.js frontend for Insurance Performance Intelligence Copilot: the agent-facing chat and dashboard (`/`, `/login`, `/targets`) and the administration console (`/admin/*`).
 
 ## Requirements
 
@@ -20,9 +18,16 @@ Open [http://localhost:3000](http://localhost:3000) in a browser.
 
 `/api/*` and `/ws/*` requests are proxied to the backend defined by `NEXT_PUBLIC_API_URL` (default `http://localhost:8000`).
 
+The chat WebSocket is proxied as well, so the backend sees the frontend's origin. Allow it in the backend environment, otherwise the socket is rejected with 403:
+
+```bash
+WS_ALLOWED_ORIGINS=http://localhost:3000
+```
+
 ## Checks
 
 ```bash
-pnpm lint
-pnpm build
+pnpm check
 ```
+
+`check` runs `pnpm lint`, `pnpm build` and `pnpm typecheck` in that order. If `typecheck` reports errors under `.next/`, delete the `.next` directory left by an earlier `pnpm dev` and run it again.
