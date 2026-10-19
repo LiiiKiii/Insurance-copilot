@@ -12,9 +12,9 @@ This project progressively combines data-driven diagnosis, deterministic busines
 
 Current migration stage:
 
-**A4 — Administration and Supporting Features**
+**A4 — Existing Tests and Baseline Acceptance**
 
-A4 adds the smallest usable administration path for the M3 knowledge subsystem. Administrators can authenticate, manage tenant-scoped knowledge bases, upload PDF documents for OCR and indexing, inspect generated chunks, and import project-local text documents through English administration tools.
+A4 validates the smallest usable administration path for the M3 knowledge subsystem. Administrators can authenticate, manage tenant-scoped knowledge bases, upload PDF documents for OCR and indexing, inspect generated chunks, and import project-local text documents through English administration tools. The round adds repeatable baseline tests for knowledge retrieval, upload boundaries, and the PDF document-processing pipeline.
 
 The stage also retains the A3 integration delivered by the other workstreams: M3 daily briefing and compliance services, plus M4 planning endpoints and the interface contract for later candidate prioritisation.
 
@@ -90,6 +90,14 @@ The completed project's unrelated upload-cleanup job remains outside the A3 M3 s
 - a minimal A4 navigation shell that exposes only the knowledge area;
 - an API client with token refresh and role-aware controls.
 
+#### M3 tests and baseline acceptance
+
+- file-based retrieval tests for competition rules, best practices, and sales scripts;
+- SQLite FTS5 acceptance coverage for administrator-managed knowledge chunks;
+- tenant-isolation and PDF upload validation tests for the knowledge administration router;
+- unit tests for PDF rasterisation, OCR extraction, layout recovery, Markdown chunking, indexing, and end-to-end document status transitions;
+- isolated temporary databases, files, and mocked OCR adapters so the baseline does not require production data or external services.
+
 ## Knowledge Corpus
 
 The version-controlled corpus contains:
@@ -136,10 +144,10 @@ Uploaded runtime files are stored outside version control.
 - `tiktoken` for token-aware chunking
 - Next.js 16 and React 19 for the administration page
 
-Install the Python project and its declared dependencies with:
+Install the Python project and its test dependencies with:
 
 ```powershell
-python -m pip install -e .
+python -m pip install -e ".[dev]"
 ```
 
 Configure A4 authentication in `.env` before starting the server or creating the first administrator:
@@ -157,6 +165,25 @@ python -m admin.seeds
 
 Start the backend and frontend with the project's existing development commands. The administration page is available at `/admin/login` after both services are running.
 
+## Test and Baseline Acceptance
+
+Run the A4 M3 acceptance scope with:
+
+```powershell
+python -m pytest tests/test_knowledge_retrieval.py tests/admin/test_knowledge_router.py tests/admin/services/pdf -q
+```
+
+The acceptance scope covers the following baseline:
+
+| Area | Baseline evidence |
+| ---- | ----------------- |
+| File knowledge retrieval | English queries return matched content with source references |
+| Database knowledge retrieval | SQLite FTS5 returns indexed chunks and preserves document provenance |
+| Upload boundary | Tenant isolation, PDF-only input, and the 20 MB size limit are enforced |
+| Document processing | Rasterisation, OCR, layout recovery, chunking, indexing, and failure states are tested |
+
+These tests exercise only features already available by A4. They do not introduce vector search, retrieval scoring datasets, production OCR benchmarks, or later-stage end-to-end workflows.
+
 ## A4 Boundary
 
-This round does not introduce the completed project's remaining admin pages, full agent-side admin orchestration, vector retrieval, retrieval evaluation datasets, final deployment configuration, or end-to-end production hardening. Those components must be migrated in their designated later stages.
+This round does not introduce the completed project's remaining admin pages, full agent-side admin orchestration, vector retrieval, retrieval evaluation datasets, final deployment configuration, or end-to-end production hardening. Those components and their tests must be migrated in their designated later stages.
