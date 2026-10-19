@@ -390,13 +390,22 @@ export function useInsuranceChat() {
   const connect = useCallback(() => {
     if (wsRef.current?.readyState === WebSocket.OPEN) return
 
+    // The server rejects sockets that do not authenticate, so skip connecting
+    // (and reconnecting) until a login token is available.
+    const token = getAuthToken()
+    if (!token) {
+      setStatus('disconnected')
+      return
+    }
+
     setStatus('connecting')
     const ws = new WebSocket(WS_URL)
     wsRef.current = ws
 
+    // First frame must be the auth handshake; the status flips to
+    // 'connected' only after the server replies with `auth_ok`.
     ws.onopen = () => {
-      setStatus('connected')
-      reconnectAttemptsRef.current = 0
+      ws.send(JSON.stringify({ type: 'auth', token }))
     }
 
     ws.onclose = () => {
@@ -420,6 +429,11 @@ export function useInsuranceChat() {
       try {
         data = JSON.parse(event.data) as InboundWsEvent
       } catch {
+        return
+      }
+      if (data.type === 'auth_ok') {
+        setStatus('connected')
+        reconnectAttemptsRef.current = 0
         return
       }
       handleWsEvent(data)
