@@ -12,9 +12,9 @@ This project progressively combines data-driven diagnosis, deterministic busines
 
 Current migration stage:
 
-**A4 — Existing Tests and Baseline Acceptance**
+**A5 — Existing Tests and Baseline Acceptance**
 
-A4 validates the smallest usable administration path for the M3 knowledge subsystem. Administrators can authenticate, manage tenant-scoped knowledge bases, upload PDF documents for OCR and indexing, inspect generated chunks, and import project-local text documents through English administration tools. The round adds repeatable baseline tests for knowledge retrieval, upload boundaries, and the PDF document-processing pipeline.
+A5 validates the administration path introduced for the M3 knowledge subsystem in A4. The round adds repeatable baseline tests for knowledge retrieval, upload boundaries, and the PDF document-processing pipeline without changing the existing implementation.
 
 The stage also retains the A3 integration delivered by the other workstreams: M3 daily briefing and compliance services, plus M4 planning endpoints and the interface contract for later candidate prioritisation.
 
@@ -90,7 +90,20 @@ The completed project's unrelated upload-cleanup job remains outside the A3 M3 s
 - a minimal A4 navigation shell that exposes only the knowledge area;
 - an API client with token refresh and role-aware controls.
 
-#### M3 tests and baseline acceptance
+### A4 M4 Deliverables
+
+- the existing English action templates are seeded as the non-public
+  `planning.action_templates` system configuration;
+- super administrators can manage the templates through the protected system
+  configuration API already introduced in A4;
+- the chase-plan tool consumes the managed value without changing its weekly
+  target calculations or priority rules;
+- the version-controlled JSON file and built-in English templates remain safe
+  fallbacks when the administration database is unavailable or invalid.
+
+### A5 M3 Deliverables
+
+#### Tests and baseline acceptance
 
 - file-based retrieval tests for competition rules, best practices, and sales scripts;
 - SQLite FTS5 acceptance coverage for administrator-managed knowledge chunks;
@@ -167,7 +180,7 @@ Start the backend and frontend with the project's existing development commands.
 
 ## Test and Baseline Acceptance
 
-Run the A4 M3 acceptance scope with:
+Run the A5 M3 acceptance scope with:
 
 ```powershell
 python -m pytest tests/test_knowledge_retrieval.py tests/admin/test_knowledge_router.py tests/admin/services/pdf -q
@@ -182,8 +195,8 @@ The acceptance scope covers the following baseline:
 | Upload boundary | Tenant isolation, PDF-only input, and the 20 MB size limit are enforced |
 | Document processing | Rasterisation, OCR, layout recovery, chunking, indexing, and failure states are tested |
 
-These tests exercise only features already available by A4. They do not introduce vector search, retrieval scoring datasets, production OCR benchmarks, or later-stage end-to-end workflows.
+These tests exercise only features already available through A4. They do not introduce vector search, retrieval scoring datasets, production OCR benchmarks, or later-stage end-to-end workflows.
 
-## A4 Boundary
+## A5 Boundary
 
 This round does not introduce the completed project's remaining admin pages, full agent-side admin orchestration, vector retrieval, retrieval evaluation datasets, final deployment configuration, or end-to-end production hardening. Those components and their tests must be migrated in their designated later stages.

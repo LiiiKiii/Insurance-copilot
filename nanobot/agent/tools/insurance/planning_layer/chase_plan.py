@@ -18,6 +18,9 @@ from nanobot.agent.tools.insurance.data_layer._db import load_competitions_from_
 
 logger = logging.getLogger(__name__)
 
+ACTION_TEMPLATES_CONFIG_KEY = "planning.action_templates"
+_ALLOWED_PRIORITIES = frozenset({"P0", "P1", "P2"})
+
 # ── Default action templates (fallback if config file not found) ──────────────
 _DEFAULT_HKD_ACTIONS = [
     {"priority": "P0", "template": "Maintain daily production of HKD {daily_premium_needed:,} and prioritise high-value policies"},
@@ -38,9 +41,48 @@ _templates_cache: tuple[float, dict] | None = None
 _TEMPLATES_CACHE_TTL = 60  # seconds
 
 
+def _valid_action_templates(value: Any) -> bool:
+    """Return whether a value satisfies the action-template runtime contract."""
+    if not isinstance(value, dict):
+        return False
+    for group in ("hkd_actions", "non_hkd_actions"):
+        actions = value.get(group)
+        if not isinstance(actions, list) or not actions:
+            return False
+        for action in actions:
+            if not isinstance(action, dict):
+                return False
+            if action.get("priority") not in _ALLOWED_PRIORITIES:
+                return False
+            if not isinstance(action.get("template"), str) or not action["template"].strip():
+                return False
+    return True
+
+
+def _load_managed_action_templates() -> Any:
+    """Read the A4 system setting without making admin packages import-time dependencies."""
+    from admin.config_bridge import get_json
+
+    return get_json(ACTION_TEMPLATES_CONFIG_KEY, default=None)
+
+
 def _load_action_templates(workspace: Path | None = None) -> dict:
-    """Load action templates from JSON config, with TTL cache and fallback to hardcoded defaults."""
+    """Load admin-managed templates, then fall back to file and built-in values."""
     global _templates_cache
+
+    # A4 exposes this global, non-secret value through the existing protected
+    # system-configuration API. The bridge owns database cache invalidation.
+    try:
+        configured = _load_managed_action_templates()
+        if _valid_action_templates(configured):
+            return configured
+        if configured is not None:
+            logger.warning("Ignoring invalid action-template system configuration.")
+    except Exception:
+        # Planning remains available while the administration database is
+        # offline or has not been initialised.
+        logger.warning("Action-template system configuration is unavailable.")
+
     now = time.monotonic()
     if _templates_cache is not None:
         cached_at, cached = _templates_cache
@@ -55,8 +97,10 @@ def _load_action_templates(workspace: Path | None = None) -> dict:
         if p.exists():
             try:
                 result = json.loads(p.read_text(encoding="utf-8"))
-                _templates_cache = (now, result)
-                return result
+                if _valid_action_templates(result):
+                    _templates_cache = (now, result)
+                    return result
+                logger.warning("Ignoring invalid action-template file: %s", p)
             except (json.JSONDecodeError, OSError) as e:
                 logger.warning("Failed to load action templates from %s: %s", p, e)
     defaults = {"hkd_actions": _DEFAULT_HKD_ACTIONS, "non_hkd_actions": _DEFAULT_NON_HKD_ACTIONS}

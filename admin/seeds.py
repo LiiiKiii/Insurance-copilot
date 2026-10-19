@@ -21,6 +21,7 @@ from admin.models.agent_data import (
     AgentProfile,
 )
 from admin.models.competition import Competition, CompetitionEntry
+from admin.models.config import SystemConfig
 from admin.models.performance_target import PerformanceTarget
 from admin.models.tenant import Tenant
 from admin.models.user import Permission, Role, User, role_permissions, user_roles
@@ -30,6 +31,7 @@ from admin.services.auth_service import hash_password
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_MOCK_DIR = PROJECT_ROOT / "data" / "mock"
 DEFAULT_TENANT_ID = "00000000-0000-0000-0000-000000000001"
+ACTION_TEMPLATES_CONFIG_KEY = "planning.action_templates"
 
 
 def _require_env(name: str) -> str:
@@ -448,6 +450,32 @@ async def _seed_competitions(
     return len(definitions), len(entries)
 
 
+async def _seed_planning_configuration(session: AsyncSession) -> int:
+    """Seed the editable action-plan templates used by the planning layer."""
+    existing = await session.scalar(
+        select(SystemConfig).where(
+            SystemConfig.tenant_id.is_(None),
+            SystemConfig.config_key == ACTION_TEMPLATES_CONFIG_KEY,
+        )
+    )
+    if existing is not None:
+        # Seed reruns must not erase a super administrator's saved templates.
+        return 1
+
+    templates = _read_json(PROJECT_ROOT / "data" / "config", "action_templates.json")
+    session.add(
+        SystemConfig(
+            tenant_id=None,
+            config_key=ACTION_TEMPLATES_CONFIG_KEY,
+            config_value=json.dumps(templates, ensure_ascii=False),
+            config_type="json",
+            description="Action templates for competition chase plans",
+            is_public=False,
+        )
+    )
+    return 1
+
+
 async def seed(mock_dir: Path = DEFAULT_MOCK_DIR) -> dict[str, int]:
     """Create or update the A4 business and admin seed records."""
     agents = _read_json(mock_dir, "agents.json")
@@ -475,6 +503,7 @@ async def seed(mock_dir: Path = DEFAULT_MOCK_DIR) -> dict[str, int]:
             )
             attribution_count = await _seed_attribution(session, attribution)
             competition_count, entry_count = await _seed_competitions(session, competitions)
+            planning_config_count = await _seed_planning_configuration(session)
             await session.commit()
         except Exception:
             await session.rollback()
@@ -492,6 +521,7 @@ async def seed(mock_dir: Path = DEFAULT_MOCK_DIR) -> dict[str, int]:
         "attribution_rows": attribution_count,
         "competitions": competition_count,
         "competition_entries": entry_count,
+        "planning_configs": planning_config_count,
     }
 
 

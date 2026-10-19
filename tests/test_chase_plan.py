@@ -9,6 +9,7 @@ from unittest.mock import patch
 
 from nanobot.agent.tools.insurance.planning_layer.chase_plan import (
     GenerateChasePlanTool,
+    _load_action_templates,
 )
 
 
@@ -174,6 +175,48 @@ class GenerateChasePlanToolTests(unittest.IsolatedAsyncioTestCase):
             result = json.loads(await self.tool.execute(agent_id="A1"))
 
         self.assertEqual(result, {"error": "Data query failed"})
+
+    def test_admin_configuration_takes_precedence_over_file(self) -> None:
+        configured = {
+            "hkd_actions": [{"priority": "P1", "template": "Configured HKD action"}],
+            "non_hkd_actions": [{"priority": "P2", "template": "Configured case action"}],
+        }
+
+        with patch(
+            "nanobot.agent.tools.insurance.planning_layer.chase_plan._load_managed_action_templates",
+            return_value=configured,
+        ):
+            self.assertEqual(_load_action_templates(Path(self.temp_dir.name)), configured)
+
+    def test_invalid_admin_configuration_uses_file_fallback(self) -> None:
+        config_dir = Path(self.temp_dir.name) / "data" / "config"
+        config_dir.mkdir(parents=True)
+        config_dir.joinpath("action_templates.json").write_text(
+            json.dumps(HKD_TEMPLATES | {
+                "non_hkd_actions": [
+                    {"priority": "P1", "template": "Submit one case"}
+                ]
+            }),
+            encoding="utf-8",
+        )
+
+        with (
+            patch(
+                "nanobot.agent.tools.insurance.planning_layer.chase_plan._load_managed_action_templates",
+                return_value={"hkd_actions": []},
+            ),
+            patch(
+                "nanobot.agent.tools.insurance.planning_layer.chase_plan._templates_cache",
+                None,
+            ),
+        ):
+            templates = _load_action_templates(Path(self.temp_dir.name))
+
+        self.assertEqual(templates["hkd_actions"], HKD_TEMPLATES["hkd_actions"])
+        self.assertEqual(
+            templates["non_hkd_actions"],
+            [{"priority": "P1", "template": "Submit one case"}],
+        )
 
 
 if __name__ == "__main__":

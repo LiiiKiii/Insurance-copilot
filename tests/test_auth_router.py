@@ -20,7 +20,7 @@ from sqlalchemy.orm import selectinload
 from admin.db import Base, get_db
 from admin.models.tenant import Tenant
 from admin.models.user import Role, User
-from admin.routers.auth import router as auth_router
+from admin.routers import admin_router
 from admin.services.auth_service import (
     create_access_token,
     create_refresh_token,
@@ -401,7 +401,7 @@ class AuthenticationRouterTests(unittest.IsolatedAsyncioTestCase):
         self.assertFalse(body["data"]["is_admin"])
         self.assertEqual(body["data"]["roles"], [])
 
-    async def test_only_auth_router_is_added_and_a3_health_remains_available(self) -> None:
+    async def test_a4_admin_registry_and_a3_health_are_available(self) -> None:
         status, body, _ = await self._request("GET", "/api/health")
         self.assertEqual((status, body), (200, {"status": "ok", "agent_loop": "not_started"}))
 
@@ -409,14 +409,11 @@ class AuthenticationRouterTests(unittest.IsolatedAsyncioTestCase):
             getattr(route, "original_router", None)
             for route in self.application.routes
         ]
-        self.assertIn(auth_router, included_routers)
-        self.assertNotIn(
-            "admin.routers.knowledge",
-            {router.__module__ for router in included_routers if router is not None},
-        )
-        paths = [route.path for route in auth_router.routes if hasattr(route, "path")]
+        self.assertIn(admin_router, included_routers)
+        paths = self.application.openapi()["paths"]
         self.assertIn("/api/admin/auth/login", paths)
-        self.assertNotIn("/knowledge", paths)
+        self.assertIn("/api/admin/auth/me", paths)
+        self.assertIn("/api/admin/knowledge-bases/", paths)
 
 
 if __name__ == "__main__":
