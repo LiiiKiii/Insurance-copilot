@@ -12,13 +12,13 @@ This project progressively combines data-driven diagnosis, deterministic busines
 
 Current migration stage:
 
-**A5 — Existing Tests and Baseline Acceptance**
+**A6 — Baseline Freeze**
 
-A5 validates the administration path introduced for the M3 knowledge subsystem in A4. The round adds repeatable baseline tests for knowledge retrieval, upload boundaries, and the PDF document-processing pipeline without changing the existing implementation.
+A6 closes the staged migration and freezes the accepted project baseline. For M3, this round verifies that the version-controlled corpus and administrator-managed knowledge bases remain searchable, that search results retain source references, and that the existing knowledge administration tests cover tenant and document-processing boundaries.
 
-The stage also retains the A3 integration delivered by the other workstreams: M3 daily briefing and compliance services, plus M4 planning endpoints and the interface contract for later candidate prioritisation.
+No new M3 runtime code is introduced in A6 because the required knowledge models, retrieval tools, administration routes, ingestion pipeline, corpus, and acceptance tests were migrated in A0 through A5.
 
-Unrelated administration areas such as user management, tenant management, model configuration, audit dashboards, usage analytics, channels, and general database tools are intentionally excluded from this stage.
+The frozen baseline also retains the A3 integration delivered by the other workstreams: M3 daily briefing and compliance services, plus M4 planning endpoints and the interface contract for candidate prioritisation.
 
 ### A0 Deliverables Retained
 
@@ -101,7 +101,7 @@ The completed project's unrelated upload-cleanup job remains outside the A3 M3 s
 - the version-controlled JSON file and built-in English templates remain safe
   fallbacks when the administration database is unavailable or invalid.
 
-### A5 M3 Deliverables
+### A5 M3 Deliverables Retained
 
 #### Tests and baseline acceptance
 
@@ -110,6 +110,15 @@ The completed project's unrelated upload-cleanup job remains outside the A3 M3 s
 - tenant-isolation and PDF upload validation tests for the knowledge administration router;
 - unit tests for PDF rasterisation, OCR extraction, layout recovery, Markdown chunking, indexing, and end-to-end document status transitions;
 - isolated temporary databases, files, and mocked OCR adapters so the baseline does not require production data or external services.
+
+### A6 M3 Baseline Freeze
+
+- confirmed that competition rules, qualification rules, best practices, and sales scripts are searchable through the existing English file-retrieval tools;
+- confirmed that administrator-managed chunks are searchable through SQLite FTS5 with the SQL `LIKE` fallback retained for compatible deployments;
+- confirmed that retrieval responses preserve source references for Markdown assets and database-backed documents;
+- confirmed that the version-controlled knowledge corpus, tenant-aware administration routes, import tool, and PDF ingestion pipeline are present in the final staged repository;
+- retained the A5 automated acceptance scope without modifying the validated M3 implementation;
+- recorded the final M3 capabilities and known retrieval boundaries in this README.
 
 ## Knowledge Corpus
 
@@ -180,7 +189,7 @@ Start the backend and frontend with the project's existing development commands.
 
 ## Test and Baseline Acceptance
 
-Run the A5 M3 acceptance scope with:
+Run the final A6 M3 acceptance scope with:
 
 ```powershell
 python -m pytest tests/test_knowledge_retrieval.py tests/admin/test_knowledge_router.py tests/admin/services/pdf -q
@@ -195,8 +204,10 @@ The acceptance scope covers the following baseline:
 | Upload boundary | Tenant isolation, PDF-only input, and the 20 MB size limit are enforced |
 | Document processing | Rasterisation, OCR, layout recovery, chunking, indexing, and failure states are tested |
 
-These tests exercise only features already available through A4. They do not introduce vector search, retrieval scoring datasets, production OCR benchmarks, or later-stage end-to-end workflows.
+These tests exercise the M3 features introduced through A4 and retained in the frozen baseline. They do not introduce vector search, retrieval scoring datasets, or production OCR benchmarks.
 
-## A5 Boundary
+## A6 Baseline Freeze
 
-This round does not introduce the completed project's remaining admin pages, full agent-side admin orchestration, vector retrieval, retrieval evaluation datasets, final deployment configuration, or end-to-end production hardening. Those components and their tests must be migrated in their designated later stages.
+A6 is the final migration round. The M3 baseline is considered complete for the implemented product scope: deterministic English file retrieval, SQLite FTS5 database retrieval with a SQL fallback, source citation, tenant-aware knowledge administration, local text import, PDF ingestion, and automated acceptance coverage.
+
+No code file is added or replaced in A6. Vector or embedding retrieval, quantitative Recall@K and Precision@K datasets, production OCR benchmarking, and broader production hardening are outside the implemented baseline and are not implied by this freeze.
