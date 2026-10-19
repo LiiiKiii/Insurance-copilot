@@ -50,15 +50,17 @@ export default function UsersPage() {
 
   const save = async () => {
     setSaving(true); setErr(null)
-    const body = {
-      username: form.username, email: form.email, display_name: form.display_name,
-      is_active: form.is_active, roles: [form.role], tier: form.tier, supervisor_id: form.supervisor_id || null,
+    // The backend rejects unknown fields: `username` is create-only and
+    // `is_active` is update-only.
+    const common = {
+      email: form.email, display_name: form.display_name,
+      roles: [form.role], tier: form.tier, supervisor_id: form.supervisor_id || null,
       daily_call_limit: form.daily_call_limit,
       ...(form.password ? { password: form.password } : {}),
     }
     const r = modal === 'create'
-      ? await adminApi.users.create(body)
-      : await adminApi.users.update(selected!.id, body)
+      ? await adminApi.users.create({ ...common, username: form.username })
+      : await adminApi.users.update(selected!.id, { ...common, is_active: form.is_active })
     setSaving(false)
     if (r.ok) { setModal(null); load(); toast('success', modal === 'create' ? t('admin.users.toast.created') : t('admin.users.toast.updated')) }
     else setErr(r.error?.message ?? t('admin.users.toast.opFailed'))
