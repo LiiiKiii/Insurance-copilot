@@ -11,6 +11,7 @@ from pydantic import BaseModel, Field
 
 from admin.config_bridge import DefaultModelConfigurationError
 from admin.db import get_sync_db
+from admin.dependencies import is_admin_role
 from admin.models.inbox import BriefingSettings, DailyBriefing, InboxMessage
 from admin.models.user import User
 from admin.utils import now_beijing
@@ -520,7 +521,7 @@ def _serialize_settings(s: BriefingSettings) -> dict:
 
 def _require_admin(db, agent_id: str) -> User:
     user = _resolve_user(db, agent_id)
-    if not user.is_superadmin and (user.tier or 'agent') not in ('director', 'team_lead'):
+    if not is_admin_role(user):
         raise HTTPException(403, detail='admin permission required')
     return user
 

@@ -12,13 +12,13 @@ This project progressively combines data-driven diagnosis, deterministic busines
 
 Current migration stage:
 
-**A5 — Existing Tests and Baseline Acceptance**
+**A6 — Final Integration Validation**
 
-A5 validates the administration path introduced for the M3 knowledge subsystem in A4. The round adds repeatable baseline tests for knowledge retrieval, upload boundaries, and the PDF document-processing pipeline without changing the existing implementation.
+A5 added repeatable baseline tests for knowledge retrieval, upload boundaries, PDF processing, and planning. A6 validates the merged backend, reviews frontend interfaces, and documents executable results and remaining limits in [docs/a6_m1_baseline.md](docs/a6_m1_baseline.md).
 
 The stage also retains the A3 integration delivered by the other workstreams: M3 daily briefing and compliance services, plus M4 planning endpoints and the interface contract for later candidate prioritisation.
 
-Unrelated administration areas such as user management, tenant management, model configuration, audit dashboards, usage analytics, channels, and general database tools are intentionally excluded from this stage.
+A6 adds no new administration features; it checks the code already present in the merged repository.
 
 ### A0 Deliverables Retained
 
@@ -169,28 +169,51 @@ Uploaded runtime files are stored outside version control.
 - `tiktoken` for token-aware chunking
 - Next.js 16 and React 19 for the administration page
 
-Install the Python project and its test dependencies with:
+Create a virtual environment and install the Python project, its test dependencies, and an ASGI server with:
 
 ```powershell
-python -m pip install -e ".[dev]"
+python -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -e ".[dev]" uvicorn
 ```
 
-Configure A4 authentication in `.env` before starting the server or creating the first administrator:
+Copy `.env.example` to `.env` and configure authentication before starting the server or creating the first administrator. Set `ADMIN_DATABASE_URL` to a database intended for this instance; if omitted, the app uses `data/db/admin.db`. Keep `.env` out of version control.
 
 ```text
 ADMIN_SECRET_KEY=<random-signing-secret-of-at-least-32-bytes>
 ADMIN_DEFAULT_PASSWORD=<initial-admin-password>
+ADMIN_ENCRYPTION_KEY=<Fernet-key-for-encrypted-provider-credentials>
 ```
 
-Never commit real secrets. Create the database records and initial `admin` account with:
+`ADMIN_ENCRYPTION_KEY` is required when encrypted provider credentials are stored or read. Generate it with `python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())"` and keep the value private. Apply the tracked migrations to a new development database with `.\.venv\Scripts\python.exe -m alembic upgrade head`. The backend also initialises currently modeled tables at startup. Create the initial `admin` account and seed data with:
 
 ```powershell
-python -m admin.seeds
+.\.venv\Scripts\python.exe -m admin.seeds
 ```
 
-Start the backend and frontend with the project's existing development commands. The administration page is available at `/admin/login` after both services are running.
+Start the backend from the repository root, then start the frontend in a second terminal:
+
+```powershell
+.\.venv\Scripts\python.exe -m uvicorn api.server:app --reload
+```
+
+```powershell
+cd web
+pnpm install --frozen-lockfile
+pnpm dev
+```
+
+The frontend requires Node.js 20+ and pnpm 9. It proxies `/api/*` and `/ws/*` to `NEXT_PUBLIC_API_URL` (default `http://localhost:8000`); open `http://localhost:3000/admin/login`. For local chat WebSockets, set `WS_ALLOWED_ORIGINS=http://localhost:3000` in the backend environment.
 
 ## Test and Baseline Acceptance
+
+Run the full backend suites from the repository root with:
+
+```powershell
+.\.venv\Scripts\python.exe -m unittest discover -s tests -p "test_*.py" -q
+.\.venv\Scripts\python.exe -m pytest tests -q
+```
+
+For frontend checks, run `pnpm install --frozen-lockfile` followed by `pnpm check` from `web/`. These commands require Node.js and pnpm. Set `ADMIN_DATABASE_URL` to a disposable SQLite database for integration runs; never point tests at a production database. The PDF chunker tests need the public `cl100k_base` tokenizer data cached by `tiktoken` on first use. See the A6 baseline report for actual results and limits.
 
 Run the A5 M3 acceptance scope with:
 
@@ -222,6 +245,6 @@ module is not part of the current codebase. This preserves the implemented
 planning behavior while recording the missing runtime dependency as a known
 baseline limitation.
 
-## A5 Boundary
+## Historical A5 Boundary
 
-This round does not introduce the completed project's remaining admin pages, full agent-side admin orchestration, vector retrieval, retrieval evaluation datasets, final deployment configuration, or end-to-end production hardening. Those components and their tests must be migrated in their designated later stages.
+The A5 round did not introduce the completed project's remaining admin pages, full agent-side admin orchestration, vector retrieval, retrieval evaluation datasets, final deployment configuration, or end-to-end production hardening. Those components and their tests belong to their designated later stages.

@@ -46,8 +46,7 @@ export default function TargetsPage() {
 
   // Load agents from API
   useEffect(() => {
-    fetch('/api/agents-list')
-      .then(r => r.json())
+    adminApi.agents.list()
       .then(d => {
         if (d?.ok && Array.isArray(d.data)) {
           const ids = d.data.map((a: { agent_id: string }) => a.agent_id)

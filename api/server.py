@@ -14,10 +14,11 @@ from contextlib import asynccontextmanager
 from importlib import import_module
 from typing import Any
 
-from fastapi import APIRouter, FastAPI
+from fastapi import APIRouter, Depends, FastAPI
 
 from admin.db import close_db, init_db
 from admin.routers import admin_router
+from api.briefing_access import require_briefing_access
 from api.routers.config import router as config_router
 from api.state import RuntimeState
 from api.ws import router as websocket_router
@@ -190,6 +191,16 @@ def create_app(
     planning_router = _optional_router("api.routers.planning")
     if planning_router is not None:
         application.include_router(planning_router)
+
+    agents_router = _optional_router("api.routers.agents")
+    if agents_router is not None:
+        application.include_router(agents_router)
+
+    briefing_router = _optional_router("api.routers.briefing")
+    if briefing_router is not None:
+        application.include_router(
+            briefing_router, dependencies=[Depends(require_briefing_access)]
+        )
 
     application.include_router(websocket_router)
 
