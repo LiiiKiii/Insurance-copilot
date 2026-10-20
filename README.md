@@ -14,7 +14,7 @@ Current migration stage:
 
 **A6 — Final Integration Validation and Baseline Freeze**
 
-A5 established repeatable acceptance coverage for knowledge retrieval, upload boundaries, PDF processing, and planning. A6 validates the merged project and freezes the accepted baseline. For M3, this round verifies that the version-controlled corpus and administrator-managed knowledge bases remain searchable, that search results retain source references, and that the existing knowledge administration tests cover tenant and document-processing boundaries.
+A5 established repeatable acceptance coverage for knowledge retrieval, upload boundaries, PDF processing, and planning. A6 validates the merged project and freezes the accepted baseline. The current validation confirms the knowledge-retrieval boundary and the deterministic planning behavior while preserving their documented limitations.
 
 No new M3 runtime code is introduced in A6 because the required knowledge models, retrieval tools, administration routes, ingestion pipeline, corpus, and acceptance tests were migrated in A0 through A5.
 
@@ -129,6 +129,21 @@ The completed project's unrelated upload-cleanup job remains outside the A3 M3 s
 - retained the A5 automated acceptance scope without modifying the validated M3 implementation;
 - recorded the final M3 capabilities and known retrieval boundaries in this README.
 
+### A6 M4 Baseline Freeze
+
+- confirmed that the chase-plan tool deducts pending premium, divides the open
+  gap into equal weekly targets, and produces configured action-template text;
+- confirmed stable handling for urgent competition selection, covered targets,
+  unknown competitions, data errors, and invalid planning API responses;
+- retained the improvement-advice Top-N, P0/P1/P2, and template-rendering
+  contract without changing its rules;
+- recorded that the current P0/P1/P2 labels are deterministic template labels,
+  not the output of customer scoring, Top-K ranking, or an optimisation model;
+- recorded the missing attribution calculation module as a runtime limitation
+  for end-to-end improvement-advice execution;
+- preserved the accepted planning implementation without adding a new
+  algorithm.
+
 ## Knowledge Corpus
 
 The version-controlled corpus contains:
@@ -241,16 +256,21 @@ The acceptance scope covers the following baseline:
 
 These tests exercise the M3 features introduced through A4 and retained in the frozen baseline. They do not introduce vector search, retrieval scoring datasets, or production OCR benchmarks.
 
-Run the retained A5 M4 planning acceptance scope with:
+Run the A6 M4 planning acceptance scope with:
 
 ```powershell
-.\.venv\Scripts\python.exe -m unittest tests/test_chase_plan.py tests/test_planning_api.py -v
+.\.venv\Scripts\python.exe -m pytest tests/test_chase_plan.py tests/test_insurance_tools.py tests/test_planning_api.py -q
 ```
 
-The chase-plan tests execute the current planning logic with isolated business data and action templates. The planning API tests verify route registration, validated request forwarding, and stable invalid-payload handling.
+The 19-test acceptance scope executes the current chase-plan logic with
+isolated business data and action templates, verifies the improvement-advice
+template contract against deterministic attribution results, and checks route
+registration, validated request forwarding, and stable invalid-payload
+handling. The detailed result and functional boundary are recorded in
+`docs/a6_m4_planning_baseline.md`.
 
 ## A6 Baseline Freeze
 
-A6 is the final migration round. The M3 baseline is considered complete for the implemented product scope: deterministic English file retrieval, SQLite FTS5 database retrieval with a SQL fallback, source citation, tenant-aware knowledge administration, local text import, PDF ingestion, and automated acceptance coverage. The merged baseline also retains the existing M4 planning behavior and its focused acceptance tests.
+A6 is the final migration round. The M3 baseline is considered complete for the implemented product scope: deterministic English file retrieval, SQLite FTS5 database retrieval with a SQL fallback, source citation, tenant-aware knowledge administration, local text import, PDF ingestion, and automated acceptance coverage. The merged baseline also retains the existing M4 planning behavior and its focused acceptance tests. That planning behavior is a deterministic, template-based baseline and must not be represented as an optimisation algorithm.
 
 No code file is added or replaced in A6. Vector or embedding retrieval, quantitative Recall@K and Precision@K datasets, production OCR benchmarking, and broader production hardening are outside the implemented baseline and are not implied by this freeze.
