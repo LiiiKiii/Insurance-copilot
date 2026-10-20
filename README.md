@@ -202,6 +202,7 @@ Copy `.env.example` to `.env` and configure authentication before starting the s
 ```text
 ADMIN_SECRET_KEY=<random-signing-secret-of-at-least-32-bytes>
 ADMIN_DEFAULT_PASSWORD=<initial-admin-password>
+AGENT_DEFAULT_PASSWORD=<initial-password-for-seeded-agent-accounts>
 ADMIN_ENCRYPTION_KEY=<Fernet-key-for-encrypted-provider-credentials>
 ```
 

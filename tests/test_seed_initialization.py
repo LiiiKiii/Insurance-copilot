@@ -14,6 +14,7 @@ from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 TEST_ADMIN_PASSWORD = "A6-only-validation-password"
+TEST_AGENT_PASSWORD = "A6-only-agent-validation-password"
 
 
 class SeedInitializationTests(unittest.TestCase):
@@ -26,6 +27,7 @@ class SeedInitializationTests(unittest.TestCase):
             f"sqlite+aiosqlite:///{database_path.as_posix()}"
         )
         environment["ADMIN_DEFAULT_PASSWORD"] = TEST_ADMIN_PASSWORD
+        environment["AGENT_DEFAULT_PASSWORD"] = TEST_AGENT_PASSWORD
 
         completed = subprocess.run(
             [sys.executable, "-m", "admin.seeds"],
@@ -50,7 +52,8 @@ class SeedInitializationTests(unittest.TestCase):
             "tenants": "tenants",
             "knowledge_permissions": "permissions",
             "admin_roles": "roles",
-            "admin_users": "users",
+            "admin_users": "users WHERE is_superadmin = 1",
+            "agent_users": "users WHERE is_superadmin = 0",
             "agent_profiles": "agent_profiles",
             "performance_rows": "agent_performance_metrics",
             "performance_targets": "performance_targets",
@@ -62,7 +65,7 @@ class SeedInitializationTests(unittest.TestCase):
         }
         return {
             summary_key: connection.execute(
-                f'SELECT COUNT(*) FROM "{table_name}"'
+                f'SELECT COUNT(*) FROM {table_name}'
             ).fetchone()[0]
             for summary_key, table_name in tables.items()
         }
@@ -99,6 +102,25 @@ class SeedInitializationTests(unittest.TestCase):
                 foreign_key_violations = connection.execute(
                     "PRAGMA foreign_key_check"
                 ).fetchall()
+                target_agents_without_user = connection.execute(
+                    "SELECT DISTINCT agent_id FROM performance_targets "
+                    "WHERE agent_id NOT IN (SELECT username FROM users)"
+                ).fetchall()
+                agent_row = connection.execute(
+                    "SELECT id, password_hash, is_superadmin, is_active, tier "
+                    "FROM users WHERE username = 'AGT001'"
+                ).fetchone()
+                agent_role = connection.execute(
+                    "SELECT roles.name FROM roles "
+                    "JOIN user_roles ON user_roles.role_id = roles.id "
+                    "WHERE user_roles.user_id = ?",
+                    (agent_row[0],),
+                ).fetchall()
+                agent_supervisor = connection.execute(
+                    "SELECT supervisor.username FROM users AS agent "
+                    "JOIN users AS supervisor ON supervisor.id = agent.supervisor_id "
+                    "WHERE agent.username = 'AGT001'"
+                ).fetchone()
 
         self.assertEqual(first_summary, first_counts)
         self.assertEqual(second_summary, second_counts)
@@ -110,6 +132,14 @@ class SeedInitializationTests(unittest.TestCase):
         self.assertTrue(admin_row[1].startswith("$2"))
         self.assertEqual(admin_row[2:], (1, 1))
         self.assertEqual(admin_role, [("super_admin",)])
+
+        self.assertEqual(target_agents_without_user, [])
+        self.assertIsNotNone(agent_row)
+        self.assertNotEqual(agent_row[1], TEST_AGENT_PASSWORD)
+        self.assertTrue(agent_row[1].startswith("$2"))
+        self.assertEqual(agent_row[2:], (0, 1, "senior_agent"))
+        self.assertEqual(agent_role, [("agent_manager",)])
+        self.assertEqual(agent_supervisor, ("AGT_TL01",))
 
         templates = json.loads(planning_value)
         self.assertTrue(templates["hkd_actions"])
