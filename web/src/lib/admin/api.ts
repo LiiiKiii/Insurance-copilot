@@ -173,7 +173,7 @@ function redirectToLogin(): void {
   window.location.href = `/admin/login?next=${next}`
 }
 
-async function apiFetch<T>(path: string, init: RequestInit = {}): Promise<ApiResponse<T>> {
+async function apiFetch<T>(path: string, init: RequestInit = {}, base = getAdminBase()): Promise<ApiResponse<T>> {
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
     ...(init.headers as Record<string, string> | undefined),
@@ -181,14 +181,14 @@ async function apiFetch<T>(path: string, init: RequestInit = {}): Promise<ApiRes
   const token = getToken()
   if (token) headers.Authorization = `Bearer ${token}`
 
-  let response = await fetch(`${getAdminBase()}${path}`, { ...init, headers })
+  let response = await fetch(`${base}${path}`, { ...init, headers })
   if (response.status === 401) {
     if (!refreshing) refreshing = refreshAccessToken()
     const refreshed = await refreshing
     refreshing = null
     if (refreshed) {
       headers.Authorization = `Bearer ${getToken()}`
-      response = await fetch(`${getAdminBase()}${path}`, { ...init, headers })
+      response = await fetch(`${base}${path}`, { ...init, headers })
     } else {
       redirectToLogin()
     }
@@ -242,6 +242,9 @@ async function uploadDocument(kbId: string, file: File): Promise<ApiResponse<KBD
 }
 
 export const adminApi = {
+  agents: {
+    list: () => apiFetch<{ agent_id: string }[]>('/api/agents-list', {}, API_CONFIG.BASE_URL),
+  },
   auth: {
     login: async (username: string, password: string) => {
       const result = await apiFetch<{

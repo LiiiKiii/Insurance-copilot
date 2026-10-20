@@ -9,14 +9,18 @@ from __future__ import annotations
 import os
 import tempfile
 import unittest
+from contextlib import contextmanager
 from pathlib import Path
 from unittest.mock import patch
 
 import httpx
+from sqlalchemy import create_engine
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
+from sqlalchemy.orm import sessionmaker
 
 from admin.db import Base, get_db
 from admin.models.competition import Competition
+from admin.models.inbox import InboxMessage
 from admin.models.performance_target import PerformanceTarget
 from admin.models.tenant import Tenant
 from admin.models.user import Role, User
@@ -36,6 +40,8 @@ class ApiEndpointTests(unittest.IsolatedAsyncioTestCase):
         self.directory = tempfile.TemporaryDirectory()
         database_path = Path(self.directory.name) / "api-endpoints.db"
         self.engine = create_async_engine(f"sqlite+aiosqlite:///{database_path.as_posix()}")
+        self.sync_engine = create_engine(f"sqlite:///{database_path.as_posix()}")
+        self.sync_sessions = sessionmaker(self.sync_engine, expire_on_commit=False)
         self.sessions = async_sessionmaker(
             self.engine, expire_on_commit=False, class_=AsyncSession
         )
@@ -49,6 +55,8 @@ class ApiEndpointTests(unittest.IsolatedAsyncioTestCase):
                 yield session
 
         self.app.dependency_overrides[get_db] = test_db
+        self.briefing_db_patch = patch("api.routers.briefing.get_sync_db", self._sync_test_db)
+        self.briefing_db_patch.start()
         self.client = httpx.AsyncClient(
             transport=httpx.ASGITransport(app=self.app), base_url="http://test"
         )
@@ -71,6 +79,19 @@ class ApiEndpointTests(unittest.IsolatedAsyncioTestCase):
                         roles=[role],
                     )
                 )
+            for user_id, tenant_id, active in (
+                ("agent-a", "tenant-a", True),
+                ("inactive-a", "tenant-a", False),
+                ("agent-b", "tenant-b", True),
+            ):
+                session.add(User(
+                    id=user_id,
+                    tenant_id=tenant_id,
+                    username=user_id,
+                    email=f"{user_id}@example.test",
+                    password_hash="unused-in-token-tests",
+                    is_active=active,
+                ))
             session.add_all(
                 [
                     PerformanceTarget(
@@ -98,6 +119,20 @@ class ApiEndpointTests(unittest.IsolatedAsyncioTestCase):
                     for suffix in ("a", "b")
                 ]
             )
+            session.add_all([
+                InboxMessage(
+                    id=f"message-{suffix}",
+                    tenant_id=f"tenant-{suffix}",
+                    agent_id="admin-a" if suffix == "a" else "reader-b",
+                    external_id=f"external-{suffix}",
+                    priority="P1",
+                    category="follow-up",
+                    notification_name=f"Notification {suffix}",
+                    receiver_type="agent",
+                    raw_content=f"private {suffix}",
+                )
+                for suffix in ("a", "b")
+            ])
             await session.commit()
 
         self.admin_headers = {
@@ -109,17 +144,102 @@ class ApiEndpointTests(unittest.IsolatedAsyncioTestCase):
 
     async def asyncTearDown(self) -> None:
         await self.client.aclose()
+        self.briefing_db_patch.stop()
         self.app.dependency_overrides.clear()
         await self.engine.dispose()
+        self.sync_engine.dispose()
         self.directory.cleanup()
         self.audit_patch.stop()
         self.environment.stop()
+
+    @contextmanager
+    def _sync_test_db(self):
+        with self.sync_sessions.begin() as session:
+            yield session
 
     async def test_health_is_public_and_reports_lazy_runtime(self) -> None:
         response = await self.client.get("/api/health")
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json(), {"status": "ok", "agent_loop": "not_started"})
+
+    async def test_agents_list_matches_frontend_shape_and_tenant_scope(self) -> None:
+        anonymous = await self.client.get("/api/agents-list")
+        tenant_a = await self.client.get("/api/agents-list", headers=self.admin_headers)
+        tenant_b = await self.client.get("/api/agents-list", headers=self.reader_headers)
+
+        self.assertEqual(anonymous.status_code, 401)
+        self.assertEqual(tenant_a.status_code, 200)
+        self.assertEqual(tenant_a.json(), {
+            "ok": True,
+            "data": [{"agent_id": "admin-a"}, {"agent_id": "agent-a"}],
+        })
+        self.assertEqual(tenant_b.status_code, 200)
+        self.assertEqual(tenant_b.json(), {
+            "ok": True,
+            "data": [{"agent_id": "agent-b"}, {"agent_id": "reader-b"}],
+        })
+
+    async def test_briefing_mount_preserves_paths_and_requires_identity(self) -> None:
+        paths = self.app.openapi()["paths"]
+        self.assertIn("get", paths["/api/briefing/today/summary"])
+        self.assertIn("post", paths["/api/briefing/today/regenerate"])
+        self.assertIn("get", paths["/api/briefing/messages/{message_id}"])
+        self.assertIn("get", paths["/api/briefing/admin/agents"])
+        self.assertIn("post", paths["/api/briefing/inbox/ingest"])
+
+        anonymous = await self.client.get("/api/briefing/today/summary?agent_id=admin-a")
+        spoofed = await self.client.get(
+            "/api/briefing/today/summary?agent_id=reader-b", headers=self.admin_headers
+        )
+        with patch("api.routers.briefing.get_compliance_warnings", return_value=[]):
+            own = await self.client.get(
+                "/api/briefing/today/summary?agent_id=admin-a", headers=self.admin_headers
+            )
+        self.assertEqual(anonymous.status_code, 401)
+        self.assertEqual(spoofed.status_code, 403)
+        self.assertEqual(own.status_code, 200)
+        self.assertEqual(own.json()["message_count"], 1)
+
+    async def test_briefing_message_and_admin_scope(self) -> None:
+        foreign_message = await self.client.get(
+            "/api/briefing/messages/message-b", headers=self.admin_headers
+        )
+        foreign_read = await self.client.post(
+            "/api/briefing/messages/message-b/read", headers=self.admin_headers
+        )
+        own_message = await self.client.get(
+            "/api/briefing/messages/message-a", headers=self.admin_headers
+        )
+        reader_admin = await self.client.get(
+            "/api/briefing/admin/agents?agent_id=reader-b", headers=self.reader_headers
+        )
+        admin_spoof = await self.client.get(
+            "/api/briefing/admin/agents?agent_id=reader-b", headers=self.admin_headers
+        )
+        admin_own = await self.client.get(
+            "/api/briefing/admin/agents?agent_id=admin-a", headers=self.admin_headers
+        )
+        ingest = await self.client.post(
+            "/api/briefing/inbox/ingest", headers=self.admin_headers,
+            json={"messages": []},
+        )
+        async with self.sessions() as session:
+            untouched = await session.get(InboxMessage, "message-b")
+
+        self.assertEqual(foreign_message.status_code, 404)
+        self.assertEqual(foreign_read.status_code, 404)
+        self.assertIsNone(untouched.read_at)
+        self.assertEqual(own_message.status_code, 200)
+        self.assertEqual(own_message.json()["raw_content"], "private a")
+        self.assertEqual(reader_admin.status_code, 403)
+        self.assertEqual(admin_spoof.status_code, 403)
+        self.assertEqual(admin_own.status_code, 200)
+        self.assertEqual(
+            [agent["username"] for agent in admin_own.json()["agents"]],
+            ["admin-a", "agent-a", "inactive-a"],
+        )
+        self.assertEqual(ingest.status_code, 403)
 
     async def test_targets_validate_inputs_and_restrict_writes(self) -> None:
         anonymous = await self.client.get("/api/admin/targets/")

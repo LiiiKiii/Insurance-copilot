@@ -58,7 +58,7 @@ class FinalA4IntegrationTests(unittest.IsolatedAsyncioTestCase):
         build.assert_called_once()
         persist.assert_awaited_once()
 
-    async def test_a4_routes_and_deferred_briefing_are_explicit(self):
+    async def test_a4_routes_and_mounted_briefing_are_explicit(self):
         paths = self.app.openapi()["paths"]
         for path, method in (
             ("/api/admin/auth/login", "POST"),
@@ -75,7 +75,7 @@ class FinalA4IntegrationTests(unittest.IsolatedAsyncioTestCase):
         ):
             self.assertIn(method.lower(), paths[path])
         self.assertEqual(str(self.app.url_path_for("chat")), "/ws/chat")
-        self.assertNotIn("/api/briefing/today", paths)
+        self.assertIn("get", paths["/api/briefing/today"])
         self.assertNotIn("/api/chat", paths)
 
     async def test_planning_requires_live_identity_and_own_agent_id(self):

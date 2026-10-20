@@ -12,13 +12,13 @@ This project progressively combines data-driven diagnosis, deterministic busines
 
 Current migration stage:
 
-**A6 — Baseline Freeze**
+**A6 — Final Integration Validation and Baseline Freeze**
 
-A6 closes the staged migration and freezes the accepted project baseline. For M3, this round verifies that the version-controlled corpus and administrator-managed knowledge bases remain searchable, that search results retain source references, and that the existing knowledge administration tests cover tenant and document-processing boundaries.
+A5 established repeatable acceptance coverage for knowledge retrieval, upload boundaries, PDF processing, and planning. A6 validates the merged project and freezes the accepted baseline. For M3, this round verifies that the version-controlled corpus and administrator-managed knowledge bases remain searchable, that search results retain source references, and that the existing knowledge administration tests cover tenant and document-processing boundaries.
 
 No new M3 runtime code is introduced in A6 because the required knowledge models, retrieval tools, administration routes, ingestion pipeline, corpus, and acceptance tests were migrated in A0 through A5.
 
-The frozen baseline also retains the A3 integration delivered by the other workstreams: M3 daily briefing and compliance services, plus M4 planning endpoints and the interface contract for candidate prioritisation.
+A6 adds no new administration features. It validates the code already present in the merged repository and retains the A3 integration delivered by the other workstreams: M3 daily briefing and compliance services, plus M4 planning endpoints and the interface contract for candidate prioritisation.
 
 ### A0 Deliverables Retained
 
@@ -111,6 +111,15 @@ The completed project's unrelated upload-cleanup job remains outside the A3 M3 s
 - unit tests for PDF rasterisation, OCR extraction, layout recovery, Markdown chunking, indexing, and end-to-end document status transitions;
 - isolated temporary databases, files, and mocked OCR adapters so the baseline does not require production data or external services.
 
+### A5 M4 Deliverables Retained
+
+#### Planning-tool baseline acceptance
+
+- chase-plan coverage for pending-premium deduction, equal weekly targets, urgent competition selection, managed-template fallback, and stable errors;
+- planning API coverage for route registration, validated chase-plan inputs, improvement-advice Top-N forwarding, and invalid tool payloads;
+- deterministic tests that isolate database access and business calculations;
+- no customer scoring, ranking, Top-K selection, or optimisation algorithm was added by the test round.
+
 ### A6 M3 Baseline Freeze
 
 - confirmed that competition rules, qualification rules, best practices, and sales scripts are searchable through the existing English file-retrieval tools;
@@ -166,30 +175,56 @@ Uploaded runtime files are stored outside version control.
 - `tiktoken` for token-aware chunking
 - Next.js 16 and React 19 for the administration page
 
-Install the Python project and its test dependencies with:
+Create a virtual environment and install the Python project, its test dependencies, and an ASGI server with:
 
 ```powershell
-python -m pip install -e ".[dev]"
+python -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -e ".[dev]" uvicorn
 ```
 
-Configure A4 authentication in `.env` before starting the server or creating the first administrator:
+Copy `.env.example` to `.env` and configure authentication before starting the server or creating the first administrator. Set `ADMIN_DATABASE_URL` to a database intended for this instance; if omitted, the application uses `data/db/admin.db`. Keep `.env` out of version control.
 
 ```text
 ADMIN_SECRET_KEY=<random-signing-secret-of-at-least-32-bytes>
 ADMIN_DEFAULT_PASSWORD=<initial-admin-password>
+ADMIN_ENCRYPTION_KEY=<Fernet-key-for-encrypted-provider-credentials>
 ```
 
-Never commit real secrets. Create the database records and initial `admin` account with:
+`ADMIN_ENCRYPTION_KEY` is required when encrypted provider credentials are stored or read. Generate it with `python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())"` and keep the value private.
+
+Apply the tracked migrations to a new development database, then create the initial `admin` account and seed data:
 
 ```powershell
-python -m admin.seeds
+.\.venv\Scripts\python.exe -m alembic upgrade head
+.\.venv\Scripts\python.exe -m admin.seeds
 ```
 
-Start the backend and frontend with the project's existing development commands. The administration page is available at `/admin/login` after both services are running.
+Start the backend from the repository root, then start the frontend in a second terminal:
+
+```powershell
+.\.venv\Scripts\python.exe -m uvicorn api.server:app --reload
+```
+
+```powershell
+cd web
+pnpm install --frozen-lockfile
+pnpm dev
+```
+
+The frontend requires Node.js 20+ and pnpm 9. It proxies `/api/*` and `/ws/*` to `NEXT_PUBLIC_API_URL` (default `http://localhost:8000`). Open `http://localhost:3000/admin/login`. For local chat WebSockets, set `WS_ALLOWED_ORIGINS=http://localhost:3000` in the backend environment.
 
 ## Test and Baseline Acceptance
 
-Run the final A6 M3 acceptance scope with:
+Run the complete backend suites from the repository root with:
+
+```powershell
+.\.venv\Scripts\python.exe -m unittest discover -s tests -p "test_*.py" -q
+.\.venv\Scripts\python.exe -m pytest tests -q
+```
+
+For frontend checks, run `pnpm install --frozen-lockfile` followed by `pnpm lint` from `web/`. Set `ADMIN_DATABASE_URL` to a disposable SQLite database for integration runs; never point tests at a production database. The PDF chunker tests need the public `cl100k_base` tokenizer data cached by `tiktoken` on first use.
+
+Run the focused A6 M3 acceptance scope with:
 
 ```powershell
 python -m pytest tests/test_knowledge_retrieval.py tests/admin/test_knowledge_router.py tests/admin/services/pdf -q
@@ -206,8 +241,16 @@ The acceptance scope covers the following baseline:
 
 These tests exercise the M3 features introduced through A4 and retained in the frozen baseline. They do not introduce vector search, retrieval scoring datasets, or production OCR benchmarks.
 
+Run the retained A5 M4 planning acceptance scope with:
+
+```powershell
+.\.venv\Scripts\python.exe -m unittest tests/test_chase_plan.py tests/test_planning_api.py -v
+```
+
+The chase-plan tests execute the current planning logic with isolated business data and action templates. The planning API tests verify route registration, validated request forwarding, and stable invalid-payload handling.
+
 ## A6 Baseline Freeze
 
-A6 is the final migration round. The M3 baseline is considered complete for the implemented product scope: deterministic English file retrieval, SQLite FTS5 database retrieval with a SQL fallback, source citation, tenant-aware knowledge administration, local text import, PDF ingestion, and automated acceptance coverage.
+A6 is the final migration round. The M3 baseline is considered complete for the implemented product scope: deterministic English file retrieval, SQLite FTS5 database retrieval with a SQL fallback, source citation, tenant-aware knowledge administration, local text import, PDF ingestion, and automated acceptance coverage. The merged baseline also retains the existing M4 planning behavior and its focused acceptance tests.
 
 No code file is added or replaced in A6. Vector or embedding retrieval, quantitative Recall@K and Precision@K datasets, production OCR benchmarking, and broader production hardening are outside the implemented baseline and are not implied by this freeze.
