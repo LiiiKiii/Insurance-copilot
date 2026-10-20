@@ -12,13 +12,13 @@ This project progressively combines data-driven diagnosis, deterministic busines
 
 Current migration stage:
 
-**A6 — Final Integration Validation**
+**A6 — Final Integration Validation and Baseline Freeze**
 
-A5 added repeatable baseline tests for knowledge retrieval, upload boundaries, PDF processing, and planning. A6 validates the merged backend, reviews frontend interfaces, and documents executable results and remaining limits in [docs/a6_m1_baseline.md](docs/a6_m1_baseline.md).
+A5 established repeatable acceptance coverage for knowledge retrieval, upload boundaries, PDF processing, and planning. A6 validates the merged project and freezes the accepted baseline. For M3, this round verifies that the version-controlled corpus and administrator-managed knowledge bases remain searchable, that search results retain source references, and that the existing knowledge administration tests cover tenant and document-processing boundaries.
 
-The stage also retains the A3 integration delivered by the other workstreams: M3 daily briefing and compliance services, plus M4 planning endpoints and the interface contract for later candidate prioritisation.
+No new M3 runtime code is introduced in A6 because the required knowledge models, retrieval tools, administration routes, ingestion pipeline, corpus, and acceptance tests were migrated in A0 through A5.
 
-A6 adds no new administration features; it checks the code already present in the merged repository.
+A6 adds no new administration features. It validates the code already present in the merged repository and retains the A3 integration delivered by the other workstreams: M3 daily briefing and compliance services, plus M4 planning endpoints and the interface contract for candidate prioritisation.
 
 ### A0 Deliverables Retained
 
@@ -101,7 +101,7 @@ The completed project's unrelated upload-cleanup job remains outside the A3 M3 s
 - the version-controlled JSON file and built-in English templates remain safe
   fallbacks when the administration database is unavailable or invalid.
 
-### A5 M3 Deliverables
+### A5 M3 Deliverables Retained
 
 #### Tests and baseline acceptance
 
@@ -111,17 +111,23 @@ The completed project's unrelated upload-cleanup job remains outside the A3 M3 s
 - unit tests for PDF rasterisation, OCR extraction, layout recovery, Markdown chunking, indexing, and end-to-end document status transitions;
 - isolated temporary databases, files, and mocked OCR adapters so the baseline does not require production data or external services.
 
-### A5 M4 Deliverables
+### A5 M4 Deliverables Retained
 
 #### Planning-tool baseline acceptance
 
-- chase-plan coverage for pending-premium deduction, equal weekly targets,
-  urgent competition selection, managed-template fallback, and stable errors;
-- improvement-advice coverage for data errors, invalid attribution snapshots,
-  Top-N handling, P0/P1/P2 assignment, known templates, and generic advice;
-- deterministic tests that isolate database access and attribution calculations;
-- no customer scoring, ranking, Top-K selection, or optimisation algorithm is
-  added by this test round.
+- chase-plan coverage for pending-premium deduction, equal weekly targets, urgent competition selection, managed-template fallback, and stable errors;
+- planning API coverage for route registration, validated chase-plan inputs, improvement-advice Top-N forwarding, and invalid tool payloads;
+- deterministic tests that isolate database access and business calculations;
+- no customer scoring, ranking, Top-K selection, or optimisation algorithm was added by the test round.
+
+### A6 M3 Baseline Freeze
+
+- confirmed that competition rules, qualification rules, best practices, and sales scripts are searchable through the existing English file-retrieval tools;
+- confirmed that administrator-managed chunks are searchable through SQLite FTS5 with the SQL `LIKE` fallback retained for compatible deployments;
+- confirmed that retrieval responses preserve source references for Markdown assets and database-backed documents;
+- confirmed that the version-controlled knowledge corpus, tenant-aware administration routes, import tool, and PDF ingestion pipeline are present in the final staged repository;
+- retained the A5 automated acceptance scope without modifying the validated M3 implementation;
+- recorded the final M3 capabilities and known retrieval boundaries in this README.
 
 ## Knowledge Corpus
 
@@ -176,7 +182,7 @@ python -m venv .venv
 .\.venv\Scripts\python.exe -m pip install -e ".[dev]" uvicorn
 ```
 
-Copy `.env.example` to `.env` and configure authentication before starting the server or creating the first administrator. Set `ADMIN_DATABASE_URL` to a database intended for this instance; if omitted, the app uses `data/db/admin.db`. Keep `.env` out of version control.
+Copy `.env.example` to `.env` and configure authentication before starting the server or creating the first administrator. Set `ADMIN_DATABASE_URL` to a database intended for this instance; if omitted, the application uses `data/db/admin.db`. Keep `.env` out of version control.
 
 ```text
 ADMIN_SECRET_KEY=<random-signing-secret-of-at-least-32-bytes>
@@ -184,9 +190,12 @@ ADMIN_DEFAULT_PASSWORD=<initial-admin-password>
 ADMIN_ENCRYPTION_KEY=<Fernet-key-for-encrypted-provider-credentials>
 ```
 
-`ADMIN_ENCRYPTION_KEY` is required when encrypted provider credentials are stored or read. Generate it with `python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())"` and keep the value private. Apply the tracked migrations to a new development database with `.\.venv\Scripts\python.exe -m alembic upgrade head`. The backend also initialises currently modeled tables at startup. Create the initial `admin` account and seed data with:
+`ADMIN_ENCRYPTION_KEY` is required when encrypted provider credentials are stored or read. Generate it with `python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())"` and keep the value private.
+
+Apply the tracked migrations to a new development database, then create the initial `admin` account and seed data:
 
 ```powershell
+.\.venv\Scripts\python.exe -m alembic upgrade head
 .\.venv\Scripts\python.exe -m admin.seeds
 ```
 
@@ -202,20 +211,20 @@ pnpm install --frozen-lockfile
 pnpm dev
 ```
 
-The frontend requires Node.js 20+ and pnpm 9. It proxies `/api/*` and `/ws/*` to `NEXT_PUBLIC_API_URL` (default `http://localhost:8000`); open `http://localhost:3000/admin/login`. For local chat WebSockets, set `WS_ALLOWED_ORIGINS=http://localhost:3000` in the backend environment.
+The frontend requires Node.js 20+ and pnpm 9. It proxies `/api/*` and `/ws/*` to `NEXT_PUBLIC_API_URL` (default `http://localhost:8000`). Open `http://localhost:3000/admin/login`. For local chat WebSockets, set `WS_ALLOWED_ORIGINS=http://localhost:3000` in the backend environment.
 
 ## Test and Baseline Acceptance
 
-Run the full backend suites from the repository root with:
+Run the complete backend suites from the repository root with:
 
 ```powershell
 .\.venv\Scripts\python.exe -m unittest discover -s tests -p "test_*.py" -q
 .\.venv\Scripts\python.exe -m pytest tests -q
 ```
 
-For frontend checks, run `pnpm install --frozen-lockfile` followed by `pnpm check` from `web/`. These commands require Node.js and pnpm. Set `ADMIN_DATABASE_URL` to a disposable SQLite database for integration runs; never point tests at a production database. The PDF chunker tests need the public `cl100k_base` tokenizer data cached by `tiktoken` on first use. See the A6 baseline report for actual results and limits.
+For frontend checks, run `pnpm install --frozen-lockfile` followed by `pnpm lint` from `web/`. Set `ADMIN_DATABASE_URL` to a disposable SQLite database for integration runs; never point tests at a production database. The PDF chunker tests need the public `cl100k_base` tokenizer data cached by `tiktoken` on first use.
 
-Run the A5 M3 acceptance scope with:
+Run the focused A6 M3 acceptance scope with:
 
 ```powershell
 python -m pytest tests/test_knowledge_retrieval.py tests/admin/test_knowledge_router.py tests/admin/services/pdf -q
@@ -230,21 +239,18 @@ The acceptance scope covers the following baseline:
 | Upload boundary | Tenant isolation, PDF-only input, and the 20 MB size limit are enforced |
 | Document processing | Rasterisation, OCR, layout recovery, chunking, indexing, and failure states are tested |
 
-These tests exercise only features already available through A4. They do not introduce vector search, retrieval scoring datasets, production OCR benchmarks, or later-stage end-to-end workflows.
+These tests exercise the M3 features introduced through A4 and retained in the frozen baseline. They do not introduce vector search, retrieval scoring datasets, or production OCR benchmarks.
 
-Run the A5 M4 planning acceptance scope with:
+Run the retained A5 M4 planning acceptance scope with:
 
 ```powershell
-python -m unittest tests/test_chase_plan.py tests/test_insurance_tools.py tests/test_planning_api.py -v
+.\.venv\Scripts\python.exe -m unittest tests/test_chase_plan.py tests/test_planning_api.py -v
 ```
 
-The chase-plan tests execute the current planning logic with isolated business
-data and action templates. The improvement-advice tests inject deterministic
-attribution-gap results because the corresponding attribution calculation
-module is not part of the current codebase. This preserves the implemented
-planning behavior while recording the missing runtime dependency as a known
-baseline limitation.
+The chase-plan tests execute the current planning logic with isolated business data and action templates. The planning API tests verify route registration, validated request forwarding, and stable invalid-payload handling.
 
-## Historical A5 Boundary
+## A6 Baseline Freeze
 
-The A5 round did not introduce the completed project's remaining admin pages, full agent-side admin orchestration, vector retrieval, retrieval evaluation datasets, final deployment configuration, or end-to-end production hardening. Those components and their tests belong to their designated later stages.
+A6 is the final migration round. The M3 baseline is considered complete for the implemented product scope: deterministic English file retrieval, SQLite FTS5 database retrieval with a SQL fallback, source citation, tenant-aware knowledge administration, local text import, PDF ingestion, and automated acceptance coverage. The merged baseline also retains the existing M4 planning behavior and its focused acceptance tests.
+
+No code file is added or replaced in A6. Vector or embedding retrieval, quantitative Recall@K and Precision@K datasets, production OCR benchmarking, and broader production hardening are outside the implemented baseline and are not implied by this freeze.
