@@ -274,6 +274,75 @@ async def _seed_admin_access(
     return len(permissions), len(roles), 1
 
 
+# Rank-to-tier mapping and reporting lines, as in the Original agent accounts.
+AGENT_TIERS = {
+    "Team Lead": "team_lead",
+    "Senior Business Manager": "senior_agent",
+}
+AGENT_SUPERVISORS = {
+    "AGT001": "AGT_TL01",
+    "AGT002": "AGT_TL01",
+    "AGT003": "AGT001",
+}
+
+
+async def _seed_agent_users(
+    session: AsyncSession,
+    tenant_id: str,
+    agents: list[dict[str, Any]],
+) -> int:
+    """Create a login account for every mock agent so agent IDs match users."""
+    manager_role = await session.scalar(
+        select(Role).where(Role.tenant_id == tenant_id, Role.name == "agent_manager")
+    )
+    if manager_role is None:
+        raise RuntimeError("agent_manager role must be seeded before agent users")
+
+    users: dict[str, User] = {}
+    for agent in agents:
+        username = agent["agent_id"]
+        tier = AGENT_TIERS.get(agent.get("rank_en") or "", "agent")
+        user = await session.scalar(
+            select(User).where(User.tenant_id == tenant_id, User.username == username)
+        )
+        if user is None:
+            user = User(
+                id=str(uuid.uuid4()),
+                tenant_id=tenant_id,
+                username=username,
+                email=agent.get("email") or f"{username.lower()}@insurance-copilot.local",
+                password_hash=hash_password(_require_env("AGENT_DEFAULT_PASSWORD")),
+                display_name=agent.get("name_en") or username,
+                is_superadmin=False,
+                is_active=True,
+                tier=tier,
+            )
+            session.add(user)
+            await session.flush()
+        else:
+            user.tier = tier
+        users[username] = user
+
+        role_link = (
+            await session.execute(
+                select(user_roles).where(
+                    user_roles.c.user_id == user.id,
+                    user_roles.c.role_id == manager_role.id,
+                )
+            )
+        ).first()
+        if role_link is None:
+            await session.execute(
+                insert(user_roles).values(user_id=user.id, role_id=manager_role.id)
+            )
+
+    for username, supervisor in AGENT_SUPERVISORS.items():
+        if username in users and supervisor in users:
+            users[username].supervisor_id = users[supervisor].id
+
+    return len(users)
+
+
 async def _seed_profiles(session: AsyncSession, agents: list[dict[str, Any]]) -> int:
     for agent in agents:
         highlights = agent.get("career_highlights") or []
@@ -495,6 +564,7 @@ async def seed(mock_dir: Path = DEFAULT_MOCK_DIR) -> dict[str, int]:
                 session,
                 tenant.id,
             )
+            agent_user_count = await _seed_agent_users(session, tenant.id, agents)
             profile_count = await _seed_profiles(session, agents)
             performance_count, target_count = await _seed_performance(session, performance)
             policy_count = await _seed_policies(
@@ -514,6 +584,7 @@ async def seed(mock_dir: Path = DEFAULT_MOCK_DIR) -> dict[str, int]:
         "knowledge_permissions": permission_count,
         "admin_roles": role_count,
         "admin_users": admin_count,
+        "agent_users": agent_user_count,
         "agent_profiles": profile_count,
         "performance_rows": performance_count,
         "performance_targets": target_count,
