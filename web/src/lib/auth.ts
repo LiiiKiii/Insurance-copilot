@@ -22,6 +22,12 @@ export function getToken(): string | null {
   return localStorage.getItem(TOKEN_KEY)
 }
 
+/** Bearer header for protected backend routes; empty when signed out. */
+export function authHeaders(): Record<string, string> {
+  const token = getToken()
+  return token ? { Authorization: `Bearer ${token}` } : {}
+}
+
 export function getChatUser(): ChatUser | null {
   if (typeof window === 'undefined') return null
   try {

@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import { useInsuranceChat } from '@/lib/useWebSocket'
 import { Sidebar, SidebarContent } from '@/components/Sidebar'
 import { ConfirmModal } from '@/components/ConfirmModal'
-import { clearAuth } from '@/lib/auth'
+import { authHeaders, clearAuth } from '@/lib/auth'
 import { ChatInterface } from '@/components/ChatInterface'
 import { AlertBanner } from '@/components/AlertBanner'
 import { PerformanceTab } from '@/components/PerformanceTab'
@@ -63,7 +63,7 @@ export default function Home() {
         if (data.configured) return
         await fetch('/api/config/apply', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 'Content-Type': 'application/json', ...authHeaders() },
           body: JSON.stringify(cfg),
         }).catch(() => {})
       })
@@ -75,7 +75,7 @@ export default function Home() {
     // Notify backend to use the new key (fire-and-forget)
     fetch('/api/config/apply', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', ...authHeaders() },
       body: JSON.stringify(cfg),
     }).catch(() => {/* best effort */})
   }
