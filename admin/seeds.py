@@ -27,7 +27,6 @@ from admin.models.tenant import Tenant
 from admin.models.user import Permission, Role, User, role_permissions, user_roles
 from admin.services.auth_service import hash_password
 
-
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_MOCK_DIR = PROJECT_ROOT / "data" / "mock"
 DEFAULT_TENANT_ID = "00000000-0000-0000-0000-000000000001"
