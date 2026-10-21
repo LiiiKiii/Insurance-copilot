@@ -1,0 +1,1352 @@
+{
+  "AGT00690": {
+    "agent_id": "AGT00690",
+    "currency": "USD",
+    "assessments": [
+      {
+        "subject": "Written Premium",
+        "target_value": 383000,
+        "current_value": 154750,
+        "status": "Needs Attention",
+        "remark": "Source-derived YTD written premium compared with the annual target."
+      },
+      {
+        "subject": "New Business Commission",
+        "target_value": 5000,
+        "current_value": 1130,
+        "status": "Needs Attention",
+        "remark": "Derived from new-business premium and documented product commission assumptions."
+      },
+      {
+        "subject": "Average Case Size",
+        "target_value": 1200,
+        "current_value": 1190,
+        "status": "Below Benchmark",
+        "remark": "Derived from normalised bound-policy volume and new-business premium."
+      }
+    ]
+  },
+  "AGT00770": {
+    "agent_id": "AGT00770",
+    "currency": "USD",
+    "assessments": [
+      {
+        "subject": "Written Premium",
+        "target_value": 355000,
+        "current_value": 143650,
+        "status": "Needs Attention",
+        "remark": "Source-derived YTD written premium compared with the annual target."
+      },
+      {
+        "subject": "New Business Commission",
+        "target_value": 14200,
+        "current_value": 5640,
+        "status": "Needs Attention",
+        "remark": "Derived from new-business premium and documented product commission assumptions."
+      },
+      {
+        "subject": "Average Case Size",
+        "target_value": 4800,
+        "current_value": 4590,
+        "status": "Below Benchmark",
+        "remark": "Derived from normalised bound-policy volume and new-business premium."
+      }
+    ]
+  },
+  "AGT00817": {
+    "agent_id": "AGT00817",
+    "currency": "USD",
+    "assessments": [
+      {
+        "subject": "Written Premium",
+        "target_value": 234000,
+        "current_value": 94730,
+        "status": "Needs Attention",
+        "remark": "Source-derived YTD written premium compared with the annual target."
+      },
+      {
+        "subject": "New Business Commission",
+        "target_value": 5000,
+        "current_value": 90,
+        "status": "Needs Attention",
+        "remark": "Derived from new-business premium and documented product commission assumptions."
+      },
+      {
+        "subject": "Average Case Size",
+        "target_value": 1100,
+        "current_value": 720,
+        "status": "Below Benchmark",
+        "remark": "Derived from normalised bound-policy volume and new-business premium."
+      }
+    ]
+  },
+  "AGT00949": {
+    "agent_id": "AGT00949",
+    "currency": "USD",
+    "assessments": [
+      {
+        "subject": "Written Premium",
+        "target_value": 459000,
+        "current_value": 185720,
+        "status": "Needs Attention",
+        "remark": "Source-derived YTD written premium compared with the annual target."
+      },
+      {
+        "subject": "New Business Commission",
+        "target_value": 6000,
+        "current_value": 2400,
+        "status": "Needs Attention",
+        "remark": "Derived from new-business premium and documented product commission assumptions."
+      },
+      {
+        "subject": "Average Case Size",
+        "target_value": 1800,
+        "current_value": 1670,
+        "status": "Below Benchmark",
+        "remark": "Derived from normalised bound-policy volume and new-business premium."
+      }
+    ]
+  },
+  "AGT01191": {
+    "agent_id": "AGT01191",
+    "currency": "USD",
+    "assessments": [
+      {
+        "subject": "Written Premium",
+        "target_value": 455000,
+        "current_value": 184070,
+        "status": "Needs Attention",
+        "remark": "Source-derived YTD written premium compared with the annual target."
+      },
+      {
+        "subject": "New Business Commission",
+        "target_value": 5000,
+        "current_value": 600,
+        "status": "Needs Attention",
+        "remark": "Derived from new-business premium and documented product commission assumptions."
+      },
+      {
+        "subject": "Average Case Size",
+        "target_value": 1800,
+        "current_value": 1690,
+        "status": "Below Benchmark",
+        "remark": "Derived from normalised bound-policy volume and new-business premium."
+      }
+    ]
+  },
+  "AGT01448": {
+    "agent_id": "AGT01448",
+    "currency": "USD",
+    "assessments": [
+      {
+        "subject": "Written Premium",
+        "target_value": 1128000,
+        "current_value": 456360,
+        "status": "Needs Attention",
+        "remark": "Source-derived YTD written premium compared with the annual target."
+      },
+      {
+        "subject": "New Business Commission",
+        "target_value": 19600,
+        "current_value": 7770,
+        "status": "Needs Attention",
+        "remark": "Derived from new-business premium and documented product commission assumptions."
+      },
+      {
+        "subject": "Average Case Size",
+        "target_value": 3200,
+        "current_value": 3060,
+        "status": "Below Benchmark",
+        "remark": "Derived from normalised bound-policy volume and new-business premium."
+      }
+    ]
+  },
+  "AGT01525": {
+    "agent_id": "AGT01525",
+    "currency": "USD",
+    "assessments": [
+      {
+        "subject": "Written Premium",
+        "target_value": 283000,
+        "current_value": 114280,
+        "status": "Needs Attention",
+        "remark": "Source-derived YTD written premium compared with the annual target."
+      },
+      {
+        "subject": "New Business Commission",
+        "target_value": 5000,
+        "current_value": 280,
+        "status": "Needs Attention",
+        "remark": "Derived from new-business premium and documented product commission assumptions."
+      },
+      {
+        "subject": "Average Case Size",
+        "target_value": 2400,
+        "current_value": 2310,
+        "status": "Below Benchmark",
+        "remark": "Derived from normalised bound-policy volume and new-business premium."
+      }
+    ]
+  },
+  "AGT01569": {
+    "agent_id": "AGT01569",
+    "currency": "USD",
+    "assessments": [
+      {
+        "subject": "Written Premium",
+        "target_value": 418000,
+        "current_value": 169120,
+        "status": "Needs Attention",
+        "remark": "Source-derived YTD written premium compared with the annual target."
+      },
+      {
+        "subject": "New Business Commission",
+        "target_value": 5000,
+        "current_value": 150,
+        "status": "Needs Attention",
+        "remark": "Derived from new-business premium and documented product commission assumptions."
+      },
+      {
+        "subject": "Average Case Size",
+        "target_value": 700,
+        "current_value": 500,
+        "status": "Below Benchmark",
+        "remark": "Derived from normalised bound-policy volume and new-business premium."
+      }
+    ]
+  },
+  "AGT01662": {
+    "agent_id": "AGT01662",
+    "currency": "USD",
+    "assessments": [
+      {
+        "subject": "Written Premium",
+        "target_value": 948000,
+        "current_value": 383460,
+        "status": "Needs Attention",
+        "remark": "Source-derived YTD written premium compared with the annual target."
+      },
+      {
+        "subject": "New Business Commission",
+        "target_value": 7400,
+        "current_value": 2920,
+        "status": "Needs Attention",
+        "remark": "Derived from new-business premium and documented product commission assumptions."
+      },
+      {
+        "subject": "Average Case Size",
+        "target_value": 2900,
+        "current_value": 2780,
+        "status": "Below Benchmark",
+        "remark": "Derived from normalised bound-policy volume and new-business premium."
+      }
+    ]
+  },
+  "AGT01876": {
+    "agent_id": "AGT01876",
+    "currency": "USD",
+    "assessments": [
+      {
+        "subject": "Written Premium",
+        "target_value": 202000,
+        "current_value": 81810,
+        "status": "Needs Attention",
+        "remark": "Source-derived YTD written premium compared with the annual target."
+      },
+      {
+        "subject": "New Business Commission",
+        "target_value": 5000,
+        "current_value": 530,
+        "status": "Needs Attention",
+        "remark": "Derived from new-business premium and documented product commission assumptions."
+      },
+      {
+        "subject": "Average Case Size",
+        "target_value": 1800,
+        "current_value": 1690,
+        "status": "Below Benchmark",
+        "remark": "Derived from normalised bound-policy volume and new-business premium."
+      }
+    ]
+  },
+  "AGT02217": {
+    "agent_id": "AGT02217",
+    "currency": "USD",
+    "assessments": [
+      {
+        "subject": "Written Premium",
+        "target_value": 1304000,
+        "current_value": 527370,
+        "status": "Needs Attention",
+        "remark": "Source-derived YTD written premium compared with the annual target."
+      },
+      {
+        "subject": "New Business Commission",
+        "target_value": 13500,
+        "current_value": 5350,
+        "status": "Needs Attention",
+        "remark": "Derived from new-business premium and documented product commission assumptions."
+      },
+      {
+        "subject": "Average Case Size",
+        "target_value": 1700,
+        "current_value": 1630,
+        "status": "Below Benchmark",
+        "remark": "Derived from normalised bound-policy volume and new-business premium."
+      }
+    ]
+  },
+  "AGT02393": {
+    "agent_id": "AGT02393",
+    "currency": "USD",
+    "assessments": [
+      {
+        "subject": "Written Premium",
+        "target_value": 1245000,
+        "current_value": 503770,
+        "status": "Needs Attention",
+        "remark": "Source-derived YTD written premium compared with the annual target."
+      },
+      {
+        "subject": "New Business Commission",
+        "target_value": 12200,
+        "current_value": 4840,
+        "status": "Needs Attention",
+        "remark": "Derived from new-business premium and documented product commission assumptions."
+      },
+      {
+        "subject": "Average Case Size",
+        "target_value": 2200,
+        "current_value": 2060,
+        "status": "Below Benchmark",
+        "remark": "Derived from normalised bound-policy volume and new-business premium."
+      }
+    ]
+  },
+  "AGT02660": {
+    "agent_id": "AGT02660",
+    "currency": "USD",
+    "assessments": [
+      {
+        "subject": "Written Premium",
+        "target_value": 284000,
+        "current_value": 114820,
+        "status": "Needs Attention",
+        "remark": "Source-derived YTD written premium compared with the annual target."
+      },
+      {
+        "subject": "New Business Commission",
+        "target_value": 5000,
+        "current_value": 1660,
+        "status": "Needs Attention",
+        "remark": "Derived from new-business premium and documented product commission assumptions."
+      },
+      {
+        "subject": "Average Case Size",
+        "target_value": 1800,
+        "current_value": 1680,
+        "status": "Below Benchmark",
+        "remark": "Derived from normalised bound-policy volume and new-business premium."
+      }
+    ]
+  },
+  "AGT02837": {
+    "agent_id": "AGT02837",
+    "currency": "USD",
+    "assessments": [
+      {
+        "subject": "Written Premium",
+        "target_value": 61000,
+        "current_value": 24570,
+        "status": "Needs Attention",
+        "remark": "Source-derived YTD written premium compared with the annual target."
+      },
+      {
+        "subject": "New Business Commission",
+        "target_value": 5000,
+        "current_value": 110,
+        "status": "Needs Attention",
+        "remark": "Derived from new-business premium and documented product commission assumptions."
+      },
+      {
+        "subject": "Average Case Size",
+        "target_value": 700,
+        "current_value": 500,
+        "status": "Below Benchmark",
+        "remark": "Derived from normalised bound-policy volume and new-business premium."
+      }
+    ]
+  },
+  "AGT02946": {
+    "agent_id": "AGT02946",
+    "currency": "USD",
+    "assessments": [
+      {
+        "subject": "Written Premium",
+        "target_value": 161000,
+        "current_value": 64950,
+        "status": "Needs Attention",
+        "remark": "Source-derived YTD written premium compared with the annual target."
+      },
+      {
+        "subject": "New Business Commission",
+        "target_value": 5000,
+        "current_value": 270,
+        "status": "Needs Attention",
+        "remark": "Derived from new-business premium and documented product commission assumptions."
+      },
+      {
+        "subject": "Average Case Size",
+        "target_value": 800,
+        "current_value": 790,
+        "status": "Below Benchmark",
+        "remark": "Derived from normalised bound-policy volume and new-business premium."
+      }
+    ]
+  },
+  "AGT03036": {
+    "agent_id": "AGT03036",
+    "currency": "USD",
+    "assessments": [
+      {
+        "subject": "Written Premium",
+        "target_value": 265000,
+        "current_value": 107070,
+        "status": "Needs Attention",
+        "remark": "Source-derived YTD written premium compared with the annual target."
+      },
+      {
+        "subject": "New Business Commission",
+        "target_value": 5000,
+        "current_value": 40,
+        "status": "Needs Attention",
+        "remark": "Derived from new-business premium and documented product commission assumptions."
+      },
+      {
+        "subject": "Average Case Size",
+        "target_value": 1100,
+        "current_value": 500,
+        "status": "Below Benchmark",
+        "remark": "Derived from normalised bound-policy volume and new-business premium."
+      }
+    ]
+  },
+  "AGT03318": {
+    "agent_id": "AGT03318",
+    "currency": "USD",
+    "assessments": [
+      {
+        "subject": "Written Premium",
+        "target_value": 327000,
+        "current_value": 132080,
+        "status": "Needs Attention",
+        "remark": "Source-derived YTD written premium compared with the annual target."
+      },
+      {
+        "subject": "New Business Commission",
+        "target_value": 5000,
+        "current_value": 470,
+        "status": "Needs Attention",
+        "remark": "Derived from new-business premium and documented product commission assumptions."
+      },
+      {
+        "subject": "Average Case Size",
+        "target_value": 800,
+        "current_value": 750,
+        "status": "Below Benchmark",
+        "remark": "Derived from normalised bound-policy volume and new-business premium."
+      }
+    ]
+  },
+  "AGT03488": {
+    "agent_id": "AGT03488",
+    "currency": "USD",
+    "assessments": [
+      {
+        "subject": "Written Premium",
+        "target_value": 124000,
+        "current_value": 50330,
+        "status": "Needs Attention",
+        "remark": "Source-derived YTD written premium compared with the annual target."
+      },
+      {
+        "subject": "New Business Commission",
+        "target_value": 5000,
+        "current_value": 910,
+        "status": "Needs Attention",
+        "remark": "Derived from new-business premium and documented product commission assumptions."
+      },
+      {
+        "subject": "Average Case Size",
+        "target_value": 1100,
+        "current_value": 880,
+        "status": "Below Benchmark",
+        "remark": "Derived from normalised bound-policy volume and new-business premium."
+      }
+    ]
+  },
+  "AGT03724": {
+    "agent_id": "AGT03724",
+    "currency": "USD",
+    "assessments": [
+      {
+        "subject": "Written Premium",
+        "target_value": 1022000,
+        "current_value": 413390,
+        "status": "Needs Attention",
+        "remark": "Source-derived YTD written premium compared with the annual target."
+      },
+      {
+        "subject": "New Business Commission",
+        "target_value": 8800,
+        "current_value": 3500,
+        "status": "Needs Attention",
+        "remark": "Derived from new-business premium and documented product commission assumptions."
+      },
+      {
+        "subject": "Average Case Size",
+        "target_value": 2200,
+        "current_value": 2130,
+        "status": "Below Benchmark",
+        "remark": "Derived from normalised bound-policy volume and new-business premium."
+      }
+    ]
+  },
+  "AGT03826": {
+    "agent_id": "AGT03826",
+    "currency": "USD",
+    "assessments": [
+      {
+        "subject": "Written Premium",
+        "target_value": 245000,
+        "current_value": 98960,
+        "status": "Needs Attention",
+        "remark": "Source-derived YTD written premium compared with the annual target."
+      },
+      {
+        "subject": "New Business Commission",
+        "target_value": 5000,
+        "current_value": 780,
+        "status": "Needs Attention",
+        "remark": "Derived from new-business premium and documented product commission assumptions."
+      },
+      {
+        "subject": "Average Case Size",
+        "target_value": 2400,
+        "current_value": 2270,
+        "status": "Below Benchmark",
+        "remark": "Derived from normalised bound-policy volume and new-business premium."
+      }
+    ]
+  },
+  "AGT03851": {
+    "agent_id": "AGT03851",
+    "currency": "USD",
+    "assessments": [
+      {
+        "subject": "Written Premium",
+        "target_value": 60000,
+        "current_value": 24130,
+        "status": "Needs Attention",
+        "remark": "Source-derived YTD written premium compared with the annual target."
+      },
+      {
+        "subject": "New Business Commission",
+        "target_value": 5000,
+        "current_value": 0,
+        "status": "Needs Attention",
+        "remark": "Derived from new-business premium and documented product commission assumptions."
+      },
+      {
+        "subject": "Average Case Size",
+        "target_value": 700,
+        "current_value": 500,
+        "status": "Below Benchmark",
+        "remark": "Derived from normalised bound-policy volume and new-business premium."
+      }
+    ]
+  },
+  "AGT04277": {
+    "agent_id": "AGT04277",
+    "currency": "USD",
+    "assessments": [
+      {
+        "subject": "Written Premium",
+        "target_value": 2106000,
+        "current_value": 852060,
+        "status": "Needs Attention",
+        "remark": "Source-derived YTD written premium compared with the annual target."
+      },
+      {
+        "subject": "New Business Commission",
+        "target_value": 5000,
+        "current_value": 1820,
+        "status": "Needs Attention",
+        "remark": "Derived from new-business premium and documented product commission assumptions."
+      },
+      {
+        "subject": "Average Case Size",
+        "target_value": 2900,
+        "current_value": 2790,
+        "status": "Below Benchmark",
+        "remark": "Derived from normalised bound-policy volume and new-business premium."
+      }
+    ]
+  },
+  "AGT04310": {
+    "agent_id": "AGT04310",
+    "currency": "USD",
+    "assessments": [
+      {
+        "subject": "Written Premium",
+        "target_value": 225000,
+        "current_value": 91100,
+        "status": "Needs Attention",
+        "remark": "Source-derived YTD written premium compared with the annual target."
+      },
+      {
+        "subject": "New Business Commission",
+        "target_value": 5000,
+        "current_value": 210,
+        "status": "Needs Attention",
+        "remark": "Derived from new-business premium and documented product commission assumptions."
+      },
+      {
+        "subject": "Average Case Size",
+        "target_value": 700,
+        "current_value": 500,
+        "status": "Below Benchmark",
+        "remark": "Derived from normalised bound-policy volume and new-business premium."
+      }
+    ]
+  },
+  "AGT04332": {
+    "agent_id": "AGT04332",
+    "currency": "USD",
+    "assessments": [
+      {
+        "subject": "Written Premium",
+        "target_value": 262000,
+        "current_value": 106100,
+        "status": "Needs Attention",
+        "remark": "Source-derived YTD written premium compared with the annual target."
+      },
+      {
+        "subject": "New Business Commission",
+        "target_value": 5000,
+        "current_value": 900,
+        "status": "Needs Attention",
+        "remark": "Derived from new-business premium and documented product commission assumptions."
+      },
+      {
+        "subject": "Average Case Size",
+        "target_value": 1600,
+        "current_value": 1480,
+        "status": "Below Benchmark",
+        "remark": "Derived from normalised bound-policy volume and new-business premium."
+      }
+    ]
+  },
+  "AGT04578": {
+    "agent_id": "AGT04578",
+    "currency": "USD",
+    "assessments": [
+      {
+        "subject": "Written Premium",
+        "target_value": 224000,
+        "current_value": 90680,
+        "status": "Needs Attention",
+        "remark": "Source-derived YTD written premium compared with the annual target."
+      },
+      {
+        "subject": "New Business Commission",
+        "target_value": 5000,
+        "current_value": 170,
+        "status": "Needs Attention",
+        "remark": "Derived from new-business premium and documented product commission assumptions."
+      },
+      {
+        "subject": "Average Case Size",
+        "target_value": 1500,
+        "current_value": 1420,
+        "status": "Below Benchmark",
+        "remark": "Derived from normalised bound-policy volume and new-business premium."
+      }
+    ]
+  },
+  "AGT04976": {
+    "agent_id": "AGT04976",
+    "currency": "USD",
+    "assessments": [
+      {
+        "subject": "Written Premium",
+        "target_value": 274000,
+        "current_value": 110700,
+        "status": "Needs Attention",
+        "remark": "Source-derived YTD written premium compared with the annual target."
+      },
+      {
+        "subject": "New Business Commission",
+        "target_value": 5000,
+        "current_value": 280,
+        "status": "Needs Attention",
+        "remark": "Derived from new-business premium and documented product commission assumptions."
+      },
+      {
+        "subject": "Average Case Size",
+        "target_value": 700,
+        "current_value": 520,
+        "status": "Below Benchmark",
+        "remark": "Derived from normalised bound-policy volume and new-business premium."
+      }
+    ]
+  },
+  "AGT05246": {
+    "agent_id": "AGT05246",
+    "currency": "USD",
+    "assessments": [
+      {
+        "subject": "Written Premium",
+        "target_value": 121000,
+        "current_value": 49030,
+        "status": "Needs Attention",
+        "remark": "Source-derived YTD written premium compared with the annual target."
+      },
+      {
+        "subject": "New Business Commission",
+        "target_value": 5000,
+        "current_value": 350,
+        "status": "Needs Attention",
+        "remark": "Derived from new-business premium and documented product commission assumptions."
+      },
+      {
+        "subject": "Average Case Size",
+        "target_value": 700,
+        "current_value": 630,
+        "status": "Below Benchmark",
+        "remark": "Derived from normalised bound-policy volume and new-business premium."
+      }
+    ]
+  },
+  "AGT05467": {
+    "agent_id": "AGT05467",
+    "currency": "USD",
+    "assessments": [
+      {
+        "subject": "Written Premium",
+        "target_value": 12000,
+        "current_value": 670,
+        "status": "Needs Attention",
+        "remark": "Source-derived YTD written premium compared with the annual target."
+      },
+      {
+        "subject": "New Business Commission",
+        "target_value": 5000,
+        "current_value": 0,
+        "status": "Needs Attention",
+        "remark": "Derived from new-business premium and documented product commission assumptions."
+      },
+      {
+        "subject": "Average Case Size",
+        "target_value": 500,
+        "current_value": 500,
+        "status": "Meets Benchmark",
+        "remark": "Derived from normalised bound-policy volume and new-business premium."
+      }
+    ]
+  },
+  "AGT05922": {
+    "agent_id": "AGT05922",
+    "currency": "USD",
+    "assessments": [
+      {
+        "subject": "Written Premium",
+        "target_value": 279000,
+        "current_value": 112860,
+        "status": "Needs Attention",
+        "remark": "Source-derived YTD written premium compared with the annual target."
+      },
+      {
+        "subject": "New Business Commission",
+        "target_value": 5000,
+        "current_value": 40,
+        "status": "Needs Attention",
+        "remark": "Derived from new-business premium and documented product commission assumptions."
+      },
+      {
+        "subject": "Average Case Size",
+        "target_value": 700,
+        "current_value": 500,
+        "status": "Below Benchmark",
+        "remark": "Derived from normalised bound-policy volume and new-business premium."
+      }
+    ]
+  },
+  "AGT05946": {
+    "agent_id": "AGT05946",
+    "currency": "USD",
+    "assessments": [
+      {
+        "subject": "Written Premium",
+        "target_value": 269000,
+        "current_value": 109000,
+        "status": "Needs Attention",
+        "remark": "Source-derived YTD written premium compared with the annual target."
+      },
+      {
+        "subject": "New Business Commission",
+        "target_value": 5000,
+        "current_value": 800,
+        "status": "Needs Attention",
+        "remark": "Derived from new-business premium and documented product commission assumptions."
+      },
+      {
+        "subject": "Average Case Size",
+        "target_value": 900,
+        "current_value": 860,
+        "status": "Below Benchmark",
+        "remark": "Derived from normalised bound-policy volume and new-business premium."
+      }
+    ]
+  },
+  "AGT05960": {
+    "agent_id": "AGT05960",
+    "currency": "USD",
+    "assessments": [
+      {
+        "subject": "Written Premium",
+        "target_value": 1045000,
+        "current_value": 422920,
+        "status": "Needs Attention",
+        "remark": "Source-derived YTD written premium compared with the annual target."
+      },
+      {
+        "subject": "New Business Commission",
+        "target_value": 6900,
+        "current_value": 2730,
+        "status": "Needs Attention",
+        "remark": "Derived from new-business premium and documented product commission assumptions."
+      },
+      {
+        "subject": "Average Case Size",
+        "target_value": 2600,
+        "current_value": 2500,
+        "status": "Below Benchmark",
+        "remark": "Derived from normalised bound-policy volume and new-business premium."
+      }
+    ]
+  },
+  "AGT06340": {
+    "agent_id": "AGT06340",
+    "currency": "USD",
+    "assessments": [
+      {
+        "subject": "Written Premium",
+        "target_value": 336000,
+        "current_value": 135840,
+        "status": "Needs Attention",
+        "remark": "Source-derived YTD written premium compared with the annual target."
+      },
+      {
+        "subject": "New Business Commission",
+        "target_value": 5000,
+        "current_value": 1020,
+        "status": "Needs Attention",
+        "remark": "Derived from new-business premium and documented product commission assumptions."
+      },
+      {
+        "subject": "Average Case Size",
+        "target_value": 1700,
+        "current_value": 1610,
+        "status": "Below Benchmark",
+        "remark": "Derived from normalised bound-policy volume and new-business premium."
+      }
+    ]
+  },
+  "AGT06392": {
+    "agent_id": "AGT06392",
+    "currency": "USD",
+    "assessments": [
+      {
+        "subject": "Written Premium",
+        "target_value": 239000,
+        "current_value": 96750,
+        "status": "Needs Attention",
+        "remark": "Source-derived YTD written premium compared with the annual target."
+      },
+      {
+        "subject": "New Business Commission",
+        "target_value": 5000,
+        "current_value": 900,
+        "status": "Needs Attention",
+        "remark": "Derived from new-business premium and documented product commission assumptions."
+      },
+      {
+        "subject": "Average Case Size",
+        "target_value": 1400,
+        "current_value": 1380,
+        "status": "Below Benchmark",
+        "remark": "Derived from normalised bound-policy volume and new-business premium."
+      }
+    ]
+  },
+  "AGT07043": {
+    "agent_id": "AGT07043",
+    "currency": "USD",
+    "assessments": [
+      {
+        "subject": "Written Premium",
+        "target_value": 633000,
+        "current_value": 256050,
+        "status": "Needs Attention",
+        "remark": "Source-derived YTD written premium compared with the annual target."
+      },
+      {
+        "subject": "New Business Commission",
+        "target_value": 16200,
+        "current_value": 6420,
+        "status": "Needs Attention",
+        "remark": "Derived from new-business premium and documented product commission assumptions."
+      },
+      {
+        "subject": "Average Case Size",
+        "target_value": 8700,
+        "current_value": 8270,
+        "status": "Below Benchmark",
+        "remark": "Derived from normalised bound-policy volume and new-business premium."
+      }
+    ]
+  },
+  "AGT07655": {
+    "agent_id": "AGT07655",
+    "currency": "USD",
+    "assessments": [
+      {
+        "subject": "Written Premium",
+        "target_value": 457000,
+        "current_value": 184740,
+        "status": "Needs Attention",
+        "remark": "Source-derived YTD written premium compared with the annual target."
+      },
+      {
+        "subject": "New Business Commission",
+        "target_value": 8400,
+        "current_value": 3350,
+        "status": "Needs Attention",
+        "remark": "Derived from new-business premium and documented product commission assumptions."
+      },
+      {
+        "subject": "Average Case Size",
+        "target_value": 1900,
+        "current_value": 1810,
+        "status": "Below Benchmark",
+        "remark": "Derived from normalised bound-policy volume and new-business premium."
+      }
+    ]
+  },
+  "AGT07761": {
+    "agent_id": "AGT07761",
+    "currency": "USD",
+    "assessments": [
+      {
+        "subject": "Written Premium",
+        "target_value": 290000,
+        "current_value": 117230,
+        "status": "Needs Attention",
+        "remark": "Source-derived YTD written premium compared with the annual target."
+      },
+      {
+        "subject": "New Business Commission",
+        "target_value": 5000,
+        "current_value": 890,
+        "status": "Needs Attention",
+        "remark": "Derived from new-business premium and documented product commission assumptions."
+      },
+      {
+        "subject": "Average Case Size",
+        "target_value": 2200,
+        "current_value": 880,
+        "status": "Below Benchmark",
+        "remark": "Derived from normalised bound-policy volume and new-business premium."
+      }
+    ]
+  },
+  "AGT07985": {
+    "agent_id": "AGT07985",
+    "currency": "USD",
+    "assessments": [
+      {
+        "subject": "Written Premium",
+        "target_value": 398000,
+        "current_value": 161070,
+        "status": "Needs Attention",
+        "remark": "Source-derived YTD written premium compared with the annual target."
+      },
+      {
+        "subject": "New Business Commission",
+        "target_value": 5000,
+        "current_value": 1590,
+        "status": "Needs Attention",
+        "remark": "Derived from new-business premium and documented product commission assumptions."
+      },
+      {
+        "subject": "Average Case Size",
+        "target_value": 1500,
+        "current_value": 1460,
+        "status": "Below Benchmark",
+        "remark": "Derived from normalised bound-policy volume and new-business premium."
+      }
+    ]
+  },
+  "AGT08233": {
+    "agent_id": "AGT08233",
+    "currency": "USD",
+    "assessments": [
+      {
+        "subject": "Written Premium",
+        "target_value": 12000,
+        "current_value": 4890,
+        "status": "Needs Attention",
+        "remark": "Source-derived YTD written premium compared with the annual target."
+      },
+      {
+        "subject": "New Business Commission",
+        "target_value": 5000,
+        "current_value": 0,
+        "status": "Needs Attention",
+        "remark": "Derived from new-business premium and documented product commission assumptions."
+      },
+      {
+        "subject": "Average Case Size",
+        "target_value": 700,
+        "current_value": 500,
+        "status": "Below Benchmark",
+        "remark": "Derived from normalised bound-policy volume and new-business premium."
+      }
+    ]
+  },
+  "AGT08658": {
+    "agent_id": "AGT08658",
+    "currency": "USD",
+    "assessments": [
+      {
+        "subject": "Written Premium",
+        "target_value": 143000,
+        "current_value": 58040,
+        "status": "Needs Attention",
+        "remark": "Source-derived YTD written premium compared with the annual target."
+      },
+      {
+        "subject": "New Business Commission",
+        "target_value": 5000,
+        "current_value": 910,
+        "status": "Needs Attention",
+        "remark": "Derived from new-business premium and documented product commission assumptions."
+      },
+      {
+        "subject": "Average Case Size",
+        "target_value": 1600,
+        "current_value": 1480,
+        "status": "Below Benchmark",
+        "remark": "Derived from normalised bound-policy volume and new-business premium."
+      }
+    ]
+  },
+  "AGT08696": {
+    "agent_id": "AGT08696",
+    "currency": "USD",
+    "assessments": [
+      {
+        "subject": "Written Premium",
+        "target_value": 275000,
+        "current_value": 111310,
+        "status": "Needs Attention",
+        "remark": "Source-derived YTD written premium compared with the annual target."
+      },
+      {
+        "subject": "New Business Commission",
+        "target_value": 5000,
+        "current_value": 320,
+        "status": "Needs Attention",
+        "remark": "Derived from new-business premium and documented product commission assumptions."
+      },
+      {
+        "subject": "Average Case Size",
+        "target_value": 700,
+        "current_value": 670,
+        "status": "Below Benchmark",
+        "remark": "Derived from normalised bound-policy volume and new-business premium."
+      }
+    ]
+  },
+  "AGT08703": {
+    "agent_id": "AGT08703",
+    "currency": "USD",
+    "assessments": [
+      {
+        "subject": "Written Premium",
+        "target_value": 1815000,
+        "current_value": 734090,
+        "status": "Needs Attention",
+        "remark": "Source-derived YTD written premium compared with the annual target."
+      },
+      {
+        "subject": "New Business Commission",
+        "target_value": 19400,
+        "current_value": 7710,
+        "status": "Needs Attention",
+        "remark": "Derived from new-business premium and documented product commission assumptions."
+      },
+      {
+        "subject": "Average Case Size",
+        "target_value": 2800,
+        "current_value": 2630,
+        "status": "Below Benchmark",
+        "remark": "Derived from normalised bound-policy volume and new-business premium."
+      }
+    ]
+  },
+  "AGT09144": {
+    "agent_id": "AGT09144",
+    "currency": "USD",
+    "assessments": [
+      {
+        "subject": "Written Premium",
+        "target_value": 1095000,
+        "current_value": 442860,
+        "status": "Needs Attention",
+        "remark": "Source-derived YTD written premium compared with the annual target."
+      },
+      {
+        "subject": "New Business Commission",
+        "target_value": 12900,
+        "current_value": 5110,
+        "status": "Needs Attention",
+        "remark": "Derived from new-business premium and documented product commission assumptions."
+      },
+      {
+        "subject": "Average Case Size",
+        "target_value": 2200,
+        "current_value": 2120,
+        "status": "Below Benchmark",
+        "remark": "Derived from normalised bound-policy volume and new-business premium."
+      }
+    ]
+  },
+  "AGT09226": {
+    "agent_id": "AGT09226",
+    "currency": "USD",
+    "assessments": [
+      {
+        "subject": "Written Premium",
+        "target_value": 96000,
+        "current_value": 39020,
+        "status": "Needs Attention",
+        "remark": "Source-derived YTD written premium compared with the annual target."
+      },
+      {
+        "subject": "New Business Commission",
+        "target_value": 5000,
+        "current_value": 900,
+        "status": "Needs Attention",
+        "remark": "Derived from new-business premium and documented product commission assumptions."
+      },
+      {
+        "subject": "Average Case Size",
+        "target_value": 1800,
+        "current_value": 1740,
+        "status": "Below Benchmark",
+        "remark": "Derived from normalised bound-policy volume and new-business premium."
+      }
+    ]
+  },
+  "AGT09285": {
+    "agent_id": "AGT09285",
+    "currency": "USD",
+    "assessments": [
+      {
+        "subject": "Written Premium",
+        "target_value": 2225000,
+        "current_value": 900250,
+        "status": "Needs Attention",
+        "remark": "Source-derived YTD written premium compared with the annual target."
+      },
+      {
+        "subject": "New Business Commission",
+        "target_value": 24900,
+        "current_value": 9890,
+        "status": "Needs Attention",
+        "remark": "Derived from new-business premium and documented product commission assumptions."
+      },
+      {
+        "subject": "Average Case Size",
+        "target_value": 10300,
+        "current_value": 9780,
+        "status": "Below Benchmark",
+        "remark": "Derived from normalised bound-policy volume and new-business premium."
+      }
+    ]
+  },
+  "AGT09360": {
+    "agent_id": "AGT09360",
+    "currency": "USD",
+    "assessments": [
+      {
+        "subject": "Written Premium",
+        "target_value": 975000,
+        "current_value": 394370,
+        "status": "Needs Attention",
+        "remark": "Source-derived YTD written premium compared with the annual target."
+      },
+      {
+        "subject": "New Business Commission",
+        "target_value": 38900,
+        "current_value": 15440,
+        "status": "Needs Attention",
+        "remark": "Derived from new-business premium and documented product commission assumptions."
+      },
+      {
+        "subject": "Average Case Size",
+        "target_value": 8600,
+        "current_value": 8220,
+        "status": "Below Benchmark",
+        "remark": "Derived from normalised bound-policy volume and new-business premium."
+      }
+    ]
+  },
+  "AGT09458": {
+    "agent_id": "AGT09458",
+    "currency": "USD",
+    "assessments": [
+      {
+        "subject": "Written Premium",
+        "target_value": 113000,
+        "current_value": 45800,
+        "status": "Needs Attention",
+        "remark": "Source-derived YTD written premium compared with the annual target."
+      },
+      {
+        "subject": "New Business Commission",
+        "target_value": 5000,
+        "current_value": 340,
+        "status": "Needs Attention",
+        "remark": "Derived from new-business premium and documented product commission assumptions."
+      },
+      {
+        "subject": "Average Case Size",
+        "target_value": 700,
+        "current_value": 500,
+        "status": "Below Benchmark",
+        "remark": "Derived from normalised bound-policy volume and new-business premium."
+      }
+    ]
+  },
+  "AGT09571": {
+    "agent_id": "AGT09571",
+    "currency": "USD",
+    "assessments": [
+      {
+        "subject": "Written Premium",
+        "target_value": 913000,
+        "current_value": 369330,
+        "status": "Needs Attention",
+        "remark": "Source-derived YTD written premium compared with the annual target."
+      },
+      {
+        "subject": "New Business Commission",
+        "target_value": 8500,
+        "current_value": 3390,
+        "status": "Needs Attention",
+        "remark": "Derived from new-business premium and documented product commission assumptions."
+      },
+      {
+        "subject": "Average Case Size",
+        "target_value": 1800,
+        "current_value": 1690,
+        "status": "Below Benchmark",
+        "remark": "Derived from normalised bound-policy volume and new-business premium."
+      }
+    ]
+  },
+  "AGT09608": {
+    "agent_id": "AGT09608",
+    "currency": "USD",
+    "assessments": [
+      {
+        "subject": "Written Premium",
+        "target_value": 226000,
+        "current_value": 91250,
+        "status": "Needs Attention",
+        "remark": "Source-derived YTD written premium compared with the annual target."
+      },
+      {
+        "subject": "New Business Commission",
+        "target_value": 5000,
+        "current_value": 240,
+        "status": "Needs Attention",
+        "remark": "Derived from new-business premium and documented product commission assumptions."
+      },
+      {
+        "subject": "Average Case Size",
+        "target_value": 2100,
+        "current_value": 2040,
+        "status": "Below Benchmark",
+        "remark": "Derived from normalised bound-policy volume and new-business premium."
+      }
+    ]
+  },
+  "AGT09761": {
+    "agent_id": "AGT09761",
+    "currency": "USD",
+    "assessments": [
+      {
+        "subject": "Written Premium",
+        "target_value": 2528000,
+        "current_value": 1022460,
+        "status": "Needs Attention",
+        "remark": "Source-derived YTD written premium compared with the annual target."
+      },
+      {
+        "subject": "New Business Commission",
+        "target_value": 31900,
+        "current_value": 12670,
+        "status": "Needs Attention",
+        "remark": "Derived from new-business premium and documented product commission assumptions."
+      },
+      {
+        "subject": "Average Case Size",
+        "target_value": 4200,
+        "current_value": 4030,
+        "status": "Below Benchmark",
+        "remark": "Derived from normalised bound-policy volume and new-business premium."
+      }
+    ]
+  },
+  "AGT09891": {
+    "agent_id": "AGT09891",
+    "currency": "USD",
+    "assessments": [
+      {
+        "subject": "Written Premium",
+        "target_value": 364000,
+        "current_value": 147250,
+        "status": "Needs Attention",
+        "remark": "Source-derived YTD written premium compared with the annual target."
+      },
+      {
+        "subject": "New Business Commission",
+        "target_value": 5000,
+        "current_value": 640,
+        "status": "Needs Attention",
+        "remark": "Derived from new-business premium and documented product commission assumptions."
+      },
+      {
+        "subject": "Average Case Size",
+        "target_value": 700,
+        "current_value": 700,
+        "status": "Meets Benchmark",
+        "remark": "Derived from normalised bound-policy volume and new-business premium."
+      }
+    ]
+  }
+}

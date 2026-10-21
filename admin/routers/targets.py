@@ -29,7 +29,7 @@ class TargetRequest(BaseModel):
     metric_key: str = Field(min_length=1, max_length=50)
     metric_label: str = Field(default="", max_length=100)
     target_value: float = Field(ge=0)
-    unit: str = Field(default="HKD", max_length=20)
+    unit: str = Field(default="USD", max_length=20)
     period_type: str = Field(default="annual", max_length=20)
     period_start: str = Field(pattern=DATE_PATTERN)
     period_end: str = Field(pattern=DATE_PATTERN)

@@ -30,7 +30,7 @@ class CompetitionRequest(BaseModel):
     type: str = Field(default="competition", min_length=1, max_length=30)
     target_metric: str = Field(min_length=1, max_length=50)
     target_value: float | None = Field(default=None, ge=0)
-    unit: str = Field(default="HKD", max_length=20)
+    unit: str = Field(default="USD", max_length=20)
     deadline: str = Field(pattern=DATE_PATTERN)
     reward: str = ""
     description: str = ""

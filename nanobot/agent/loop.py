@@ -16,6 +16,17 @@ from nanobot.bus.queue import MessageBus
 from nanobot.providers.base import LLMProvider
 
 
+_AGENT_SCOPED_TOOLS = frozenset({
+    "get_performance_snapshot",
+    "get_competition_status",
+    "get_pending_policies",
+    "get_attribution_analysis",
+    "generate_chase_plan",
+    "generate_improvement_advice",
+    "prioritize_followups",
+})
+
+
 class AgentLoop:
     """Connect the message bus, context builder, and LLM provider."""
 
@@ -178,9 +189,21 @@ class AgentLoop:
                 thinking_blocks=response.thinking_blocks,
             )
             for tool_call in response.tool_calls:
+                arguments = dict(tool_call.arguments)
+                if msg.channel == "websocket" and tool_call.name in _AGENT_SCOPED_TOOLS:
+                    requested_agent = arguments.get("agent_id")
+                    if requested_agent not in (None, msg.chat_id):
+                        self.context.add_tool_result(
+                            messages,
+                            tool_call.id,
+                            tool_call.name,
+                            '{"error":"agent_id is not authorized"}',
+                        )
+                        continue
+                    arguments["agent_id"] = msg.chat_id
                 result = await self.tool_registry.execute(
                     tool_call.name,
-                    tool_call.arguments,
+                    arguments,
                 )
                 self.context.add_tool_result(
                     messages,

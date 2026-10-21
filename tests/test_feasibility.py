@@ -45,6 +45,18 @@ class ComputeFeasibilityTests(unittest.TestCase):
         self.assertAlmostEqual(result["required_ratio"], 0.1)
         self.assertEqual(result["probability_pct"], 89)
 
+    def test_usd_uses_monetary_capacity_model(self) -> None:
+        usd = compute_feasibility(
+            actual_gap=10_000,
+            days_remaining=60,
+            monthly_avg=50_000,
+            unit="USD",
+        )
+
+        self.assertEqual(usd["level"], "high")
+        self.assertAlmostEqual(usd["required_ratio"], 0.1)
+        self.assertIn("USD", usd["narrative"])
+
     def test_zero_days_hkd_has_very_low_feasibility(self) -> None:
         result = compute_feasibility(
             actual_gap=50000,

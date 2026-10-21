@@ -18,7 +18,11 @@ async def list_agent_ids(current_user: RoleAny, db: DB) -> dict:
     rows = (
         await db.execute(
             select(User.username)
-            .where(User.tenant_id == current_user.tenant_id, User.is_active.is_(True))
+            .where(
+                User.tenant_id == current_user.tenant_id,
+                User.is_active.is_(True),
+                User.is_superadmin.is_(False),
+            )
             .order_by(User.username.asc())
         )
     ).scalars().all()

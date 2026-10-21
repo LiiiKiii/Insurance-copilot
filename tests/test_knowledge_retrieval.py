@@ -29,7 +29,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 async def test_competition_search_returns_a_source_reference():
     result = json.loads(
         await SearchCompetitionRulesTool(PROJECT_ROOT).execute(
-            query="MDRT qualification requirements"
+            query="written premium excellence requirements"
         )
     )
 

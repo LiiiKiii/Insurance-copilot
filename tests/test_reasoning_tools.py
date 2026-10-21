@@ -23,6 +23,22 @@ from nanobot.agent.tools.insurance.reasoning_layer.tools import (
 from nanobot.config.schema import Config
 from nanobot.providers.base import LLMProvider, LLMResponse
 
+EXPECTED_WORKBENCH_TOOLS = (
+    "get_performance_snapshot",
+    "get_competition_status",
+    "get_pending_policies",
+    "get_attribution_analysis",
+    "calculate_run_rate",
+    "assess_gap_feasibility",
+    "search_competition_rules",
+    "search_best_practice",
+    "search_sales_scripts",
+    "search_knowledge_base",
+    "generate_chase_plan",
+    "generate_improvement_advice",
+    "prioritize_followups",
+)
+
 
 class NoNetworkProvider(LLMProvider):
     """Provider double used to prove RuntimeState setup makes no request."""
@@ -54,19 +70,19 @@ class ReasoningToolTests(unittest.IsolatedAsyncioTestCase):
         self.assertIs(runtime.agent_loop.tool_registry, runtime.tool_registry)
         self.assertEqual(
             runtime.tool_registry.tool_names,
-            ("calculate_run_rate", "assess_gap_feasibility"),
+            EXPECTED_WORKBENCH_TOOLS,
         )
 
-    async def test_composition_registers_only_the_two_explicit_reasoning_tools(self) -> None:
+    async def test_composition_registers_the_complete_workbench_toolset(self) -> None:
         registry = build_reasoning_registry()
 
         self.assertEqual(
             registry.tool_names,
-            ("calculate_run_rate", "assess_gap_feasibility"),
+            EXPECTED_WORKBENCH_TOOLS,
         )
         self.assertEqual(
             [definition["function"]["name"] for definition in registry.get_definitions()],
-            ["calculate_run_rate", "assess_gap_feasibility"],
+            list(EXPECTED_WORKBENCH_TOOLS),
         )
 
     async def test_run_rate_schema_has_only_calculation_inputs(self) -> None:
@@ -141,10 +157,10 @@ class ReasoningToolTests(unittest.IsolatedAsyncioTestCase):
             schema["parameters"]["required"],
             ["actual_gap", "days_remaining", "monthly_avg"],
         )
-        self.assertEqual(schema["parameters"]["properties"]["unit"]["default"], "HKD")
+        self.assertEqual(schema["parameters"]["properties"]["unit"]["default"], "USD")
         self.assertEqual(
             schema["parameters"]["properties"]["unit"]["enum"],
-            ["HKD", "policies"],
+            ["USD", "HKD", "policies"],
         )
         self.assertEqual(
             set(schema["parameters"]["properties"]),
@@ -168,16 +184,20 @@ class ReasoningToolTests(unittest.IsolatedAsyncioTestCase):
 
         for inputs in cases:
             with self.subTest(inputs=inputs):
+                expected_inputs = {"unit": "USD", **inputs}
                 self.assertEqual(
                     await tool.execute(**inputs),
-                    compute_feasibility(**inputs),
+                    compute_feasibility(**expected_inputs),
                 )
 
     async def test_feasibility_normalizes_supported_units_and_preserves_default_hkd(self) -> None:
         registry = build_reasoning_registry()
         inputs = {"actual_gap": "24000", "days_remaining": "30", "monthly_avg": "30000"}
         unit_cases = (
-            (None, "HKD"),
+            (None, "USD"),
+            ("USD", "USD"),
+            ("usd", "USD"),
+            (" USD ", "USD"),
             ("HKD", "HKD"),
             ("hkd", "HKD"),
             (" HKD ", "HKD"),

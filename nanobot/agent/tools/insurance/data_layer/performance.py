@@ -60,19 +60,16 @@ class GetPerformanceSnapshotTool(Tool):
         """Map public metric keys to ORM attributes and display metadata."""
         return {
             "protection_premium": {
-                "label": "MDRT annual credit",
-                "unit": "Credit",
+                "label": "Written premium",
+                "unit": "USD",
                 "current_col": "protection_premium_current",
                 "target_col": "protection_premium_target",
                 "rate_col": "protection_premium_rate",
-                "description": (
-                    "Annual MDRT credit. This is a points-based measure and must "
-                    "not be treated as HKD premium."
-                ),
+                "description": "Year-to-date written premium in the source currency.",
             },
             "pending_premium": {
                 "label": "Pending premium",
-                "unit": "HKD",
+                "unit": "USD",
                 "current_col": "pending_premium_current",
                 "target_col": None,
                 "rate_col": None,
@@ -95,24 +92,24 @@ class GetPerformanceSnapshotTool(Tool):
                 "description": "Policies successfully issued after underwriting.",
             },
             "quarter_fyc": {
-                "label": "Quarterly FYC",
-                "unit": "HKD",
+                "label": "Quarterly new business commission",
+                "unit": "USD",
                 "current_col": "quarter_fyc",
                 "target_col": None,
                 "rate_col": None,
                 "description": "First-year commission accumulated this quarter.",
             },
             "ytd_fyc": {
-                "label": "Year-to-date FYC",
-                "unit": "HKD",
+                "label": "Year-to-date new business commission",
+                "unit": "USD",
                 "current_col": "ytd_fyc",
                 "target_col": None,
                 "rate_col": None,
                 "description": "First-year commission accumulated year to date.",
             },
             "daily_fyc": {
-                "label": "Daily average FYC",
-                "unit": "HKD/day",
+                "label": "Daily average new business commission",
+                "unit": "USD/day",
                 "current_col": "daily_fyc",
                 "target_col": None,
                 "rate_col": None,
@@ -223,13 +220,13 @@ class GetPerformanceSnapshotTool(Tool):
             policy_count = row.policy_count
             if ytd_fyc is not None and policy_count:
                 result["avg_fyc_per_policy"] = {
-                    "label": "Average FYC per policy",
-                    "unit": "HKD",
+                    "label": "Average new business commission per policy",
+                    "unit": "USD",
                     "current": round(ytd_fyc / policy_count, 2),
                     "target": None,
                     "rate": None,
                     "description": (
-                        "Year-to-date FYC divided by issued policy count. This is "
+                        "Year-to-date new business commission divided by issued policy count. This is "
                         "average commission, not average premium."
                     ),
                 }

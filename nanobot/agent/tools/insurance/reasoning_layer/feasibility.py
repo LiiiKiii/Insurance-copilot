@@ -2,6 +2,7 @@
 
 
 DAYS_PER_MONTH_APPROX = 30
+MONETARY_UNITS = frozenset({"HKD", "USD"})
 
 FEASIBILITY_RATIO_HIGH = 1.0
 FEASIBILITY_RATIO_MEDIUM = 1.5
@@ -71,7 +72,7 @@ def compute_feasibility(
         else float("inf")
     )
 
-    if unit == "HKD":
+    if unit in MONETARY_UNITS:
         required_ratio = (
             daily_needed / daily_avg
             if daily_avg > 0

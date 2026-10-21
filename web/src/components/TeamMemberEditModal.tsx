@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { cn } from '@/lib/utils'
 import { useTranslation } from '@/lib/i18n'
+import { authenticatedFetch as fetch, authHeaders } from '@/lib/auth'
 
 /* ─── Types ─── */
 
@@ -83,7 +84,7 @@ function IconSpinner({ className }: { className?: string }) {
 /* ─── Helpers ─── */
 
 function formatVal(v: number, unit: string): string {
-  if (unit === 'HKD') return v >= 1_000_000 ? `${(v / 1_000_000).toFixed(1)}M` : v >= 1000 ? `${(v / 1000).toFixed(0)}K` : String(v)
+  if (['HKD', 'USD'].includes(unit)) return v >= 1_000_000 ? `${(v / 1_000_000).toFixed(1)}M` : v >= 1000 ? `${(v / 1000).toFixed(0)}K` : String(v)
   if (unit === '%') return `${(v * 100).toFixed(1)}%`
   return String(v)
 }
@@ -114,10 +115,10 @@ export function TeamMemberEditModal({ agentId, callerAgentId, memberName, onClos
     let cancelled = false
     setLoading(true)
     Promise.all([
-      fetch(`/api/targets?agent_id=${agentId}`).then(r => r.json()).catch(() => ({ data: [] })),
-      fetch(`/api/performance?agent_id=${agentId}`).then(r => r.json()).catch(() => ({ metrics: {} })),
-      fetch(`/api/agent-competitions?agent_id=${agentId}`).then(r => r.json()).catch(() => ({ data: [] })),
-      fetch(`/api/all-competitions`).then(r => r.json()).catch(() => ({ data: [] })),
+      fetch(`/api/targets?agent_id=${agentId}`, { headers: authHeaders() }).then(r => r.json()).catch(() => ({ data: [] })),
+      fetch(`/api/performance?agent_id=${agentId}`, { headers: authHeaders() }).then(r => r.json()).catch(() => ({ metrics: {} })),
+      fetch(`/api/agent-competitions?agent_id=${agentId}`, { headers: authHeaders() }).then(r => r.json()).catch(() => ({ data: [] })),
+      fetch(`/api/all-competitions`, { headers: authHeaders() }).then(r => r.json()).catch(() => ({ data: [] })),
     ]).then(([tData, pData, acData, allCData]) => {
       if (cancelled) return
       setTargets(Array.isArray(tData.data) ? tData.data : [])
@@ -144,18 +145,18 @@ export function TeamMemberEditModal({ agentId, callerAgentId, memberName, onClos
     try {
       if (existing) {
         // Remove
-        await fetch(`/api/agent-competitions/${existing.entry_id}`, { method: 'DELETE' })
+        await fetch(`/api/agent-competitions/${existing.entry_id}`, { method: 'DELETE', headers: authHeaders() })
         setAgentComps(prev => prev.filter(ac => ac.entry_id !== existing.entry_id))
       } else {
         // Add
         const res = await fetch('/api/agent-competitions', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 'Content-Type': 'application/json', ...authHeaders() },
           body: JSON.stringify({ agent_id: agentId, competition_id: comp.id }),
         }).then(r => r.json())
         if (res.ok) {
           // Reload agent competitions to get full data
-          const acRes = await fetch(`/api/agent-competitions?agent_id=${agentId}`).then(r => r.json())
+          const acRes = await fetch(`/api/agent-competitions?agent_id=${agentId}`, { headers: authHeaders() }).then(r => r.json())
           if (acRes?.ok && Array.isArray(acRes?.data)) setAgentComps(acRes.data)
         }
       }
@@ -172,7 +173,7 @@ export function TeamMemberEditModal({ agentId, callerAgentId, memberName, onClos
         if (isNaN(numVal)) return Promise.resolve()
         return fetch(`/api/targets/${targetId}?agent_id=${callerAgentId}`, {
           method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 'Content-Type': 'application/json', ...authHeaders() },
           body: JSON.stringify({ target_value: numVal }),
         })
       })
@@ -182,7 +183,7 @@ export function TeamMemberEditModal({ agentId, callerAgentId, memberName, onClos
         if (isNaN(numVal)) return Promise.resolve()
         return fetch(`/api/agent-competitions/${entryId}`, {
           method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 'Content-Type': 'application/json', ...authHeaders() },
           body: JSON.stringify({ current_value: numVal }),
         })
       })

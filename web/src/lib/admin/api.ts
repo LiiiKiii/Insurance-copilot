@@ -330,8 +330,27 @@ export const adminApi = {
   },
 
   targets: {
-    list: (agentId?: string) =>
-      apiFetch<PerformanceTarget[]>(`/targets/${agentId ? `?agent_id=${agentId}` : ''}`),
+    list: async (agentId?: string) => {
+      const pageSize = 200
+      const allTargets: PerformanceTarget[] = []
+      let page = 1
+      while (true) {
+        const query = new URLSearchParams({ page: String(page), page_size: String(pageSize) })
+        if (agentId) query.set('agent_id', agentId)
+        const result = await apiFetch<PerformanceTarget[]>(`/targets/?${query.toString()}`)
+        if (!result.ok) return result
+        allTargets.push(...result.data)
+        const total = result.meta?.total ?? allTargets.length
+        if (allTargets.length >= total || result.data.length === 0) {
+          return {
+            ...result,
+            data: allTargets,
+            meta: { ...result.meta, page: 1, page_size: allTargets.length, total },
+          }
+        }
+        page += 1
+      }
+    },
     create: (body: unknown) =>
       apiFetch<PerformanceTarget>('/targets/', { method: 'POST', body: JSON.stringify(body) }),
     batchCreate: (targets: unknown[]) =>

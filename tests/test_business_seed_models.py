@@ -13,9 +13,11 @@ from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_asyn
 from admin.db import Base
 from admin.models.agent_data import (
     AgentAttribution,
+    AgentClient,
     AgentPerformanceMetrics,
     AgentPolicy,
 )
+from admin.models.assessment import AgentAssessment
 from admin.models.competition import Competition, CompetitionEntry
 from admin.models.performance_target import PerformanceTarget
 from admin.models.tenant import Tenant
@@ -23,7 +25,9 @@ from admin.seeds import (
     _performance_values,
     _period_bounds,
     _require_env,
+    _seed_assessments,
     _seed_attribution,
+    _seed_clients,
     _seed_competitions,
     _seed_performance,
     _seed_policies,
@@ -50,6 +54,8 @@ class BusinessSeedModelTests(unittest.IsolatedAsyncioTestCase):
                         AgentPerformanceMetrics.__table__,
                         PerformanceTarget.__table__,
                         AgentPolicy.__table__,
+                        AgentClient.__table__,
+                        AgentAssessment.__table__,
                         AgentAttribution.__table__,
                         Competition.__table__,
                         CompetitionEntry.__table__,
@@ -88,6 +94,11 @@ class BusinessSeedModelTests(unittest.IsolatedAsyncioTestCase):
 
         self.assertEqual(values["protection_premium_rate"], 0.5)
         self.assertIsNone(values["conversion_rate_rate"])
+        extended = _performance_values(
+            {"metrics": {"policy_count": {"current": 12}, "churn_rate": {"current": 0.08}}}
+        )
+        self.assertEqual(extended["policy_count"], 12)
+        self.assertEqual(extended["churn_rate"], 0.08)
 
     async def test_business_seed_helpers_are_idempotent(self) -> None:
         performance = {
@@ -109,6 +120,7 @@ class BusinessSeedModelTests(unittest.IsolatedAsyncioTestCase):
                     {
                         "policy_id": "POL001",
                         "client_name": "Alex Client",
+                        "customer_id": "CLI001",
                         "premium": 20_000,
                         "product_en": "Protection Plan",
                         "status_en": "underwriting",
@@ -120,6 +132,29 @@ class BusinessSeedModelTests(unittest.IsolatedAsyncioTestCase):
             "AGT001": {
                 "period": "2026 Q2",
                 "activity": {"appointments": 18},
+            }
+        }
+        clients = {
+            "AGT001": {
+                "clients": [{
+                    "client_id": "CLI001",
+                    "name": "Alex Client",
+                    "age": 42,
+                    "premium": 20_000,
+                    "tag_categories": ["Value"],
+                    "tag_labels": ["High Value"],
+                }]
+            }
+        }
+        assessments = {
+            "AGT001": {
+                "assessments": [{
+                    "subject": "Written Premium",
+                    "target_value": 100_000,
+                    "current_value": 60_000,
+                    "status": "On Track",
+                    "remark": "Source-derived value.",
+                }]
             }
         }
         competitions = {
@@ -145,6 +180,8 @@ class BusinessSeedModelTests(unittest.IsolatedAsyncioTestCase):
                 await _seed_tenant(session)
                 await _seed_performance(session, performance)
                 await _seed_policies(session, policies)
+                await _seed_clients(session, clients)
+                await _seed_assessments(session, assessments)
                 await _seed_attribution(session, attribution)
                 await _seed_competitions(session, competitions)
                 await session.commit()
@@ -159,6 +196,12 @@ class BusinessSeedModelTests(unittest.IsolatedAsyncioTestCase):
                 ),
                 "policies": await session.scalar(
                     select(func.count()).select_from(AgentPolicy)
+                ),
+                "clients": await session.scalar(
+                    select(func.count()).select_from(AgentClient)
+                ),
+                "assessments": await session.scalar(
+                    select(func.count()).select_from(AgentAssessment)
                 ),
                 "attribution": await session.scalar(
                     select(func.count()).select_from(AgentAttribution)

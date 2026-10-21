@@ -1,6 +1,6 @@
 {
   "hkd_actions": [
-    {"priority": "P0", "template": "Maintain daily production of HKD {daily_premium_needed:,} and prioritise high-value policies"},
+    {"priority": "P0", "template": "Maintain daily production of {unit} {daily_premium_needed:,} and prioritise high-value policies"},
     {"priority": "P0", "template": "Review the three clients most likely to close at 09:00 each day and follow up with each one"},
     {"priority": "P0", "template": "Contact every quoted client who has not been followed up within 30 days this week and ask about their concerns"},
     {"priority": "P1", "template": "Ask each existing client for one referral and explain the current competition target"},

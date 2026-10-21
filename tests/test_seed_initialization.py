@@ -60,6 +60,8 @@ class SeedInitializationTests(unittest.TestCase):
             "performance_rows": "agent_performance_metrics",
             "performance_targets": "performance_targets",
             "policies": "agent_policies",
+            "agent_clients": "agent_clients",
+            "agent_assessments": "agent_assessments",
             "attribution_rows": "agent_attribution",
             "competitions": "competitions",
             "competition_entries": "competition_entries",
@@ -114,6 +116,10 @@ class SeedInitializationTests(unittest.TestCase):
                     "SELECT DISTINCT agent_id FROM performance_targets "
                     "WHERE agent_id NOT IN (SELECT username FROM users)"
                 ).fetchall()
+                policy_clients_without_record = connection.execute(
+                    "SELECT customer_id FROM agent_policies WHERE customer_id IS NOT NULL "
+                    "AND customer_id NOT IN (SELECT client_id FROM agent_clients)"
+                ).fetchall()
                 agent_rows = connection.execute(
                     "SELECT agent.username, agent.password_hash, agent.is_superadmin, "
                     "agent.is_active, agent.tier, supervisor.username "
@@ -141,11 +147,19 @@ class SeedInitializationTests(unittest.TestCase):
         self.assertEqual(admin_role, [("super_admin",)])
 
         self.assertEqual(target_agents_without_user, [])
+        self.assertEqual(policy_clients_without_record, [])
+        agents = json.loads(
+            (PROJECT_ROOT / "data" / "mock" / "agents.json").read_text(encoding="utf-8")
+        )
+        tier_by_rank = {
+            "Team Lead": "team_lead",
+            "Senior Business Manager": "senior_agent",
+        }
         expected_accounts = {
-            "AGT001": (0, 1, "senior_agent", "AGT_TL01"),
-            "AGT002": (0, 1, "agent", "AGT_TL01"),
-            "AGT003": (0, 1, "agent", "AGT001"),
-            "AGT_TL01": (0, 1, "team_lead", None),
+            agent["agent_id"]: (
+                0, 1, tier_by_rank.get(agent.get("rank_en"), "agent"),
+                agent.get("supervisor_agent_id"),
+            ) for agent in agents
         }
         self.assertEqual(
             {row[0]: row[2:] for row in agent_rows},

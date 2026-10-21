@@ -158,7 +158,7 @@ The version-controlled corpus contains:
 | Category | Documents |
 | -------- | --------- |
 | Competition rules | `competition_starlight.md`, `competition_elite_challenge.md`, `competition_quarterly_sprint.md`, `competition_rookie_king.md` |
-| Qualification rules | `mdrt_rules.md`, `cot_rules.md` |
+| Performance standards | `mdrt_rules.md` (written premium excellence), `cot_rules.md` (portfolio quality excellence); legacy filenames are retained for compatibility |
 | Sales guidance | `sales_scripts.md`, `best_practices.md`, `action_guidelines.md` |
 | Historical competition circulars | Markdown documents under `data/knowledge/competitions/` |
 

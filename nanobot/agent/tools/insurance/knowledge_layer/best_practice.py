@@ -8,9 +8,11 @@ from nanobot.agent.tools.base import Tool
 TOPIC_KEYWORDS = {
     "case_size": ["case size", "average premium", "low premium", "coverage amount"],
     "conversion": ["conversion", "closing rate", "follow-up", "lead"],
-    "mdrt": ["mdrt", "million dollar round table", "milestone"],
+    "written_premium": ["written premium", "premium target", "milestone"],
     "sprint": ["sprint", "deadline", "last 30 days", "final month"],
-    "existing_client": ["existing client", "additional coverage", "renewal", "referral"],
+    "existing_client": ["existing client", "cross-line", "renewal", "referral"],
+    "retention": ["retention", "renewal", "churn"],
+    "product_mix": ["product mix", "motor", "property", "commercial", "specialty"],
     "lead": ["lead", "follow-up", "prospect", "pipeline"],
 }
 
@@ -31,7 +33,7 @@ class SearchBestPracticeTool(Tool):
         return (
             "Search proven insurance sales practices and success strategies. "
             "Covers average premium improvement, lead conversion, competition sprints, "
-            "MDRT progress, and additional coverage for existing clients."
+            "written-premium progress, retention, and cross-line reviews for existing clients."
         )
 
     @property
@@ -41,7 +43,7 @@ class SearchBestPracticeTool(Tool):
             "properties": {
                 "topic": {
                     "type": "string",
-                    "description": "Topic such as 'low average premium', 'MDRT sprint', 'low lead conversion', or 'last 30 days of a competition'",
+                    "description": "Topic such as 'low average premium', 'written premium sprint', 'low lead conversion', or 'renewal retention'",
                 },
                 "context": {
                     "type": "string",

@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 import { API_CONFIG, RECONNECT } from '@/config'
 import type { ChatMessage, ChatSession } from './chatTypes'
+import { authenticatedFetch as fetch, getAccessTokenExpiration, getValidAccessToken } from './auth'
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Types
@@ -64,6 +65,10 @@ function getWsUrl(): string {
   if (typeof window === 'undefined') return `ws://localhost:8000${API_CONFIG.WS_PATH}`
   if (process.env.NEXT_PUBLIC_WS_URL) return process.env.NEXT_PUBLIC_WS_URL
   const scheme = window.location.protocol === 'https:' ? 'wss' : 'ws'
+  const isLoopback = ['localhost', '127.0.0.1', '::1'].includes(window.location.hostname)
+  if (process.env.NODE_ENV === 'development' && isLoopback) {
+    return `${scheme}://${window.location.hostname}:8000${API_CONFIG.WS_PATH}`
+  }
   return `${scheme}://${window.location.host}${API_CONFIG.WS_PATH}`
 }
 
@@ -189,6 +194,7 @@ export function useInsuranceChat() {
   const reconnectTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const reconnectAttemptsRef = useRef(0)
   const MAX_RECONNECT_ATTEMPTS = RECONNECT.MAX_ATTEMPTS
+  const authRefreshTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   // turn_id → session_id routing table. Entries are kept until the response
   // event arrives, then cleared, so the map stays small.
@@ -196,7 +202,7 @@ export function useInsuranceChat() {
   // Sessions already hydrated from the server — skip re-fetching on switch.
   const hydratedSessionsRef = useRef<Set<string>>(new Set())
 
-  const connectRef = useRef<() => void>(() => {})
+  const connectRef = useRef<() => void | Promise<void>>(() => {})
 
   // Keep refs in sync with state so handlers always see the latest value
   // without re-binding the WS .onmessage closure.
@@ -341,19 +347,31 @@ export function useInsuranceChat() {
             },
           ]
         })
-        // Server may upgrade a client-generated session_id to its own; keep
-        // both refs in sync if so (only for the session that initiated the turn).
+        // The server upgrades the client-generated id to a stable persisted
+        // session id. Move the local message bucket and active-session pointer
+        // so the sidebar entry, subsequent turns, and persisted history all use
+        // the same identifier.
         if (data.session_id && data.session_id !== sid) {
-          // No remap needed — current implementation keeps client-generated
-          // session ids stable, but we still record the route for any
-          // late-arriving events on this turn.
+          const persistedSessionId = data.session_id
+          setMessagesBySession((all) => {
+            const next = { ...all }
+            next[persistedSessionId] = next[sid] ?? []
+            delete next[sid]
+            return next
+          })
+          hydratedSessionsRef.current.delete(sid)
+          hydratedSessionsRef.current.add(persistedSessionId)
+          if (sessionIdRef.current === sid) {
+            sessionIdRef.current = persistedSessionId
+            setActiveSessionId(persistedSessionId)
+          }
         }
         if (turnId) turnSessionRef.current.delete(turnId)
         // The session list on the server now has a new updated_at and possibly
         // a new session — refresh.
         refreshChatSessions()
         // Mark this session as hydrated so we don't re-fetch it.
-        hydratedSessionsRef.current.add(sid)
+        hydratedSessionsRef.current.add(data.session_id ?? sid)
         break
       }
 
@@ -387,12 +405,12 @@ export function useInsuranceChat() {
   }, [refreshChatSessions, setTypingForSession, updateSessionMessages])
 
   // ── WebSocket lifecycle ─────────────────────────────────────────────────────
-  const connect = useCallback(() => {
+  const connect = useCallback(async () => {
     if (wsRef.current?.readyState === WebSocket.OPEN) return
 
     // The server rejects sockets that do not authenticate, so skip connecting
     // (and reconnecting) until a login token is available.
-    const token = getAuthToken()
+    const token = await getValidAccessToken()
     if (!token) {
       setStatus('disconnected')
       return
@@ -409,6 +427,8 @@ export function useInsuranceChat() {
     }
 
     ws.onclose = () => {
+      if (authRefreshTimeoutRef.current) clearTimeout(authRefreshTimeoutRef.current)
+      authRefreshTimeoutRef.current = null
       setStatus('disconnected')
       if (reconnectAttemptsRef.current < MAX_RECONNECT_ATTEMPTS) {
         const delay = Math.min(
@@ -416,7 +436,7 @@ export function useInsuranceChat() {
           RECONNECT.MAX_DELAY_MS,
         )
         reconnectAttemptsRef.current += 1
-        reconnectTimeoutRef.current = setTimeout(() => connectRef.current(), delay)
+        reconnectTimeoutRef.current = setTimeout(() => { void connectRef.current() }, delay)
       }
     }
 
@@ -434,6 +454,13 @@ export function useInsuranceChat() {
       if (data.type === 'auth_ok') {
         setStatus('connected')
         reconnectAttemptsRef.current = 0
+        const expiresAt = getAccessTokenExpiration(token)
+        if (expiresAt !== null) {
+          const refreshDelay = Math.max(expiresAt - Date.now() - 30_000, 0)
+          authRefreshTimeoutRef.current = setTimeout(() => {
+            if (ws.readyState <= WebSocket.OPEN) ws.close()
+          }, refreshDelay)
+        }
         return
       }
       handleWsEvent(data)
@@ -443,9 +470,10 @@ export function useInsuranceChat() {
   useEffect(() => { connectRef.current = connect }, [connect])
 
   useEffect(() => {
-    connect()
+    void connect()
     return () => {
       if (reconnectTimeoutRef.current) clearTimeout(reconnectTimeoutRef.current)
+      if (authRefreshTimeoutRef.current) clearTimeout(authRefreshTimeoutRef.current)
       wsRef.current?.close()
     }
   }, [connect])
@@ -499,6 +527,9 @@ export function useInsuranceChat() {
       next.delete(oldId)
       return next
     })
+    // The local message bucket was removed, so a later click on this persisted
+    // session must hydrate it from the server again.
+    hydratedSessionsRef.current.delete(oldId)
     sessionIdRef.current = newId
     setActiveSessionId(newId)
   }, [])

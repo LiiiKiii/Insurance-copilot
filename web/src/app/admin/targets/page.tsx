@@ -13,7 +13,7 @@ interface MetricOption {
 }
 
 const METRIC_OPTIONS: MetricOption[] = [
-  { key: 'protection_premium', labelKey: 'admin.targets.metric.protectionPremium', unit: 'Credit' },
+  { key: 'protection_premium', labelKey: 'admin.targets.metric.protectionPremium', unit: 'USD' },
   { key: 'submission_count',   labelKey: 'admin.targets.metric.submissionCount',   unitKey: 'admin.targets.unit.cases' },
   { key: 'conversion_rate',    labelKey: 'admin.targets.metric.conversionRate',    unit: '%' },
   { key: 'new_clients',        labelKey: 'admin.targets.metric.newClients',        unitKey: 'admin.targets.unit.persons' },
@@ -24,7 +24,7 @@ const METRIC_OPTIONS: MetricOption[] = [
 function formatValue(v: number | null | undefined, unit: string, locale: Locale): string {
   if (v == null || Number.isNaN(v)) return '—'
   const bcp47 = LOCALE_BCP47[locale]
-  if (unit === 'HKD') return `HKD ${v.toLocaleString(bcp47)}`
+  if (unit === 'HKD' || unit === 'USD') return `${unit} ${v.toLocaleString(bcp47)}`
   if (unit === '%') return `${(v * 100).toFixed(1)}%`
   return `${v.toLocaleString(bcp47)} ${unit}`
 }
@@ -71,9 +71,9 @@ export default function TargetsPage() {
   useEffect(() => { load() }, [load])
 
   const resolveUnit = (mo: MetricOption | undefined): string => {
-    if (!mo) return 'HKD'
+    if (!mo) return 'USD'
     if (mo.unitKey) return t(mo.unitKey)
-    return mo.unit || 'HKD'
+    return mo.unit || 'USD'
   }
 
   const handleCreate = async () => {

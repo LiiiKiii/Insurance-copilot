@@ -22,7 +22,7 @@ class PerformanceTarget(Base):
     metric_key: Mapped[str] = mapped_column(String(50), nullable=False)
     metric_label: Mapped[str] = mapped_column(String(100), default="")
     target_value: Mapped[float] = mapped_column(Float, nullable=False)
-    unit: Mapped[str] = mapped_column(String(20), default="HKD")
+    unit: Mapped[str] = mapped_column(String(20), default="USD")
     period_type: Mapped[str] = mapped_column(String(20), default="annual")
     period_start: Mapped[str] = mapped_column(String(10), nullable=False)
     period_end: Mapped[str] = mapped_column(String(10), nullable=False)
