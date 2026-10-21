@@ -10,6 +10,9 @@ from nanobot.agent.tools.base import Tool
 
 from ._db import db_error, load_performance_row
 
+# User-facing metric names that the model may request instead of storage keys.
+_METRIC_ALIASES = {"written_premium": "protection_premium"}
+
 
 class GetPerformanceSnapshotTool(Tool):
     """Return current, target, and completion values without reasoning."""
@@ -44,7 +47,8 @@ class GetPerformanceSnapshotTool(Tool):
                     "items": {"type": "string"},
                     "description": (
                         "Optional metric keys. Leave empty to return all metrics. "
-                        "Supported keys include protection_premium, pending_premium, "
+                        "Supported keys include protection_premium (written premium; "
+                        "written_premium is accepted as an alias), pending_premium, "
                         "submission_count, policy_count, quarter_fyc, ytd_fyc, "
                         "daily_fyc, avg_fyc_per_policy, conversion_rate, new_clients, "
                         "total_clients, churn_rate, client_retention, "
@@ -184,7 +188,9 @@ class GetPerformanceSnapshotTool(Tool):
 
     async def execute(self, **kwargs: Any) -> str:
         agent_id = kwargs["agent_id"]
-        requested = set(kwargs.get("metrics") or [])
+        requested = {
+            _METRIC_ALIASES.get(key, key) for key in kwargs.get("metrics") or []
+        }
 
         try:
             row = load_performance_row(agent_id)
