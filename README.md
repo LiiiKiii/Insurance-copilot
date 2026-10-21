@@ -129,20 +129,27 @@ The completed project's unrelated upload-cleanup job remains outside the A3 M3 s
 - retained the A5 automated acceptance scope without modifying the validated M3 implementation;
 - recorded the final M3 capabilities and known retrieval boundaries in this README.
 
-### A6 M4 Baseline Freeze
+### M4 Prioritisation and Planning
 
-- confirmed that the chase-plan tool deducts pending premium, divides the open
-  gap into equal weekly targets, and produces configured action-template text;
-- confirmed stable handling for urgent competition selection, covered targets,
-  unknown competitions, data errors, and invalid planning API responses;
-- retained the improvement-advice Top-N, P0/P1/P2, and template-rendering
-  contract without changing its rules;
-- recorded that the current P0/P1/P2 labels are deterministic template labels,
-  not the output of customer scoring, Top-K ranking, or an optimisation model;
-- recorded the missing attribution calculation module as a runtime limitation
-  for end-to-end improvement-advice execution;
-- preserved the accepted planning implementation without adding a new
-  algorithm.
+- the chase-plan tool deducts pending premium, selects an urgent open
+  competition, divides the remaining gap into weekly targets, and attaches
+  configured action-template text;
+- the improvement-advice tool calculates attribution gaps at runtime and maps
+  the highest-priority weaknesses to deterministic P0/P1/P2 guidance;
+- `prioritize_followups` filters ineligible, unauthorised, non-compliant, and
+  invalid candidates before applying an explainable weighted score;
+- eligible candidates are ranked with deterministic tie-breaking and returned
+  as Top-K recommendations with score components, priority levels, actions,
+  timing, evidence, and ranking reasons;
+- `POST /api/planning/prioritization` exposes the ranking contract through the
+  authenticated planning API without querying or changing M2-owned data;
+- Precision@K and NDCG@K utilities compare the weighted ranking with an
+  expected-contribution-only baseline using a tracked synthetic fixture;
+- the synthetic evaluation validates the implementation pipeline only and is
+  not evidence of production effectiveness or improved sales outcomes; and
+- the default Agent runtime tool registry remains unchanged, so enabling
+  automatic LLM access to `prioritize_followups` remains an explicit integration
+  decision.
 
 ## Knowledge Corpus
 
@@ -270,8 +277,37 @@ registration, validated request forwarding, and stable invalid-payload
 handling. The detailed result and functional boundary are recorded in
 `docs/a6_m4_planning_baseline.md`.
 
+Run the current M4 prioritisation and attribution regression scope with:
+
+```powershell
+.\.venv\Scripts\python.exe -m pytest tests/test_attribution_gap.py tests/test_planning_api.py tests/test_prioritization.py tests/test_prioritization_evaluation.py -q
+```
+
+Run the reproducible ranking experiment with:
+
+```powershell
+.\.venv\Scripts\python.exe scripts/evaluate_prioritization.py
+```
+
+The implementation details, current ownership boundary, synthetic-data notice,
+and baseline comparison are recorded in
+`docs/coursework/m4_prioritization_experiment.md`.
+
 ## A6 Baseline Freeze
 
-A6 is the final migration round. The M3 baseline is considered complete for the implemented product scope: deterministic English file retrieval, SQLite FTS5 database retrieval with a SQL fallback, source citation, tenant-aware knowledge administration, local text import, PDF ingestion, and automated acceptance coverage. The merged baseline also retains the existing M4 planning behavior and its focused acceptance tests. That planning behavior is a deterministic, template-based baseline and must not be represented as an optimisation algorithm.
+A6 is the final migration round. The M3 baseline is considered complete for the
+implemented product scope: deterministic English file retrieval, SQLite FTS5
+database retrieval with a SQL fallback, source citation, tenant-aware knowledge
+administration, local text import, PDF ingestion, and automated acceptance
+coverage.
 
-No code file is added or replaced in A6. Vector or embedding retrieval, quantitative Recall@K and Precision@K datasets, production OCR benchmarking, and broader production hardening are outside the implemented baseline and are not implied by this freeze.
+The current M4 implementation combines the deterministic chase-plan and
+improvement-advice tools with a separate prioritisation module for explainable
+candidate filtering, weighted ranking, Top-K recommendation, and offline
+ranking metrics. It must not be represented as a trained
+conversion-probability model or as proof of production business impact.
+
+Vector or embedding retrieval, a production labelled ranking dataset,
+production OCR benchmarking, automatic M2 candidate-data ingestion, M5
+recommendation rendering, and broader production hardening remain outside the
+currently integrated baseline.
