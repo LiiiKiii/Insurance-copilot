@@ -28,6 +28,86 @@ export function authHeaders(): Record<string, string> {
   return token ? { Authorization: `Bearer ${token}` } : {}
 }
 
+let tokenRefreshPromise: Promise<string | null> | null = null
+
+export function getAccessTokenExpiration(token: string): number | null {
+  try {
+    const encoded = token.split('.')[1]
+    if (!encoded) return null
+    const base64 = encoded.replace(/-/g, '+').replace(/_/g, '/')
+    const padded = base64.padEnd(Math.ceil(base64.length / 4) * 4, '=')
+    const payload = JSON.parse(atob(padded)) as { exp?: unknown }
+    return typeof payload.exp === 'number' ? payload.exp * 1000 : null
+  } catch {
+    return null
+  }
+}
+
+async function refreshAccessToken(): Promise<string | null> {
+  const refreshToken = localStorage.getItem(REFRESH_KEY)
+  if (!refreshToken) return null
+  try {
+    const response = await window.fetch(`${API_CONFIG.BASE_URL}/api/admin/auth/refresh`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ refresh_token: refreshToken }),
+    })
+    const body = await response.json().catch(() => null)
+    const accessToken = body?.data?.access_token
+    if (!response.ok || !body?.ok || typeof accessToken !== 'string') return null
+    localStorage.setItem(TOKEN_KEY, accessToken)
+    return accessToken
+  } catch {
+    return null
+  }
+}
+
+export async function getValidAccessToken(forceRefresh = false): Promise<string | null> {
+  const token = getToken()
+  const expiresAt = token ? getAccessTokenExpiration(token) : null
+  if (!forceRefresh && token && expiresAt !== null && expiresAt > Date.now() + 30_000) {
+    return token
+  }
+  if (!tokenRefreshPromise) {
+    const pending = refreshAccessToken()
+    tokenRefreshPromise = pending
+    pending.finally(() => {
+      if (tokenRefreshPromise === pending) tokenRefreshPromise = null
+    })
+  }
+  return tokenRefreshPromise
+}
+
+function redirectToLogin(): void {
+  clearAuth()
+  if (window.location.pathname === '/login') return
+  const next = encodeURIComponent(window.location.pathname + window.location.search)
+  window.location.href = `/login?next=${next}`
+}
+
+/** Fetch a protected endpoint, refreshing an expired access token once. */
+export async function authenticatedFetch(
+  input: RequestInfo | URL,
+  init: RequestInit = {},
+): Promise<Response> {
+  const headers = new Headers(init.headers)
+  const token = await getValidAccessToken()
+  if (token) headers.set('Authorization', `Bearer ${token}`)
+
+  let response = await window.fetch(input, { ...init, headers })
+  if (response.status !== 401) return response
+
+  const refreshed = await getValidAccessToken(true)
+  if (!refreshed) {
+    redirectToLogin()
+    return response
+  }
+  headers.set('Authorization', `Bearer ${refreshed}`)
+  response = await window.fetch(input, { ...init, headers })
+  if (response.status === 401) redirectToLogin()
+  return response
+}
+
 export function getChatUser(): ChatUser | null {
   if (typeof window === 'undefined') return null
   try {

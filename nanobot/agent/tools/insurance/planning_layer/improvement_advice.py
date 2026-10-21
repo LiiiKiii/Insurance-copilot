@@ -11,7 +11,7 @@ ADVICE_TEMPLATES = {
     "lead_followup": {
         "conversion_rate": {
             "action": "Spend 30 minutes at 16:00 each day calling back leads that have not been followed up, with the goal of increasing this week's follow-up rate from {value:.0%} to {target:.0%}",
-            "expected": "Each 10% increase in lead conversion rate is expected to add HKD 30,000-50,000 in monthly premium",
+            "expected": "A higher conversion rate should increase bound-policy volume; quantify the premium impact using the agent's actual average case size",
         },
         "response_time_hours": {
             "action": "Make first contact with every new lead within 24 hours (set a CRM reminder); reduce the current average of {value} hours to within 24 hours",
@@ -25,7 +25,7 @@ ADVICE_TEMPLATES = {
     "policy_type": {
         "protection_ratio": {
             "action": "Conduct a needs analysis before every quotation and recommend a 60:40 protection-to-savings product ratio; the current ratio is {value:.0%}",
-            "expected": "Average case premium can increase from HKD {current:,} to HKD {target:,}",
+            "expected": "Average case premium can increase from USD {current:,} to USD {target:,}",
         },
         "avg_case_size": {
             "action": "Starting this month, pair every main policy with at least one rider (critical illness + medical) to increase average case premium",

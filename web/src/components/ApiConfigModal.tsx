@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useTranslation } from '@/lib/i18n'
-import { authHeaders } from '@/lib/auth'
+import { authenticatedFetch as fetch, authHeaders } from '@/lib/auth'
 
 const STORAGE_KEY = 'insurance_copilot_config'
 

@@ -18,6 +18,8 @@ export default function CompetitionsPage() {
     return () => { cancelled = true }
   }, [])
 
+  const today = new Date().toISOString().slice(0, 10)
+
   return (
     <div className="p-4 md:p-6 space-y-6 max-w-[1400px] mx-auto">
       <div className="flex items-center justify-between">
@@ -65,11 +67,11 @@ export default function CompetitionsPage() {
                   <td className="px-4 py-3 text-sm text-slate-600 dark:text-slate-300">{c.deadline}</td>
                   <td className="px-4 py-3">
                     <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${
-                      c.is_active
+                      c.is_active && c.deadline >= today
                         ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
                         : 'bg-slate-100 text-slate-600 dark:bg-slate-700 dark:text-slate-400'
                     }`}>
-                      {c.is_active ? t('admin.competitions.status.active') : t('admin.competitions.status.ended')}
+                      {c.is_active && c.deadline >= today ? t('admin.competitions.status.active') : t('admin.competitions.status.ended')}
                     </span>
                   </td>
                 </tr>

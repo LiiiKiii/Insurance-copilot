@@ -2,10 +2,10 @@
 
 from __future__ import annotations
 
+import asyncio
 import json
 import logging
 import os
-import asyncio
 from typing import Any
 from urllib.parse import urlsplit
 from uuid import uuid4
@@ -15,8 +15,8 @@ from fastapi import APIRouter, WebSocket, WebSocketDisconnect
 from admin.db import AsyncSessionFactory
 from admin.dependencies import authenticate_access_token
 from admin.hooks import log_ai_audit, log_flow_step
+from api.chat_history import persist_turn
 from api.compliance import apply_compliance
-
 
 router = APIRouter()
 logger = logging.getLogger(__name__)
@@ -93,7 +93,14 @@ def _origin_allowed(websocket: WebSocket) -> bool:
         return False
     host = websocket.headers.get("host")
     same_origin = host is not None and parsed.netloc.casefold() == host.casefold()
-    return same_origin
+    if same_origin:
+        return True
+    # During local development the browser runs on :3000 while the API and
+    # WebSocket server run on :8000.  Restrict this exception to loopback hosts
+    # so a remote Origin can never use the relaxed port check.
+    loopback_hosts = {"localhost", "127.0.0.1", "::1"}
+    api_hostname = urlsplit(f"//{host}").hostname if host else None
+    return parsed.hostname in loopback_hosts and api_hostname in loopback_hosts
 
 
 async def _verified_user(token: str):
@@ -106,6 +113,14 @@ async def _audit_write(operation, **kwargs) -> None:
         await operation(**kwargs)
     except Exception:
         logger.warning("WebSocket audit persistence failed")
+
+
+async def _persist_chat_turn(**kwargs) -> None:
+    try:
+        async with AsyncSessionFactory() as db:
+            await persist_turn(db, **kwargs)
+    except Exception:
+        logger.warning("Chat-history persistence failed", exc_info=True)
 
 
 def _model_id(agent_loop: Any) -> str | None:
@@ -257,6 +272,15 @@ async def chat(websocket: WebSocket) -> None:
             continue
 
         processed_content, has_compliance_issue, matched_keywords = apply_compliance(content)
+
+        await _persist_chat_turn(
+            session_id=session_id,
+            user=user,
+            agent_id=agent_id,
+            user_message=message,
+            assistant_message=processed_content,
+            assistant_metadata=dict(getattr(result, "metadata", None) or {}),
+        )
 
         await _audit_write(log_flow_step, session_id=session_id, agent_id=user.username,
                            step_index=2, step_type="response", content=processed_content)

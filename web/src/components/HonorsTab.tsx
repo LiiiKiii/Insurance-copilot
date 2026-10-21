@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { cn } from '@/lib/utils'
 import { useTranslation } from '@/lib/i18n'
+import { authenticatedFetch as fetch, authHeaders } from '@/lib/auth'
 
 interface Honor {
   id: string
@@ -30,7 +31,7 @@ function formatHKD(n: number | null | undefined): string {
 
 function formatGap(gap: number | null | undefined, unit: string): string {
   if (gap == null) return '—'
-  if (unit === 'HKD') return `HKD ${formatHKD(gap)}`
+  if (['HKD', 'USD'].includes(unit)) return `${unit} ${formatHKD(gap)}`
   return `${formatHKD(gap)}${unit ? ' ' + unit : ''}`
 }
 
@@ -43,7 +44,7 @@ export function HonorsTab({ agentId }: HonorsTabProps) {
     if (!agentId) return
     let cancelled = false
     setLoading(true)
-    fetch(`/api/competitions?agent_id=${agentId}`)
+    fetch(`/api/competitions?agent_id=${agentId}`, { headers: authHeaders() })
       .then((r) => r.json())
       .then((data) => {
         if (cancelled) return

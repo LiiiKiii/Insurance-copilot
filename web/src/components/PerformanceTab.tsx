@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { cn } from '@/lib/utils'
 import { useTranslation } from '@/lib/i18n'
+import { authenticatedFetch as fetch, authHeaders } from '@/lib/auth'
 
 interface Metric {
   label: string
@@ -24,9 +25,9 @@ interface PerformanceTabProps {
   agentId: string
 }
 
-function formatHKD(n: number | null | undefined): string {
+function formatUSD(n: number | null | undefined): string {
   if (n == null) return '—'
-  return `HKD ${n.toLocaleString()}`
+  return `USD ${n.toLocaleString()}`
 }
 
 function formatNum(n: number | null | undefined, unit?: string): string {
@@ -50,7 +51,7 @@ function SectionCard({ title, children }: { title: string; children: React.React
 /* ─── Status Badge ─── */
 
 function StatusBadge({ status }: { status: string | null }) {
-  const isPass = status === 'Achieved' || status === 'Met'
+  const isPass = ['Achieved', 'Met', 'On Track', 'Meets Benchmark'].includes(status || '')
   return (
     <span className={cn(
       'text-[10px] font-medium px-2 py-0.5 rounded-full whitespace-nowrap',
@@ -96,7 +97,7 @@ export function PerformanceTab({ agentId }: PerformanceTabProps) {
     let cancelled = false
     setLoading(true)
     setError(null)
-    fetch(`/api/performance?agent_id=${agentId}`, {})
+    fetch(`/api/performance?agent_id=${agentId}`, { headers: authHeaders() })
       .then(r => r.json())
       .then(data => {
         if (cancelled) return
@@ -158,8 +159,8 @@ export function PerformanceTab({ agentId }: PerformanceTabProps) {
                     />
                   </div>
                   <div className="flex justify-between text-[10px] text-slate-400">
-                    <span>{t('metric.current')} {formatHKD(current)}</span>
-                    <span>{t('metric.target')} {formatHKD(target)}</span>
+                    <span>{t('metric.current')} {formatUSD(current)}</span>
+                    <span>{t('metric.target')} {formatUSD(target)}</span>
                   </div>
                   {a.remark && <p className="text-[10px] text-slate-400">{a.remark}</p>}
                 </div>
@@ -174,9 +175,9 @@ export function PerformanceTab({ agentId }: PerformanceTabProps) {
         <div className="space-y-0">
           <KVRow label={t('tab.performance.metric.policyCount')} value={formatNum(m('policy_count').current as number, t('metric.unit.items'))} />
           <KVRow label={t('tab.performance.metric.submissionCount')} value={formatNum(m('submission_count').current as number, t('metric.unit.items'))} />
-          <KVRow label={t('tab.performance.metric.quarterFyc')} value={formatHKD(m('quarter_fyc').current as number)} />
-          <KVRow label={t('tab.performance.metric.fyc')} value={formatHKD(m('fyc').current as number)} />
-          <KVRow label={t('tab.performance.metric.dailyFyc')} value={formatHKD(m('daily_fyc').current as number)} />
+          <KVRow label={t('tab.performance.metric.quarterFyc')} value={formatUSD(m('quarter_fyc').current as number)} />
+          <KVRow label={t('tab.performance.metric.fyc')} value={formatUSD(m('fyc').current as number)} />
+          <KVRow label={t('tab.performance.metric.dailyFyc')} value={formatUSD(m('daily_fyc').current as number)} />
         </div>
       </SectionCard>
 

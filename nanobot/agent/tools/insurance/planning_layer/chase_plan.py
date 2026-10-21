@@ -20,10 +20,11 @@ logger = logging.getLogger(__name__)
 
 ACTION_TEMPLATES_CONFIG_KEY = "planning.action_templates"
 _ALLOWED_PRIORITIES = frozenset({"P0", "P1", "P2"})
+_MONETARY_UNITS = frozenset({"HKD", "USD"})
 
 # ── Default action templates (fallback if config file not found) ──────────────
 _DEFAULT_HKD_ACTIONS = [
-    {"priority": "P0", "template": "Maintain daily production of HKD {daily_premium_needed:,} and prioritise high-value policies"},
+    {"priority": "P0", "template": "Maintain daily production of {unit} {daily_premium_needed:,} and prioritise high-value policies"},
     {"priority": "P0", "template": "Review the three clients most likely to close at 09:00 each day and follow up with each one"},
     {"priority": "P0", "template": "Contact every quoted client who has not been followed up within 30 days this week and ask about their concerns"},
     {"priority": "P1", "template": "Ask each existing client for one referral and explain the current competition target"},
@@ -202,12 +203,12 @@ class GenerateChasePlanTool(Tool):
             week_end = min(today + timedelta(weeks=w) - timedelta(days=1), date.fromisoformat(deadline) if deadline else today + timedelta(days=days_remaining))
             remaining_after = max(actual_gap - weekly_target * w, 0)
 
-            if unit == "HKD":
+            if unit in _MONETARY_UNITS:
                 weekly_plans.append({
                     "week": f"Week {w} ({week_start.strftime('%m/%d')}-{week_end.strftime('%m/%d')})",
-                    "target": f"HKD {weekly_target:,}",
-                    "cumulative_target": f"HKD {weekly_target * w:,}",
-                    "remaining_after": f"HKD {remaining_after:,}",
+                    "target": f"{unit} {weekly_target:,}",
+                    "cumulative_target": f"{unit} {weekly_target * w:,}",
+                    "remaining_after": f"{unit} {remaining_after:,}",
                 })
             else:
                 weekly_plans.append({
@@ -228,7 +229,7 @@ class GenerateChasePlanTool(Tool):
             "unit": unit,
         }
 
-        if unit == "HKD":
+        if unit in _MONETARY_UNITS:
             raw_templates = templates.get("hkd_actions", _DEFAULT_HKD_ACTIONS)
         else:
             raw_templates = templates.get("non_hkd_actions", _DEFAULT_NON_HKD_ACTIONS)

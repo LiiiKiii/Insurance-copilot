@@ -23,7 +23,7 @@ class Competition(Base):
     type: Mapped[str] = mapped_column(String(30), nullable=False)
     target_metric: Mapped[str] = mapped_column(String(50), nullable=False)
     target_value: Mapped[float | None] = mapped_column(Float, nullable=True)
-    unit: Mapped[str] = mapped_column(String(20), default="HKD")
+    unit: Mapped[str] = mapped_column(String(20), default="USD")
     deadline: Mapped[str] = mapped_column(String(10), nullable=False)
     reward: Mapped[str] = mapped_column(Text, default="")
     description: Mapped[str] = mapped_column(Text, default="")

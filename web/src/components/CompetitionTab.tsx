@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { cn } from '@/lib/utils'
 import { useTranslation, type MessageKey } from '@/lib/i18n'
+import { authenticatedFetch as fetch, authHeaders } from '@/lib/auth'
 
 // Frontend-side mapping from the backend's feasibility-hint enum
 // to translation keys, so the badge text follows the UI locale. Unknown
@@ -41,7 +42,7 @@ function formatHKD(n: number | null | undefined): string {
 
 function formatGap(gap: number | null | undefined, unit: string): string {
   if (gap == null) return '—'
-  if (unit === 'HKD') return `HKD ${formatHKD(gap)}`
+  if (['HKD', 'USD'].includes(unit)) return `${unit} ${formatHKD(gap)}`
   return `${gap} ${unit}`
 }
 
@@ -99,7 +100,7 @@ export function CompetitionTab({ agentId }: CompetitionTabProps) {
     if (!agentId) return
     let cancelled = false
     setLoading(true)
-    fetch(`/api/competitions?agent_id=${agentId}`, {})
+    fetch(`/api/competitions?agent_id=${agentId}`, { headers: authHeaders() })
       .then(r => r.json())
       .then(data => {
         if (cancelled) return

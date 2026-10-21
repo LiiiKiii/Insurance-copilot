@@ -75,7 +75,7 @@ class FeatureModelParityTests(unittest.IsolatedAsyncioTestCase):
             ),
         )
         self.assertEqual(FEATURE_META, {
-            "gap_analysis": {"label": "缺口分析", "desc": "MDRT距離、達標缺口計算"},
+            "gap_analysis": {"label": "缺口分析", "desc": "書面保費目標、達標缺口計算"},
             "competition": {"label": "競賽進度", "desc": "競賽狀態、榮譽目標追蹤"},
             "attribution": {"label": "歸因分析", "desc": "業績未達標原因分析"},
             "chase_plan": {"label": "追趕計劃", "desc": "週度目標拆解、行動計劃"},
@@ -90,7 +90,7 @@ class FeatureModelParityTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(get_feature_model("unknown"), "model")
 
     async def test_original_ordered_case_insensitive_keyword_detection(self) -> None:
-        self.assertEqual(detect_feature("MDRT 還差多少"), "gap_analysis")
+        self.assertEqual(detect_feature("書面保費還差多少"), "gap_analysis")
         self.assertEqual(detect_feature("DEADLINE 前的衝刺"), "competition")
         # "達標" belongs to the first matching category, ahead of attribution.
         self.assertEqual(detect_feature("為什麼沒達標"), "gap_analysis")
@@ -101,7 +101,7 @@ class FeatureModelParityTests(unittest.IsolatedAsyncioTestCase):
         set_feature_model("general", "general-model")
         self.assertEqual(get_model_for_message("完全無關"), "general-model")
         set_feature_model("gap_analysis", "gap-model")
-        self.assertEqual(get_model_for_message("MDRT缺口"), "gap-model")
+        self.assertEqual(get_model_for_message("書面保費缺口"), "gap-model")
 
     async def test_per_slug_global_string_persistence_and_empty_override(self) -> None:
         await save_feature_model_to_db("competition", "openai/gpt-5")
@@ -138,7 +138,7 @@ class FeatureModelParityTests(unittest.IsolatedAsyncioTestCase):
             listed = await list_feature_models(None)
             self.assertEqual(listed["data"][0], {
                 "slug": "gap_analysis", "label": "缺口分析",
-                "desc": "MDRT距離、達標缺口計算", "model": "",
+                "desc": "書面保費目標、達標缺口計算", "model": "",
             })
             knowledge = next(row for row in listed["data"] if row["slug"] == "knowledge")
             self.assertEqual(set(knowledge), {"slug", "label", "desc", "model"})

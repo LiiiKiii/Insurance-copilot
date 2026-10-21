@@ -2,6 +2,7 @@
 
 
 PARTIAL_COVERAGE_THRESHOLD = 0.5
+MONETARY_UNITS = frozenset({"HKD", "USD"})
 
 
 def compute_gap_analysis(
@@ -10,7 +11,7 @@ def compute_gap_analysis(
 ) -> list[dict]:
     """Allocate one shared pending-premium pool across competition gaps.
 
-    Pending premium is allocated to positive HKD gaps in ascending
+    Pending premium is allocated to positive monetary gaps in ascending
     ``days_remaining`` order. Results retain the caller's original order.
     """
     remaining_pool = float(pending_premium or 0)
@@ -40,7 +41,7 @@ def compute_gap_analysis(
                 pending_coverage_pct=100.0,
                 status="achieved",
             )
-        elif unit != "HKD":
+        elif unit not in MONETARY_UNITS:
             result.update(
                 actual_gap=gap,
                 pending_deduction=0,
@@ -63,7 +64,7 @@ def compute_gap_analysis(
         gap = competition.get("gap")
         unit = competition.get("unit", "HKD")
 
-        if gap is None or gap <= 0 or unit != "HKD":
+        if gap is None or gap <= 0 or unit not in MONETARY_UNITS:
             continue
 
         deduction = min(gap, remaining_pool) if remaining_pool > 0 else 0

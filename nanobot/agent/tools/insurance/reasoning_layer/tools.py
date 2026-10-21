@@ -109,6 +109,7 @@ class AssessGapFeasibilityTool(Tool):
 
     _UNIT_ALIASES = {
         "hkd": "HKD",
+        "usd": "USD",
         "policies": "policies",
     }
 
@@ -142,12 +143,12 @@ class AssessGapFeasibilityTool(Tool):
                 },
                 "unit": {
                     "type": "string",
-                    "enum": ["HKD", "policies"],
-                    "default": "HKD",
+                    "enum": ["USD", "HKD", "policies"],
+                    "default": "USD",
                     "description": (
-                        "Supported calculation unit: HKD for currency gaps or policies "
+                        "Supported calculation unit: USD or HKD for currency gaps, or policies "
                         "for policy-count gaps. Casing and surrounding whitespace are "
-                        "normalized. Defaults to HKD when omitted."
+                        "normalized. Defaults to USD when omitted."
                     ),
                 },
             },
@@ -183,7 +184,7 @@ class AssessGapFeasibilityTool(Tool):
         return errors
 
     async def execute(self, **kwargs: Any) -> dict[str, Any]:
-        unit = self._canonical_unit(kwargs.get("unit", "HKD"))
+        unit = self._canonical_unit(kwargs.get("unit", "USD"))
         if unit is None:
             raise ValueError("unit must be a supported feasibility unit")
 

@@ -3,7 +3,7 @@
  */
 
 import { API_CONFIG } from '@/config'
-import { getToken } from './auth'
+import { authenticatedFetch as fetch, getToken } from './auth'
 
 export interface ComplianceWarning {
   type: string

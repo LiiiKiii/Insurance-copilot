@@ -9,6 +9,7 @@ from admin.models.agent_data import (
 )
 from admin.models.assessment import AgentAssessment
 from admin.models.audit import AiAuditLog, ErrorLog, RequestLog
+from admin.models.chat import ChatMessage, ChatSession
 from admin.models.competition import Competition, CompetitionEntry
 from admin.models.config import SystemConfig
 from admin.models.flow_log import FlowLog
@@ -29,6 +30,8 @@ __all__ = [
     "AgentProfile",
     "AiAuditLog",
     "BriefingSettings",
+    "ChatMessage",
+    "ChatSession",
     "Competition",
     "CompetitionEntry",
     "DailyBriefing",

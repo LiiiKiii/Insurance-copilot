@@ -196,6 +196,14 @@ def create_app(
     if agents_router is not None:
         application.include_router(agents_router)
 
+    dashboard_router = _optional_router("api.routers.agent_dashboard")
+    if dashboard_router is not None:
+        application.include_router(dashboard_router)
+
+    chat_sessions_router = _optional_router("api.routers.chat_sessions")
+    if chat_sessions_router is not None:
+        application.include_router(chat_sessions_router)
+
     briefing_router = _optional_router("api.routers.briefing")
     if briefing_router is not None:
         application.include_router(

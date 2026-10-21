@@ -1,130 +1,54 @@
 # Action Recommendation Logic
 
-## Overview
+## Purpose
 
-This document defines the decision logic used by Insurance Copilot to produce prioritised actions from performance gaps, competition progress, pending premium, and attribution indicators.
+Use performance gaps, pending premium, product mix, retention, conversion, and training data to create practical general-insurance coaching actions.
 
-## Core Decision Tree
+## Decision Sequence
 
-### Step 1: Assess Pending Premium
+### 1. Validate the Data
 
-```text
-Pending premium > 0?
-├── Yes: prioritise follow-up on pending policies
-│   ├── Pending amount > 50% of the gap
-│   │   └── Focus on outstanding underwriting actions because approval could substantially reduce the gap.
-│   ├── Pending amount > 20% of the gap
-│   │   └── Accelerate underwriting while continuing new-business activity.
-│   └── Pending amount < 20% of the gap
-│       └── Pending premium has limited impact; place greater emphasis on new opportunities.
-└── No: continue to Step 2
-```
+- Keep missing conversion values unavailable.
+- Confirm written premium and product detail reconcile.
+- Exclude duplicate, reversed, cancelled, and declined records.
+- Identify synthetic and derived values before giving advice.
 
-### Step 2: Assess Gap Size
+### 2. Assess Pending Premium
 
-```text
-Completion rate = current / target
-├── At least 80%: sprint stage
-│   ├── Message: the target is close; concentrate effort on completion.
-│   └── Action: prioritise existing-client reviews and active proposals.
-├── 50%–79%: steady progress
-│   ├── Message: progress is reasonable; maintain a consistent cadence.
-│   └── Action: balance prospecting with existing-client service.
-├── 30%–49%: acceleration required
-│   ├── Message: progress is behind plan and activity must increase.
-│   └── Action: increase weekly meetings and broaden lead sources.
-└── Below 30%: warning
-    ├── Message: progress is materially behind plan; prepare a recovery plan with a supervisor.
-    └── Action: review the full sales pipeline and request team support.
-```
+- More than 50% of the monetary gap: prioritise underwriting and outstanding documents.
+- Between 20% and 50%: work pending cases while maintaining new-business activity.
+- Below 20%: treat pending cases as secondary and strengthen the active quotation pipeline.
 
-### Step 3: Assess Time Urgency
+Pending premium is a scenario offset, not achieved written premium.
 
-```text
-Remaining days = deadline - current date
-├── 30 days or fewer: urgent
-│   └── Raise priority and review progress daily.
-├── 31–60 days: attention required
-│   └── Set weekly targets and review them regularly.
-├── 61–90 days: normal
-│   └── Continue according to plan.
-└── More than 90 days: sufficient time
-    └── Treat as a medium- or long-term objective.
-```
+### 3. Assess Progress
 
-### Step 4: Generate Attribution-Based Actions
+- At least 80%: completion sprint; focus on active quotations and pending requirements.
+- 50%–79%: maintain a weekly production and renewal cadence.
+- 30%–49%: increase qualified lead and client-review activity.
+- Below 30%: create a recovery plan with the supervisor.
 
-Use underperforming attribution indicators to select targeted recommendations.
+### 4. Select the Action
 
-#### Insufficient Lead Follow-up
+- Low conversion: improve response time, discovery, quotation clarity, and follow-up.
+- Low retention: start renewal reviews 60–90 days before expiry and document loss reasons.
+- Unbalanced mix: review legitimate Motor, Property, Commercial, and Specialty exposures.
+- Low practice use: complete two focused AI practice sessions per week.
 
-```text
-Condition: lead_conversion_rate < peer_avg or response_hours > peer_avg
-Actions:
-- Set a target for the first response within four hours.
-- Follow up each qualified lead at least three times.
-- Use AI practice sessions to improve needs analysis and objection handling.
-```
+## Output Example
 
-#### Low Activity Participation
+1. Urgent — Written Premium Excellence Challenge
+   Gap: USD 120,000
+   Pending scenario offset: USD 35,000
+   Action: resolve outstanding underwriting items and review qualified quotations.
 
-```text
-Condition: activity indicators < peer_avg
-Actions:
-- Attend at least two client activities this month.
-- Co-host one seminar with an experienced colleague.
-- Publish one or two useful professional updates each week.
-```
+2. Improvement — Conversion Quality
+   Current: 22%; target: 35%
+   Action: respond within four business hours and use a documented three-touch follow-up plan.
 
-#### Unbalanced Product Mix
+## Compliance
 
-```text
-Condition: protection product share < 40%
-Actions:
-- Review whether the low protection share is reducing FYC and competition progress.
-- Discuss a suitable protection-and-savings combination where client needs support it.
-- Explain how product mix affects average FYC without making unsuitable recommendations.
-```
-
-#### Low AI Practice Usage
-
-```text
-Condition: training_sessions < peer_avg
-Actions:
-- Complete at least two AI-supported sales practice sessions each week.
-- Focus practice on objection handling, needs analysis, and product explanation.
-```
-
-## Recommendation Priority Rules
-
-After generating applicable actions, order them as follows:
-
-1. **Highest priority:** competition or honour deadline within 30 days with a remaining gap.
-2. **High priority:** pending-policy follow-up that can directly convert into recognised performance.
-3. **Medium priority:** attribution dimensions materially below the peer benchmark.
-4. **Routine:** medium-term planning and capability development.
-
-## Suggested Output Structure
-
-```text
-Recommended actions, ordered by priority
-
-1. Urgent — Quarterly Sprint, X days remaining
-   Gap: Y cases
-   Recommended action: ...
-
-2. Important — Follow pending policies
-   Pending amount: HKD XXX,XXX
-   Recommended action: ...
-
-3. Improvement — Strengthen lead follow-up
-   Current versus peer benchmark: ...
-   Recommended action: ...
-```
-
-## Compliance Notes
-
-- Recommendations are for internal decision support and do not constitute investment advice.
-- Recommendations must not present an unsuitable product as the only solution.
-- Results depend on internal system records and should be checked with a supervisor when data is uncertain.
-- The system does not promise or guarantee performance outcomes.
+- Advice is internal decision support, not a guarantee of results.
+- Never recommend unsuitable cover solely to raise premium or commission.
+- Clearly explain limits, deductibles, exclusions, and material changes.
+- Escalate uncertain data or compliance issues to a supervisor.

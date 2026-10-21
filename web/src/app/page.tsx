@@ -5,10 +5,10 @@ import { useRouter } from 'next/navigation'
 import { useInsuranceChat } from '@/lib/useWebSocket'
 import { Sidebar, SidebarContent } from '@/components/Sidebar'
 import { ConfirmModal } from '@/components/ConfirmModal'
-import { authHeaders, clearAuth } from '@/lib/auth'
+import { authenticatedFetch as fetch, authHeaders, clearAuth, getChatUser } from '@/lib/auth'
 import { ChatInterface } from '@/components/ChatInterface'
 import { AlertBanner } from '@/components/AlertBanner'
-import { PerformanceTab } from '@/components/PerformanceTab'
+import { TargetsTab } from '@/components/TargetsTab'
 import { CompetitionTab } from '@/components/CompetitionTab'
 import { HonorsTab } from '@/components/HonorsTab'
 import { ApiConfigModal, loadApiConfig, type ApiConfig } from '@/components/ApiConfigModal'
@@ -18,7 +18,6 @@ import { DataBottomSheet } from '@/components/mobile/DataBottomSheet'
 import { DataFab } from '@/components/mobile/DataFab'
 import { useTranslation } from '@/lib/i18n'
 import { cn } from '@/lib/utils'
-import { getChatUser } from '@/lib/auth'
 
 type TabKey = 'performance' | 'competition' | 'honors'
 
@@ -34,6 +33,7 @@ export default function Home() {
   const [dataSheetOpen, setDataSheetOpen] = useState(false)
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false)
   const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null)
+  const [chatUser, setChatUser] = useState<ReturnType<typeof getChatUser>>(null)
 
   // Auth guard: redirect to /login if not logged in
   useEffect(() => {
@@ -42,6 +42,7 @@ export default function Home() {
       router.replace('/login')
       return
     }
+    setChatUser(user)
     // agentId is picked by the sidebar (first agent), not taken from the logged-in user
     setReady(true)
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
@@ -50,6 +51,12 @@ export default function Home() {
   // truly no key saved. Backend auto-apply runs silently and does NOT force the modal
   // open on failure (users can click the API Config button or send a message to retry).
   useEffect(() => {
+    if (!chatUser) return
+    if (!chatUser.is_superadmin) {
+      setApiConfig(null)
+      setConfigOpen(false)
+      return
+    }
     const cfg = loadApiConfig()
     setApiConfig(cfg)
     if (!cfg.apiKey) {
@@ -57,7 +64,7 @@ export default function Home() {
       return
     }
     // Silent background verify + auto-apply; do not force-open modal on failure
-    fetch('/api/config/status')
+    fetch('/api/config/status', { headers: authHeaders() })
       .then(r => r.json())
       .then(async (data) => {
         if (data.configured) return
@@ -68,7 +75,7 @@ export default function Home() {
         }).catch(() => {})
       })
       .catch(() => {})
-  }, [])
+  }, [chatUser])
 
   const handleConfigSave = (cfg: ApiConfig) => {
     setApiConfig(cfg)
@@ -93,7 +100,7 @@ export default function Home() {
         onMenuClick={() => setLeftDrawerOpen(true)}
         rightSlot={
           <div className="flex items-center gap-2">
-            <button
+            {chatUser?.is_superadmin && <button
             onClick={() => setConfigOpen(true)}
             aria-label={apiConfig?.apiKey ? t('apiConfig.configured.aria') : t('apiConfig.notConfigured.aria')}
             className={cn(
@@ -107,7 +114,7 @@ export default function Home() {
               <circle cx="12" cy="12" r="3" />
               <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
             </svg>
-          </button>
+          </button>}
           </div>
         }
       />
@@ -187,7 +194,7 @@ export default function Home() {
           {/* Tab content */}
           <div className="flex-1 min-h-0 overflow-y-auto">
             {activeTab === 'performance' ? (
-              <PerformanceTab agentId={chat.agentId} />
+              <TargetsTab agentId={chat.agentId} />
             ) : activeTab === 'honors' ? (
               <HonorsTab agentId={chat.agentId} />
             ) : (
@@ -204,7 +211,7 @@ export default function Home() {
             isTyping={chat.isTyping}
             status={chat.status}
             onSend={chat.sendMessage}
-            onOpenConfig={() => setConfigOpen(true)}
+            onOpenConfig={chatUser?.is_superadmin ? () => setConfigOpen(true) : undefined}
             apiConfigured={!!apiConfig?.apiKey}
             agentId={chat.agentId}
             sessionKey={chat.activeSessionId ?? 'default'}
@@ -245,11 +252,11 @@ export default function Home() {
       />
 
       {/* API Config Modal */}
-      <ApiConfigModal
+      {chatUser?.is_superadmin && <ApiConfigModal
         open={configOpen}
         onClose={() => setConfigOpen(false)}
         onSave={handleConfigSave}
-      />
+      />}
     </div>
   )
 }

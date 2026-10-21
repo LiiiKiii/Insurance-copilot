@@ -89,6 +89,16 @@ class ComputeGapAnalysisTests(unittest.TestCase):
         self.assertEqual(result["pending_coverage_pct"], 0.0)
         self.assertEqual(result["status"], "open")
 
+    def test_usd_gap_uses_pending_premium(self) -> None:
+        result = compute_gap_analysis(
+            [competition("usd", 50_000, unit="USD")],
+            20_000,
+        )[0]
+
+        self.assertEqual(result["actual_gap"], 30_000)
+        self.assertEqual(result["pending_deduction"], 20_000)
+        self.assertEqual(result["unit"], "USD")
+
     def test_missing_unit_defaults_to_hkd(self) -> None:
         item = competition("default-unit", 50000)
         del item["unit"]

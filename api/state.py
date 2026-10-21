@@ -17,6 +17,19 @@ from nanobot.providers.registry import find_by_name
 from api.runtime_config import resolve_startup_runtime_config
 
 
+_PROJECT_ROOT = Path(__file__).resolve().parent.parent
+_LEGACY_DEFAULT_WORKSPACE = Path("~/.nanobot/workspace").expanduser()
+
+
+def _resolve_workspace(configured: Path) -> Path:
+    """Use the repository knowledge base when no workspace was configured."""
+    resolved = configured.expanduser()
+    project_knowledge = _PROJECT_ROOT / "data" / "knowledge"
+    if resolved == _LEGACY_DEFAULT_WORKSPACE and project_knowledge.is_dir():
+        return _PROJECT_ROOT
+    return resolved
+
+
 class RuntimeState:
     """Own the runtime objects that an application lifespan will manage.
 
@@ -34,10 +47,10 @@ class RuntimeState:
         # normal application startup resolves default, persisted, and
         # environment configuration in that documented order.
         self.config = config or resolve_startup_runtime_config()
-        self.workspace = workspace or self.config.workspace_path
+        self.workspace = workspace or _resolve_workspace(self.config.workspace_path)
         self.bus = MessageBus()
         self.provider = provider or self._create_provider()
-        self.tool_registry = build_reasoning_registry()
+        self.tool_registry = build_reasoning_registry(self.workspace)
         self.agent_loop = AgentLoop(
             bus=self.bus,
             provider=self.provider,
