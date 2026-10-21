@@ -1,0 +1,29 @@
+{
+  "dataset_id": "m4-synthetic-v1",
+  "description": "Synthetic fixture for validating the ranking experiment pipeline; not production evidence.",
+  "agent_id": "AGT001",
+  "objective": {
+    "open_gap": 100000,
+    "unit": "HKD",
+    "deadline": "2026-12-31"
+  },
+  "constraints": {
+    "top_k": 5
+  },
+  "candidates": [
+    {"candidate_id": "POL-A", "expected_contribution": 90000, "urgency": 0.2, "actionability": 0.3, "business_fit": 0.4},
+    {"candidate_id": "POL-B", "expected_contribution": 60000, "urgency": 0.95, "actionability": 0.9, "business_fit": 0.9},
+    {"candidate_id": "POL-C", "expected_contribution": 70000, "urgency": 0.7, "actionability": 0.75, "business_fit": 0.8},
+    {"candidate_id": "POL-D", "expected_contribution": 50000, "urgency": 0.8, "actionability": 0.85, "business_fit": 0.7},
+    {"candidate_id": "POL-E", "expected_contribution": 100000, "urgency": 0.1, "actionability": 0.2, "business_fit": 0.3},
+    {"candidate_id": "POL-X", "expected_contribution": 120000, "urgency": 1.0, "actionability": 1.0, "business_fit": 1.0, "compliance_allowed": false}
+  ],
+  "relevance": {
+    "POL-A": 1,
+    "POL-B": 3,
+    "POL-C": 3,
+    "POL-D": 2,
+    "POL-E": 0
+  },
+  "evaluation_k": 3
+}
