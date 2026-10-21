@@ -10,14 +10,15 @@ from unittest.mock import patch
 try:
     from fastapi import HTTPException
     from fastapi.routing import APIRoute
-    from starlette.routing import NoMatchFound
 
     from api.routers.planning import (
         ChasePlanRequest,
         ImprovementAdviceRequest,
+        PrioritizationRequest,
         _decode_tool_result,
         generate_chase_plan,
         generate_improvement_advice,
+        prioritize_followups,
         router as planning_router,
     )
     from api.server import app, create_app
@@ -47,6 +48,7 @@ class PlanningApiTests(unittest.IsolatedAsyncioTestCase):
         expected = {
             "/api/planning/chase-plan",
             "/api/planning/improvement-advice",
+            "/api/planning/prioritization",
         }
         router_paths = {
             route.path
@@ -57,8 +59,10 @@ class PlanningApiTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(router_paths, expected)
         for route in planning_router.routes:
             self.assertEqual(str(app.url_path_for(route.name)), route.path)
-        with self.assertRaises(NoMatchFound):
-            app.url_path_for("prioritize_followups")
+        self.assertEqual(
+            str(app.url_path_for("prioritize_followups")),
+            "/api/planning/prioritization",
+        )
 
     async def test_chase_plan_forwards_validated_business_inputs(self) -> None:
         tool = self.FakeTool({"competition_id": "COMP-1", "weekly_plans": []})
@@ -92,6 +96,39 @@ class PlanningApiTests(unittest.IsolatedAsyncioTestCase):
 
         self.assertEqual(result, {"agent_id": "AGT001", "advice": []})
         self.assertEqual(tool.calls, [{"agent_id": "AGT001", "top_n": 3}])
+
+    async def test_prioritization_forwards_supplied_candidate_contract(self) -> None:
+        tool = self.FakeTool({"agent_id": "AGT001", "recommendations": []})
+        request = PrioritizationRequest(
+            agent_id="AGT001",
+            objective={"open_gap": 1000},
+            candidates=[{
+                "candidate_id": "POL-1",
+                "expected_contribution": 500,
+                "urgency": 0.8,
+                "actionability": 0.7,
+            }],
+            constraints={"top_k": 1},
+        )
+
+        with patch("api.routers.planning._build_prioritization_tool", return_value=tool):
+            result = await prioritize_followups(request, SimpleNamespace(username="AGT001"))
+
+        self.assertEqual(result["recommendations"], [])
+        self.assertEqual(tool.calls[0]["agent_id"], "AGT001")
+        self.assertEqual(tool.calls[0]["constraints"], {"top_k": 1})
+
+    async def test_prioritization_rejects_cross_agent_request(self) -> None:
+        request = PrioritizationRequest(
+            agent_id="AGT002",
+            objective={"open_gap": 1000},
+            candidates=[],
+        )
+
+        with self.assertRaises(HTTPException) as raised:
+            await prioritize_followups(request, SimpleNamespace(username="AGT001"))
+
+        self.assertEqual(raised.exception.status_code, 403)
 
     def test_invalid_tool_payload_is_rejected(self) -> None:
         with self.assertRaises(HTTPException) as raised:
