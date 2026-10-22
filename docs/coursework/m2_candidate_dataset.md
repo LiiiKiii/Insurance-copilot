@@ -28,7 +28,11 @@ python scripts/build_m2_candidate_dataset.py
 The generator writes two files:
 
 - `data/evaluation/m2_candidate_scenarios.json` contains complete candidate
-  inputs, derived features, filtering evidence, and source traceability;
+  inputs, derived features, filtering evidence, and source traceability. This
+  is the final machine-readable candidate input delivered to M4. Every
+  candidate includes `candidate_id`, `expected_contribution`, `urgency`,
+  `actionability`, `business_fit`, `eligible`, `permission_allowed`, and
+  `compliance_allowed`;
 - `data/evaluation/m2_candidate_blind.json` contains only evidence fields for
   independent human ranking.
 

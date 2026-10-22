@@ -34,6 +34,16 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_MOCK_DIR = PROJECT_ROOT / "data" / "mock"
 DEFAULT_TENANT_ID = "00000000-0000-0000-0000-000000000001"
 ACTION_TEMPLATES_CONFIG_KEY = "planning.action_templates"
+LEGACY_COMPETITION_IDS = frozenset(
+    {
+        "COMP_STARLIGHT_2026",
+        "COMP_SPRINT_2026Q1",
+        "COMP_ELITE_2026",
+        "COMP_ROOKIE_2026",
+        "HONOR_MDRT_2026",
+        "HONOR_COT_2026",
+    }
+)
 
 
 def _require_env(name: str) -> str:
@@ -397,6 +407,7 @@ async def _seed_profiles(session: AsyncSession, agents: list[dict[str, Any]]) ->
 async def _seed_performance(
     session: AsyncSession,
     performance: dict[str, dict[str, Any]],
+    tenant_id: str,
 ) -> tuple[int, int]:
     performance_count = 0
     target_count = 0
@@ -429,7 +440,7 @@ async def _seed_performance(
                     "period_end": period_end,
                 },
                 {
-                    "tenant_id": DEFAULT_TENANT_ID,
+                    "tenant_id": tenant_id,
                     "metric_label": metric.get("label", metric_key),
                     "target_value": target,
                     "unit": metric.get("unit", ""),
@@ -508,6 +519,7 @@ async def _seed_clients(
 async def _seed_assessments(
     session: AsyncSession,
     assessment_data: dict[str, dict[str, Any]],
+    tenant_id: str,
 ) -> int:
     count = 0
     for agent_id, payload in assessment_data.items():
@@ -516,7 +528,7 @@ async def _seed_assessments(
                 session,
                 AgentAssessment,
                 {
-                    "tenant_id": DEFAULT_TENANT_ID,
+                    "tenant_id": tenant_id,
                     "agent_id": agent_id,
                     "subject": assessment["subject"],
                 },
@@ -551,6 +563,7 @@ async def _seed_attribution(
 async def _seed_competitions(
     session: AsyncSession,
     competition_data: dict[str, dict[str, Any]],
+    tenant_id: str,
 ) -> tuple[int, int]:
     definitions: dict[str, dict[str, Any]] = {}
     entries: list[tuple[str, dict[str, Any]]] = []
@@ -560,13 +573,24 @@ async def _seed_competitions(
             definitions.setdefault(competition["id"], competition)
             entries.append((agent_id, competition))
 
+    # These identifiers belong to the retired HKD-era seed.  Deactivate only
+    # known seed records so that reruns do not hide administrator-created
+    # competitions that are not present in the current mock dataset.
+    retired_ids = LEGACY_COMPETITION_IDS.difference(definitions)
+    if retired_ids:
+        retired_competitions = await session.scalars(
+            select(Competition).where(Competition.id.in_(retired_ids))
+        )
+        for competition in retired_competitions:
+            competition.is_active = False
+
     for competition_id, competition in definitions.items():
         await _upsert(
             session,
             Competition,
             {"id": competition_id},
             {
-                "tenant_id": DEFAULT_TENANT_ID,
+                "tenant_id": tenant_id,
                 "name": competition["name"],
                 "name_en": competition.get("name_en", ""),
                 "type": competition["type"],
@@ -644,15 +668,27 @@ async def seed(mock_dir: Path = DEFAULT_MOCK_DIR) -> dict[str, int]:
             )
             agent_user_count = await _seed_agent_users(session, tenant.id, agents)
             profile_count = await _seed_profiles(session, agents)
-            performance_count, target_count = await _seed_performance(session, performance)
+            performance_count, target_count = await _seed_performance(
+                session,
+                performance,
+                tenant.id,
+            )
             policy_count = await _seed_policies(
                 session,
                 _policy_sources(policies, competitions),
             )
             client_count = await _seed_clients(session, clients)
-            assessment_count = await _seed_assessments(session, assessments)
+            assessment_count = await _seed_assessments(
+                session,
+                assessments,
+                tenant.id,
+            )
             attribution_count = await _seed_attribution(session, attribution)
-            competition_count, entry_count = await _seed_competitions(session, competitions)
+            competition_count, entry_count = await _seed_competitions(
+                session,
+                competitions,
+                tenant.id,
+            )
             planning_config_count = await _seed_planning_configuration(session)
             await session.commit()
         except Exception:
