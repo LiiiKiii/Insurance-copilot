@@ -34,7 +34,14 @@
         },
         {
           "annotator_id": "non_m4_annotator_2",
-          "ranking": []
+          "ranking": [
+            "CLI-00690-005",
+            "CLI-00690-007",
+            "POL-00690-001",
+            "POL-00690-002",
+            "CLI-00690-009",
+            "CLI-00690-011"
+          ]
         }
       ],
       "consensus_relevance": {}
@@ -63,7 +70,14 @@
         },
         {
           "annotator_id": "non_m4_annotator_2",
-          "ranking": []
+          "ranking": [
+            "CLI-00770-010",
+            "POL-00770-001",
+            "CLI-00770-008",
+            "POL-00770-002",
+            "CLI-00770-012",
+            "POL-00770-003"
+          ]
         }
       ],
       "consensus_relevance": {}
@@ -92,7 +106,14 @@
         },
         {
           "annotator_id": "non_m4_annotator_2",
-          "ranking": []
+          "ranking": [
+            "CLI-00817-011",
+            "POL-00817-004",
+            "POL-00817-001",
+            "POL-00817-002",
+            "CLI-00817-013",
+            "POL-00817-003"
+          ]
         }
       ],
       "consensus_relevance": {}
@@ -121,7 +142,14 @@
         },
         {
           "annotator_id": "non_m4_annotator_2",
-          "ranking": []
+          "ranking": [
+            "CLI-00949-016",
+            "CLI-00949-006",
+            "POL-00949-001",
+            "CLI-00949-014",
+            "CLI-00949-018",
+            "POL-00949-002"
+          ]
         }
       ],
       "consensus_relevance": {}
@@ -150,7 +178,14 @@
         },
         {
           "annotator_id": "non_m4_annotator_2",
-          "ranking": []
+          "ranking": [
+            "CLI-01191-017",
+            "CLI-01191-007",
+            "POL-01191-001",
+            "POL-01191-002",
+            "CLI-01191-005",
+            "POL-01191-003"
+          ]
         }
       ],
       "consensus_relevance": {}
@@ -179,7 +214,14 @@
         },
         {
           "annotator_id": "non_m4_annotator_2",
-          "ranking": []
+          "ranking": [
+            "CLI-01448-006",
+            "POL-01448-004",
+            "POL-01448-001",
+            "POL-01448-002",
+            "CLI-01448-008",
+            "POL-01448-003"
+          ]
         }
       ],
       "consensus_relevance": {}
@@ -208,7 +250,14 @@
         },
         {
           "annotator_id": "non_m4_annotator_2",
-          "ranking": []
+          "ranking": [
+            "CLI-01525-013",
+            "POL-01525-001",
+            "CLI-01525-015",
+            "CLI-01525-011",
+            "CLI-01525-009",
+            "POL-01525-002"
+          ]
         }
       ],
       "consensus_relevance": {}
@@ -237,7 +286,14 @@
         },
         {
           "annotator_id": "non_m4_annotator_2",
-          "ranking": []
+          "ranking": [
+            "CLI-01569-014",
+            "CLI-01569-012",
+            "POL-01569-001",
+            "POL-01569-002",
+            "CLI-01569-016",
+            "POL-01569-003"
+          ]
         }
       ],
       "consensus_relevance": {}
@@ -266,7 +322,14 @@
         },
         {
           "annotator_id": "non_m4_annotator_2",
-          "ranking": []
+          "ranking": [
+            "CLI-01662-015",
+            "POL-01662-001",
+            "POL-01662-002",
+            "POL-01662-003",
+            "CLI-01662-017",
+            "POL-01662-004"
+          ]
         }
       ],
       "consensus_relevance": {}
@@ -295,7 +358,14 @@
         },
         {
           "annotator_id": "non_m4_annotator_2",
-          "ranking": []
+          "ranking": [
+            "CLI-01876-006",
+            "POL-01876-001",
+            "CLI-01876-018",
+            "POL-01876-002",
+            "CLI-01876-008",
+            "POL-01876-003"
+          ]
         }
       ],
       "consensus_relevance": {}
