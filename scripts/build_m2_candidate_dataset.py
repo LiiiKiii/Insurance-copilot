@@ -17,6 +17,10 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "data" / "evaluation" / "m2_candidate_scenarios.json"
 AS_OF = date(2026, 5, 31)
+SCENARIO_COUNT = 10
+POLICIES_PER_SCENARIO = 4
+ACTIONABLE_CLIENTS_PER_SCENARIO = 2
+FILTERED_CLIENTS_PER_SCENARIO = 4
 NEED_PRODUCT = {
     "Motor": "Private Motor Insurance",
     "Property": "Home Contents Insurance",
@@ -99,14 +103,14 @@ def build_dataset() -> dict[str, Any]:
     attribution_by_agent = load("attribution.json")
     scenarios: list[dict[str, Any]] = []
 
-    for agent in agents[:5]:
+    for agent in agents[:SCENARIO_COUNT]:
         agent_id = agent["agent_id"]
         performance = performance_by_agent[agent_id]
         client_rows = clients_by_agent[agent_id]["clients"]
         clients = {row["client_id"]: row for row in client_rows}
         policies = sorted(
             policies_by_agent[agent_id]["policies"], key=lambda row: row["policy_id"]
-        )[:4]
+        )[:POLICIES_PER_SCENARIO]
         product_categories = {
             row["product_name"]: row["category"]
             for row in attribution_by_agent[agent_id]["product_details"]
@@ -169,8 +173,20 @@ def build_dataset() -> dict[str, Any]:
             candidates.append(candidate)
 
         linked_clients = {row["customer_id"] for row in policies}
-        client_candidates = [row for row in client_rows if row["client_id"] not in linked_clients]
-        client_candidates.sort(
+        available_clients = [
+            row for row in client_rows if row["client_id"] not in linked_clients
+        ]
+        actionable_clients = [
+            row
+            for row in available_clients
+            if {"Renewal Due", "Follow-up"} & set(row["tag_labels"])
+        ]
+        filtered_clients = [
+            row
+            for row in available_clients
+            if not ({"Renewal Due", "Follow-up"} & set(row["tag_labels"]))
+        ]
+        actionable_clients.sort(
             key=lambda row: (
                 -(3 * ("Renewal Due" in row["tag_labels"])
                   + 2 * ("Follow-up" in row["tag_labels"])
@@ -178,11 +194,16 @@ def build_dataset() -> dict[str, Any]:
                 row["client_id"],
             )
         )
-        for client in client_candidates[:4]:
+        filtered_clients.sort(key=lambda row: row["client_id"])
+        client_candidates = (
+            actionable_clients[:ACTIONABLE_CLIENTS_PER_SCENARIO]
+            + filtered_clients[:FILTERED_CLIENTS_PER_SCENARIO]
+        )
+        for client in client_candidates:
             tags = set(client["tag_labels"])
             category = need_category(tags)
             product = NEED_PRODUCT.get(category or "", agent["specialties"][0])
-            eligible = "Active" in tags or bool({"Renewal Due", "Follow-up"} & tags)
+            eligible = bool({"Renewal Due", "Follow-up"} & tags)
             urgency = 0.9 if "Renewal Due" in tags else 0.75 if "Follow-up" in tags else 0.6 if "High Value" in tags else 0.35
             actionability = 0.95 if {"Renewal Due", "Follow-up"}.issubset(tags) else 0.9 if "Follow-up" in tags else 0.85 if "Renewal Due" in tags else 0.55
             candidate = {
@@ -200,7 +221,7 @@ def build_dataset() -> dict[str, Any]:
                 "eligible": eligible,
                 "eligibility_information": {
                     "decision": eligible,
-                    "basis": "Active client or actionable renewal/follow-up tag",
+                    "basis": "Client has an explicit renewal-due or follow-up signal",
                 },
                 "urgency": urgency,
                 "actionability": actionability,
@@ -244,12 +265,20 @@ def build_dataset() -> dict[str, Any]:
         "description": "Deterministic coursework candidate set for M4 ranking integration.",
         "as_of_date": AS_OF.isoformat(),
         "currency": "USD",
+        "evaluation_k": [1, 3, 5],
         "selection": {
-            "method": "First five agent IDs in ascending order; four policies and four non-policy clients per agent",
+            "method": "First ten agent IDs in ascending order; four policies, two actionable clients, and four filter-control clients per agent",
             "random_sampling": False,
             "scenario_count": len(scenarios),
-            "candidates_per_scenario": 8,
+            "candidates_per_scenario": 10,
             "candidate_count": sum(len(row["candidates"]) for row in scenarios),
+            "filtered_candidate_count": sum(
+                row["eligible"]
+                and row["permission_allowed"]
+                and row["compliance_allowed"]
+                for scenario in scenarios
+                for row in scenario["candidates"]
+            ),
         },
         "source_files": [
             "data/mock/agents.json",
@@ -277,7 +306,7 @@ def build_dataset() -> dict[str, Any]:
             "urgency": "Policy due-date bands or client renewal/follow-up tags, normalised to 0-1",
             "actionability": "Awaiting-documents/underwriting status or client follow-up tags, normalised to 0-1",
             "business_fit": "Base 0.4 plus product-specialty, need-category, and high-value matches, capped at 1",
-            "eligibility": "Pending positive-premium policy, or active/actionable client",
+            "eligibility": "Pending positive-premium policy, or client with an explicit renewal-due/follow-up signal",
             "permission": "Candidate record belongs to the scenario agent",
             "compliance": "Agent training-compliance gate permits sales",
             "reference_relevance": "Deterministic 0-3 coursework label from stated operational thresholds",

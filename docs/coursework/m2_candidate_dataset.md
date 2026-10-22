@@ -2,11 +2,16 @@
 
 ## Delivery scope
 
-`data/evaluation/m2_candidate_scenarios.json` contains five deterministic
-agent scenarios and forty candidates. Each scenario contains four pending
-policies and four client follow-up candidates, satisfying the requested range
-of 5–10 scenarios, 30–50 candidates in total, and 5–10 candidates per
-scenario. No random row sampling is used.
+`data/evaluation/m2_candidate_scenarios.json` contains ten deterministic agent
+scenarios and one hundred raw candidates. Each scenario contains four pending
+policies, two clients with explicit renewal/follow-up signals, and four
+filter-control clients without such a signal. The eligibility filter therefore
+retains six candidates per scenario and sixty candidates overall. This meets
+the requested range of 8–10 scenarios, 10–15 raw candidates per scenario,
+80–120 raw candidates overall, and at least 50–60 candidates after filtering.
+No random row sampling is used.
+
+The primary evaluation cut-offs are `K = 1, 3, 5`.
 
 All monetary values are denominated in USD. The file is regenerated with:
 
@@ -28,7 +33,7 @@ python scripts/build_m2_candidate_dataset.py
 | `estimated_approval_days` | Policy minimum and maximum approval days | Existing project field / not applicable |
 | `client_tags` | Client `tag_labels` | Existing project field |
 | `product_type` | Policy product or deterministic client-need mapping | Direct or derived |
-| `eligible` | Pending positive-premium policy, or active/actionable client | Derived |
+| `eligible` | Pending positive-premium policy, or client with an explicit renewal/follow-up signal | Derived |
 | `permission_allowed` | Candidate belongs to the scenario agent | Derived |
 | `compliance_allowed` | Agent is not blocked by the training-compliance gate | Derived |
 | `source_record_id` | Original project policy/client identifier | Traceability field |
@@ -51,6 +56,19 @@ python scripts/build_m2_candidate_dataset.py
   high-value tag. The result is capped at 1.
 - **Reference relevance:** a deterministic 0–3 coursework label supports
   offline evaluation. It is explicitly not a production judgement label.
+
+## Filtering and evaluation scope
+
+Each scenario starts with ten candidates. Four pending policies and two
+renewal/follow-up clients pass the deterministic eligibility, permission, and
+compliance gates. Four ordinary active clients are retained in the raw input as
+filter-control records and are excluded with the explicit `ineligible` reason.
+Consequently the complete dataset contains 100 raw candidates and 60 eligible
+candidates.
+
+M4 should report Precision@K and NDCG@K at `K = 1`, `K = 3`, and `K = 5`.
+The scenario relevance mapping contains labels for both retained and excluded
+candidates so that filtering and ranking can be audited separately.
 
 ## Data provenance
 

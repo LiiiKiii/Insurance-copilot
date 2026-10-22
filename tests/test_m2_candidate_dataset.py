@@ -6,6 +6,10 @@ import json
 import unittest
 from pathlib import Path
 
+from nanobot.agent.tools.insurance.planning_layer.evaluation import (
+    evaluate_ranking,
+    expected_contribution_baseline,
+)
 from nanobot.agent.tools.insurance.planning_layer.prioritization import (
     prioritize_followups,
 )
@@ -23,14 +27,16 @@ class M2CandidateDatasetTests(unittest.TestCase):
 
     def test_scope_and_currency_match_coursework_request(self) -> None:
         selection = self.dataset["selection"]
-        self.assertEqual(selection["scenario_count"], 5)
-        self.assertEqual(selection["candidate_count"], 40)
-        self.assertEqual(selection["candidates_per_scenario"], 8)
+        self.assertEqual(selection["scenario_count"], 10)
+        self.assertEqual(selection["candidate_count"], 100)
+        self.assertEqual(selection["candidates_per_scenario"], 10)
+        self.assertEqual(selection["filtered_candidate_count"], 60)
         self.assertFalse(selection["random_sampling"])
         self.assertEqual(self.dataset["currency"], "USD")
+        self.assertEqual(self.dataset["evaluation_k"], [1, 3, 5])
 
         for scenario in self.dataset["scenarios"]:
-            self.assertEqual(len(scenario["candidates"]), 8)
+            self.assertEqual(len(scenario["candidates"]), 10)
             self.assertEqual(scenario["objective"]["unit"], "USD")
             self.assertEqual(
                 {row["candidate_type"] for row in scenario["candidates"]},
@@ -85,10 +91,37 @@ class M2CandidateDatasetTests(unittest.TestCase):
                 key: scenario[key]
                 for key in ("agent_id", "objective", "constraints", "candidates")
             })
-            self.assertEqual(result["candidate_count"], 8)
-            self.assertEqual(result["eligible_count"], 8)
+            self.assertEqual(result["candidate_count"], 10)
+            self.assertEqual(result["eligible_count"], 6)
             self.assertEqual(len(result["recommendations"]), 5)
-            self.assertEqual(result["excluded_candidates"], [])
+            self.assertEqual(len(result["excluded_candidates"]), 4)
+            self.assertEqual(
+                {row["reason"] for row in result["excluded_candidates"]},
+                {"ineligible"},
+            )
+
+    def test_report_metrics_are_available_at_k_1_3_and_5(self) -> None:
+        for scenario in self.dataset["scenarios"]:
+            result = prioritize_followups({
+                key: scenario[key]
+                for key in ("agent_id", "objective", "constraints", "candidates")
+            })
+            proposed = [row["candidate_id"] for row in result["recommendations"]]
+            eligible_ids = {
+                row["candidate_id"]
+                for row in scenario["candidates"]
+                if row["eligible"]
+                and row["permission_allowed"]
+                and row["compliance_allowed"]
+            }
+            baseline = expected_contribution_baseline(
+                scenario["candidates"], eligible_ids
+            )
+            for k in self.dataset["evaluation_k"]:
+                metrics = evaluate_ranking(
+                    proposed, baseline, scenario["relevance"], k
+                )
+                self.assertEqual(metrics["k"], k)
 
 
 if __name__ == "__main__":
