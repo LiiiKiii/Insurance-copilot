@@ -23,7 +23,14 @@
       "annotations": [
         {
           "annotator_id": "non_m4_annotator_1",
-          "ranking": []
+          "ranking": [
+            "POL-00690-004",
+            "CLI-00690-008",
+            "CLI-00690-015",
+            "POL-00690-003",
+            "POL-00690-002",
+            "POL-00690-001"
+          ]
         },
         {
           "annotator_id": "non_m4_annotator_2",
@@ -45,7 +52,14 @@
       "annotations": [
         {
           "annotator_id": "non_m4_annotator_1",
-          "ranking": []
+          "ranking": [
+            "POL-00770-004",
+            "CLI-00770-008",
+            "CLI-00770-015",
+            "POL-00770-003",
+            "POL-00770-002",
+            "POL-00770-001"
+          ]
         },
         {
           "annotator_id": "non_m4_annotator_2",
@@ -67,7 +81,14 @@
       "annotations": [
         {
           "annotator_id": "non_m4_annotator_1",
-          "ranking": []
+          "ranking": [
+            "CLI-00817-008",
+            "CLI-00817-015",
+            "POL-00817-004",
+            "POL-00817-003",
+            "POL-00817-002",
+            "POL-00817-001"
+          ]
         },
         {
           "annotator_id": "non_m4_annotator_2",
@@ -89,7 +110,14 @@
       "annotations": [
         {
           "annotator_id": "non_m4_annotator_1",
-          "ranking": []
+          "ranking": [
+            "CLI-00949-008",
+            "CLI-00949-015",
+            "POL-00949-004",
+            "POL-00949-001",
+            "POL-00949-002",
+            "POL-00949-003"
+          ]
         },
         {
           "annotator_id": "non_m4_annotator_2",
@@ -111,7 +139,14 @@
       "annotations": [
         {
           "annotator_id": "non_m4_annotator_1",
-          "ranking": []
+          "ranking": [
+            "CLI-01191-008",
+            "CLI-01191-015",
+            "POL-01191-004",
+            "POL-01191-003",
+            "POL-01191-002",
+            "POL-01191-001"
+          ]
         },
         {
           "annotator_id": "non_m4_annotator_2",
@@ -133,7 +168,14 @@
       "annotations": [
         {
           "annotator_id": "non_m4_annotator_1",
-          "ranking": []
+          "ranking": [
+            "CLI-01448-008",
+            "CLI-01448-015",
+            "POL-01448-004",
+            "POL-01448-003",
+            "POL-01448-002",
+            "POL-01448-001"
+          ]
         },
         {
           "annotator_id": "non_m4_annotator_2",
@@ -155,7 +197,14 @@
       "annotations": [
         {
           "annotator_id": "non_m4_annotator_1",
-          "ranking": []
+          "ranking": [
+            "POL-01525-004",
+            "CLI-01525-008",
+            "CLI-01525-015",
+            "POL-01525-003",
+            "POL-01525-002",
+            "POL-01525-001"
+          ]
         },
         {
           "annotator_id": "non_m4_annotator_2",
@@ -177,7 +226,14 @@
       "annotations": [
         {
           "annotator_id": "non_m4_annotator_1",
-          "ranking": []
+          "ranking": [
+            "CLI-01569-008",
+            "CLI-01569-015",
+            "POL-01569-004",
+            "POL-01569-003",
+            "POL-01569-002",
+            "POL-01569-001"
+          ]
         },
         {
           "annotator_id": "non_m4_annotator_2",
@@ -199,7 +255,14 @@
       "annotations": [
         {
           "annotator_id": "non_m4_annotator_1",
-          "ranking": []
+          "ranking": [
+            "CLI-01662-008",
+            "CLI-01662-015",
+            "POL-01662-004",
+            "POL-01662-003",
+            "POL-01662-002",
+            "POL-01662-001"
+          ]
         },
         {
           "annotator_id": "non_m4_annotator_2",
@@ -221,7 +284,14 @@
       "annotations": [
         {
           "annotator_id": "non_m4_annotator_1",
-          "ranking": []
+          "ranking": [
+            "CLI-01876-008",
+            "CLI-01876-015",
+            "POL-01876-004",
+            "POL-01876-003",
+            "POL-01876-002",
+            "POL-01876-001"
+          ]
         },
         {
           "annotator_id": "non_m4_annotator_2",
