@@ -1,0 +1,304 @@
+{
+  "dataset_id": "m2-coursework-candidates-v3",
+  "annotation_version": "human-v3",
+  "annotation_status": "pending",
+  "recommended_method": "Two non-M4 annotators rank independently; one annotator is acceptable only if reported as a limitation.",
+  "grading_rule": {
+    "positions_1_2": 3,
+    "positions_3_4": 2,
+    "position_5": 1,
+    "position_6": 0
+  },
+  "scenarios": [
+    {
+      "scenario_id": "SCN-AGT00690",
+      "eligible_candidate_ids": [
+        "POL-00690-001",
+        "POL-00690-002",
+        "CLI-00690-005",
+        "CLI-00690-007",
+        "CLI-00690-009",
+        "CLI-00690-011"
+      ],
+      "annotations": [
+        {
+          "annotator_id": "non_m4_annotator_1",
+          "ranking": [
+            "CLI-00690-007",
+            "CLI-00690-005",
+            "CLI-00690-011",
+            "CLI-00690-009",
+            "POL-00690-002",
+            "POL-00690-001"
+          ]
+        },
+        {
+          "annotator_id": "non_m4_annotator_2",
+          "ranking": []
+        }
+      ],
+      "consensus_relevance": {}
+    },
+    {
+      "scenario_id": "SCN-AGT00770",
+      "eligible_candidate_ids": [
+        "POL-00770-001",
+        "POL-00770-002",
+        "POL-00770-003",
+        "CLI-00770-008",
+        "CLI-00770-010",
+        "CLI-00770-012"
+      ],
+      "annotations": [
+        {
+          "annotator_id": "non_m4_annotator_1",
+          "ranking": [
+            "CLI-00770-012",
+            "CLI-00770-010",
+            "CLI-00770-008",
+            "POL-00770-003",
+            "POL-00770-001",
+            "POL-00770-002"
+          ]
+        },
+        {
+          "annotator_id": "non_m4_annotator_2",
+          "ranking": []
+        }
+      ],
+      "consensus_relevance": {}
+    },
+    {
+      "scenario_id": "SCN-AGT00817",
+      "eligible_candidate_ids": [
+        "POL-00817-001",
+        "POL-00817-002",
+        "POL-00817-003",
+        "POL-00817-004",
+        "CLI-00817-011",
+        "CLI-00817-013"
+      ],
+      "annotations": [
+        {
+          "annotator_id": "non_m4_annotator_1",
+          "ranking": [
+            "CLI-00817-013",
+            "CLI-00817-011",
+            "POL-00817-003",
+            "POL-00817-004",
+            "POL-00817-001",
+            "POL-00817-002"
+          ]
+        },
+        {
+          "annotator_id": "non_m4_annotator_2",
+          "ranking": []
+        }
+      ],
+      "consensus_relevance": {}
+    },
+    {
+      "scenario_id": "SCN-AGT00949",
+      "eligible_candidate_ids": [
+        "POL-00949-001",
+        "POL-00949-002",
+        "CLI-00949-014",
+        "CLI-00949-016",
+        "CLI-00949-018",
+        "CLI-00949-006"
+      ],
+      "annotations": [
+        {
+          "annotator_id": "non_m4_annotator_1",
+          "ranking": [
+            "CLI-00949-014",
+            "CLI-00949-006",
+            "CLI-00949-018",
+            "CLI-00949-016",
+            "POL-00949-002",
+            "POL-00949-001"
+          ]
+        },
+        {
+          "annotator_id": "non_m4_annotator_2",
+          "ranking": []
+        }
+      ],
+      "consensus_relevance": {}
+    },
+    {
+      "scenario_id": "SCN-AGT01191",
+      "eligible_candidate_ids": [
+        "POL-01191-001",
+        "POL-01191-002",
+        "POL-01191-003",
+        "CLI-01191-017",
+        "CLI-01191-005",
+        "CLI-01191-007"
+      ],
+      "annotations": [
+        {
+          "annotator_id": "non_m4_annotator_1",
+          "ranking": [
+            "CLI-01191-007",
+            "CLI-01191-005",
+            "CLI-01191-017",
+            "POL-01191-003",
+            "POL-01191-002",
+            "POL-01191-001"
+          ]
+        },
+        {
+          "annotator_id": "non_m4_annotator_2",
+          "ranking": []
+        }
+      ],
+      "consensus_relevance": {}
+    },
+    {
+      "scenario_id": "SCN-AGT01448",
+      "eligible_candidate_ids": [
+        "POL-01448-001",
+        "POL-01448-002",
+        "POL-01448-003",
+        "POL-01448-004",
+        "CLI-01448-006",
+        "CLI-01448-008"
+      ],
+      "annotations": [
+        {
+          "annotator_id": "non_m4_annotator_1",
+          "ranking": [
+            "CLI-01448-006",
+            "CLI-01448-008",
+            "POL-01448-004",
+            "POL-01448-003",
+            "POL-01448-002",
+            "POL-01448-001"
+          ]
+        },
+        {
+          "annotator_id": "non_m4_annotator_2",
+          "ranking": []
+        }
+      ],
+      "consensus_relevance": {}
+    },
+    {
+      "scenario_id": "SCN-AGT01525",
+      "eligible_candidate_ids": [
+        "POL-01525-001",
+        "POL-01525-002",
+        "CLI-01525-009",
+        "CLI-01525-011",
+        "CLI-01525-013",
+        "CLI-01525-015"
+      ],
+      "annotations": [
+        {
+          "annotator_id": "non_m4_annotator_1",
+          "ranking": [
+            "CLI-01525-013",
+            "CLI-01525-011",
+            "CLI-01525-009",
+            "CLI-01525-015",
+            "POL-01525-002",
+            "POL-01525-001"
+          ]
+        },
+        {
+          "annotator_id": "non_m4_annotator_2",
+          "ranking": []
+        }
+      ],
+      "consensus_relevance": {}
+    },
+    {
+      "scenario_id": "SCN-AGT01569",
+      "eligible_candidate_ids": [
+        "POL-01569-001",
+        "POL-01569-002",
+        "POL-01569-003",
+        "CLI-01569-012",
+        "CLI-01569-014",
+        "CLI-01569-016"
+      ],
+      "annotations": [
+        {
+          "annotator_id": "non_m4_annotator_1",
+          "ranking": [
+            "CLI-01569-014",
+            "CLI-01569-012",
+            "CLI-01569-016",
+            "POL-01569-003",
+            "POL-01569-001",
+            "POL-01569-002"
+          ]
+        },
+        {
+          "annotator_id": "non_m4_annotator_2",
+          "ranking": []
+        }
+      ],
+      "consensus_relevance": {}
+    },
+    {
+      "scenario_id": "SCN-AGT01662",
+      "eligible_candidate_ids": [
+        "POL-01662-001",
+        "POL-01662-002",
+        "POL-01662-003",
+        "POL-01662-004",
+        "CLI-01662-015",
+        "CLI-01662-017"
+      ],
+      "annotations": [
+        {
+          "annotator_id": "non_m4_annotator_1",
+          "ranking": [
+            "CLI-01662-017",
+            "CLI-01662-015",
+            "POL-01662-003",
+            "POL-01662-002",
+            "POL-01662-004",
+            "POL-01662-001"
+          ]
+        },
+        {
+          "annotator_id": "non_m4_annotator_2",
+          "ranking": []
+        }
+      ],
+      "consensus_relevance": {}
+    },
+    {
+      "scenario_id": "SCN-AGT01876",
+      "eligible_candidate_ids": [
+        "POL-01876-001",
+        "POL-01876-002",
+        "POL-01876-003",
+        "CLI-01876-018",
+        "CLI-01876-006",
+        "CLI-01876-008"
+      ],
+      "annotations": [
+        {
+          "annotator_id": "non_m4_annotator_1",
+          "ranking": [
+            "CLI-01876-006",
+            "CLI-01876-018",
+            "CLI-01876-008",
+            "POL-01876-001",
+            "POL-01876-002",
+            "POL-01876-003"
+          ]
+        },
+        {
+          "annotator_id": "non_m4_annotator_2",
+          "ranking": []
+        }
+      ],
+      "consensus_relevance": {}
+    }
+  ]
+}

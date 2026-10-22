@@ -1,0 +1,1617 @@
+{
+  "dataset_id": "m2-coursework-candidates-v3",
+  "blind_version": "human-ranking-v3",
+  "description": "Blinded evidence-only view for independent human ranking.",
+  "scenarios": [
+    {
+      "scenario_id": "SCN-AGT00690",
+      "agent_id": "AGT00690",
+      "agent_specialties": [
+        "Private Motor Insurance",
+        "Home Contents Insurance",
+        "SME Business Package"
+      ],
+      "open_gap": 228250.0,
+      "currency": "USD",
+      "deadline": "2026-12-31",
+      "candidates": [
+        {
+          "candidate_id": "POL-00690-001",
+          "candidate_type": "policy",
+          "premium": 740.0,
+          "currency": "USD",
+          "policy_status": "Awaiting Documents",
+          "submit_date": "2026-05-26",
+          "estimated_approval_days": {
+            "min": 4,
+            "max": 7
+          },
+          "client_tags": [
+            "Young Professional",
+            "High Value",
+            "Motor"
+          ],
+          "product_type": "Private Motor Insurance",
+          "action_signal": "Customer documents are incomplete; the agent can request them now.",
+          "action_deadline": "2026-06-01",
+          "tenant_id": "coursework-demo",
+          "owner_agent_id": "AGT00690",
+          "eligible": true,
+          "permission_allowed": true,
+          "compliance_allowed": true,
+          "source_record_id": "POL-00690-001"
+        },
+        {
+          "candidate_id": "POL-00690-002",
+          "candidate_type": "policy",
+          "premium": 940.0,
+          "currency": "USD",
+          "policy_status": "Underwriter Query",
+          "submit_date": "2026-05-15",
+          "estimated_approval_days": {
+            "min": 5,
+            "max": 8
+          },
+          "client_tags": [
+            "Young Professional",
+            "High Value",
+            "Property"
+          ],
+          "product_type": "Home Contents Insurance",
+          "action_signal": "The underwriter has an unanswered question for the agent.",
+          "action_deadline": "2026-06-02",
+          "tenant_id": "coursework-demo",
+          "owner_agent_id": "AGT00690",
+          "eligible": true,
+          "permission_allowed": true,
+          "compliance_allowed": true,
+          "source_record_id": "POL-00690-002"
+        },
+        {
+          "candidate_id": "CLI-00690-005",
+          "candidate_type": "client",
+          "premium": 6590.0,
+          "currency": "USD",
+          "policy_status": null,
+          "submit_date": null,
+          "estimated_approval_days": null,
+          "client_tags": [
+            "Pre-retirement",
+            "Growth",
+            "Specialty"
+          ],
+          "product_type": "Personal Liability Insurance",
+          "action_signal": "The client requested a callback today.",
+          "action_deadline": "2026-05-31",
+          "tenant_id": "coursework-demo",
+          "owner_agent_id": "AGT00690",
+          "eligible": true,
+          "permission_allowed": true,
+          "compliance_allowed": true,
+          "source_record_id": "CLI-00690-005"
+        },
+        {
+          "candidate_id": "CLI-00690-007",
+          "candidate_type": "client",
+          "premium": 8360.0,
+          "currency": "USD",
+          "policy_status": null,
+          "submit_date": null,
+          "estimated_approval_days": null,
+          "client_tags": [
+            "Retiree",
+            "Growth",
+            "Property"
+          ],
+          "product_type": "Home Contents Insurance",
+          "action_signal": "Renewal decision is due within three days.",
+          "action_deadline": "2026-06-03",
+          "tenant_id": "coursework-demo",
+          "owner_agent_id": "AGT00690",
+          "eligible": true,
+          "permission_allowed": true,
+          "compliance_allowed": true,
+          "source_record_id": "CLI-00690-007"
+        },
+        {
+          "candidate_id": "CLI-00690-009",
+          "candidate_type": "client",
+          "premium": 3930.0,
+          "currency": "USD",
+          "policy_status": null,
+          "submit_date": null,
+          "estimated_approval_days": null,
+          "client_tags": [
+            "Family Builder",
+            "Standard",
+            "Commercial"
+          ],
+          "product_type": "SME Business Package",
+          "action_signal": "The client requested a quotation within five days.",
+          "action_deadline": "2026-06-05",
+          "tenant_id": "coursework-demo",
+          "owner_agent_id": "AGT00690",
+          "eligible": true,
+          "permission_allowed": true,
+          "compliance_allowed": true,
+          "source_record_id": "CLI-00690-009"
+        },
+        {
+          "candidate_id": "CLI-00690-011",
+          "candidate_type": "client",
+          "premium": 5710.0,
+          "currency": "USD",
+          "policy_status": null,
+          "submit_date": null,
+          "estimated_approval_days": null,
+          "client_tags": [
+            "Pre-retirement",
+            "Standard",
+            "Motor"
+          ],
+          "product_type": "Private Motor Insurance",
+          "action_signal": "A coverage review is scheduled within fourteen days.",
+          "action_deadline": "2026-06-14",
+          "tenant_id": "coursework-demo",
+          "owner_agent_id": "AGT00690",
+          "eligible": true,
+          "permission_allowed": true,
+          "compliance_allowed": true,
+          "source_record_id": "CLI-00690-011"
+        }
+      ]
+    },
+    {
+      "scenario_id": "SCN-AGT00770",
+      "agent_id": "AGT00770",
+      "agent_specialties": [
+        "Private Motor Insurance - Annual",
+        "Private Motor Insurance",
+        "Home Contents Insurance"
+      ],
+      "open_gap": 211350.0,
+      "currency": "USD",
+      "deadline": "2026-12-31",
+      "candidates": [
+        {
+          "candidate_id": "POL-00770-001",
+          "candidate_type": "policy",
+          "premium": 2840.0,
+          "currency": "USD",
+          "policy_status": "Awaiting Documents",
+          "submit_date": "2026-05-17",
+          "estimated_approval_days": {
+            "min": 4,
+            "max": 7
+          },
+          "client_tags": [
+            "Family Builder",
+            "High Value",
+            "Motor"
+          ],
+          "product_type": "Private Motor Insurance - Annual",
+          "action_signal": "Customer documents are incomplete; the agent can request them now.",
+          "action_deadline": "2026-06-01",
+          "tenant_id": "coursework-demo",
+          "owner_agent_id": "AGT00770",
+          "eligible": true,
+          "permission_allowed": true,
+          "compliance_allowed": true,
+          "source_record_id": "POL-00770-001"
+        },
+        {
+          "candidate_id": "POL-00770-002",
+          "candidate_type": "policy",
+          "premium": 3620.0,
+          "currency": "USD",
+          "policy_status": "Client Confirmation Pending",
+          "submit_date": "2026-05-06",
+          "estimated_approval_days": {
+            "min": 5,
+            "max": 8
+          },
+          "client_tags": [
+            "Family Builder",
+            "High Value",
+            "Property"
+          ],
+          "product_type": "Private Motor Insurance",
+          "action_signal": "Quoted terms are ready and the client must confirm acceptance.",
+          "action_deadline": "2026-06-04",
+          "tenant_id": "coursework-demo",
+          "owner_agent_id": "AGT00770",
+          "eligible": true,
+          "permission_allowed": true,
+          "compliance_allowed": true,
+          "source_record_id": "POL-00770-002"
+        },
+        {
+          "candidate_id": "POL-00770-003",
+          "candidate_type": "policy",
+          "premium": 4400.0,
+          "currency": "USD",
+          "policy_status": "Underwriting",
+          "submit_date": "2026-04-25",
+          "estimated_approval_days": {
+            "min": 6,
+            "max": 9
+          },
+          "client_tags": [
+            "Pre-retirement",
+            "Growth",
+            "Liability"
+          ],
+          "product_type": "Home Contents Insurance",
+          "action_signal": "The case is being reviewed and has no outstanding request.",
+          "action_deadline": "2026-06-08",
+          "tenant_id": "coursework-demo",
+          "owner_agent_id": "AGT00770",
+          "eligible": true,
+          "permission_allowed": true,
+          "compliance_allowed": true,
+          "source_record_id": "POL-00770-003"
+        },
+        {
+          "candidate_id": "CLI-00770-008",
+          "candidate_type": "client",
+          "premium": 3340.0,
+          "currency": "USD",
+          "policy_status": null,
+          "submit_date": null,
+          "estimated_approval_days": null,
+          "client_tags": [
+            "Family Builder",
+            "Standard",
+            "Liability"
+          ],
+          "product_type": "Public Liability Insurance",
+          "action_signal": "Renewal decision is due within three days.",
+          "action_deadline": "2026-06-03",
+          "tenant_id": "coursework-demo",
+          "owner_agent_id": "AGT00770",
+          "eligible": true,
+          "permission_allowed": true,
+          "compliance_allowed": true,
+          "source_record_id": "CLI-00770-008"
+        },
+        {
+          "candidate_id": "CLI-00770-010",
+          "candidate_type": "client",
+          "premium": 5290.0,
+          "currency": "USD",
+          "policy_status": null,
+          "submit_date": null,
+          "estimated_approval_days": null,
+          "client_tags": [
+            "Pre-retirement",
+            "Standard",
+            "Specialty"
+          ],
+          "product_type": "Personal Liability Insurance",
+          "action_signal": "The client requested a callback today.",
+          "action_deadline": "2026-05-31",
+          "tenant_id": "coursework-demo",
+          "owner_agent_id": "AGT00770",
+          "eligible": true,
+          "permission_allowed": true,
+          "compliance_allowed": true,
+          "source_record_id": "CLI-00770-010"
+        },
+        {
+          "candidate_id": "CLI-00770-012",
+          "candidate_type": "client",
+          "premium": 7240.0,
+          "currency": "USD",
+          "policy_status": null,
+          "submit_date": null,
+          "estimated_approval_days": null,
+          "client_tags": [
+            "Retiree",
+            "Standard",
+            "Property"
+          ],
+          "product_type": "Home Contents Insurance",
+          "action_signal": "A coverage review is scheduled within fourteen days.",
+          "action_deadline": "2026-06-14",
+          "tenant_id": "coursework-demo",
+          "owner_agent_id": "AGT00770",
+          "eligible": true,
+          "permission_allowed": true,
+          "compliance_allowed": true,
+          "source_record_id": "CLI-00770-012"
+        }
+      ]
+    },
+    {
+      "scenario_id": "SCN-AGT00817",
+      "agent_id": "AGT00817",
+      "agent_specialties": [
+        "Private Motor Insurance",
+        "Home Contents Insurance",
+        "Commercial Motor Insurance"
+      ],
+      "open_gap": 139270.0,
+      "currency": "USD",
+      "deadline": "2026-12-31",
+      "candidates": [
+        {
+          "candidate_id": "POL-00817-001",
+          "candidate_type": "policy",
+          "premium": 450.0,
+          "currency": "USD",
+          "policy_status": "Underwriter Query",
+          "submit_date": "2026-05-08",
+          "estimated_approval_days": {
+            "min": 4,
+            "max": 7
+          },
+          "client_tags": [
+            "Family Builder",
+            "High Value",
+            "Motor"
+          ],
+          "product_type": "Private Motor Insurance",
+          "action_signal": "The underwriter has an unanswered question for the agent.",
+          "action_deadline": "2026-06-02",
+          "tenant_id": "coursework-demo",
+          "owner_agent_id": "AGT00817",
+          "eligible": true,
+          "permission_allowed": true,
+          "compliance_allowed": true,
+          "source_record_id": "POL-00817-001"
+        },
+        {
+          "candidate_id": "POL-00817-002",
+          "candidate_type": "policy",
+          "premium": 570.0,
+          "currency": "USD",
+          "policy_status": "Client Confirmation Pending",
+          "submit_date": "2026-04-27",
+          "estimated_approval_days": {
+            "min": 5,
+            "max": 8
+          },
+          "client_tags": [
+            "Pre-retirement",
+            "High Value",
+            "Property"
+          ],
+          "product_type": "Home Contents Insurance",
+          "action_signal": "Quoted terms are ready and the client must confirm acceptance.",
+          "action_deadline": "2026-06-04",
+          "tenant_id": "coursework-demo",
+          "owner_agent_id": "AGT00817",
+          "eligible": true,
+          "permission_allowed": true,
+          "compliance_allowed": true,
+          "source_record_id": "POL-00817-002"
+        },
+        {
+          "candidate_id": "POL-00817-003",
+          "candidate_type": "policy",
+          "premium": 690.0,
+          "currency": "USD",
+          "policy_status": "Underwriting",
+          "submit_date": "2026-04-16",
+          "estimated_approval_days": {
+            "min": 6,
+            "max": 9
+          },
+          "client_tags": [
+            "Retiree",
+            "Growth",
+            "Liability"
+          ],
+          "product_type": "Commercial Motor Insurance",
+          "action_signal": "The case is being reviewed and has no outstanding request.",
+          "action_deadline": "2026-06-08",
+          "tenant_id": "coursework-demo",
+          "owner_agent_id": "AGT00817",
+          "eligible": true,
+          "permission_allowed": true,
+          "compliance_allowed": true,
+          "source_record_id": "POL-00817-003"
+        },
+        {
+          "candidate_id": "POL-00817-004",
+          "candidate_type": "policy",
+          "premium": 810.0,
+          "currency": "USD",
+          "policy_status": "Awaiting Documents",
+          "submit_date": "2026-04-05",
+          "estimated_approval_days": {
+            "min": 7,
+            "max": 12
+          },
+          "client_tags": [
+            "Retiree",
+            "Growth",
+            "Commercial"
+          ],
+          "product_type": "Goods in Transit Insurance",
+          "action_signal": "Customer documents are incomplete; the agent can request them now.",
+          "action_deadline": "2026-06-01",
+          "tenant_id": "coursework-demo",
+          "owner_agent_id": "AGT00817",
+          "eligible": true,
+          "permission_allowed": true,
+          "compliance_allowed": true,
+          "source_record_id": "POL-00817-004"
+        },
+        {
+          "candidate_id": "CLI-00817-011",
+          "candidate_type": "client",
+          "premium": 4230.0,
+          "currency": "USD",
+          "policy_status": null,
+          "submit_date": null,
+          "estimated_approval_days": null,
+          "client_tags": [
+            "Young Professional",
+            "Standard",
+            "Motor"
+          ],
+          "product_type": "Private Motor Insurance",
+          "action_signal": "The client requested a callback today.",
+          "action_deadline": "2026-05-31",
+          "tenant_id": "coursework-demo",
+          "owner_agent_id": "AGT00817",
+          "eligible": true,
+          "permission_allowed": true,
+          "compliance_allowed": true,
+          "source_record_id": "CLI-00817-011"
+        },
+        {
+          "candidate_id": "CLI-00817-013",
+          "candidate_type": "client",
+          "premium": 5550.0,
+          "currency": "USD",
+          "policy_status": null,
+          "submit_date": null,
+          "estimated_approval_days": null,
+          "client_tags": [
+            "Family Builder",
+            "Standard",
+            "Liability"
+          ],
+          "product_type": "Public Liability Insurance",
+          "action_signal": "The client requested a quotation within five days.",
+          "action_deadline": "2026-06-05",
+          "tenant_id": "coursework-demo",
+          "owner_agent_id": "AGT00817",
+          "eligible": true,
+          "permission_allowed": true,
+          "compliance_allowed": true,
+          "source_record_id": "CLI-00817-013"
+        }
+      ]
+    },
+    {
+      "scenario_id": "SCN-AGT00949",
+      "agent_id": "AGT00949",
+      "agent_specialties": [
+        "Private Motor Insurance",
+        "Home Contents Insurance",
+        "Private Motor Insurance - Annual"
+      ],
+      "open_gap": 273280.0,
+      "currency": "USD",
+      "deadline": "2026-12-31",
+      "candidates": [
+        {
+          "candidate_id": "POL-00949-001",
+          "candidate_type": "policy",
+          "premium": 1040.0,
+          "currency": "USD",
+          "policy_status": "Client Confirmation Pending",
+          "submit_date": "2026-04-29",
+          "estimated_approval_days": {
+            "min": 4,
+            "max": 7
+          },
+          "client_tags": [
+            "Pre-retirement",
+            "High Value",
+            "Motor"
+          ],
+          "product_type": "Private Motor Insurance",
+          "action_signal": "Quoted terms are ready and the client must confirm acceptance.",
+          "action_deadline": "2026-06-04",
+          "tenant_id": "coursework-demo",
+          "owner_agent_id": "AGT00949",
+          "eligible": true,
+          "permission_allowed": true,
+          "compliance_allowed": true,
+          "source_record_id": "POL-00949-001"
+        },
+        {
+          "candidate_id": "POL-00949-002",
+          "candidate_type": "policy",
+          "premium": 1320.0,
+          "currency": "USD",
+          "policy_status": "Underwriting",
+          "submit_date": "2026-04-18",
+          "estimated_approval_days": {
+            "min": 5,
+            "max": 8
+          },
+          "client_tags": [
+            "Retiree",
+            "High Value",
+            "Property"
+          ],
+          "product_type": "Home Contents Insurance",
+          "action_signal": "The case is being reviewed and has no outstanding request.",
+          "action_deadline": "2026-06-08",
+          "tenant_id": "coursework-demo",
+          "owner_agent_id": "AGT00949",
+          "eligible": true,
+          "permission_allowed": true,
+          "compliance_allowed": true,
+          "source_record_id": "POL-00949-002"
+        },
+        {
+          "candidate_id": "CLI-00949-014",
+          "candidate_type": "client",
+          "premium": 8530.0,
+          "currency": "USD",
+          "policy_status": null,
+          "submit_date": null,
+          "estimated_approval_days": null,
+          "client_tags": [
+            "Pre-retirement",
+            "Standard",
+            "Commercial"
+          ],
+          "product_type": "SME Business Package",
+          "action_signal": "The client requested a quotation within five days.",
+          "action_deadline": "2026-06-05",
+          "tenant_id": "coursework-demo",
+          "owner_agent_id": "AGT00949",
+          "eligible": true,
+          "permission_allowed": true,
+          "compliance_allowed": true,
+          "source_record_id": "CLI-00949-014"
+        },
+        {
+          "candidate_id": "CLI-00949-016",
+          "candidate_type": "client",
+          "premium": 4010.0,
+          "currency": "USD",
+          "policy_status": null,
+          "submit_date": null,
+          "estimated_approval_days": null,
+          "client_tags": [
+            "Young Professional",
+            "Standard",
+            "Motor"
+          ],
+          "product_type": "Private Motor Insurance",
+          "action_signal": "The client requested a callback today.",
+          "action_deadline": "2026-05-31",
+          "tenant_id": "coursework-demo",
+          "owner_agent_id": "AGT00949",
+          "eligible": true,
+          "permission_allowed": true,
+          "compliance_allowed": true,
+          "source_record_id": "CLI-00949-016"
+        },
+        {
+          "candidate_id": "CLI-00949-018",
+          "candidate_type": "client",
+          "premium": 5820.0,
+          "currency": "USD",
+          "policy_status": null,
+          "submit_date": null,
+          "estimated_approval_days": null,
+          "client_tags": [
+            "Family Builder",
+            "Standard",
+            "Liability"
+          ],
+          "product_type": "Public Liability Insurance",
+          "action_signal": "A coverage review is scheduled within fourteen days.",
+          "action_deadline": "2026-06-14",
+          "tenant_id": "coursework-demo",
+          "owner_agent_id": "AGT00949",
+          "eligible": true,
+          "permission_allowed": true,
+          "compliance_allowed": true,
+          "source_record_id": "CLI-00949-018"
+        },
+        {
+          "candidate_id": "CLI-00949-006",
+          "candidate_type": "client",
+          "premium": 7630.0,
+          "currency": "USD",
+          "policy_status": null,
+          "submit_date": null,
+          "estimated_approval_days": null,
+          "client_tags": [
+            "Family Builder",
+            "Growth",
+            "Motor"
+          ],
+          "product_type": "Private Motor Insurance",
+          "action_signal": "Renewal decision is due within three days.",
+          "action_deadline": "2026-06-03",
+          "tenant_id": "coursework-demo",
+          "owner_agent_id": "AGT00949",
+          "eligible": true,
+          "permission_allowed": true,
+          "compliance_allowed": true,
+          "source_record_id": "CLI-00949-006"
+        }
+      ]
+    },
+    {
+      "scenario_id": "SCN-AGT01191",
+      "agent_id": "AGT01191",
+      "agent_specialties": [
+        "Private Motor Insurance",
+        "Home Contents Insurance",
+        "Private Motor Insurance - Annual"
+      ],
+      "open_gap": 270930.0,
+      "currency": "USD",
+      "deadline": "2026-12-31",
+      "candidates": [
+        {
+          "candidate_id": "POL-01191-001",
+          "candidate_type": "policy",
+          "premium": 1050.0,
+          "currency": "USD",
+          "policy_status": "Awaiting Documents",
+          "submit_date": "2026-04-20",
+          "estimated_approval_days": {
+            "min": 4,
+            "max": 7
+          },
+          "client_tags": [
+            "Retiree",
+            "High Value",
+            "Motor"
+          ],
+          "product_type": "Private Motor Insurance",
+          "action_signal": "Customer documents are incomplete; the agent can request them now.",
+          "action_deadline": "2026-06-01",
+          "tenant_id": "coursework-demo",
+          "owner_agent_id": "AGT01191",
+          "eligible": true,
+          "permission_allowed": true,
+          "compliance_allowed": true,
+          "source_record_id": "POL-01191-001"
+        },
+        {
+          "candidate_id": "POL-01191-002",
+          "candidate_type": "policy",
+          "premium": 1330.0,
+          "currency": "USD",
+          "policy_status": "Underwriter Query",
+          "submit_date": "2026-04-09",
+          "estimated_approval_days": {
+            "min": 5,
+            "max": 8
+          },
+          "client_tags": [
+            "Young Professional",
+            "High Value",
+            "Property"
+          ],
+          "product_type": "Home Contents Insurance",
+          "action_signal": "The underwriter has an unanswered question for the agent.",
+          "action_deadline": "2026-06-02",
+          "tenant_id": "coursework-demo",
+          "owner_agent_id": "AGT01191",
+          "eligible": true,
+          "permission_allowed": true,
+          "compliance_allowed": true,
+          "source_record_id": "POL-01191-002"
+        },
+        {
+          "candidate_id": "POL-01191-003",
+          "candidate_type": "policy",
+          "premium": 1620.0,
+          "currency": "USD",
+          "policy_status": "Underwriting",
+          "submit_date": "2026-03-29",
+          "estimated_approval_days": {
+            "min": 6,
+            "max": 9
+          },
+          "client_tags": [
+            "Family Builder",
+            "Growth",
+            "Liability"
+          ],
+          "product_type": "Private Motor Insurance - Annual",
+          "action_signal": "The case is being reviewed and has no outstanding request.",
+          "action_deadline": "2026-06-08",
+          "tenant_id": "coursework-demo",
+          "owner_agent_id": "AGT01191",
+          "eligible": true,
+          "permission_allowed": true,
+          "compliance_allowed": true,
+          "source_record_id": "POL-01191-003"
+        },
+        {
+          "candidate_id": "CLI-01191-017",
+          "candidate_type": "client",
+          "premium": 5090.0,
+          "currency": "USD",
+          "policy_status": null,
+          "submit_date": null,
+          "estimated_approval_days": null,
+          "client_tags": [
+            "Family Builder",
+            "Standard",
+            "Property"
+          ],
+          "product_type": "Home Contents Insurance",
+          "action_signal": "The client requested a callback today.",
+          "action_deadline": "2026-05-31",
+          "tenant_id": "coursework-demo",
+          "owner_agent_id": "AGT01191",
+          "eligible": true,
+          "permission_allowed": true,
+          "compliance_allowed": true,
+          "source_record_id": "CLI-01191-017"
+        },
+        {
+          "candidate_id": "CLI-01191-005",
+          "candidate_type": "client",
+          "premium": 6960.0,
+          "currency": "USD",
+          "policy_status": null,
+          "submit_date": null,
+          "estimated_approval_days": null,
+          "client_tags": [
+            "Pre-retirement",
+            "Growth",
+            "Specialty"
+          ],
+          "product_type": "Personal Liability Insurance",
+          "action_signal": "The client requested a quotation within five days.",
+          "action_deadline": "2026-06-05",
+          "tenant_id": "coursework-demo",
+          "owner_agent_id": "AGT01191",
+          "eligible": true,
+          "permission_allowed": true,
+          "compliance_allowed": true,
+          "source_record_id": "CLI-01191-005"
+        },
+        {
+          "candidate_id": "CLI-01191-007",
+          "candidate_type": "client",
+          "premium": 8840.0,
+          "currency": "USD",
+          "policy_status": null,
+          "submit_date": null,
+          "estimated_approval_days": null,
+          "client_tags": [
+            "Retiree",
+            "Growth",
+            "Property"
+          ],
+          "product_type": "Home Contents Insurance",
+          "action_signal": "Renewal decision is due within three days.",
+          "action_deadline": "2026-06-03",
+          "tenant_id": "coursework-demo",
+          "owner_agent_id": "AGT01191",
+          "eligible": true,
+          "permission_allowed": true,
+          "compliance_allowed": true,
+          "source_record_id": "CLI-01191-007"
+        }
+      ]
+    },
+    {
+      "scenario_id": "SCN-AGT01448",
+      "agent_id": "AGT01448",
+      "agent_specialties": [
+        "Private Motor Insurance",
+        "Private Motor Insurance - Annual",
+        "Home Contents Insurance"
+      ],
+      "open_gap": 671640.0,
+      "currency": "USD",
+      "deadline": "2026-12-31",
+      "candidates": [
+        {
+          "candidate_id": "POL-01448-001",
+          "candidate_type": "policy",
+          "premium": 1900.0,
+          "currency": "USD",
+          "policy_status": "Underwriter Query",
+          "submit_date": "2026-04-11",
+          "estimated_approval_days": {
+            "min": 4,
+            "max": 7
+          },
+          "client_tags": [
+            "Family Builder",
+            "High Value",
+            "Motor"
+          ],
+          "product_type": "Private Motor Insurance",
+          "action_signal": "The underwriter has an unanswered question for the agent.",
+          "action_deadline": "2026-06-02",
+          "tenant_id": "coursework-demo",
+          "owner_agent_id": "AGT01448",
+          "eligible": true,
+          "permission_allowed": true,
+          "compliance_allowed": true,
+          "source_record_id": "POL-01448-001"
+        },
+        {
+          "candidate_id": "POL-01448-002",
+          "candidate_type": "policy",
+          "premium": 2420.0,
+          "currency": "USD",
+          "policy_status": "Client Confirmation Pending",
+          "submit_date": "2026-03-31",
+          "estimated_approval_days": {
+            "min": 5,
+            "max": 8
+          },
+          "client_tags": [
+            "Family Builder",
+            "High Value",
+            "Property"
+          ],
+          "product_type": "Private Motor Insurance - Annual",
+          "action_signal": "Quoted terms are ready and the client must confirm acceptance.",
+          "action_deadline": "2026-06-04",
+          "tenant_id": "coursework-demo",
+          "owner_agent_id": "AGT01448",
+          "eligible": true,
+          "permission_allowed": true,
+          "compliance_allowed": true,
+          "source_record_id": "POL-01448-002"
+        },
+        {
+          "candidate_id": "POL-01448-003",
+          "candidate_type": "policy",
+          "premium": 2940.0,
+          "currency": "USD",
+          "policy_status": "Underwriting",
+          "submit_date": "2026-03-20",
+          "estimated_approval_days": {
+            "min": 6,
+            "max": 9
+          },
+          "client_tags": [
+            "Family Builder",
+            "Growth",
+            "Liability"
+          ],
+          "product_type": "Home Contents Insurance",
+          "action_signal": "The case is being reviewed and has no outstanding request.",
+          "action_deadline": "2026-06-08",
+          "tenant_id": "coursework-demo",
+          "owner_agent_id": "AGT01448",
+          "eligible": true,
+          "permission_allowed": true,
+          "compliance_allowed": true,
+          "source_record_id": "POL-01448-003"
+        },
+        {
+          "candidate_id": "POL-01448-004",
+          "candidate_type": "policy",
+          "premium": 3460.0,
+          "currency": "USD",
+          "policy_status": "Awaiting Documents",
+          "submit_date": "2026-03-09",
+          "estimated_approval_days": {
+            "min": 7,
+            "max": 12
+          },
+          "client_tags": [
+            "Pre-retirement",
+            "Growth",
+            "Commercial"
+          ],
+          "product_type": "Commercial Motor Insurance",
+          "action_signal": "Customer documents are incomplete; the agent can request them now.",
+          "action_deadline": "2026-06-01",
+          "tenant_id": "coursework-demo",
+          "owner_agent_id": "AGT01448",
+          "eligible": true,
+          "permission_allowed": true,
+          "compliance_allowed": true,
+          "source_record_id": "POL-01448-004"
+        },
+        {
+          "candidate_id": "CLI-01448-006",
+          "candidate_type": "client",
+          "premium": 12920.0,
+          "currency": "USD",
+          "policy_status": null,
+          "submit_date": null,
+          "estimated_approval_days": null,
+          "client_tags": [
+            "Young Professional",
+            "Growth",
+            "Motor"
+          ],
+          "product_type": "Private Motor Insurance",
+          "action_signal": "Renewal decision is due within three days.",
+          "action_deadline": "2026-06-03",
+          "tenant_id": "coursework-demo",
+          "owner_agent_id": "AGT01448",
+          "eligible": true,
+          "permission_allowed": true,
+          "compliance_allowed": true,
+          "source_record_id": "CLI-01448-006"
+        },
+        {
+          "candidate_id": "CLI-01448-008",
+          "candidate_type": "client",
+          "premium": 5260.0,
+          "currency": "USD",
+          "policy_status": null,
+          "submit_date": null,
+          "estimated_approval_days": null,
+          "client_tags": [
+            "Family Builder",
+            "Standard",
+            "Liability"
+          ],
+          "product_type": "Public Liability Insurance",
+          "action_signal": "A coverage review is scheduled within fourteen days.",
+          "action_deadline": "2026-06-14",
+          "tenant_id": "coursework-demo",
+          "owner_agent_id": "AGT01448",
+          "eligible": true,
+          "permission_allowed": true,
+          "compliance_allowed": true,
+          "source_record_id": "CLI-01448-008"
+        }
+      ]
+    },
+    {
+      "scenario_id": "SCN-AGT01525",
+      "agent_id": "AGT01525",
+      "agent_specialties": [
+        "Private Motor Insurance",
+        "Home Contents Insurance",
+        "Public Liability Insurance"
+      ],
+      "open_gap": 168720.0,
+      "currency": "USD",
+      "deadline": "2026-12-31",
+      "candidates": [
+        {
+          "candidate_id": "POL-01525-001",
+          "candidate_type": "policy",
+          "premium": 1430.0,
+          "currency": "USD",
+          "policy_status": "Awaiting Documents",
+          "submit_date": "2026-04-02",
+          "estimated_approval_days": {
+            "min": 4,
+            "max": 7
+          },
+          "client_tags": [
+            "Family Builder",
+            "High Value",
+            "Motor"
+          ],
+          "product_type": "Private Motor Insurance",
+          "action_signal": "Customer documents are incomplete; the agent can request them now.",
+          "action_deadline": "2026-06-01",
+          "tenant_id": "coursework-demo",
+          "owner_agent_id": "AGT01525",
+          "eligible": true,
+          "permission_allowed": true,
+          "compliance_allowed": true,
+          "source_record_id": "POL-01525-001"
+        },
+        {
+          "candidate_id": "POL-01525-002",
+          "candidate_type": "policy",
+          "premium": 1820.0,
+          "currency": "USD",
+          "policy_status": "Underwriting",
+          "submit_date": "2026-03-22",
+          "estimated_approval_days": {
+            "min": 5,
+            "max": 8
+          },
+          "client_tags": [
+            "Pre-retirement",
+            "High Value",
+            "Property"
+          ],
+          "product_type": "Home Contents Insurance",
+          "action_signal": "The case is being reviewed and has no outstanding request.",
+          "action_deadline": "2026-06-08",
+          "tenant_id": "coursework-demo",
+          "owner_agent_id": "AGT01525",
+          "eligible": true,
+          "permission_allowed": true,
+          "compliance_allowed": true,
+          "source_record_id": "POL-01525-002"
+        },
+        {
+          "candidate_id": "CLI-01525-009",
+          "candidate_type": "client",
+          "premium": 3200.0,
+          "currency": "USD",
+          "policy_status": null,
+          "submit_date": null,
+          "estimated_approval_days": null,
+          "client_tags": [
+            "Pre-retirement",
+            "Standard",
+            "Commercial"
+          ],
+          "product_type": "SME Business Package",
+          "action_signal": "A coverage review is scheduled within fourteen days.",
+          "action_deadline": "2026-06-14",
+          "tenant_id": "coursework-demo",
+          "owner_agent_id": "AGT01525",
+          "eligible": true,
+          "permission_allowed": true,
+          "compliance_allowed": true,
+          "source_record_id": "CLI-01525-009"
+        },
+        {
+          "candidate_id": "CLI-01525-011",
+          "candidate_type": "client",
+          "premium": 4650.0,
+          "currency": "USD",
+          "policy_status": null,
+          "submit_date": null,
+          "estimated_approval_days": null,
+          "client_tags": [
+            "Young Professional",
+            "Standard",
+            "Motor"
+          ],
+          "product_type": "Private Motor Insurance",
+          "action_signal": "The client requested a quotation within five days.",
+          "action_deadline": "2026-06-05",
+          "tenant_id": "coursework-demo",
+          "owner_agent_id": "AGT01525",
+          "eligible": true,
+          "permission_allowed": true,
+          "compliance_allowed": true,
+          "source_record_id": "CLI-01525-011"
+        },
+        {
+          "candidate_id": "CLI-01525-013",
+          "candidate_type": "client",
+          "premium": 6090.0,
+          "currency": "USD",
+          "policy_status": null,
+          "submit_date": null,
+          "estimated_approval_days": null,
+          "client_tags": [
+            "Family Builder",
+            "Standard",
+            "Liability"
+          ],
+          "product_type": "Public Liability Insurance",
+          "action_signal": "The client requested a callback today.",
+          "action_deadline": "2026-05-31",
+          "tenant_id": "coursework-demo",
+          "owner_agent_id": "AGT01525",
+          "eligible": true,
+          "permission_allowed": true,
+          "compliance_allowed": true,
+          "source_record_id": "CLI-01525-013"
+        },
+        {
+          "candidate_id": "CLI-01525-015",
+          "candidate_type": "client",
+          "premium": 2480.0,
+          "currency": "USD",
+          "policy_status": null,
+          "submit_date": null,
+          "estimated_approval_days": null,
+          "client_tags": [
+            "Pre-retirement",
+            "Standard",
+            "Specialty"
+          ],
+          "product_type": "Personal Liability Insurance",
+          "action_signal": "Renewal decision is due within three days.",
+          "action_deadline": "2026-06-03",
+          "tenant_id": "coursework-demo",
+          "owner_agent_id": "AGT01525",
+          "eligible": true,
+          "permission_allowed": true,
+          "compliance_allowed": true,
+          "source_record_id": "CLI-01525-015"
+        }
+      ]
+    },
+    {
+      "scenario_id": "SCN-AGT01569",
+      "agent_id": "AGT01569",
+      "agent_specialties": [
+        "Private Motor Insurance",
+        "Home Contents Insurance",
+        "Private Motor Insurance - Annual"
+      ],
+      "open_gap": 248880.0,
+      "currency": "USD",
+      "deadline": "2026-12-31",
+      "candidates": [
+        {
+          "candidate_id": "POL-01569-001",
+          "candidate_type": "policy",
+          "premium": 310.0,
+          "currency": "USD",
+          "policy_status": "Underwriter Query",
+          "submit_date": "2026-03-24",
+          "estimated_approval_days": {
+            "min": 4,
+            "max": 7
+          },
+          "client_tags": [
+            "Pre-retirement",
+            "High Value",
+            "Motor"
+          ],
+          "product_type": "Private Motor Insurance",
+          "action_signal": "The underwriter has an unanswered question for the agent.",
+          "action_deadline": "2026-06-02",
+          "tenant_id": "coursework-demo",
+          "owner_agent_id": "AGT01569",
+          "eligible": true,
+          "permission_allowed": true,
+          "compliance_allowed": true,
+          "source_record_id": "POL-01569-001"
+        },
+        {
+          "candidate_id": "POL-01569-002",
+          "candidate_type": "policy",
+          "premium": 400.0,
+          "currency": "USD",
+          "policy_status": "Client Confirmation Pending",
+          "submit_date": "2026-03-13",
+          "estimated_approval_days": {
+            "min": 5,
+            "max": 8
+          },
+          "client_tags": [
+            "Retiree",
+            "High Value",
+            "Property"
+          ],
+          "product_type": "Home Contents Insurance",
+          "action_signal": "Quoted terms are ready and the client must confirm acceptance.",
+          "action_deadline": "2026-06-04",
+          "tenant_id": "coursework-demo",
+          "owner_agent_id": "AGT01569",
+          "eligible": true,
+          "permission_allowed": true,
+          "compliance_allowed": true,
+          "source_record_id": "POL-01569-002"
+        },
+        {
+          "candidate_id": "POL-01569-003",
+          "candidate_type": "policy",
+          "premium": 480.0,
+          "currency": "USD",
+          "policy_status": "Underwriting",
+          "submit_date": "2026-03-02",
+          "estimated_approval_days": {
+            "min": 6,
+            "max": 9
+          },
+          "client_tags": [
+            "Young Professional",
+            "Growth",
+            "Liability"
+          ],
+          "product_type": "Private Motor Insurance - Annual",
+          "action_signal": "The case is being reviewed and has no outstanding request.",
+          "action_deadline": "2026-06-08",
+          "tenant_id": "coursework-demo",
+          "owner_agent_id": "AGT01569",
+          "eligible": true,
+          "permission_allowed": true,
+          "compliance_allowed": true,
+          "source_record_id": "POL-01569-003"
+        },
+        {
+          "candidate_id": "CLI-01569-012",
+          "candidate_type": "client",
+          "premium": 6520.0,
+          "currency": "USD",
+          "policy_status": null,
+          "submit_date": null,
+          "estimated_approval_days": null,
+          "client_tags": [
+            "Family Builder",
+            "Standard",
+            "Property"
+          ],
+          "product_type": "Home Contents Insurance",
+          "action_signal": "The client requested a quotation within five days.",
+          "action_deadline": "2026-06-05",
+          "tenant_id": "coursework-demo",
+          "owner_agent_id": "AGT01569",
+          "eligible": true,
+          "permission_allowed": true,
+          "compliance_allowed": true,
+          "source_record_id": "CLI-01569-012"
+        },
+        {
+          "candidate_id": "CLI-01569-014",
+          "candidate_type": "client",
+          "premium": 8270.0,
+          "currency": "USD",
+          "policy_status": null,
+          "submit_date": null,
+          "estimated_approval_days": null,
+          "client_tags": [
+            "Pre-retirement",
+            "Standard",
+            "Commercial"
+          ],
+          "product_type": "SME Business Package",
+          "action_signal": "Renewal decision is due within three days.",
+          "action_deadline": "2026-06-03",
+          "tenant_id": "coursework-demo",
+          "owner_agent_id": "AGT01569",
+          "eligible": true,
+          "permission_allowed": true,
+          "compliance_allowed": true,
+          "source_record_id": "CLI-01569-014"
+        },
+        {
+          "candidate_id": "CLI-01569-016",
+          "candidate_type": "client",
+          "premium": 3890.0,
+          "currency": "USD",
+          "policy_status": null,
+          "submit_date": null,
+          "estimated_approval_days": null,
+          "client_tags": [
+            "Young Professional",
+            "Standard",
+            "Motor"
+          ],
+          "product_type": "Private Motor Insurance",
+          "action_signal": "A coverage review is scheduled within fourteen days.",
+          "action_deadline": "2026-06-14",
+          "tenant_id": "coursework-demo",
+          "owner_agent_id": "AGT01569",
+          "eligible": true,
+          "permission_allowed": true,
+          "compliance_allowed": true,
+          "source_record_id": "CLI-01569-016"
+        }
+      ]
+    },
+    {
+      "scenario_id": "SCN-AGT01662",
+      "agent_id": "AGT01662",
+      "agent_specialties": [
+        "Private Motor Insurance",
+        "Home Contents Insurance",
+        "Private Motor Insurance - Annual"
+      ],
+      "open_gap": 564540.0,
+      "currency": "USD",
+      "deadline": "2026-12-31",
+      "candidates": [
+        {
+          "candidate_id": "POL-01662-001",
+          "candidate_type": "policy",
+          "premium": 1720.0,
+          "currency": "USD",
+          "policy_status": "Awaiting Documents",
+          "submit_date": "2026-03-15",
+          "estimated_approval_days": {
+            "min": 4,
+            "max": 7
+          },
+          "client_tags": [
+            "Retiree",
+            "High Value",
+            "Motor"
+          ],
+          "product_type": "Private Motor Insurance",
+          "action_signal": "Customer documents are incomplete; the agent can request them now.",
+          "action_deadline": "2026-06-01",
+          "tenant_id": "coursework-demo",
+          "owner_agent_id": "AGT01662",
+          "eligible": true,
+          "permission_allowed": true,
+          "compliance_allowed": true,
+          "source_record_id": "POL-01662-001"
+        },
+        {
+          "candidate_id": "POL-01662-002",
+          "candidate_type": "policy",
+          "premium": 2190.0,
+          "currency": "USD",
+          "policy_status": "Underwriter Query",
+          "submit_date": "2026-03-04",
+          "estimated_approval_days": {
+            "min": 5,
+            "max": 8
+          },
+          "client_tags": [
+            "Young Professional",
+            "High Value",
+            "Property"
+          ],
+          "product_type": "Home Contents Insurance",
+          "action_signal": "The underwriter has an unanswered question for the agent.",
+          "action_deadline": "2026-06-02",
+          "tenant_id": "coursework-demo",
+          "owner_agent_id": "AGT01662",
+          "eligible": true,
+          "permission_allowed": true,
+          "compliance_allowed": true,
+          "source_record_id": "POL-01662-002"
+        },
+        {
+          "candidate_id": "POL-01662-003",
+          "candidate_type": "policy",
+          "premium": 2660.0,
+          "currency": "USD",
+          "policy_status": "Client Confirmation Pending",
+          "submit_date": "2026-05-20",
+          "estimated_approval_days": {
+            "min": 6,
+            "max": 9
+          },
+          "client_tags": [
+            "Family Builder",
+            "Growth",
+            "Liability"
+          ],
+          "product_type": "Private Motor Insurance - Annual",
+          "action_signal": "Quoted terms are ready and the client must confirm acceptance.",
+          "action_deadline": "2026-06-04",
+          "tenant_id": "coursework-demo",
+          "owner_agent_id": "AGT01662",
+          "eligible": true,
+          "permission_allowed": true,
+          "compliance_allowed": true,
+          "source_record_id": "POL-01662-003"
+        },
+        {
+          "candidate_id": "POL-01662-004",
+          "candidate_type": "policy",
+          "premium": 3140.0,
+          "currency": "USD",
+          "policy_status": "Underwriting",
+          "submit_date": "2026-05-09",
+          "estimated_approval_days": {
+            "min": 7,
+            "max": 12
+          },
+          "client_tags": [
+            "Family Builder",
+            "Growth",
+            "Commercial"
+          ],
+          "product_type": "Residential Fire Insurance",
+          "action_signal": "The case is being reviewed and has no outstanding request.",
+          "action_deadline": "2026-06-08",
+          "tenant_id": "coursework-demo",
+          "owner_agent_id": "AGT01662",
+          "eligible": true,
+          "permission_allowed": true,
+          "compliance_allowed": true,
+          "source_record_id": "POL-01662-004"
+        },
+        {
+          "candidate_id": "CLI-01662-015",
+          "candidate_type": "client",
+          "premium": 4820.0,
+          "currency": "USD",
+          "policy_status": null,
+          "submit_date": null,
+          "estimated_approval_days": null,
+          "client_tags": [
+            "Young Professional",
+            "Standard",
+            "Specialty"
+          ],
+          "product_type": "Personal Liability Insurance",
+          "action_signal": "The client requested a callback today.",
+          "action_deadline": "2026-05-31",
+          "tenant_id": "coursework-demo",
+          "owner_agent_id": "AGT01662",
+          "eligible": true,
+          "permission_allowed": true,
+          "compliance_allowed": true,
+          "source_record_id": "CLI-01662-015"
+        },
+        {
+          "candidate_id": "CLI-01662-017",
+          "candidate_type": "client",
+          "premium": 7620.0,
+          "currency": "USD",
+          "policy_status": null,
+          "submit_date": null,
+          "estimated_approval_days": null,
+          "client_tags": [
+            "Family Builder",
+            "Standard",
+            "Property"
+          ],
+          "product_type": "Home Contents Insurance",
+          "action_signal": "A coverage review is scheduled within fourteen days.",
+          "action_deadline": "2026-06-14",
+          "tenant_id": "coursework-demo",
+          "owner_agent_id": "AGT01662",
+          "eligible": true,
+          "permission_allowed": true,
+          "compliance_allowed": true,
+          "source_record_id": "CLI-01662-017"
+        }
+      ]
+    },
+    {
+      "scenario_id": "SCN-AGT01876",
+      "agent_id": "AGT01876",
+      "agent_specialties": [
+        "Home Contents Insurance",
+        "Private Motor Insurance",
+        "Private Motor Insurance - Annual"
+      ],
+      "open_gap": 120190.0,
+      "currency": "USD",
+      "deadline": "2026-12-31",
+      "candidates": [
+        {
+          "candidate_id": "POL-01876-001",
+          "candidate_type": "policy",
+          "premium": 1050.0,
+          "currency": "USD",
+          "policy_status": "Awaiting Documents",
+          "submit_date": "2026-03-06",
+          "estimated_approval_days": {
+            "min": 4,
+            "max": 7
+          },
+          "client_tags": [
+            "Young Professional",
+            "High Value",
+            "Motor"
+          ],
+          "product_type": "Home Contents Insurance",
+          "action_signal": "Customer documents are incomplete; the agent can request them now.",
+          "action_deadline": "2026-06-01",
+          "tenant_id": "coursework-demo",
+          "owner_agent_id": "AGT01876",
+          "eligible": true,
+          "permission_allowed": true,
+          "compliance_allowed": true,
+          "source_record_id": "POL-01876-001"
+        },
+        {
+          "candidate_id": "POL-01876-002",
+          "candidate_type": "policy",
+          "premium": 1340.0,
+          "currency": "USD",
+          "policy_status": "Client Confirmation Pending",
+          "submit_date": "2026-05-22",
+          "estimated_approval_days": {
+            "min": 5,
+            "max": 8
+          },
+          "client_tags": [
+            "Family Builder",
+            "High Value",
+            "Property"
+          ],
+          "product_type": "Private Motor Insurance",
+          "action_signal": "Quoted terms are ready and the client must confirm acceptance.",
+          "action_deadline": "2026-06-04",
+          "tenant_id": "coursework-demo",
+          "owner_agent_id": "AGT01876",
+          "eligible": true,
+          "permission_allowed": true,
+          "compliance_allowed": true,
+          "source_record_id": "POL-01876-002"
+        },
+        {
+          "candidate_id": "POL-01876-003",
+          "candidate_type": "policy",
+          "premium": 1620.0,
+          "currency": "USD",
+          "policy_status": "Underwriting",
+          "submit_date": "2026-05-11",
+          "estimated_approval_days": {
+            "min": 6,
+            "max": 9
+          },
+          "client_tags": [
+            "Family Builder",
+            "Growth",
+            "Liability"
+          ],
+          "product_type": "Private Motor Insurance - Annual",
+          "action_signal": "The case is being reviewed and has no outstanding request.",
+          "action_deadline": "2026-06-08",
+          "tenant_id": "coursework-demo",
+          "owner_agent_id": "AGT01876",
+          "eligible": true,
+          "permission_allowed": true,
+          "compliance_allowed": true,
+          "source_record_id": "POL-01876-003"
+        },
+        {
+          "candidate_id": "CLI-01876-018",
+          "candidate_type": "client",
+          "premium": 4370.0,
+          "currency": "USD",
+          "policy_status": null,
+          "submit_date": null,
+          "estimated_approval_days": null,
+          "client_tags": [
+            "Retiree",
+            "Standard",
+            "Liability"
+          ],
+          "product_type": "Public Liability Insurance",
+          "action_signal": "Renewal decision is due within three days.",
+          "action_deadline": "2026-06-03",
+          "tenant_id": "coursework-demo",
+          "owner_agent_id": "AGT01876",
+          "eligible": true,
+          "permission_allowed": true,
+          "compliance_allowed": true,
+          "source_record_id": "CLI-01876-018"
+        },
+        {
+          "candidate_id": "CLI-01876-006",
+          "candidate_type": "client",
+          "premium": 5730.0,
+          "currency": "USD",
+          "policy_status": null,
+          "submit_date": null,
+          "estimated_approval_days": null,
+          "client_tags": [
+            "Retiree",
+            "Growth",
+            "Motor"
+          ],
+          "product_type": "Private Motor Insurance",
+          "action_signal": "The client requested a callback today.",
+          "action_deadline": "2026-05-31",
+          "tenant_id": "coursework-demo",
+          "owner_agent_id": "AGT01876",
+          "eligible": true,
+          "permission_allowed": true,
+          "compliance_allowed": true,
+          "source_record_id": "CLI-01876-006"
+        },
+        {
+          "candidate_id": "CLI-01876-008",
+          "candidate_type": "client",
+          "premium": 2330.0,
+          "currency": "USD",
+          "policy_status": null,
+          "submit_date": null,
+          "estimated_approval_days": null,
+          "client_tags": [
+            "Family Builder",
+            "Standard",
+            "Liability"
+          ],
+          "product_type": "Public Liability Insurance",
+          "action_signal": "The client requested a quotation within five days.",
+          "action_deadline": "2026-06-05",
+          "tenant_id": "coursework-demo",
+          "owner_agent_id": "AGT01876",
+          "eligible": true,
+          "permission_allowed": true,
+          "compliance_allowed": true,
+          "source_record_id": "CLI-01876-008"
+        }
+      ]
+    }
+  ]
+}

@@ -87,6 +87,7 @@ class GetPendingPoliciesTool(Tool):
                 "policy_id": policy.policy_id,
                 "client_name": policy.client_name,
                 "premium": policy.premium,
+                "currency": "USD",
                 "product": policy.product,
                 "status": policy.status,
                 "status_detail": policy.status_detail,
@@ -109,6 +110,7 @@ class GetPendingPoliciesTool(Tool):
         return json.dumps(
             {
                 "agent_id": agent_id,
+                "currency": "USD",
                 "total_count": len(policy_items),
                 "total_pending_premium": (
                     stored_pending if stored_pending is not None else calculated_pending
