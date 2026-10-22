@@ -149,6 +149,48 @@ class PrioritizationTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(result["agent_id"], "AGT001")
         self.assertEqual(tool.validate_params(tool.cast_params(self.payload)), [])
 
+    def test_tool_contract_requires_candidate_scoring_fields(self) -> None:
+        tool = PrioritizeFollowupsTool()
+        required_fields = (
+            "candidate_id",
+            "expected_contribution",
+            "urgency",
+            "actionability",
+        )
+
+        for field in required_fields:
+            payload = copy.deepcopy(self.payload)
+            del payload["candidates"][0][field]
+
+            with self.subTest(field=field):
+                errors = tool.validate_params(tool.cast_params(payload))
+                self.assertIn(f"missing required candidates[0].{field}", errors)
+
+    def test_tool_contract_rejects_candidate_scores_outside_valid_ranges(self) -> None:
+        tool = PrioritizeFollowupsTool()
+        cases = (
+            ("expected_contribution", -1, "must be >= 0"),
+            ("urgency", -0.1, "must be >= 0"),
+            ("urgency", 1.1, "must be <= 1"),
+            ("actionability", 1.1, "must be <= 1"),
+            ("business_fit", -0.1, "must be >= 0"),
+        )
+
+        for field, value, expected_error in cases:
+            payload = copy.deepcopy(self.payload)
+            payload["candidates"][0][field] = value
+
+            with self.subTest(field=field, value=value):
+                errors = tool.validate_params(tool.cast_params(payload))
+                self.assertTrue(
+                    any(
+                        error.startswith(f"candidates[0].{field} ")
+                        and expected_error in error
+                        for error in errors
+                    ),
+                    errors,
+                )
+
 
 if __name__ == "__main__":
     unittest.main()

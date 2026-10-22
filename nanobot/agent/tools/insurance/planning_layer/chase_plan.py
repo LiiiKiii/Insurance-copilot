@@ -189,7 +189,7 @@ class GenerateChasePlanTool(Tool):
 
         actual_gap = gap_info.get("actual_gap", 0)
         days_remaining = comp.get("days_remaining", 30)
-        unit = comp.get("unit", "HKD")
+        unit = comp.get("unit", "USD")
         deadline = comp.get("deadline", "")
         today = date.today()
 
