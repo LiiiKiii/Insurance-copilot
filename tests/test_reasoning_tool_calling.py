@@ -152,10 +152,13 @@ class ReasoningToolCallingTests(unittest.IsolatedAsyncioTestCase):
 
         self.assertEqual(response.content, "The supplied performance is behind pace.")
         self.assertEqual(len(provider.calls), 2)
-        self.assertEqual(
-            [item["function"]["name"] for item in provider.calls[0]["tools"]],
-            ["calculate_run_rate", "assess_gap_feasibility"],
-        )
+        offered_tools = {
+            item["function"]["name"] for item in provider.calls[0]["tools"]
+        }
+        self.assertIn("calculate_run_rate", offered_tools)
+        self.assertIn("get_performance_snapshot", offered_tools)
+        self.assertIn("search_knowledge_base", offered_tools)
+        self.assertIn("generate_chase_plan", offered_tools)
         assistant, tool_result = provider.calls[1]["messages"][-2:]
         self.assertEqual(assistant["role"], "assistant")
         self.assertEqual(assistant["tool_calls"][0]["id"], "run-rate-call")
@@ -171,7 +174,7 @@ class ReasoningToolCallingTests(unittest.IsolatedAsyncioTestCase):
         provider = self._tool_then_answer_provider()
         runtime = SimpleNamespace(is_running=True, agent_loop=self._loop(provider))
         socket = WebSocketHarness(create_app(runtime=runtime))
-        with patch("api.ws._verified_user", new=AsyncMock(return_value=SimpleNamespace(id="user", tenant_id="tenant", username="AGT001"))), patch("api.ws.log_flow_step", new=AsyncMock()), patch("api.ws.log_ai_audit", new=AsyncMock()):
+        with patch("api.ws._verified_user", new=AsyncMock(return_value=SimpleNamespace(id="user", tenant_id="tenant", username="AGT001"))), patch("api.ws.log_flow_step", new=AsyncMock()), patch("api.ws.log_ai_audit", new=AsyncMock()), patch("api.ws._persist_chat_turn", new=AsyncMock()):
             await socket.connect()
             try:
                 event = await socket.request(

@@ -150,6 +150,7 @@ class DataLayerToolTests(unittest.TestCase):
                         type="competition",
                         target_metric="protection_premium",
                         target_value=100_000,
+                        unit="USD",
                         deadline="2099-12-31",
                         is_active=True,
                     ),
@@ -202,6 +203,7 @@ class DataLayerToolTests(unittest.TestCase):
             {"protection_premium", "avg_fyc_per_policy"},
         )
         self.assertEqual(result["metrics"]["protection_premium"]["current"], 75_000)
+        self.assertEqual(result["metrics"]["protection_premium"]["unit"], "USD")
         self.assertEqual(result["metrics"]["avg_fyc_per_policy"]["current"], 5_000)
 
     def test_performance_tool_reports_missing_agent(self) -> None:
@@ -216,7 +218,9 @@ class DataLayerToolTests(unittest.TestCase):
         result = self._run(GetPendingPoliciesTool(self.workspace), agent_id="AGT001")
 
         self.assertEqual(result["total_count"], 2)
+        self.assertEqual(result["currency"], "USD")
         self.assertEqual(result["total_pending_premium"], 31_000)
+        self.assertEqual({row["currency"] for row in result["policies"]}, {"USD"})
         self.assertEqual(result["policies"][0]["policy_id"], "POL001")
         self.assertEqual(result["policies"][0]["client_age"], 42)
         self.assertEqual(result["policies"][0]["client_tag_labels"], ["family"])
@@ -235,6 +239,7 @@ class DataLayerToolTests(unittest.TestCase):
         )
 
         self.assertEqual(without_honours["total"], 1)
+        self.assertEqual(without_honours["competitions"][0]["unit"], "USD")
         self.assertEqual(without_honours["competitions"][0]["gap"], 30_000)
         self.assertEqual(selected_honour["competitions"][0]["type"], "honor")
         self.assertIsNone(selected_honour["competitions"][0]["days_remaining"])

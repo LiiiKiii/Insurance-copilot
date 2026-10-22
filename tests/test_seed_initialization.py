@@ -12,8 +12,11 @@ import unittest
 from contextlib import closing
 from pathlib import Path
 
+from admin.services.auth_service import verify_password
+
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 TEST_ADMIN_PASSWORD = "A6-only-validation-password"
+TEST_AGENT_PASSWORD = "A6-only-agent-validation-password"
 
 
 class SeedInitializationTests(unittest.TestCase):
@@ -26,6 +29,7 @@ class SeedInitializationTests(unittest.TestCase):
             f"sqlite+aiosqlite:///{database_path.as_posix()}"
         )
         environment["ADMIN_DEFAULT_PASSWORD"] = TEST_ADMIN_PASSWORD
+        environment["AGENT_DEFAULT_PASSWORD"] = TEST_AGENT_PASSWORD
 
         completed = subprocess.run(
             [sys.executable, "-m", "admin.seeds"],
@@ -50,11 +54,14 @@ class SeedInitializationTests(unittest.TestCase):
             "tenants": "tenants",
             "knowledge_permissions": "permissions",
             "admin_roles": "roles",
-            "admin_users": "users",
+            "admin_users": "users WHERE is_superadmin = 1",
+            "agent_users": "users WHERE is_superadmin = 0",
             "agent_profiles": "agent_profiles",
             "performance_rows": "agent_performance_metrics",
             "performance_targets": "performance_targets",
             "policies": "agent_policies",
+            "agent_clients": "agent_clients",
+            "agent_assessments": "agent_assessments",
             "attribution_rows": "agent_attribution",
             "competitions": "competitions",
             "competition_entries": "competition_entries",
@@ -62,7 +69,7 @@ class SeedInitializationTests(unittest.TestCase):
         }
         return {
             summary_key: connection.execute(
-                f'SELECT COUNT(*) FROM "{table_name}"'
+                f'SELECT COUNT(*) FROM {table_name}'
             ).fetchone()[0]
             for summary_key, table_name in tables.items()
         }
@@ -74,6 +81,12 @@ class SeedInitializationTests(unittest.TestCase):
             first_summary = self._run_seed(database_path)
             with closing(sqlite3.connect(database_path)) as connection:
                 first_counts = self._table_counts(connection)
+                first_agent_hashes = dict(
+                    connection.execute(
+                        "SELECT username, password_hash FROM users "
+                        "WHERE is_superadmin = 0"
+                    ).fetchall()
+                )
 
             second_summary = self._run_seed(database_path)
             with closing(sqlite3.connect(database_path)) as connection:
@@ -99,6 +112,28 @@ class SeedInitializationTests(unittest.TestCase):
                 foreign_key_violations = connection.execute(
                     "PRAGMA foreign_key_check"
                 ).fetchall()
+                target_agents_without_user = connection.execute(
+                    "SELECT DISTINCT agent_id FROM performance_targets "
+                    "WHERE agent_id NOT IN (SELECT username FROM users)"
+                ).fetchall()
+                policy_clients_without_record = connection.execute(
+                    "SELECT customer_id FROM agent_policies WHERE customer_id IS NOT NULL "
+                    "AND customer_id NOT IN (SELECT client_id FROM agent_clients)"
+                ).fetchall()
+                agent_rows = connection.execute(
+                    "SELECT agent.username, agent.password_hash, agent.is_superadmin, "
+                    "agent.is_active, agent.tier, supervisor.username "
+                    "FROM users AS agent "
+                    "LEFT JOIN users AS supervisor ON supervisor.id = agent.supervisor_id "
+                    "WHERE agent.is_superadmin = 0 ORDER BY agent.username"
+                ).fetchall()
+                agent_roles = connection.execute(
+                    "SELECT users.username, roles.name FROM users "
+                    "JOIN user_roles ON user_roles.user_id = users.id "
+                    "JOIN roles ON user_roles.role_id = roles.id "
+                    "WHERE users.is_superadmin = 0 "
+                    "ORDER BY users.username, roles.name"
+                ).fetchall()
 
         self.assertEqual(first_summary, first_counts)
         self.assertEqual(second_summary, second_counts)
@@ -110,6 +145,37 @@ class SeedInitializationTests(unittest.TestCase):
         self.assertTrue(admin_row[1].startswith("$2"))
         self.assertEqual(admin_row[2:], (1, 1))
         self.assertEqual(admin_role, [("super_admin",)])
+
+        self.assertEqual(target_agents_without_user, [])
+        self.assertEqual(policy_clients_without_record, [])
+        agents = json.loads(
+            (PROJECT_ROOT / "data" / "mock" / "agents.json").read_text(encoding="utf-8")
+        )
+        tier_by_rank = {
+            "Team Lead": "team_lead",
+            "Senior Business Manager": "senior_agent",
+        }
+        expected_accounts = {
+            agent["agent_id"]: (
+                0, 1, tier_by_rank.get(agent.get("rank_en"), "agent"),
+                agent.get("supervisor_agent_id"),
+            ) for agent in agents
+        }
+        self.assertEqual(
+            {row[0]: row[2:] for row in agent_rows},
+            expected_accounts,
+        )
+        second_agent_hashes = {row[0]: row[1] for row in agent_rows}
+        self.assertEqual(second_agent_hashes, first_agent_hashes)
+        for password_hash in second_agent_hashes.values():
+            self.assertNotEqual(password_hash, TEST_AGENT_PASSWORD)
+            self.assertTrue(password_hash.startswith("$2"))
+            self.assertTrue(verify_password(TEST_AGENT_PASSWORD, password_hash))
+            self.assertFalse(verify_password("incorrect-password", password_hash))
+        self.assertEqual(
+            agent_roles,
+            [(username, "agent_manager") for username in sorted(expected_accounts)],
+        )
 
         templates = json.loads(planning_value)
         self.assertTrue(templates["hkd_actions"])

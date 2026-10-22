@@ -83,6 +83,18 @@ class RuntimeStateTests(unittest.IsolatedAsyncioTestCase):
         self.assertIsNone(self.runtime.agent_task)
         self.assertEqual(self.provider.calls, [])
 
+    async def test_default_workspace_uses_project_knowledge_base(self) -> None:
+        config = Config.model_validate(
+            {
+                "providers": {"openrouter": {"apiKey": "test-key"}},
+            }
+        )
+
+        runtime = RuntimeState(config=config, provider=self.provider)
+
+        self.assertEqual(runtime.workspace, Path(__file__).resolve().parents[1])
+        self.assertTrue((runtime.workspace / "data" / "knowledge").is_dir())
+
     async def test_configured_provider_is_resolved_without_a_request(self) -> None:
         runtime = RuntimeState(config=self.config)
 

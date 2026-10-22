@@ -27,12 +27,13 @@ class ToolRegistry:
     _TIMEOUT_MESSAGE = "Tool execution timed out."
     _EMPTY_RESULT_MESSAGE = "Tool completed without a result."
     _UNSERIALIZABLE_RESULT_MESSAGE = "Tool returned an unsupported result."
+    _RESULT_TOO_LARGE_MESSAGE = "Tool result exceeded size limit."
 
     def __init__(
         self,
         *,
         timeout_seconds: float = 10.0,
-        max_result_chars: int = 4_000,
+        max_result_chars: int = 5_000,
     ) -> None:
         if timeout_seconds <= 0:
             raise ValueError("timeout_seconds must be positive.")
@@ -81,11 +82,16 @@ class ToolRegistry:
         schema before execution.  Errors are intentionally generic so model
         history never receives exception details or sensitive configuration.
         """
+        content, _status = await self.execute_with_status(name, params)
+        return content
+
+    async def execute_with_status(self, name: str, params: object) -> tuple[str, str]:
+        """Return provider-safe content and a status for transport audit records."""
         tool = self.get(name)
         if tool is None:
-            return self._UNKNOWN_TOOL_MESSAGE
+            return self._UNKNOWN_TOOL_MESSAGE, "unknown_tool"
         if not isinstance(params, dict):
-            return self._INVALID_PARAMETERS_MESSAGE
+            return self._INVALID_PARAMETERS_MESSAGE, "invalid_parameters"
 
         try:
             cast_params = tool.cast_params(params)
@@ -94,10 +100,10 @@ class ToolRegistry:
             raise
         except Exception as exc:
             logger.error("Tool argument validation failed (%s)", type(exc).__name__)
-            return self._INVALID_PARAMETERS_MESSAGE
+            return self._INVALID_PARAMETERS_MESSAGE, "invalid_parameters"
 
         if errors:
-            return self._INVALID_PARAMETERS_MESSAGE
+            return self._INVALID_PARAMETERS_MESSAGE, "invalid_parameters"
 
         try:
             result = await asyncio.wait_for(
@@ -105,17 +111,20 @@ class ToolRegistry:
                 timeout=self.timeout_seconds,
             )
         except asyncio.TimeoutError:
-            return self._TIMEOUT_MESSAGE
+            return self._TIMEOUT_MESSAGE, "timed_out"
         except asyncio.CancelledError:
             raise
         except Exception as exc:
             logger.error("Tool execution failed (%s)", type(exc).__name__)
-            return self._EXECUTION_FAILED_MESSAGE
+            return self._EXECUTION_FAILED_MESSAGE, "execution_failed"
 
-        return self._to_content(result)
+        content = self._to_content(result)
+        if len(content) > self.max_result_chars:
+            return self._RESULT_TOO_LARGE_MESSAGE[: self.max_result_chars], "result_too_large"
+        return content, "completed"
 
     def _to_content(self, result: Any) -> str:
-        """Produce bounded string content suitable for a provider tool message."""
+        """Serialize a result before applying the provider output limit."""
         if result is None:
             content = self._EMPTY_RESULT_MESSAGE
         elif isinstance(result, str):
@@ -126,6 +135,4 @@ class ToolRegistry:
             except (TypeError, ValueError):
                 content = self._UNSERIALIZABLE_RESULT_MESSAGE
 
-        if len(content) > self.max_result_chars:
-            return content[: self.max_result_chars - 1] + "…"
         return content

@@ -217,10 +217,19 @@ def create_app(
     if agents_router is not None:
         application.include_router(agents_router)
 
-    for module_name in ("api.routers.business", "api.routers.sessions"):
-        compatibility_router = _optional_router(module_name)
-        if compatibility_router is not None:
-            application.include_router(compatibility_router)
+    # Preserve the response shapes consumed by the existing agent workbench.
+    # The newer dashboard router below adds management-only endpoints.
+    business_router = _optional_router("api.routers.business")
+    if business_router is not None:
+        application.include_router(business_router)
+
+    dashboard_router = _optional_router("api.routers.agent_dashboard")
+    if dashboard_router is not None:
+        application.include_router(dashboard_router)
+
+    chat_sessions_router = _optional_router("api.routers.chat_sessions")
+    if chat_sessions_router is not None:
+        application.include_router(chat_sessions_router)
 
     briefing_router = _optional_router("api.routers.briefing")
     if briefing_router is not None:

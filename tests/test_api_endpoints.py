@@ -16,7 +16,7 @@ from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_asyn
 from sqlalchemy.orm import sessionmaker
 
 from admin.db import Base, get_db
-from admin.models.chat_session import ChatMessage, ChatSession
+from admin.models.chat import ChatMessage, ChatSession
 from admin.models.competition import Competition, CompetitionEntry
 from admin.models.inbox import InboxMessage
 from admin.models.performance_target import PerformanceTarget
@@ -134,6 +134,7 @@ class ApiEndpointTests(unittest.IsolatedAsyncioTestCase):
             session.add(
                 ChatSession(
                     id="ws:session-a",
+                    tenant_id="tenant-a",
                     user_id="admin-a",
                     agent_id="admin-a",
                     title="Persisted chat",

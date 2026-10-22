@@ -18,9 +18,9 @@ from nanobot.retrieval_citations import (
 
 SCENARIO_KEYWORDS = {
     "objection": ["think about it", "objection", "refuse", "expensive", "too costly"],
-    "needs_analysis": ["needs", "fabe", "analysis", "protection gap", "coverage gap"],
+    "needs_analysis": ["needs", "risk review", "analysis", "exposure", "coverage gap"],
     "referral": ["referral", "introduction", "friend", "recommendation"],
-    "upsell": ["additional coverage", "existing client", "upsell", "upgrade"],
+    "upsell": ["cross-line", "existing client", "additional exposure", "upgrade"],
     "closing": ["close", "closing", "commit", "sign", "purchase"],
 }
 
@@ -40,8 +40,8 @@ class SearchSalesScriptsTool(Tool):
     def description(self) -> str:
         return (
             "Search sales scripts for a specific customer conversation. "
-            "Supported scenarios include objection handling, FABE needs analysis, "
-            "referrals, additional coverage for existing clients, and closing."
+            "Supported scenarios include price objection handling, risk analysis, "
+            "referrals, cross-line reviews, renewals, and closing."
         )
 
     @property
@@ -55,7 +55,7 @@ class SearchSalesScriptsTool(Tool):
                 },
                 "product_type": {
                     "type": "string",
-                    "description": "Optional product type such as protection, savings, or critical illness",
+                    "description": "Optional product type such as motor, property, commercial, liability, or specialty",
                 },
                 "search_mode": {
                     "type": "string",

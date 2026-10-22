@@ -119,18 +119,16 @@ class WebSocketChatTests(unittest.IsolatedAsyncioTestCase):
         self.flow_mock = self.flow_patch.start()
         self.ai_patch = patch("api.ws.log_ai_audit", new_callable=AsyncMock)
         self.ai_mock = self.ai_patch.start()
-        self.persistence_patch = patch(
-            "api.ws._persist_chat_turn", new_callable=AsyncMock
-        )
-        self.persistence_mock = self.persistence_patch.start()
+        self.history_patch = patch("api.ws._persist_chat_turn", new_callable=AsyncMock)
+        self.history_patch.start()
         await self.socket.connect()
 
     async def asyncTearDown(self) -> None:
         if self.socket.task is not None and not self.socket.task.done():
             await self.socket.disconnect()
         self.ai_patch.stop()
+        self.history_patch.stop()
         self.flow_patch.stop()
-        self.persistence_patch.stop()
         self.auth_patch.stop()
 
     async def test_route_is_registered(self) -> None:
@@ -172,6 +170,20 @@ class WebSocketChatTests(unittest.IsolatedAsyncioTestCase):
                 }
             ],
         )
+
+    async def test_untrusted_tool_metadata_is_not_written_to_audit(self) -> None:
+        self.runtime.agent_loop.result = SimpleNamespace(
+            content="Safe answer",
+            metadata={"tool_events": [
+                {"name": "API_KEY=private-value", "status": "completed"},
+                {"name": "prioritize_followups", "status": {"invalid": True}},
+            ]},
+        )
+        await self.socket.send_json({"message": "Hello", "agent_id": "AGT001"})
+        self.assertEqual((await self.socket.receive_json())["type"], "response")
+        self.assertEqual(self.ai_mock.await_args.kwargs["tools_called"], "[]")
+        self.assertEqual([call.kwargs["step_type"] for call in self.flow_mock.await_args_list],
+                         ["user_input", "llm_call", "response"])
 
     async def test_explicit_identifiers_are_preserved(self) -> None:
         await self.socket.send_json(

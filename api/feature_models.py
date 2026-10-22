@@ -32,7 +32,7 @@ FEATURE_SLUGS = (
     "general",
 )
 FEATURE_META: dict[str, dict[str, str]] = {
-    "gap_analysis": {"label": "缺口分析", "desc": "MDRT距離、達標缺口計算"},
+    "gap_analysis": {"label": "缺口分析", "desc": "書面保費目標、達標缺口計算"},
     "competition": {"label": "競賽進度", "desc": "競賽狀態、榮譽目標追蹤"},
     "attribution": {"label": "歸因分析", "desc": "業績未達標原因分析"},
     "chase_plan": {"label": "追趕計劃", "desc": "週度目標拆解、行動計劃"},
@@ -42,7 +42,7 @@ FEATURE_META: dict[str, dict[str, str]] = {
     "general": {"label": "通用兜底", "desc": "其他所有問題"},
 }
 _FEATURE_KEYWORDS: dict[str, tuple[str, ...]] = {
-    "gap_analysis": ("缺口", "差多少", "mdrt", "MDRT", "達標", "距離"),
+    "gap_analysis": ("缺口", "差多少", "書面保費", "written premium", "達標", "距離"),
     "competition": ("競賽", "榮譽", "星光", "衝刺", "deadline", "截止"),
     "attribution": ("歸因", "為什麼", "原因", "沒達標", "表現差", "弱項"),
     "chase_plan": ("追趕", "計劃", "拆解", "每週", "行動", "安排"),

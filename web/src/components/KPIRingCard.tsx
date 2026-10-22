@@ -15,7 +15,7 @@ interface KPIRingCardProps {
 
 function formatValue(value: number | null | undefined, unit: string): string {
 	if (value == null || Number.isNaN(value)) return "—";
-	if (unit === "HKD") {
+	if (["HKD", "USD"].includes(unit)) {
 		if (value >= 1_000_000) return `${(value / 1_000_000).toFixed(1)}M`;
 		if (value >= 1_000) return `${(value / 1_000).toFixed(0)}K`;
 		return value.toLocaleString();

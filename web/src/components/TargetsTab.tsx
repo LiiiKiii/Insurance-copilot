@@ -5,13 +5,14 @@ import { cn } from "@/lib/utils";
 import { KPIRingCard } from "@/components/KPIRingCard";
 import { TeamMemberEditModal } from "@/components/TeamMemberEditModal";
 import { useTranslation, type MessageKey } from "@/lib/i18n";
-import { authFetch } from "@/lib/auth";
+import { authenticatedFetch as fetch, authHeaders } from "@/lib/auth";
 
 /* ─── Types ─── */
 
 interface TeamMember {
 	agent_id: string;
 	name_zh: string;
+	name_en?: string;
 	nickname: string;
 	tier: string;
 	rank: string;
@@ -96,7 +97,7 @@ const CORE_METRICS = [
 
 function formatVal(v: number, unit: string): string {
 	if (v == null) return "—";
-	if (unit === "HKD")
+	if (["HKD", "USD"].includes(unit))
 		return v >= 1_000_000
 			? `${(v / 1_000_000).toFixed(1)}M`
 			: v >= 1000
@@ -115,7 +116,7 @@ function formatHKD(n: number | null | undefined): string {
 
 function formatGap(gap: number | null | undefined, unit: string): string {
 	if (gap == null) return "—";
-	if (unit === "HKD") return `HKD ${formatHKD(gap)}`;
+	if (["HKD", "USD"].includes(unit)) return `${unit} ${formatHKD(gap)}`;
 	return `${gap} ${unit}`;
 }
 
@@ -323,13 +324,13 @@ function MemberDetail({ memberId }: { memberId: string }) {
 		let cancelled = false;
 		setLoading(true);
 		Promise.all([
-			fetch(`/api/performance?agent_id=${memberId}`)
+			fetch(`/api/performance?agent_id=${memberId}`, { headers: authHeaders() })
 				.then((r) => r.json())
 				.catch(() => ({ metrics: {} })),
-			fetch(`/api/targets?agent_id=${memberId}`)
+			fetch(`/api/targets?agent_id=${memberId}`, { headers: authHeaders() })
 				.then((r) => r.json())
 				.catch(() => ({ data: [] })),
-			authFetch(`/api/competitions?agent_id=${encodeURIComponent(memberId)}`)
+			fetch(`/api/competitions?agent_id=${encodeURIComponent(memberId)}`, { headers: authHeaders() })
 				.then((r) => r.json())
 				.catch(() => ({ competitions: [] })),
 		]).then(([perfData, targetsData, compData]) => {
@@ -359,7 +360,9 @@ function MemberDetail({ memberId }: { memberId: string }) {
 
 	// Only real competitions belong in this view (honors have their own tab).
 	const comps = competitions.filter((c) => c.type === 'competition');
-	const activeComps = comps.filter((c) => c.gap !== null && c.gap > 0);
+	const activeComps = comps.filter(
+		(c) => c.gap !== null && c.gap > 0 && (c.days_remaining == null || c.days_remaining >= 0),
+	);
 	const completedComps = comps.filter((c) => c.gap !== null && c.gap <= 0);
 
 	return (
@@ -389,7 +392,7 @@ function MemberDetail({ memberId }: { memberId: string }) {
 											{target.metric_label || target.metric_key}
 										</td>
 										<td className="px-3 py-1.5 text-right font-mono text-slate-600 dark:text-slate-300">
-											{target.unit === "HKD" ? "HKD " : ""}
+											{["HKD", "USD"].includes(target.unit) ? `${target.unit} ` : ""}
 											{formatVal(current, target.unit)} /{" "}
 											{formatVal(target.target_value, target.unit)}
 										</td>
@@ -498,7 +501,7 @@ function CompetitionRowEnhanced({ comp }: { comp: Competition }) {
 				</div>
 				<div className="flex items-center gap-3 mt-1">
 					<span className="text-[10px] text-slate-500 dark:text-slate-400 font-mono">
-						{comp.unit === "HKD" ? "HKD " : ""}
+						{["HKD", "USD"].includes(comp.unit) ? `${comp.unit} ` : ""}
 						{formatHKD(comp.current_value ?? 0)} /{" "}
 						{formatHKD(comp.target_value ?? 0)}
 					</span>
@@ -598,14 +601,14 @@ function TeamMemberCard({
 
 	const loadSubTeam = useCallback(() => {
 		if (subTeam.length > 0 || member.sub_count === 0) return;
-		fetch(`/api/my-team?agent_id=${member.agent_id}`)
+		fetch(`/api/my-team?agent_id=${member.agent_id}`, { headers: authHeaders() })
 			.then((r) => r.json())
 			.then((d) => {
 				if (d?.ok && Array.isArray(d?.data?.team)) {
 					setSubTeam(d.data.team);
 					// Load metrics for each sub-member
 					d.data.team.forEach((sm: TeamMember) => {
-						fetch(`/api/performance?agent_id=${sm.agent_id}`)
+						fetch(`/api/performance?agent_id=${sm.agent_id}`, { headers: authHeaders() })
 							.then((r) => r.json())
 							.then((pd) => {
 								setSubMetrics((prev) => ({
@@ -633,7 +636,7 @@ function TeamMemberCard({
 							TIER_DOT_COLORS[member.tier] || "bg-slate-400",
 						)}
 					>
-						{(member.name_zh || member.agent_id)[0]}
+						{(member.name_en || member.name_zh || member.agent_id)[0]}
 					</button>
 					{/* Info column */}
 					<div className="flex-1 min-w-0">
@@ -643,7 +646,7 @@ function TeamMemberCard({
 								onClick={() => setExpanded(!expanded)}
 								className="font-medium text-sm text-slate-800 dark:text-white truncate cursor-pointer hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
 							>
-								{member.name_zh || member.agent_id}
+								{member.name_en || member.name_zh || member.agent_id}
 							</button>
 							<span
 								className={cn(
@@ -719,12 +722,12 @@ function TeamMemberCard({
 													TIER_DOT_COLORS[sm.tier] || "bg-slate-400",
 												)}
 											>
-												{(sm.name_zh || sm.agent_id)[0]}
+											{(sm.name_en || sm.name_zh || sm.agent_id)[0]}
 											</div>
 											<div className="flex-1 min-w-0">
 												<div className="flex items-center gap-1.5">
 													<span className="text-xs font-medium text-slate-700 dark:text-slate-200 truncate">
-														{sm.name_zh || sm.agent_id}
+													{sm.name_en || sm.name_zh || sm.agent_id}
 													</span>
 													<span
 														className={cn(
@@ -756,7 +759,7 @@ function TeamMemberCard({
 				<TeamMemberEditModal
 					agentId={member.agent_id}
 					callerAgentId={callerId}
-					memberName={member.name_zh || member.agent_id}
+					memberName={member.name_en || member.name_zh || member.agent_id}
 					onClose={() => setEditModalOpen(false)}
 					onSave={onTargetSaved}
 				/>
@@ -778,13 +781,13 @@ function MyGoalsTab({ agentId }: { agentId: string }) {
 		let cancelled = false;
 		setLoading(true);
 		Promise.all([
-			fetch(`/api/performance?agent_id=${agentId}`)
+			fetch(`/api/performance?agent_id=${agentId}`, { headers: authHeaders() })
 				.then((r) => r.json())
 				.catch(() => ({ metrics: {} })),
-			fetch(`/api/targets?agent_id=${agentId}`)
+			fetch(`/api/targets?agent_id=${agentId}`, { headers: authHeaders() })
 				.then((r) => r.json())
 				.catch(() => ({ data: [] })),
-			authFetch(`/api/competitions?agent_id=${encodeURIComponent(agentId)}`)
+			fetch(`/api/competitions?agent_id=${encodeURIComponent(agentId)}`, { headers: authHeaders() })
 				.then((r) => r.json())
 				.catch(() => ({ competitions: [] })),
 		]).then(([perfData, targetsData, compData]) => {
@@ -824,7 +827,9 @@ function MyGoalsTab({ agentId }: { agentId: string }) {
 
 	// Only real competitions belong in this view (honors have their own tab).
 	const comps = competitions.filter((c) => c.type === 'competition');
-	const activeComps = comps.filter((c) => c.gap !== null && c.gap > 0);
+	const activeComps = comps.filter(
+		(c) => c.gap !== null && c.gap > 0 && (c.days_remaining == null || c.days_remaining >= 0),
+	);
 	const completedComps = comps.filter((c) => c.gap !== null && c.gap <= 0);
 
 	return (
@@ -934,7 +939,7 @@ function TeamGoalsTab({ agentId }: { agentId: string }) {
 	useEffect(() => {
 		let cancelled = false;
 		setLoading(true);
-		fetch(`/api/my-team?agent_id=${agentId}`)
+		fetch(`/api/my-team?agent_id=${agentId}`, { headers: authHeaders() })
 			.then((r) => r.json())
 			.then((d) => {
 				if (cancelled) return;
@@ -942,7 +947,7 @@ function TeamGoalsTab({ agentId }: { agentId: string }) {
 					setTeam(d.data.team);
 					// Load performance for each member in parallel
 					d.data.team.forEach((m: TeamMember) => {
-						fetch(`/api/performance?agent_id=${m.agent_id}`)
+						fetch(`/api/performance?agent_id=${m.agent_id}`, { headers: authHeaders() })
 							.then((r) => r.json())
 							.then((pd) => {
 								if (cancelled) return;

@@ -7,6 +7,7 @@ import json
 import os
 import uuid
 from datetime import date
+from numbers import Real
 from pathlib import Path
 from typing import Any
 
@@ -16,10 +17,12 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from admin.db import AsyncSessionFactory, close_db, init_db
 from admin.models.agent_data import (
     AgentAttribution,
+    AgentClient,
     AgentPerformanceMetrics,
     AgentPolicy,
     AgentProfile,
 )
+from admin.models.assessment import AgentAssessment
 from admin.models.competition import Competition, CompetitionEntry
 from admin.models.config import SystemConfig
 from admin.models.performance_target import PerformanceTarget
@@ -27,11 +30,20 @@ from admin.models.tenant import Tenant
 from admin.models.user import Permission, Role, User, role_permissions, user_roles
 from admin.services.auth_service import hash_password
 
-
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_MOCK_DIR = PROJECT_ROOT / "data" / "mock"
 DEFAULT_TENANT_ID = "00000000-0000-0000-0000-000000000001"
 ACTION_TEMPLATES_CONFIG_KEY = "planning.action_templates"
+LEGACY_COMPETITION_IDS = frozenset(
+    {
+        "COMP_STARLIGHT_2026",
+        "COMP_SPRINT_2026Q1",
+        "COMP_ELITE_2026",
+        "COMP_ROOKIE_2026",
+        "HONOR_MDRT_2026",
+        "HONOR_COT_2026",
+    }
+)
 
 
 def _require_env(name: str) -> str:
@@ -102,6 +114,15 @@ def _performance_values(payload: dict[str, Any]) -> dict[str, Any]:
     retention = _metric(payload, "client_retention")
     training = _metric(payload, "ai_training_usage")
     fyc = _metric(payload, "fyc")
+    policy_count = _metric(payload, "policy_count")
+    quarter_fyc = _metric(payload, "quarter_fyc")
+    ytd_fyc = _metric(payload, "ytd_fyc")
+    daily_fyc = _metric(payload, "daily_fyc")
+    total_clients = _metric(payload, "total_clients")
+    churn_rate = _metric(payload, "churn_rate")
+    churn_clients = _metric(payload, "churn_clients")
+    renewal_due = _metric(payload, "renewal_due_clients")
+    ai_practice = _metric(payload, "ai_practice_rate")
     ranking = payload.get("ranking", {})
     history = payload.get("history", {})
     team = payload.get("team_breakdown", {})
@@ -145,6 +166,17 @@ def _performance_values(payload: dict[str, Any]) -> dict[str, Any]:
         "ranking_top_performer_premium": ranking.get("top_performer_premium"),
         "team_personal_premium": team.get("personal_premium"),
         "team_subordinate_premium": team.get("subordinate_premium"),
+        "policy_count": policy_count.get("current"),
+        "quarter_fyc": quarter_fyc.get("current"),
+        "ytd_fyc": ytd_fyc.get("current"),
+        "daily_fyc": daily_fyc.get("current"),
+        "total_clients": total_clients.get("current"),
+        "churn_rate": churn_rate.get("current"),
+        "churn_clients": churn_clients.get("current"),
+        "renewal_due_clients": renewal_due.get("current"),
+        "ai_practice_rate": ai_practice.get("current"),
+        "online_university": _metric(payload, "online_university").get("current"),
+        "no_train_no_sell": _metric(payload, "no_train_no_sell").get("current"),
     }
 
 
@@ -274,9 +306,81 @@ async def _seed_admin_access(
     return len(permissions), len(roles), 1
 
 
+# Rank-to-tier mapping and reporting lines, as in the Original agent accounts.
+AGENT_TIERS = {
+    "Team Lead": "team_lead",
+    "Senior Business Manager": "senior_agent",
+}
+AGENT_SUPERVISORS = {
+    "AGT001": "AGT_TL01",
+    "AGT002": "AGT_TL01",
+    "AGT003": "AGT001",
+}
+
+
+async def _seed_agent_users(
+    session: AsyncSession,
+    tenant_id: str,
+    agents: list[dict[str, Any]],
+) -> int:
+    """Create a login account for every mock agent so agent IDs match users."""
+    manager_role = await session.scalar(
+        select(Role).where(Role.tenant_id == tenant_id, Role.name == "agent_manager")
+    )
+    if manager_role is None:
+        raise RuntimeError("agent_manager role must be seeded before agent users")
+
+    users: dict[str, User] = {}
+    for agent in agents:
+        username = agent["agent_id"]
+        tier = AGENT_TIERS.get(agent.get("rank_en") or "", "agent")
+        user = await session.scalar(
+            select(User).where(User.tenant_id == tenant_id, User.username == username)
+        )
+        if user is None:
+            user = User(
+                id=str(uuid.uuid4()),
+                tenant_id=tenant_id,
+                username=username,
+                email=agent.get("email") or f"{username.lower()}@insurance-copilot.local",
+                password_hash=hash_password(_require_env("AGENT_DEFAULT_PASSWORD")),
+                display_name=agent.get("name_en") or username,
+                is_superadmin=False,
+                is_active=True,
+                tier=tier,
+            )
+            session.add(user)
+            await session.flush()
+        else:
+            user.tier = tier
+        users[username] = user
+
+        role_link = (
+            await session.execute(
+                select(user_roles).where(
+                    user_roles.c.user_id == user.id,
+                    user_roles.c.role_id == manager_role.id,
+                )
+            )
+        ).first()
+        if role_link is None:
+            await session.execute(
+                insert(user_roles).values(user_id=user.id, role_id=manager_role.id)
+            )
+
+    for agent in agents:
+        username = agent["agent_id"]
+        supervisor = agent.get("supervisor_agent_id") or AGENT_SUPERVISORS.get(username)
+        users[username].supervisor_id = (
+            users[supervisor].id if supervisor in users else None
+        )
+
+    return len(users)
+
+
 async def _seed_profiles(session: AsyncSession, agents: list[dict[str, Any]]) -> int:
     for agent in agents:
-        highlights = agent.get("career_highlights") or []
+        specialties = agent.get("specialties") or agent.get("career_highlights") or []
         await _upsert(
             session,
             AgentProfile,
@@ -286,14 +390,15 @@ async def _seed_profiles(session: AsyncSession, agents: list[dict[str, Any]]) ->
                 "license_no": agent.get("license_no"),
                 "team": agent.get("team_en") or agent.get("team"),
                 "join_date": agent.get("join_date"),
-                "specialties": json.dumps(highlights, ensure_ascii=False),
-                "years_of_service": (
+                "specialties": json.dumps(specialties, ensure_ascii=False),
+                "years_of_service": agent.get("years_of_service") or (
                     date.today().year - agent["join_year"]
-                    if agent.get("join_year")
-                    else None
+                    if agent.get("join_year") else None
                 ),
+                "rank_level": agent.get("rank_level"),
                 "phone": agent.get("phone"),
                 "email": agent.get("email"),
+                "avatar_url": agent.get("avatar_url"),
             },
         )
     return len(agents)
@@ -302,6 +407,7 @@ async def _seed_profiles(session: AsyncSession, agents: list[dict[str, Any]]) ->
 async def _seed_performance(
     session: AsyncSession,
     performance: dict[str, dict[str, Any]],
+    tenant_id: str,
 ) -> tuple[int, int]:
     performance_count = 0
     target_count = 0
@@ -322,7 +428,7 @@ async def _seed_performance(
 
         for metric_key, metric in payload.get("metrics", {}).items():
             target = metric.get("target")
-            if target is None:
+            if not isinstance(target, Real) or isinstance(target, bool):
                 continue
             await _upsert(
                 session,
@@ -334,7 +440,7 @@ async def _seed_performance(
                     "period_end": period_end,
                 },
                 {
-                    "tenant_id": DEFAULT_TENANT_ID,
+                    "tenant_id": tenant_id,
                     "metric_label": metric.get("label", metric_key),
                     "target_value": target,
                     "unit": metric.get("unit", ""),
@@ -373,6 +479,7 @@ async def _seed_policies(
                 {
                     "agent_id": agent_id,
                     "client_name": policy.get("client_name"),
+                    "customer_id": policy.get("customer_id"),
                     "premium": policy.get("premium"),
                     "product": policy.get("product_en") or policy.get("product"),
                     "status": policy.get("status_en") or policy.get("status"),
@@ -380,6 +487,56 @@ async def _seed_policies(
                     "submit_date": policy.get("submit_date"),
                     "est_days_min": policy.get("estimated_approval_days_min"),
                     "est_days_max": policy.get("estimated_approval_days_max"),
+                },
+            )
+            count += 1
+    return count
+
+
+async def _seed_clients(
+    session: AsyncSession,
+    client_data: dict[str, dict[str, Any]],
+) -> int:
+    count = 0
+    for agent_id, payload in client_data.items():
+        for client in payload.get("clients", []):
+            await _upsert(
+                session,
+                AgentClient,
+                {"agent_id": agent_id, "client_id": client["client_id"]},
+                {
+                    "name": client.get("name"),
+                    "age": client.get("age"),
+                    "premium": client.get("premium"),
+                    "tag_categories": client.get("tag_categories"),
+                    "tag_labels": client.get("tag_labels"),
+                },
+            )
+            count += 1
+    return count
+
+
+async def _seed_assessments(
+    session: AsyncSession,
+    assessment_data: dict[str, dict[str, Any]],
+    tenant_id: str,
+) -> int:
+    count = 0
+    for agent_id, payload in assessment_data.items():
+        for assessment in payload.get("assessments", []):
+            await _upsert(
+                session,
+                AgentAssessment,
+                {
+                    "tenant_id": tenant_id,
+                    "agent_id": agent_id,
+                    "subject": assessment["subject"],
+                },
+                {
+                    "target_value": assessment.get("target_value"),
+                    "current_value": assessment.get("current_value"),
+                    "status": assessment.get("status"),
+                    "remark": assessment.get("remark"),
                 },
             )
             count += 1
@@ -406,6 +563,7 @@ async def _seed_attribution(
 async def _seed_competitions(
     session: AsyncSession,
     competition_data: dict[str, dict[str, Any]],
+    tenant_id: str,
 ) -> tuple[int, int]:
     definitions: dict[str, dict[str, Any]] = {}
     entries: list[tuple[str, dict[str, Any]]] = []
@@ -415,19 +573,30 @@ async def _seed_competitions(
             definitions.setdefault(competition["id"], competition)
             entries.append((agent_id, competition))
 
+    # These identifiers belong to the retired HKD-era seed.  Deactivate only
+    # known seed records so that reruns do not hide administrator-created
+    # competitions that are not present in the current mock dataset.
+    retired_ids = LEGACY_COMPETITION_IDS.difference(definitions)
+    if retired_ids:
+        retired_competitions = await session.scalars(
+            select(Competition).where(Competition.id.in_(retired_ids))
+        )
+        for competition in retired_competitions:
+            competition.is_active = False
+
     for competition_id, competition in definitions.items():
         await _upsert(
             session,
             Competition,
             {"id": competition_id},
             {
-                "tenant_id": DEFAULT_TENANT_ID,
+                "tenant_id": tenant_id,
                 "name": competition["name"],
                 "name_en": competition.get("name_en", ""),
                 "type": competition["type"],
                 "target_metric": competition["target_metric"],
                 "target_value": competition.get("target_value"),
-                "unit": competition.get("unit", "HKD"),
+                "unit": competition.get("unit", "USD"),
                 "deadline": competition["deadline"],
                 "reward": competition.get("reward", ""),
                 "description": competition.get("description", ""),
@@ -482,6 +651,8 @@ async def seed(mock_dir: Path = DEFAULT_MOCK_DIR) -> dict[str, int]:
     performance = _read_json(mock_dir, "performance.json")
     policies = _read_json(mock_dir, "policies.json")
     competitions = _read_json(mock_dir, "competitions.json")
+    clients = _read_json(mock_dir, "clients.json")
+    assessments = _read_json(mock_dir, "assessments.json")
     attribution = _read_json(mock_dir, "attribution.json")
 
     await init_db()
@@ -495,14 +666,29 @@ async def seed(mock_dir: Path = DEFAULT_MOCK_DIR) -> dict[str, int]:
                 session,
                 tenant.id,
             )
+            agent_user_count = await _seed_agent_users(session, tenant.id, agents)
             profile_count = await _seed_profiles(session, agents)
-            performance_count, target_count = await _seed_performance(session, performance)
+            performance_count, target_count = await _seed_performance(
+                session,
+                performance,
+                tenant.id,
+            )
             policy_count = await _seed_policies(
                 session,
                 _policy_sources(policies, competitions),
             )
+            client_count = await _seed_clients(session, clients)
+            assessment_count = await _seed_assessments(
+                session,
+                assessments,
+                tenant.id,
+            )
             attribution_count = await _seed_attribution(session, attribution)
-            competition_count, entry_count = await _seed_competitions(session, competitions)
+            competition_count, entry_count = await _seed_competitions(
+                session,
+                competitions,
+                tenant.id,
+            )
             planning_config_count = await _seed_planning_configuration(session)
             await session.commit()
         except Exception:
@@ -514,10 +700,13 @@ async def seed(mock_dir: Path = DEFAULT_MOCK_DIR) -> dict[str, int]:
         "knowledge_permissions": permission_count,
         "admin_roles": role_count,
         "admin_users": admin_count,
+        "agent_users": agent_user_count,
         "agent_profiles": profile_count,
         "performance_rows": performance_count,
         "performance_targets": target_count,
         "policies": policy_count,
+        "agent_clients": client_count,
+        "agent_assessments": assessment_count,
         "attribution_rows": attribution_count,
         "competitions": competition_count,
         "competition_entries": entry_count,

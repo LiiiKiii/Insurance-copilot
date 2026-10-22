@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useTranslation } from '@/lib/i18n'
-import { authFetch } from '@/lib/auth'
+import { authenticatedFetch as fetch, authHeaders } from '@/lib/auth'
 
 const STORAGE_KEY = 'insurance_copilot_config'
 
@@ -296,7 +296,7 @@ export function ApiConfigModal({ open, onClose, onSave }: Props) {
   // Load feature models from backend
   const loadFeatureModels = async () => {
     try {
-      const res = await authFetch('/api/feature-models')
+      const res = await fetch('/api/feature-models', { headers: authHeaders() })
       const data = await res.json()
       if (data.ok) setFeatureModels(data.data)
     } catch { /* silent */ }
@@ -351,9 +351,9 @@ export function ApiConfigModal({ open, onClose, onSave }: Props) {
     setTesting(true)
     setTestResult(null)
     try {
-      const res = await authFetch('/api/config/test', {
+      const res = await fetch('/api/config/test', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', ...authHeaders() },
         body: JSON.stringify(cfg),
       })
       const data = await res.json()
@@ -464,9 +464,9 @@ export function ApiConfigModal({ open, onClose, onSave }: Props) {
                           ))
                           setFeatureSaving(entry.slug)
                           try {
-                            await authFetch('/api/feature-models', {
+                            await fetch('/api/feature-models', {
                               method: 'POST',
-                              headers: { 'Content-Type': 'application/json' },
+                              headers: { 'Content-Type': 'application/json', ...authHeaders() },
                               body: JSON.stringify({ slug: entry.slug, model: newModel }),
                             })
                           } catch { /* silent */ } finally {
@@ -497,7 +497,7 @@ export function ApiConfigModal({ open, onClose, onSave }: Props) {
 
             <button
               onClick={async () => {
-                await authFetch('/api/feature-models/reset', { method: 'POST' })
+                await fetch('/api/feature-models/reset', { method: 'POST', headers: authHeaders() })
                 await loadFeatureModels()
               }}
               className="w-full py-2 text-xs text-slate-500 dark:text-slate-400 hover:text-red-500 dark:hover:text-red-400 border border-dashed border-slate-300 dark:border-slate-600 rounded-lg transition-colors"

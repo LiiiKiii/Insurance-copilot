@@ -100,7 +100,7 @@ async def init_db() -> None:
     from admin.models import (  # noqa: F401
         agent_data,
         assessment,
-        chat_session,
+        chat,
         competition,
         config,
         inbox,

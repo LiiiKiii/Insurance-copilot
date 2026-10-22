@@ -27,35 +27,66 @@ export function getRefreshToken(): string | null {
   return localStorage.getItem(REFRESH_KEY)
 }
 
-let refreshInFlight: Promise<boolean> | null = null
+/** Bearer header for protected backend routes; empty when signed out. */
+export function authHeaders(): Record<string, string> {
+  const token = getToken()
+  return token ? { Authorization: `Bearer ${token}` } : {}
+}
 
-export async function refreshAccessToken(): Promise<boolean> {
-  if (typeof window === 'undefined') return false
-  if (refreshInFlight) return refreshInFlight
+let tokenRefreshPromise: Promise<string | null> | null = null
 
-  refreshInFlight = (async () => {
-    const refreshToken = getRefreshToken()
-    if (!refreshToken) return false
-    try {
-      const response = await fetch(`${API_CONFIG.BASE_URL}/api/admin/auth/refresh`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ refresh_token: refreshToken }),
-      })
-      const body = await response.json().catch(() => null)
-      if (!response.ok || !body?.ok || !body?.data?.access_token) return false
-      localStorage.setItem(TOKEN_KEY, body.data.access_token)
-      return true
-    } catch {
-      return false
-    }
-  })()
-
+export function getAccessTokenExpiration(token: string): number | null {
   try {
-    return await refreshInFlight
-  } finally {
-    refreshInFlight = null
+    const encoded = token.split('.')[1]
+    if (!encoded) return null
+    const base64 = encoded.replace(/-/g, '+').replace(/_/g, '/')
+    const padded = base64.padEnd(Math.ceil(base64.length / 4) * 4, '=')
+    const payload = JSON.parse(atob(padded)) as { exp?: unknown }
+    return typeof payload.exp === 'number' ? payload.exp * 1000 : null
+  } catch {
+    return null
   }
+}
+
+async function requestAccessTokenRefresh(): Promise<string | null> {
+  if (typeof window === 'undefined') return null
+  const refreshToken = getRefreshToken()
+  if (!refreshToken) return null
+  try {
+    const response = await window.fetch(`${API_CONFIG.BASE_URL}/api/admin/auth/refresh`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ refresh_token: refreshToken }),
+    })
+    const body = await response.json().catch(() => null)
+    const accessToken = body?.data?.access_token
+    if (!response.ok || !body?.ok || typeof accessToken !== 'string') return null
+    localStorage.setItem(TOKEN_KEY, accessToken)
+    return accessToken
+  } catch {
+    return null
+  }
+}
+
+export async function getValidAccessToken(forceRefresh = false): Promise<string | null> {
+  const token = getToken()
+  const expiresAt = token ? getAccessTokenExpiration(token) : null
+  if (!forceRefresh && token && expiresAt !== null && expiresAt > Date.now() + 30_000) {
+    return token
+  }
+  if (!tokenRefreshPromise) {
+    const pending = requestAccessTokenRefresh()
+    tokenRefreshPromise = pending
+    pending.finally(() => {
+      if (tokenRefreshPromise === pending) tokenRefreshPromise = null
+    })
+  }
+  return tokenRefreshPromise
+}
+
+/** Refresh the access token for callers that only need success/failure. */
+export async function refreshAccessToken(): Promise<boolean> {
+  return (await getValidAccessToken(true)) !== null
 }
 
 export function redirectToLogin(): void {
@@ -65,23 +96,31 @@ export function redirectToLogin(): void {
   window.location.href = `/login?next=${next}`
 }
 
-/** Fetch a protected API route, refreshing an expired access token once. */
-export async function authFetch(input: RequestInfo | URL, init: RequestInit = {}) {
+/** Fetch a protected endpoint, refreshing an expired access token once. */
+export async function authenticatedFetch(
+  input: RequestInfo | URL,
+  init: RequestInit = {},
+): Promise<Response> {
   const headers = new Headers(init.headers)
-  const token = getToken()
+  const token = await getValidAccessToken()
   if (token) headers.set('Authorization', `Bearer ${token}`)
 
-  let response = await fetch(input, { ...init, headers })
+  let response = await window.fetch(input, { ...init, headers })
   if (response.status !== 401) return response
 
-  if (await refreshAccessToken()) {
-    const refreshedToken = getToken()
-    if (refreshedToken) headers.set('Authorization', `Bearer ${refreshedToken}`)
-    response = await fetch(input, { ...init, headers })
+  const refreshed = await getValidAccessToken(true)
+  if (!refreshed) {
+    redirectToLogin()
+    return response
   }
+  headers.set('Authorization', `Bearer ${refreshed}`)
+  response = await window.fetch(input, { ...init, headers })
   if (response.status === 401) redirectToLogin()
   return response
 }
+
+/** Backwards-compatible name used by existing API clients. */
+export const authFetch = authenticatedFetch
 
 export function getChatUser(): ChatUser | null {
   if (typeof window === 'undefined') return null

@@ -92,6 +92,94 @@ class GenerateChasePlanToolTests(unittest.IsolatedAsyncioTestCase):
             [{"priority": "P0", "action": "Produce HKD 2,000 per day"}],
         )
 
+    async def test_usd_gap_uses_monetary_plan_and_pending_offset(self) -> None:
+        competitions = [_competition("USD1", unit="USD")]
+        performance = SimpleNamespace(
+            protection_premium_current=120_000,
+            protection_premium_target=240_000,
+            pending_premium_current=14_000,
+        )
+        templates = {
+            "hkd_actions": [{
+                "priority": "P0",
+                "template": "Produce {unit} {daily_premium_needed:,} per day",
+            }],
+            "non_hkd_actions": [],
+        }
+
+        with (
+            patch(
+                "nanobot.agent.tools.insurance.planning_layer.chase_plan.load_competitions_from_db",
+                return_value=competitions,
+            ),
+            patch(
+                "nanobot.agent.tools.insurance.planning_layer.chase_plan.load_performance_row",
+                return_value=performance,
+            ),
+            patch(
+                "nanobot.agent.tools.insurance.planning_layer.chase_plan.compute_run_rate",
+                return_value={"monthly_avg": 20_000},
+            ),
+            patch(
+                "nanobot.agent.tools.insurance.planning_layer.chase_plan._load_action_templates",
+                return_value=templates,
+            ),
+        ):
+            result = json.loads(
+                await self.tool.execute(agent_id="A1", competition_id="USD1")
+            )
+
+        self.assertEqual(result["actual_gap"], 56_000)
+        self.assertEqual(result["pending_deduction"], 14_000)
+        self.assertEqual(result["weekly_plans"][0]["target"], "USD 14,000")
+        self.assertEqual(
+            result["daily_actions"],
+            [{"priority": "P0", "action": "Produce USD 2,000 per day"}],
+        )
+
+    async def test_missing_competition_unit_defaults_to_usd(self) -> None:
+        competition = _competition("DEFAULT-UNIT", gap=28_000)
+        competition.pop("unit")
+        templates = {
+            "hkd_actions": [{
+                "priority": "P0",
+                "template": "Produce {unit} {daily_premium_needed:,} per day",
+            }],
+            "non_hkd_actions": [],
+        }
+
+        with (
+            patch(
+                "nanobot.agent.tools.insurance.planning_layer.chase_plan.load_competitions_from_db",
+                return_value=[competition],
+            ),
+            patch(
+                "nanobot.agent.tools.insurance.planning_layer.chase_plan.load_performance_row",
+                return_value=None,
+            ),
+            patch(
+                "nanobot.agent.tools.insurance.planning_layer.chase_plan.compute_run_rate",
+                return_value={"monthly_avg": 0},
+            ),
+            patch(
+                "nanobot.agent.tools.insurance.planning_layer.chase_plan._load_action_templates",
+                return_value=templates,
+            ),
+        ):
+            result = json.loads(
+                await self.tool.execute(
+                    agent_id="A1",
+                    competition_id="DEFAULT-UNIT",
+                )
+            )
+
+        self.assertEqual(result["unit"], "USD")
+        self.assertEqual(result["weekly_plans"][0]["target"], "USD 7,000")
+        self.assertEqual(
+            result["daily_actions"],
+            [{"priority": "P0", "action": "Produce USD 1,000 per day"}],
+        )
+
     async def test_omitted_id_selects_most_urgent_open_competition(self) -> None:
         competitions = [
             _competition("LATER", name="Later", days_remaining=42),

@@ -3,7 +3,7 @@
 import * as React from "react";
 import { Drawer as DrawerPrimitive } from "vaul";
 import { cn } from "@/lib/utils";
-import { PerformanceTab } from "../PerformanceTab";
+import { TargetsTab } from "../TargetsTab";
 import { CompetitionTab } from "../CompetitionTab";
 import { HonorsTab } from "../HonorsTab";
 import { useTranslation, type MessageKey } from "@/lib/i18n";
@@ -157,7 +157,7 @@ export function DataBottomSheet({
 					    buffer for mobile browser chrome (URL bar / tab switcher) which often
 					    overlays content without being reported by env(safe-area-inset-bottom). */}
 					<div className="flex-1 min-h-0 overflow-y-auto overscroll-contain pb-[calc(env(safe-area-inset-bottom)+4rem)]">
-						{activeTab === "performance" && <PerformanceTab agentId={agentId} />}
+						{activeTab === "performance" && <TargetsTab agentId={agentId} />}
 						{activeTab === "honors" && <HonorsTab agentId={agentId} />}
 						{activeTab === "competition" && <CompetitionTab agentId={agentId} />}
 					</div>

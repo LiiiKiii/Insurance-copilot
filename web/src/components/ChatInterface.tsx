@@ -24,7 +24,7 @@ import { FileButton } from './chat/FileButton'
 import { UploadPill } from './chat/UploadPill'
 import type { UploadPillState } from './chat/UploadPill'
 import { useTranslation, type MessageKey } from '@/lib/i18n'
-import { authFetch } from '@/lib/auth'
+import { authenticatedFetch as fetch, authHeaders } from '@/lib/auth'
 
 interface ChatInterfaceProps {
 	messages: ChatMessage[];
@@ -93,9 +93,9 @@ export function ChatInterface({
 	const [agentName, setAgentName] = useState<string>("");
 	useEffect(() => {
 		if (!agentId) return;
-		authFetch(`/api/agent-info?agent_id=${encodeURIComponent(agentId)}`)
+		fetch(`/api/agent-info?agent_id=${encodeURIComponent(agentId)}`, { headers: authHeaders() })
 			.then((r) => r.json())
-			.then((d) => setAgentName(d?.data?.nickname || d?.data?.name_zh || ""))
+			.then((d) => setAgentName(d?.data?.nickname || d?.data?.name_en || d?.data?.name_zh || ""))
 			.catch(() => {});
 	}, [agentId]);
 	const [input, setInput] = useState("");

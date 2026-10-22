@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
-import { authFetch, clearAuth, getChatUser } from "@/lib/auth";
+import { authenticatedFetch as fetch, authHeaders, clearAuth, getChatUser } from "@/lib/auth";
 import { ThemeToggle } from "./ThemeToggle";
 import { ConfirmModal } from "./ConfirmModal";
 import { useTranslation, LOCALE_BCP47 } from "@/lib/i18n";
@@ -10,6 +10,7 @@ import { useTranslation, LOCALE_BCP47 } from "@/lib/i18n";
 interface AgentProfile {
 	agent_id: string;
 	name_zh: string;
+	name_en?: string;
 	nickname?: string;
 	rank?: string;
 	tier?: string;
@@ -118,7 +119,7 @@ export function SidebarContent({
 	useEffect(() => {
 		if (!agentId) return;
 		let cancelled = false;
-		authFetch(`/api/agent-info?agent_id=${encodeURIComponent(agentId)}`)
+		fetch(`/api/agent-info?agent_id=${encodeURIComponent(agentId)}`, { headers: authHeaders() })
 			.then((r) => r.json())
 			.then((d) => {
 				if (!cancelled && d?.data) setCurrentAgent(d.data);
@@ -129,7 +130,7 @@ export function SidebarContent({
 		};
 	}, [agentId]);
 
-	const agentName = currentAgent?.name_zh || agentId;
+	const agentName = currentAgent?.name_en || currentAgent?.name_zh || agentId;
 	const agentTitle = currentAgent?.rank || "";
 	const agentInitial = agentName[0] || "A";
 

@@ -14,7 +14,7 @@ Current migration stage:
 
 **A6 — Final Integration Validation and Baseline Freeze**
 
-A5 established repeatable acceptance coverage for knowledge retrieval, upload boundaries, PDF processing, and planning. A6 validates the merged project and freezes the accepted baseline. For M3, this round verifies that the version-controlled corpus and administrator-managed knowledge bases remain searchable, that search results retain source references, and that the existing knowledge administration tests cover tenant and document-processing boundaries.
+A5 established repeatable acceptance coverage for knowledge retrieval, upload boundaries, PDF processing, and planning. A6 validates the merged project and freezes the accepted baseline. The current validation confirms the knowledge-retrieval boundary and the deterministic planning behavior while preserving their documented limitations.
 
 No new M3 runtime code is introduced in A6 because the required knowledge models, retrieval tools, administration routes, ingestion pipeline, corpus, and acceptance tests were migrated in A0 through A5.
 
@@ -129,6 +129,28 @@ The completed project's unrelated upload-cleanup job remains outside the A3 M3 s
 - retained the A5 automated acceptance scope without modifying the validated M3 implementation;
 - recorded the final M3 capabilities and known retrieval boundaries in this README.
 
+### M4 Prioritisation and Planning
+
+- the chase-plan tool deducts pending premium, selects an urgent open
+  competition, divides the remaining gap into weekly targets, and attaches
+  configured action-template text;
+- the improvement-advice tool calculates attribution gaps at runtime and maps
+  the highest-priority weaknesses to deterministic P0/P1/P2 guidance;
+- `prioritize_followups` filters ineligible, unauthorised, non-compliant, and
+  invalid candidates before applying an explainable weighted score;
+- eligible candidates are ranked with deterministic tie-breaking and returned
+  as Top-K recommendations with score components, priority levels, actions,
+  timing, evidence, and ranking reasons;
+- `POST /api/planning/prioritization` exposes the ranking contract through the
+  authenticated planning API without querying or changing M2-owned data;
+- Precision@K and NDCG@K utilities compare the weighted ranking with an
+  expected-contribution-only baseline using a tracked synthetic fixture;
+- the synthetic evaluation validates the implementation pipeline only and is
+  not evidence of production effectiveness or improved sales outcomes; and
+- the default Agent runtime tool registry remains unchanged, so enabling
+  automatic LLM access to `prioritize_followups` remains an explicit integration
+  decision.
+
 ## Knowledge Corpus
 
 The version-controlled corpus contains:
@@ -136,7 +158,7 @@ The version-controlled corpus contains:
 | Category | Documents |
 | -------- | --------- |
 | Competition rules | `competition_starlight.md`, `competition_elite_challenge.md`, `competition_quarterly_sprint.md`, `competition_rookie_king.md` |
-| Qualification rules | `mdrt_rules.md`, `cot_rules.md` |
+| Performance standards | `mdrt_rules.md` (written premium excellence), `cot_rules.md` (portfolio quality excellence); legacy filenames are retained for compatibility |
 | Sales guidance | `sales_scripts.md`, `best_practices.md`, `action_guidelines.md` |
 | Historical competition circulars | Markdown documents under `data/knowledge/competitions/` |
 
@@ -187,6 +209,7 @@ Copy `.env.example` to `.env` and configure authentication before starting the s
 ```text
 ADMIN_SECRET_KEY=<random-signing-secret-of-at-least-32-bytes>
 ADMIN_DEFAULT_PASSWORD=<initial-admin-password>
+AGENT_DEFAULT_PASSWORD=<initial-password-for-seeded-agent-accounts>
 ADMIN_ENCRYPTION_KEY=<Fernet-key-for-encrypted-provider-credentials>
 ```
 
@@ -241,16 +264,50 @@ The acceptance scope covers the following baseline:
 
 These tests exercise the M3 features introduced through A4 and retained in the frozen baseline. They do not introduce vector search, retrieval scoring datasets, or production OCR benchmarks.
 
-Run the retained A5 M4 planning acceptance scope with:
+Run the A6 M4 planning acceptance scope with:
 
 ```powershell
-.\.venv\Scripts\python.exe -m unittest tests/test_chase_plan.py tests/test_planning_api.py -v
+.\.venv\Scripts\python.exe -m pytest tests/test_chase_plan.py tests/test_insurance_tools.py tests/test_planning_api.py -q
 ```
 
-The chase-plan tests execute the current planning logic with isolated business data and action templates. The planning API tests verify route registration, validated request forwarding, and stable invalid-payload handling.
+The 19-test acceptance scope executes the current chase-plan logic with
+isolated business data and action templates, verifies the improvement-advice
+template contract against deterministic attribution results, and checks route
+registration, validated request forwarding, and stable invalid-payload
+handling. The detailed result and functional boundary are recorded in
+`docs/a6_m4_planning_baseline.md`.
+
+Run the current M4 prioritisation and attribution regression scope with:
+
+```powershell
+.\.venv\Scripts\python.exe -m pytest tests/test_attribution_gap.py tests/test_planning_api.py tests/test_prioritization.py tests/test_prioritization_evaluation.py -q
+```
+
+Run the reproducible ranking experiment with:
+
+```powershell
+.\.venv\Scripts\python.exe scripts/evaluate_prioritization.py
+```
+
+The implementation details, current ownership boundary, synthetic-data notice,
+and baseline comparison are recorded in
+`docs/coursework/m4_prioritization_experiment.md`.
 
 ## A6 Baseline Freeze
 
-A6 is the final migration round. The M3 baseline is considered complete for the implemented product scope: deterministic English file retrieval, SQLite FTS5 database retrieval with a SQL fallback, source citation, tenant-aware knowledge administration, local text import, PDF ingestion, and automated acceptance coverage. The merged baseline also retains the existing M4 planning behavior and its focused acceptance tests.
+A6 is the final migration round. The M3 baseline is considered complete for the
+implemented product scope: deterministic English file retrieval, SQLite FTS5
+database retrieval with a SQL fallback, source citation, tenant-aware knowledge
+administration, local text import, PDF ingestion, and automated acceptance
+coverage.
 
-No code file is added or replaced in A6. Vector or embedding retrieval, quantitative Recall@K and Precision@K datasets, production OCR benchmarking, and broader production hardening are outside the implemented baseline and are not implied by this freeze.
+The current M4 implementation combines the deterministic chase-plan and
+improvement-advice tools with a separate prioritisation module for explainable
+candidate filtering, weighted ranking, Top-K recommendation, and offline
+ranking metrics. It must not be represented as a trained
+conversion-probability model or as proof of production business impact.
+
+Vector or embedding retrieval, a production labelled ranking dataset,
+production OCR benchmarking, automatic M2 candidate-data ingestion, M5
+recommendation rendering, and broader production hardening remain outside the
+currently integrated baseline.

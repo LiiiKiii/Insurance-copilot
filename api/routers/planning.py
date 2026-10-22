@@ -35,6 +35,16 @@ class ImprovementAdviceRequest(BaseModel):
     top_n: int = Field(default=5, ge=1, le=50)
 
 
+class PrioritizationRequest(BaseModel):
+    """Data-source-independent candidate ranking request."""
+
+    agent_id: str = Field(min_length=1)
+    objective: dict[str, Any]
+    candidates: list[dict[str, Any]]
+    constraints: dict[str, Any] = Field(default_factory=dict)
+    weights: dict[str, Any] = Field(default_factory=dict)
+
+
 class PlanningTool(Protocol):
     """Small execution boundary shared by the two planning endpoints."""
 
@@ -57,6 +67,14 @@ def _build_improvement_advice_tool(workspace: Path) -> PlanningTool:
     )
 
     return GenerateImprovementAdviceTool(workspace)
+
+
+def _build_prioritization_tool() -> PlanningTool:
+    from nanobot.agent.tools.insurance.planning_layer.prioritization import (
+        PrioritizeFollowupsTool,
+    )
+
+    return PrioritizeFollowupsTool()
 
 
 def _decode_tool_result(result: str) -> dict[str, Any]:
@@ -103,4 +121,30 @@ async def generate_improvement_advice(
         agent_id=request.agent_id,
         top_n=request.top_n,
     )
+    return _decode_tool_result(result)
+
+
+@router.post("/prioritization")
+async def prioritize_followups(
+    request: PrioritizationRequest,
+    current_user: CurrentUser,
+) -> dict[str, Any]:
+    """Rank caller-owned, pre-authorised candidate records without database access."""
+    if request.agent_id != current_user.username:
+        raise HTTPException(status_code=403, detail="Agent access denied")
+
+    from nanobot.agent.tools.insurance.planning_layer.prioritization import (
+        PrioritizationInputError,
+    )
+
+    try:
+        result = await _build_prioritization_tool().execute(
+            agent_id=request.agent_id,
+            objective=request.objective,
+            candidates=request.candidates,
+            constraints=request.constraints,
+            weights=request.weights,
+        )
+    except PrioritizationInputError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
     return _decode_tool_result(result)

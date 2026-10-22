@@ -13,12 +13,6 @@ from nanobot.agent.tools.admin import (
     AdminKBImportTool,
     AdminListKnowledgeTool,
 )
-from nanobot.agent.tools.insurance.knowledge_layer import (
-    SearchBestPracticeTool,
-    SearchCompetitionRulesTool,
-    SearchKnowledgeBaseTool,
-    SearchSalesScriptsTool,
-)
 from nanobot.bus.queue import MessageBus
 from nanobot.agent.tools.registry import ToolRegistry
 from nanobot.config.schema import Config
@@ -26,6 +20,19 @@ from nanobot.providers import OpenAICompatProvider
 from nanobot.providers.base import LLMProvider
 from nanobot.providers.registry import find_by_name
 from api.runtime_config import resolve_startup_runtime_config
+
+
+_PROJECT_ROOT = Path(__file__).resolve().parent.parent
+_LEGACY_DEFAULT_WORKSPACE = Path("~/.nanobot/workspace").expanduser()
+
+
+def _resolve_workspace(configured: Path) -> Path:
+    """Use the repository knowledge base when no workspace was configured."""
+    resolved = configured.expanduser()
+    project_knowledge = _PROJECT_ROOT / "data" / "knowledge"
+    if resolved == _LEGACY_DEFAULT_WORKSPACE and project_knowledge.is_dir():
+        return _PROJECT_ROOT
+    return resolved
 
 
 class RuntimeState:
@@ -45,18 +52,14 @@ class RuntimeState:
         # normal application startup resolves default, persisted, and
         # environment configuration in that documented order.
         self.config = config or resolve_startup_runtime_config()
-        self.workspace = workspace or self.config.workspace_path
+        self.workspace = workspace or _resolve_workspace(self.config.workspace_path)
         self.bus = MessageBus()
         self.provider = provider or self._create_provider()
-        self.tool_registry = build_reasoning_registry()
-        # Keep the pre-existing reasoning registry contract intact. Knowledge
-        # tools are composed separately and injected as supplemental abilities.
+        self.tool_registry = build_reasoning_registry(self.workspace)
+        # Administrative knowledge tools are kept separate from the workbench
+        # registry so its public composition contract remains stable.
         self.knowledge_tool_registry = ToolRegistry(max_result_chars=100_000)
         for tool in (
-            SearchKnowledgeBaseTool(self.workspace),
-            SearchCompetitionRulesTool(self.workspace),
-            SearchBestPracticeTool(self.workspace),
-            SearchSalesScriptsTool(self.workspace),
             AdminListKnowledgeTool(self.workspace),
             AdminKBImportTool(self.workspace),
         ):

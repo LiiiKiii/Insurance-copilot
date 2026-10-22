@@ -19,24 +19,17 @@ from nanobot.retrieval_citations import (
 # Keyword-to-file mapping. One keyword may map to multiple source documents.
 # English summaries are listed before original circulars when both are available.
 COMP_FILE_MAP: dict[str, list[str]] = {
-    "ida": ["competitions/AG25035.md"],
-    "mdrt": ["mdrt_rules.md", "competitions/AG25035.md"],
-    "million dollar round table": ["mdrt_rules.md", "competitions/AG25035.md"],
-    "cot": ["cot_rules.md"],
-    "court of the table": ["cot_rules.md"],
-    "elite overseas": ["competition_elite_challenge.md", "competitions/AG24050.md"],
-    "elite challenge": ["competition_elite_challenge.md", "competitions/AG24050.md"],
-    "march flash": ["competition_starlight.md", "competitions/AG25030.md"],
-    "triple reward": ["competition_starlight.md", "competitions/AG25030.md"],
-    "starlight avenue": ["competition_starlight.md"],
-    "q1 campaign": ["competition_quarterly_sprint.md", "competitions/AG25011.md"],
-    "business campaign": ["competition_quarterly_sprint.md", "competitions/AG25011.md"],
-    "quarterly sprint": ["competition_quarterly_sprint.md"],
-    "april rewards": ["competitions/AG25044.md"],
-    "dragon boat": ["competitions/AG25044.md"],
-    "monthly flash": ["competitions/AG25099.md"],
-    "travel tour": ["competitions/AG25129.md"],
-    "rookie king": ["competition_rookie_king.md"],
+    "written premium": ["mdrt_rules.md", "competition_elite_challenge.md", "competitions/AG25035.md"],
+    "premium excellence": ["mdrt_rules.md", "competition_elite_challenge.md", "competitions/AG25035.md"],
+    "portfolio quality": ["cot_rules.md"],
+    "conversion quality": ["competition_starlight.md", "competitions/AG25011.md"],
+    "quote-to-bind": ["competition_starlight.md", "competitions/AG25011.md"],
+    "ai practice": ["competition_rookie_king.md", "competitions/AG25138.md"],
+    "new business commission": ["competition_quarterly_sprint.md"],
+    "commercial lines": ["competitions/AG24050.md"],
+    "renewal": ["competitions/AG25030.md", "competitions/AG25129.md"],
+    "pending case": ["competitions/AG25044.md"],
+    "cross-line": ["competitions/AG25099.md"],
     "ag24050": ["competitions/AG24050.md"],
     "ag25011": ["competitions/AG25011.md"],
     "ag25030": ["competitions/AG25030.md"],
@@ -63,8 +56,8 @@ class SearchCompetitionRulesTool(Tool):
     def description(self) -> str:
         return (
             "Search competition rules, campaign circulars, and professional honour standards. "
-            "Use this tool for Starlight Avenue, quarterly sprint, elite challenge, "
-            "Rookie King, MDRT, COT, IDA, and related competition notices."
+            "Use this tool for written-premium, conversion-quality, AI-practice, "
+            "new-business-commission, retention, and portfolio-quality programmes."
         )
 
     @property
@@ -74,7 +67,7 @@ class SearchCompetitionRulesTool(Tool):
             "properties": {
                 "query": {
                     "type": "string",
-                    "description": "Search terms such as 'MDRT qualification', 'Starlight Avenue rules', or 'quarterly sprint target'",
+                    "description": "Search terms such as 'written premium target', 'conversion quality rules', or 'AI practice sprint'",
                 },
                 "competition_name": {
                     "type": "string",
