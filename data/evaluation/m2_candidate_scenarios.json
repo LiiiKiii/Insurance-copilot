@@ -1,0 +1,2137 @@
+{
+  "dataset_id": "m2-coursework-candidates-v1",
+  "description": "Deterministic coursework candidate set for M4 ranking integration.",
+  "as_of_date": "2026-05-31",
+  "currency": "USD",
+  "selection": {
+    "method": "First five agent IDs in ascending order; four policies and four non-policy clients per agent",
+    "random_sampling": false,
+    "scenario_count": 5,
+    "candidates_per_scenario": 8,
+    "candidate_count": 40
+  },
+  "source_files": [
+    "data/mock/agents.json",
+    "data/mock/clients.json",
+    "data/mock/policies.json",
+    "data/mock/performance.json",
+    "data/mock/attribution.json"
+  ],
+  "field_lineage": {
+    "direct_project_fields": [
+      "agent_id",
+      "candidate_id",
+      "premium",
+      "policy_status",
+      "submit_date",
+      "estimated_approval_days",
+      "client_tags",
+      "product_type",
+      "source_record_id"
+    ],
+    "derived_fields": [
+      "expected_contribution",
+      "expected_decision_date",
+      "eligible",
+      "permission_allowed",
+      "compliance_allowed",
+      "urgency",
+      "actionability",
+      "business_fit",
+      "reference_relevance_grade"
+    ],
+    "synthetic_record_notice": "Customer and policy records are coursework demonstration records generated from source-derived agent and product distributions; they are not individual Kaggle customer or policy records."
+  },
+  "transformation_rules": {
+    "policy_expected_contribution": "premium multiplied by the agent historical conversion rate",
+    "client_expected_contribution": "client premium multiplied by the agent retention rate",
+    "urgency": "Policy due-date bands or client renewal/follow-up tags, normalised to 0-1",
+    "actionability": "Awaiting-documents/underwriting status or client follow-up tags, normalised to 0-1",
+    "business_fit": "Base 0.4 plus product-specialty, need-category, and high-value matches, capped at 1",
+    "eligibility": "Pending positive-premium policy, or active/actionable client",
+    "permission": "Candidate record belongs to the scenario agent",
+    "compliance": "Agent training-compliance gate permits sales",
+    "reference_relevance": "Deterministic 0-3 coursework label from stated operational thresholds"
+  },
+  "limitations": [
+    "Reference relevance grades validate the coursework pipeline only and are not production labels.",
+    "Expected contribution is a transparent rule-based estimate, not a trained probability prediction."
+  ],
+  "scenarios": [
+    {
+      "scenario_id": "SCN-AGT00690",
+      "agent_id": "AGT00690",
+      "objective": {
+        "metric": "written_premium",
+        "current": 154750.0,
+        "target": 383000.0,
+        "open_gap": 228250.0,
+        "unit": "USD",
+        "deadline": "2026-12-31"
+      },
+      "constraints": {
+        "top_k": 5
+      },
+      "candidates": [
+        {
+          "scenario_id": "SCN-AGT00690",
+          "agent_id": "AGT00690",
+          "candidate_id": "POL-00690-001",
+          "currency": "USD",
+          "permission_allowed": true,
+          "permission_information": {
+            "decision": true,
+            "basis": "Candidate is stored under the same agent_id"
+          },
+          "compliance_allowed": true,
+          "compliance_information": {
+            "decision": true,
+            "basis": "Agent training-compliance gate is not blocking sales"
+          },
+          "candidate_type": "policy",
+          "premium": 740.0,
+          "expected_contribution": 270.4,
+          "policy_status": "Underwriting",
+          "submit_date": "2026-05-26",
+          "estimated_approval_days": {
+            "min": 4,
+            "max": 7
+          },
+          "expected_decision_date": "2026-06-02",
+          "client_tags": [
+            "Young Professional",
+            "High Value",
+            "Motor",
+            "Renewal Due"
+          ],
+          "product_type": "Private Motor Insurance",
+          "eligible": true,
+          "eligibility_information": {
+            "decision": true,
+            "basis": "Pending status and positive premium"
+          },
+          "urgency": 0.85,
+          "actionability": 0.55,
+          "business_fit": 1.0,
+          "source_record_id": "POL-00690-001",
+          "source_path": "data/mock/policies.json#AGT00690/POL-00690-001",
+          "source_client_id": "CLI-00690-001",
+          "data_origin": {
+            "candidate_record": "synthetic_recent_policy_from_agent_mix",
+            "client_record": "synthetic_representative_client",
+            "scores": "deterministic_derived"
+          },
+          "reference_relevance_grade": 2
+        },
+        {
+          "scenario_id": "SCN-AGT00690",
+          "agent_id": "AGT00690",
+          "candidate_id": "POL-00690-002",
+          "currency": "USD",
+          "permission_allowed": true,
+          "permission_information": {
+            "decision": true,
+            "basis": "Candidate is stored under the same agent_id"
+          },
+          "compliance_allowed": true,
+          "compliance_information": {
+            "decision": true,
+            "basis": "Agent training-compliance gate is not blocking sales"
+          },
+          "candidate_type": "policy",
+          "premium": 940.0,
+          "expected_contribution": 343.48,
+          "policy_status": "Underwriting",
+          "submit_date": "2026-05-15",
+          "estimated_approval_days": {
+            "min": 5,
+            "max": 8
+          },
+          "expected_decision_date": "2026-05-23",
+          "client_tags": [
+            "Young Professional",
+            "High Value",
+            "Property",
+            "Active"
+          ],
+          "product_type": "Home Contents Insurance",
+          "eligible": true,
+          "eligibility_information": {
+            "decision": true,
+            "basis": "Pending status and positive premium"
+          },
+          "urgency": 1.0,
+          "actionability": 0.65,
+          "business_fit": 1.0,
+          "source_record_id": "POL-00690-002",
+          "source_path": "data/mock/policies.json#AGT00690/POL-00690-002",
+          "source_client_id": "CLI-00690-002",
+          "data_origin": {
+            "candidate_record": "synthetic_recent_policy_from_agent_mix",
+            "client_record": "synthetic_representative_client",
+            "scores": "deterministic_derived"
+          },
+          "reference_relevance_grade": 2
+        },
+        {
+          "scenario_id": "SCN-AGT00690",
+          "agent_id": "AGT00690",
+          "candidate_id": "POL-00690-003",
+          "currency": "USD",
+          "permission_allowed": true,
+          "permission_information": {
+            "decision": true,
+            "basis": "Candidate is stored under the same agent_id"
+          },
+          "compliance_allowed": true,
+          "compliance_information": {
+            "decision": true,
+            "basis": "Agent training-compliance gate is not blocking sales"
+          },
+          "candidate_type": "policy",
+          "premium": 1150.0,
+          "expected_contribution": 420.21,
+          "policy_status": "Underwriting",
+          "submit_date": "2026-05-04",
+          "estimated_approval_days": {
+            "min": 6,
+            "max": 9
+          },
+          "expected_decision_date": "2026-05-13",
+          "client_tags": [
+            "Family Builder",
+            "Growth",
+            "Liability",
+            "Active"
+          ],
+          "product_type": "SME Business Package",
+          "eligible": true,
+          "eligibility_information": {
+            "decision": true,
+            "basis": "Pending status and positive premium"
+          },
+          "urgency": 1.0,
+          "actionability": 0.65,
+          "business_fit": 0.9,
+          "source_record_id": "POL-00690-003",
+          "source_path": "data/mock/policies.json#AGT00690/POL-00690-003",
+          "source_client_id": "CLI-00690-003",
+          "data_origin": {
+            "candidate_record": "synthetic_recent_policy_from_agent_mix",
+            "client_record": "synthetic_representative_client",
+            "scores": "deterministic_derived"
+          },
+          "reference_relevance_grade": 2
+        },
+        {
+          "scenario_id": "SCN-AGT00690",
+          "agent_id": "AGT00690",
+          "candidate_id": "POL-00690-004",
+          "currency": "USD",
+          "permission_allowed": true,
+          "permission_information": {
+            "decision": true,
+            "basis": "Candidate is stored under the same agent_id"
+          },
+          "compliance_allowed": true,
+          "compliance_information": {
+            "decision": true,
+            "basis": "Agent training-compliance gate is not blocking sales"
+          },
+          "candidate_type": "policy",
+          "premium": 1350.0,
+          "expected_contribution": 493.29,
+          "policy_status": "Awaiting Documents",
+          "submit_date": "2026-04-23",
+          "estimated_approval_days": {
+            "min": 7,
+            "max": 12
+          },
+          "expected_decision_date": "2026-05-05",
+          "client_tags": [
+            "Family Builder",
+            "Growth",
+            "Commercial",
+            "Active"
+          ],
+          "product_type": "Public Liability Insurance",
+          "eligible": true,
+          "eligibility_information": {
+            "decision": true,
+            "basis": "Pending status and positive premium"
+          },
+          "urgency": 1.0,
+          "actionability": 1.0,
+          "business_fit": 0.6,
+          "source_record_id": "POL-00690-004",
+          "source_path": "data/mock/policies.json#AGT00690/POL-00690-004",
+          "source_client_id": "CLI-00690-004",
+          "data_origin": {
+            "candidate_record": "synthetic_recent_policy_from_agent_mix",
+            "client_record": "synthetic_representative_client",
+            "scores": "deterministic_derived"
+          },
+          "reference_relevance_grade": 3
+        },
+        {
+          "scenario_id": "SCN-AGT00690",
+          "agent_id": "AGT00690",
+          "candidate_id": "CLI-00690-008",
+          "currency": "USD",
+          "permission_allowed": true,
+          "permission_information": {
+            "decision": true,
+            "basis": "Candidate is stored under the same agent_id"
+          },
+          "compliance_allowed": true,
+          "compliance_information": {
+            "decision": true,
+            "basis": "Agent training-compliance gate is not blocking sales"
+          },
+          "candidate_type": "client",
+          "premium": 3050.0,
+          "expected_contribution": 2615.38,
+          "policy_status": null,
+          "submit_date": null,
+          "estimated_approval_days": null,
+          "expected_decision_date": null,
+          "not_applicable_reason": "Client follow-up candidate; no pending policy attached",
+          "client_tags": [
+            "Young Professional",
+            "Standard",
+            "Liability",
+            "Renewal Due"
+          ],
+          "product_type": "Public Liability Insurance",
+          "eligible": true,
+          "eligibility_information": {
+            "decision": true,
+            "basis": "Active client or actionable renewal/follow-up tag"
+          },
+          "urgency": 0.9,
+          "actionability": 0.85,
+          "business_fit": 0.6,
+          "source_record_id": "CLI-00690-008",
+          "source_path": "data/mock/clients.json#AGT00690/CLI-00690-008",
+          "source_client_id": "CLI-00690-008",
+          "data_origin": {
+            "candidate_record": "synthetic_representative_client",
+            "scores": "deterministic_derived"
+          },
+          "reference_relevance_grade": 3
+        },
+        {
+          "scenario_id": "SCN-AGT00690",
+          "agent_id": "AGT00690",
+          "candidate_id": "CLI-00690-015",
+          "currency": "USD",
+          "permission_allowed": true,
+          "permission_information": {
+            "decision": true,
+            "basis": "Candidate is stored under the same agent_id"
+          },
+          "compliance_allowed": true,
+          "compliance_information": {
+            "decision": true,
+            "basis": "Agent training-compliance gate is not blocking sales"
+          },
+          "candidate_type": "client",
+          "premium": 3050.0,
+          "expected_contribution": 2615.38,
+          "policy_status": null,
+          "submit_date": null,
+          "estimated_approval_days": null,
+          "expected_decision_date": null,
+          "not_applicable_reason": "Client follow-up candidate; no pending policy attached",
+          "client_tags": [
+            "Young Professional",
+            "Standard",
+            "Specialty",
+            "Renewal Due"
+          ],
+          "product_type": "Personal Liability Insurance",
+          "eligible": true,
+          "eligibility_information": {
+            "decision": true,
+            "basis": "Active client or actionable renewal/follow-up tag"
+          },
+          "urgency": 0.9,
+          "actionability": 0.85,
+          "business_fit": 0.6,
+          "source_record_id": "CLI-00690-015",
+          "source_path": "data/mock/clients.json#AGT00690/CLI-00690-015",
+          "source_client_id": "CLI-00690-015",
+          "data_origin": {
+            "candidate_record": "synthetic_representative_client",
+            "scores": "deterministic_derived"
+          },
+          "reference_relevance_grade": 3
+        },
+        {
+          "scenario_id": "SCN-AGT00690",
+          "agent_id": "AGT00690",
+          "candidate_id": "CLI-00690-006",
+          "currency": "USD",
+          "permission_allowed": true,
+          "permission_information": {
+            "decision": true,
+            "basis": "Candidate is stored under the same agent_id"
+          },
+          "compliance_allowed": true,
+          "compliance_information": {
+            "decision": true,
+            "basis": "Agent training-compliance gate is not blocking sales"
+          },
+          "candidate_type": "client",
+          "premium": 7480.0,
+          "expected_contribution": 6414.1,
+          "policy_status": null,
+          "submit_date": null,
+          "estimated_approval_days": null,
+          "expected_decision_date": null,
+          "not_applicable_reason": "Client follow-up candidate; no pending policy attached",
+          "client_tags": [
+            "Retiree",
+            "Growth",
+            "Motor",
+            "Follow-up"
+          ],
+          "product_type": "Private Motor Insurance",
+          "eligible": true,
+          "eligibility_information": {
+            "decision": true,
+            "basis": "Active client or actionable renewal/follow-up tag"
+          },
+          "urgency": 0.75,
+          "actionability": 0.9,
+          "business_fit": 0.9,
+          "source_record_id": "CLI-00690-006",
+          "source_path": "data/mock/clients.json#AGT00690/CLI-00690-006",
+          "source_client_id": "CLI-00690-006",
+          "data_origin": {
+            "candidate_record": "synthetic_representative_client",
+            "scores": "deterministic_derived"
+          },
+          "reference_relevance_grade": 2
+        },
+        {
+          "scenario_id": "SCN-AGT00690",
+          "agent_id": "AGT00690",
+          "candidate_id": "CLI-00690-011",
+          "currency": "USD",
+          "permission_allowed": true,
+          "permission_information": {
+            "decision": true,
+            "basis": "Candidate is stored under the same agent_id"
+          },
+          "compliance_allowed": true,
+          "compliance_information": {
+            "decision": true,
+            "basis": "Agent training-compliance gate is not blocking sales"
+          },
+          "candidate_type": "client",
+          "premium": 5710.0,
+          "expected_contribution": 4896.32,
+          "policy_status": null,
+          "submit_date": null,
+          "estimated_approval_days": null,
+          "expected_decision_date": null,
+          "not_applicable_reason": "Client follow-up candidate; no pending policy attached",
+          "client_tags": [
+            "Pre-retirement",
+            "Standard",
+            "Motor",
+            "Follow-up"
+          ],
+          "product_type": "Private Motor Insurance",
+          "eligible": true,
+          "eligibility_information": {
+            "decision": true,
+            "basis": "Active client or actionable renewal/follow-up tag"
+          },
+          "urgency": 0.75,
+          "actionability": 0.9,
+          "business_fit": 0.9,
+          "source_record_id": "CLI-00690-011",
+          "source_path": "data/mock/clients.json#AGT00690/CLI-00690-011",
+          "source_client_id": "CLI-00690-011",
+          "data_origin": {
+            "candidate_record": "synthetic_representative_client",
+            "scores": "deterministic_derived"
+          },
+          "reference_relevance_grade": 2
+        }
+      ],
+      "relevance": {
+        "POL-00690-001": 2,
+        "POL-00690-002": 2,
+        "POL-00690-003": 2,
+        "POL-00690-004": 3,
+        "CLI-00690-008": 3,
+        "CLI-00690-015": 3,
+        "CLI-00690-006": 2,
+        "CLI-00690-011": 2
+      }
+    },
+    {
+      "scenario_id": "SCN-AGT00770",
+      "agent_id": "AGT00770",
+      "objective": {
+        "metric": "written_premium",
+        "current": 143650.0,
+        "target": 355000.0,
+        "open_gap": 211350.0,
+        "unit": "USD",
+        "deadline": "2026-12-31"
+      },
+      "constraints": {
+        "top_k": 5
+      },
+      "candidates": [
+        {
+          "scenario_id": "SCN-AGT00770",
+          "agent_id": "AGT00770",
+          "candidate_id": "POL-00770-001",
+          "currency": "USD",
+          "permission_allowed": true,
+          "permission_information": {
+            "decision": true,
+            "basis": "Candidate is stored under the same agent_id"
+          },
+          "compliance_allowed": true,
+          "compliance_information": {
+            "decision": true,
+            "basis": "Agent training-compliance gate is not blocking sales"
+          },
+          "candidate_type": "policy",
+          "premium": 2840.0,
+          "expected_contribution": 735.28,
+          "policy_status": "Underwriting",
+          "submit_date": "2026-05-17",
+          "estimated_approval_days": {
+            "min": 4,
+            "max": 7
+          },
+          "expected_decision_date": "2026-05-24",
+          "client_tags": [
+            "Family Builder",
+            "High Value",
+            "Motor",
+            "Renewal Due"
+          ],
+          "product_type": "Private Motor Insurance - Annual",
+          "eligible": true,
+          "eligibility_information": {
+            "decision": true,
+            "basis": "Pending status and positive premium"
+          },
+          "urgency": 1.0,
+          "actionability": 0.65,
+          "business_fit": 1.0,
+          "source_record_id": "POL-00770-001",
+          "source_path": "data/mock/policies.json#AGT00770/POL-00770-001",
+          "source_client_id": "CLI-00770-001",
+          "data_origin": {
+            "candidate_record": "synthetic_recent_policy_from_agent_mix",
+            "client_record": "synthetic_representative_client",
+            "scores": "deterministic_derived"
+          },
+          "reference_relevance_grade": 2
+        },
+        {
+          "scenario_id": "SCN-AGT00770",
+          "agent_id": "AGT00770",
+          "candidate_id": "POL-00770-002",
+          "currency": "USD",
+          "permission_allowed": true,
+          "permission_information": {
+            "decision": true,
+            "basis": "Candidate is stored under the same agent_id"
+          },
+          "compliance_allowed": true,
+          "compliance_information": {
+            "decision": true,
+            "basis": "Agent training-compliance gate is not blocking sales"
+          },
+          "candidate_type": "policy",
+          "premium": 3620.0,
+          "expected_contribution": 937.22,
+          "policy_status": "Underwriting",
+          "submit_date": "2026-05-06",
+          "estimated_approval_days": {
+            "min": 5,
+            "max": 8
+          },
+          "expected_decision_date": "2026-05-14",
+          "client_tags": [
+            "Family Builder",
+            "High Value",
+            "Property",
+            "Active"
+          ],
+          "product_type": "Private Motor Insurance",
+          "eligible": true,
+          "eligibility_information": {
+            "decision": true,
+            "basis": "Pending status and positive premium"
+          },
+          "urgency": 1.0,
+          "actionability": 0.65,
+          "business_fit": 1.0,
+          "source_record_id": "POL-00770-002",
+          "source_path": "data/mock/policies.json#AGT00770/POL-00770-002",
+          "source_client_id": "CLI-00770-002",
+          "data_origin": {
+            "candidate_record": "synthetic_recent_policy_from_agent_mix",
+            "client_record": "synthetic_representative_client",
+            "scores": "deterministic_derived"
+          },
+          "reference_relevance_grade": 2
+        },
+        {
+          "scenario_id": "SCN-AGT00770",
+          "agent_id": "AGT00770",
+          "candidate_id": "POL-00770-003",
+          "currency": "USD",
+          "permission_allowed": true,
+          "permission_information": {
+            "decision": true,
+            "basis": "Candidate is stored under the same agent_id"
+          },
+          "compliance_allowed": true,
+          "compliance_information": {
+            "decision": true,
+            "basis": "Agent training-compliance gate is not blocking sales"
+          },
+          "candidate_type": "policy",
+          "premium": 4400.0,
+          "expected_contribution": 1139.16,
+          "policy_status": "Underwriting",
+          "submit_date": "2026-04-25",
+          "estimated_approval_days": {
+            "min": 6,
+            "max": 9
+          },
+          "expected_decision_date": "2026-05-04",
+          "client_tags": [
+            "Pre-retirement",
+            "Growth",
+            "Liability",
+            "Active"
+          ],
+          "product_type": "Home Contents Insurance",
+          "eligible": true,
+          "eligibility_information": {
+            "decision": true,
+            "basis": "Pending status and positive premium"
+          },
+          "urgency": 1.0,
+          "actionability": 0.65,
+          "business_fit": 0.9,
+          "source_record_id": "POL-00770-003",
+          "source_path": "data/mock/policies.json#AGT00770/POL-00770-003",
+          "source_client_id": "CLI-00770-003",
+          "data_origin": {
+            "candidate_record": "synthetic_recent_policy_from_agent_mix",
+            "client_record": "synthetic_representative_client",
+            "scores": "deterministic_derived"
+          },
+          "reference_relevance_grade": 2
+        },
+        {
+          "scenario_id": "SCN-AGT00770",
+          "agent_id": "AGT00770",
+          "candidate_id": "POL-00770-004",
+          "currency": "USD",
+          "permission_allowed": true,
+          "permission_information": {
+            "decision": true,
+            "basis": "Candidate is stored under the same agent_id"
+          },
+          "compliance_allowed": true,
+          "compliance_information": {
+            "decision": true,
+            "basis": "Agent training-compliance gate is not blocking sales"
+          },
+          "candidate_type": "policy",
+          "premium": 5180.0,
+          "expected_contribution": 1341.1,
+          "policy_status": "Awaiting Documents",
+          "submit_date": "2026-04-14",
+          "estimated_approval_days": {
+            "min": 7,
+            "max": 12
+          },
+          "expected_decision_date": "2026-04-26",
+          "client_tags": [
+            "Pre-retirement",
+            "Growth",
+            "Commercial",
+            "Active"
+          ],
+          "product_type": "SME Business Package",
+          "eligible": true,
+          "eligibility_information": {
+            "decision": true,
+            "basis": "Pending status and positive premium"
+          },
+          "urgency": 1.0,
+          "actionability": 1.0,
+          "business_fit": 0.6,
+          "source_record_id": "POL-00770-004",
+          "source_path": "data/mock/policies.json#AGT00770/POL-00770-004",
+          "source_client_id": "CLI-00770-004",
+          "data_origin": {
+            "candidate_record": "synthetic_recent_policy_from_agent_mix",
+            "client_record": "synthetic_representative_client",
+            "scores": "deterministic_derived"
+          },
+          "reference_relevance_grade": 3
+        },
+        {
+          "scenario_id": "SCN-AGT00770",
+          "agent_id": "AGT00770",
+          "candidate_id": "CLI-00770-008",
+          "currency": "USD",
+          "permission_allowed": true,
+          "permission_information": {
+            "decision": true,
+            "basis": "Candidate is stored under the same agent_id"
+          },
+          "compliance_allowed": true,
+          "compliance_information": {
+            "decision": true,
+            "basis": "Agent training-compliance gate is not blocking sales"
+          },
+          "candidate_type": "client",
+          "premium": 3340.0,
+          "expected_contribution": 2425.51,
+          "policy_status": null,
+          "submit_date": null,
+          "estimated_approval_days": null,
+          "expected_decision_date": null,
+          "not_applicable_reason": "Client follow-up candidate; no pending policy attached",
+          "client_tags": [
+            "Family Builder",
+            "Standard",
+            "Liability",
+            "Renewal Due"
+          ],
+          "product_type": "Public Liability Insurance",
+          "eligible": true,
+          "eligibility_information": {
+            "decision": true,
+            "basis": "Active client or actionable renewal/follow-up tag"
+          },
+          "urgency": 0.9,
+          "actionability": 0.85,
+          "business_fit": 0.6,
+          "source_record_id": "CLI-00770-008",
+          "source_path": "data/mock/clients.json#AGT00770/CLI-00770-008",
+          "source_client_id": "CLI-00770-008",
+          "data_origin": {
+            "candidate_record": "synthetic_representative_client",
+            "scores": "deterministic_derived"
+          },
+          "reference_relevance_grade": 3
+        },
+        {
+          "scenario_id": "SCN-AGT00770",
+          "agent_id": "AGT00770",
+          "candidate_id": "CLI-00770-015",
+          "currency": "USD",
+          "permission_allowed": true,
+          "permission_information": {
+            "decision": true,
+            "basis": "Candidate is stored under the same agent_id"
+          },
+          "compliance_allowed": true,
+          "compliance_information": {
+            "decision": true,
+            "basis": "Agent training-compliance gate is not blocking sales"
+          },
+          "candidate_type": "client",
+          "premium": 3340.0,
+          "expected_contribution": 2425.51,
+          "policy_status": null,
+          "submit_date": null,
+          "estimated_approval_days": null,
+          "expected_decision_date": null,
+          "not_applicable_reason": "Client follow-up candidate; no pending policy attached",
+          "client_tags": [
+            "Family Builder",
+            "Standard",
+            "Specialty",
+            "Renewal Due"
+          ],
+          "product_type": "Personal Liability Insurance",
+          "eligible": true,
+          "eligibility_information": {
+            "decision": true,
+            "basis": "Active client or actionable renewal/follow-up tag"
+          },
+          "urgency": 0.9,
+          "actionability": 0.85,
+          "business_fit": 0.6,
+          "source_record_id": "CLI-00770-015",
+          "source_path": "data/mock/clients.json#AGT00770/CLI-00770-015",
+          "source_client_id": "CLI-00770-015",
+          "data_origin": {
+            "candidate_record": "synthetic_representative_client",
+            "scores": "deterministic_derived"
+          },
+          "reference_relevance_grade": 3
+        },
+        {
+          "scenario_id": "SCN-AGT00770",
+          "agent_id": "AGT00770",
+          "candidate_id": "CLI-00770-006",
+          "currency": "USD",
+          "permission_allowed": true,
+          "permission_information": {
+            "decision": true,
+            "basis": "Candidate is stored under the same agent_id"
+          },
+          "compliance_allowed": true,
+          "compliance_information": {
+            "decision": true,
+            "basis": "Agent training-compliance gate is not blocking sales"
+          },
+          "candidate_type": "client",
+          "premium": 8210.0,
+          "expected_contribution": 5962.1,
+          "policy_status": null,
+          "submit_date": null,
+          "estimated_approval_days": null,
+          "expected_decision_date": null,
+          "not_applicable_reason": "Client follow-up candidate; no pending policy attached",
+          "client_tags": [
+            "Young Professional",
+            "Growth",
+            "Motor",
+            "Follow-up"
+          ],
+          "product_type": "Private Motor Insurance",
+          "eligible": true,
+          "eligibility_information": {
+            "decision": true,
+            "basis": "Active client or actionable renewal/follow-up tag"
+          },
+          "urgency": 0.75,
+          "actionability": 0.9,
+          "business_fit": 0.9,
+          "source_record_id": "CLI-00770-006",
+          "source_path": "data/mock/clients.json#AGT00770/CLI-00770-006",
+          "source_client_id": "CLI-00770-006",
+          "data_origin": {
+            "candidate_record": "synthetic_representative_client",
+            "scores": "deterministic_derived"
+          },
+          "reference_relevance_grade": 2
+        },
+        {
+          "scenario_id": "SCN-AGT00770",
+          "agent_id": "AGT00770",
+          "candidate_id": "CLI-00770-011",
+          "currency": "USD",
+          "permission_allowed": true,
+          "permission_information": {
+            "decision": true,
+            "basis": "Candidate is stored under the same agent_id"
+          },
+          "compliance_allowed": true,
+          "compliance_information": {
+            "decision": true,
+            "basis": "Agent training-compliance gate is not blocking sales"
+          },
+          "candidate_type": "client",
+          "premium": 6260.0,
+          "expected_contribution": 4546.01,
+          "policy_status": null,
+          "submit_date": null,
+          "estimated_approval_days": null,
+          "expected_decision_date": null,
+          "not_applicable_reason": "Client follow-up candidate; no pending policy attached",
+          "client_tags": [
+            "Retiree",
+            "Standard",
+            "Motor",
+            "Follow-up"
+          ],
+          "product_type": "Private Motor Insurance",
+          "eligible": true,
+          "eligibility_information": {
+            "decision": true,
+            "basis": "Active client or actionable renewal/follow-up tag"
+          },
+          "urgency": 0.75,
+          "actionability": 0.9,
+          "business_fit": 0.9,
+          "source_record_id": "CLI-00770-011",
+          "source_path": "data/mock/clients.json#AGT00770/CLI-00770-011",
+          "source_client_id": "CLI-00770-011",
+          "data_origin": {
+            "candidate_record": "synthetic_representative_client",
+            "scores": "deterministic_derived"
+          },
+          "reference_relevance_grade": 2
+        }
+      ],
+      "relevance": {
+        "POL-00770-001": 2,
+        "POL-00770-002": 2,
+        "POL-00770-003": 2,
+        "POL-00770-004": 3,
+        "CLI-00770-008": 3,
+        "CLI-00770-015": 3,
+        "CLI-00770-006": 2,
+        "CLI-00770-011": 2
+      }
+    },
+    {
+      "scenario_id": "SCN-AGT00817",
+      "agent_id": "AGT00817",
+      "objective": {
+        "metric": "written_premium",
+        "current": 94730.0,
+        "target": 234000.0,
+        "open_gap": 139270.0,
+        "unit": "USD",
+        "deadline": "2026-12-31"
+      },
+      "constraints": {
+        "top_k": 5
+      },
+      "candidates": [
+        {
+          "scenario_id": "SCN-AGT00817",
+          "agent_id": "AGT00817",
+          "candidate_id": "POL-00817-001",
+          "currency": "USD",
+          "permission_allowed": true,
+          "permission_information": {
+            "decision": true,
+            "basis": "Candidate is stored under the same agent_id"
+          },
+          "compliance_allowed": true,
+          "compliance_information": {
+            "decision": true,
+            "basis": "Agent training-compliance gate is not blocking sales"
+          },
+          "candidate_type": "policy",
+          "premium": 450.0,
+          "expected_contribution": 0.0,
+          "policy_status": "Underwriting",
+          "submit_date": "2026-05-08",
+          "estimated_approval_days": {
+            "min": 4,
+            "max": 7
+          },
+          "expected_decision_date": "2026-05-15",
+          "client_tags": [
+            "Family Builder",
+            "High Value",
+            "Motor",
+            "Renewal Due"
+          ],
+          "product_type": "Private Motor Insurance",
+          "eligible": true,
+          "eligibility_information": {
+            "decision": true,
+            "basis": "Pending status and positive premium"
+          },
+          "urgency": 1.0,
+          "actionability": 0.65,
+          "business_fit": 1.0,
+          "source_record_id": "POL-00817-001",
+          "source_path": "data/mock/policies.json#AGT00817/POL-00817-001",
+          "source_client_id": "CLI-00817-001",
+          "data_origin": {
+            "candidate_record": "synthetic_recent_policy_from_agent_mix",
+            "client_record": "synthetic_representative_client",
+            "scores": "deterministic_derived"
+          },
+          "reference_relevance_grade": 2
+        },
+        {
+          "scenario_id": "SCN-AGT00817",
+          "agent_id": "AGT00817",
+          "candidate_id": "POL-00817-002",
+          "currency": "USD",
+          "permission_allowed": true,
+          "permission_information": {
+            "decision": true,
+            "basis": "Candidate is stored under the same agent_id"
+          },
+          "compliance_allowed": true,
+          "compliance_information": {
+            "decision": true,
+            "basis": "Agent training-compliance gate is not blocking sales"
+          },
+          "candidate_type": "policy",
+          "premium": 570.0,
+          "expected_contribution": 0.0,
+          "policy_status": "Underwriting",
+          "submit_date": "2026-04-27",
+          "estimated_approval_days": {
+            "min": 5,
+            "max": 8
+          },
+          "expected_decision_date": "2026-05-05",
+          "client_tags": [
+            "Pre-retirement",
+            "High Value",
+            "Property",
+            "Active"
+          ],
+          "product_type": "Home Contents Insurance",
+          "eligible": true,
+          "eligibility_information": {
+            "decision": true,
+            "basis": "Pending status and positive premium"
+          },
+          "urgency": 1.0,
+          "actionability": 0.65,
+          "business_fit": 1.0,
+          "source_record_id": "POL-00817-002",
+          "source_path": "data/mock/policies.json#AGT00817/POL-00817-002",
+          "source_client_id": "CLI-00817-002",
+          "data_origin": {
+            "candidate_record": "synthetic_recent_policy_from_agent_mix",
+            "client_record": "synthetic_representative_client",
+            "scores": "deterministic_derived"
+          },
+          "reference_relevance_grade": 2
+        },
+        {
+          "scenario_id": "SCN-AGT00817",
+          "agent_id": "AGT00817",
+          "candidate_id": "POL-00817-003",
+          "currency": "USD",
+          "permission_allowed": true,
+          "permission_information": {
+            "decision": true,
+            "basis": "Candidate is stored under the same agent_id"
+          },
+          "compliance_allowed": true,
+          "compliance_information": {
+            "decision": true,
+            "basis": "Agent training-compliance gate is not blocking sales"
+          },
+          "candidate_type": "policy",
+          "premium": 690.0,
+          "expected_contribution": 0.0,
+          "policy_status": "Underwriting",
+          "submit_date": "2026-04-16",
+          "estimated_approval_days": {
+            "min": 6,
+            "max": 9
+          },
+          "expected_decision_date": "2026-04-25",
+          "client_tags": [
+            "Retiree",
+            "Growth",
+            "Liability",
+            "Active"
+          ],
+          "product_type": "Commercial Motor Insurance",
+          "eligible": true,
+          "eligibility_information": {
+            "decision": true,
+            "basis": "Pending status and positive premium"
+          },
+          "urgency": 1.0,
+          "actionability": 0.65,
+          "business_fit": 0.9,
+          "source_record_id": "POL-00817-003",
+          "source_path": "data/mock/policies.json#AGT00817/POL-00817-003",
+          "source_client_id": "CLI-00817-003",
+          "data_origin": {
+            "candidate_record": "synthetic_recent_policy_from_agent_mix",
+            "client_record": "synthetic_representative_client",
+            "scores": "deterministic_derived"
+          },
+          "reference_relevance_grade": 2
+        },
+        {
+          "scenario_id": "SCN-AGT00817",
+          "agent_id": "AGT00817",
+          "candidate_id": "POL-00817-004",
+          "currency": "USD",
+          "permission_allowed": true,
+          "permission_information": {
+            "decision": true,
+            "basis": "Candidate is stored under the same agent_id"
+          },
+          "compliance_allowed": true,
+          "compliance_information": {
+            "decision": true,
+            "basis": "Agent training-compliance gate is not blocking sales"
+          },
+          "candidate_type": "policy",
+          "premium": 810.0,
+          "expected_contribution": 0.0,
+          "policy_status": "Awaiting Documents",
+          "submit_date": "2026-04-05",
+          "estimated_approval_days": {
+            "min": 7,
+            "max": 12
+          },
+          "expected_decision_date": "2026-04-17",
+          "client_tags": [
+            "Retiree",
+            "Growth",
+            "Commercial",
+            "Active"
+          ],
+          "product_type": "Goods in Transit Insurance",
+          "eligible": true,
+          "eligibility_information": {
+            "decision": true,
+            "basis": "Pending status and positive premium"
+          },
+          "urgency": 1.0,
+          "actionability": 1.0,
+          "business_fit": 0.6,
+          "source_record_id": "POL-00817-004",
+          "source_path": "data/mock/policies.json#AGT00817/POL-00817-004",
+          "source_client_id": "CLI-00817-004",
+          "data_origin": {
+            "candidate_record": "synthetic_recent_policy_from_agent_mix",
+            "client_record": "synthetic_representative_client",
+            "scores": "deterministic_derived"
+          },
+          "reference_relevance_grade": 3
+        },
+        {
+          "scenario_id": "SCN-AGT00817",
+          "agent_id": "AGT00817",
+          "candidate_id": "CLI-00817-008",
+          "currency": "USD",
+          "permission_allowed": true,
+          "permission_information": {
+            "decision": true,
+            "basis": "Candidate is stored under the same agent_id"
+          },
+          "compliance_allowed": true,
+          "compliance_information": {
+            "decision": true,
+            "basis": "Agent training-compliance gate is not blocking sales"
+          },
+          "candidate_type": "client",
+          "premium": 2260.0,
+          "expected_contribution": 1970.49,
+          "policy_status": null,
+          "submit_date": null,
+          "estimated_approval_days": null,
+          "expected_decision_date": null,
+          "not_applicable_reason": "Client follow-up candidate; no pending policy attached",
+          "client_tags": [
+            "Pre-retirement",
+            "Standard",
+            "Liability",
+            "Renewal Due"
+          ],
+          "product_type": "Public Liability Insurance",
+          "eligible": true,
+          "eligibility_information": {
+            "decision": true,
+            "basis": "Active client or actionable renewal/follow-up tag"
+          },
+          "urgency": 0.9,
+          "actionability": 0.85,
+          "business_fit": 0.6,
+          "source_record_id": "CLI-00817-008",
+          "source_path": "data/mock/clients.json#AGT00817/CLI-00817-008",
+          "source_client_id": "CLI-00817-008",
+          "data_origin": {
+            "candidate_record": "synthetic_representative_client",
+            "scores": "deterministic_derived"
+          },
+          "reference_relevance_grade": 3
+        },
+        {
+          "scenario_id": "SCN-AGT00817",
+          "agent_id": "AGT00817",
+          "candidate_id": "CLI-00817-015",
+          "currency": "USD",
+          "permission_allowed": true,
+          "permission_information": {
+            "decision": true,
+            "basis": "Candidate is stored under the same agent_id"
+          },
+          "compliance_allowed": true,
+          "compliance_information": {
+            "decision": true,
+            "basis": "Agent training-compliance gate is not blocking sales"
+          },
+          "candidate_type": "client",
+          "premium": 2260.0,
+          "expected_contribution": 1970.49,
+          "policy_status": null,
+          "submit_date": null,
+          "estimated_approval_days": null,
+          "expected_decision_date": null,
+          "not_applicable_reason": "Client follow-up candidate; no pending policy attached",
+          "client_tags": [
+            "Pre-retirement",
+            "Standard",
+            "Specialty",
+            "Renewal Due"
+          ],
+          "product_type": "Personal Liability Insurance",
+          "eligible": true,
+          "eligibility_information": {
+            "decision": true,
+            "basis": "Active client or actionable renewal/follow-up tag"
+          },
+          "urgency": 0.9,
+          "actionability": 0.85,
+          "business_fit": 0.6,
+          "source_record_id": "CLI-00817-015",
+          "source_path": "data/mock/clients.json#AGT00817/CLI-00817-015",
+          "source_client_id": "CLI-00817-015",
+          "data_origin": {
+            "candidate_record": "synthetic_representative_client",
+            "scores": "deterministic_derived"
+          },
+          "reference_relevance_grade": 3
+        },
+        {
+          "scenario_id": "SCN-AGT00817",
+          "agent_id": "AGT00817",
+          "candidate_id": "CLI-00817-006",
+          "currency": "USD",
+          "permission_allowed": true,
+          "permission_information": {
+            "decision": true,
+            "basis": "Candidate is stored under the same agent_id"
+          },
+          "compliance_allowed": true,
+          "compliance_information": {
+            "decision": true,
+            "basis": "Agent training-compliance gate is not blocking sales"
+          },
+          "candidate_type": "client",
+          "premium": 5550.0,
+          "expected_contribution": 4839.05,
+          "policy_status": null,
+          "submit_date": null,
+          "estimated_approval_days": null,
+          "expected_decision_date": null,
+          "not_applicable_reason": "Client follow-up candidate; no pending policy attached",
+          "client_tags": [
+            "Family Builder",
+            "Growth",
+            "Motor",
+            "Follow-up"
+          ],
+          "product_type": "Private Motor Insurance",
+          "eligible": true,
+          "eligibility_information": {
+            "decision": true,
+            "basis": "Active client or actionable renewal/follow-up tag"
+          },
+          "urgency": 0.75,
+          "actionability": 0.9,
+          "business_fit": 0.9,
+          "source_record_id": "CLI-00817-006",
+          "source_path": "data/mock/clients.json#AGT00817/CLI-00817-006",
+          "source_client_id": "CLI-00817-006",
+          "data_origin": {
+            "candidate_record": "synthetic_representative_client",
+            "scores": "deterministic_derived"
+          },
+          "reference_relevance_grade": 2
+        },
+        {
+          "scenario_id": "SCN-AGT00817",
+          "agent_id": "AGT00817",
+          "candidate_id": "CLI-00817-011",
+          "currency": "USD",
+          "permission_allowed": true,
+          "permission_information": {
+            "decision": true,
+            "basis": "Candidate is stored under the same agent_id"
+          },
+          "compliance_allowed": true,
+          "compliance_information": {
+            "decision": true,
+            "basis": "Agent training-compliance gate is not blocking sales"
+          },
+          "candidate_type": "client",
+          "premium": 4230.0,
+          "expected_contribution": 3688.14,
+          "policy_status": null,
+          "submit_date": null,
+          "estimated_approval_days": null,
+          "expected_decision_date": null,
+          "not_applicable_reason": "Client follow-up candidate; no pending policy attached",
+          "client_tags": [
+            "Young Professional",
+            "Standard",
+            "Motor",
+            "Follow-up"
+          ],
+          "product_type": "Private Motor Insurance",
+          "eligible": true,
+          "eligibility_information": {
+            "decision": true,
+            "basis": "Active client or actionable renewal/follow-up tag"
+          },
+          "urgency": 0.75,
+          "actionability": 0.9,
+          "business_fit": 0.9,
+          "source_record_id": "CLI-00817-011",
+          "source_path": "data/mock/clients.json#AGT00817/CLI-00817-011",
+          "source_client_id": "CLI-00817-011",
+          "data_origin": {
+            "candidate_record": "synthetic_representative_client",
+            "scores": "deterministic_derived"
+          },
+          "reference_relevance_grade": 2
+        }
+      ],
+      "relevance": {
+        "POL-00817-001": 2,
+        "POL-00817-002": 2,
+        "POL-00817-003": 2,
+        "POL-00817-004": 3,
+        "CLI-00817-008": 3,
+        "CLI-00817-015": 3,
+        "CLI-00817-006": 2,
+        "CLI-00817-011": 2
+      }
+    },
+    {
+      "scenario_id": "SCN-AGT00949",
+      "agent_id": "AGT00949",
+      "objective": {
+        "metric": "written_premium",
+        "current": 185720.0,
+        "target": 459000.0,
+        "open_gap": 273280.0,
+        "unit": "USD",
+        "deadline": "2026-12-31"
+      },
+      "constraints": {
+        "top_k": 5
+      },
+      "candidates": [
+        {
+          "scenario_id": "SCN-AGT00949",
+          "agent_id": "AGT00949",
+          "candidate_id": "POL-00949-001",
+          "currency": "USD",
+          "permission_allowed": true,
+          "permission_information": {
+            "decision": true,
+            "basis": "Candidate is stored under the same agent_id"
+          },
+          "compliance_allowed": true,
+          "compliance_information": {
+            "decision": true,
+            "basis": "Agent training-compliance gate is not blocking sales"
+          },
+          "candidate_type": "policy",
+          "premium": 1040.0,
+          "expected_contribution": 275.08,
+          "policy_status": "Underwriting",
+          "submit_date": "2026-04-29",
+          "estimated_approval_days": {
+            "min": 4,
+            "max": 7
+          },
+          "expected_decision_date": "2026-05-06",
+          "client_tags": [
+            "Pre-retirement",
+            "High Value",
+            "Motor",
+            "Renewal Due"
+          ],
+          "product_type": "Private Motor Insurance",
+          "eligible": true,
+          "eligibility_information": {
+            "decision": true,
+            "basis": "Pending status and positive premium"
+          },
+          "urgency": 1.0,
+          "actionability": 0.65,
+          "business_fit": 1.0,
+          "source_record_id": "POL-00949-001",
+          "source_path": "data/mock/policies.json#AGT00949/POL-00949-001",
+          "source_client_id": "CLI-00949-001",
+          "data_origin": {
+            "candidate_record": "synthetic_recent_policy_from_agent_mix",
+            "client_record": "synthetic_representative_client",
+            "scores": "deterministic_derived"
+          },
+          "reference_relevance_grade": 2
+        },
+        {
+          "scenario_id": "SCN-AGT00949",
+          "agent_id": "AGT00949",
+          "candidate_id": "POL-00949-002",
+          "currency": "USD",
+          "permission_allowed": true,
+          "permission_information": {
+            "decision": true,
+            "basis": "Candidate is stored under the same agent_id"
+          },
+          "compliance_allowed": true,
+          "compliance_information": {
+            "decision": true,
+            "basis": "Agent training-compliance gate is not blocking sales"
+          },
+          "candidate_type": "policy",
+          "premium": 1320.0,
+          "expected_contribution": 349.14,
+          "policy_status": "Underwriting",
+          "submit_date": "2026-04-18",
+          "estimated_approval_days": {
+            "min": 5,
+            "max": 8
+          },
+          "expected_decision_date": "2026-04-26",
+          "client_tags": [
+            "Retiree",
+            "High Value",
+            "Property",
+            "Active"
+          ],
+          "product_type": "Home Contents Insurance",
+          "eligible": true,
+          "eligibility_information": {
+            "decision": true,
+            "basis": "Pending status and positive premium"
+          },
+          "urgency": 1.0,
+          "actionability": 0.65,
+          "business_fit": 1.0,
+          "source_record_id": "POL-00949-002",
+          "source_path": "data/mock/policies.json#AGT00949/POL-00949-002",
+          "source_client_id": "CLI-00949-002",
+          "data_origin": {
+            "candidate_record": "synthetic_recent_policy_from_agent_mix",
+            "client_record": "synthetic_representative_client",
+            "scores": "deterministic_derived"
+          },
+          "reference_relevance_grade": 2
+        },
+        {
+          "scenario_id": "SCN-AGT00949",
+          "agent_id": "AGT00949",
+          "candidate_id": "POL-00949-003",
+          "currency": "USD",
+          "permission_allowed": true,
+          "permission_information": {
+            "decision": true,
+            "basis": "Candidate is stored under the same agent_id"
+          },
+          "compliance_allowed": true,
+          "compliance_information": {
+            "decision": true,
+            "basis": "Agent training-compliance gate is not blocking sales"
+          },
+          "candidate_type": "policy",
+          "premium": 1610.0,
+          "expected_contribution": 425.85,
+          "policy_status": "Underwriting",
+          "submit_date": "2026-04-07",
+          "estimated_approval_days": {
+            "min": 6,
+            "max": 9
+          },
+          "expected_decision_date": "2026-04-16",
+          "client_tags": [
+            "Young Professional",
+            "Growth",
+            "Liability",
+            "Active"
+          ],
+          "product_type": "Private Motor Insurance - Annual",
+          "eligible": true,
+          "eligibility_information": {
+            "decision": true,
+            "basis": "Pending status and positive premium"
+          },
+          "urgency": 1.0,
+          "actionability": 0.65,
+          "business_fit": 0.9,
+          "source_record_id": "POL-00949-003",
+          "source_path": "data/mock/policies.json#AGT00949/POL-00949-003",
+          "source_client_id": "CLI-00949-003",
+          "data_origin": {
+            "candidate_record": "synthetic_recent_policy_from_agent_mix",
+            "client_record": "synthetic_representative_client",
+            "scores": "deterministic_derived"
+          },
+          "reference_relevance_grade": 2
+        },
+        {
+          "scenario_id": "SCN-AGT00949",
+          "agent_id": "AGT00949",
+          "candidate_id": "POL-00949-004",
+          "currency": "USD",
+          "permission_allowed": true,
+          "permission_information": {
+            "decision": true,
+            "basis": "Candidate is stored under the same agent_id"
+          },
+          "compliance_allowed": true,
+          "compliance_information": {
+            "decision": true,
+            "basis": "Agent training-compliance gate is not blocking sales"
+          },
+          "candidate_type": "policy",
+          "premium": 1890.0,
+          "expected_contribution": 499.91,
+          "policy_status": "Awaiting Documents",
+          "submit_date": "2026-03-27",
+          "estimated_approval_days": {
+            "min": 7,
+            "max": 12
+          },
+          "expected_decision_date": "2026-04-08",
+          "client_tags": [
+            "Young Professional",
+            "Growth",
+            "Commercial",
+            "Active"
+          ],
+          "product_type": "Fire and Allied Perils Insurance",
+          "eligible": true,
+          "eligibility_information": {
+            "decision": true,
+            "basis": "Pending status and positive premium"
+          },
+          "urgency": 1.0,
+          "actionability": 1.0,
+          "business_fit": 0.6,
+          "source_record_id": "POL-00949-004",
+          "source_path": "data/mock/policies.json#AGT00949/POL-00949-004",
+          "source_client_id": "CLI-00949-004",
+          "data_origin": {
+            "candidate_record": "synthetic_recent_policy_from_agent_mix",
+            "client_record": "synthetic_representative_client",
+            "scores": "deterministic_derived"
+          },
+          "reference_relevance_grade": 3
+        },
+        {
+          "scenario_id": "SCN-AGT00949",
+          "agent_id": "AGT00949",
+          "candidate_id": "CLI-00949-008",
+          "currency": "USD",
+          "permission_allowed": true,
+          "permission_information": {
+            "decision": true,
+            "basis": "Candidate is stored under the same agent_id"
+          },
+          "compliance_allowed": true,
+          "compliance_information": {
+            "decision": true,
+            "basis": "Agent training-compliance gate is not blocking sales"
+          },
+          "candidate_type": "client",
+          "premium": 3110.0,
+          "expected_contribution": 2417.71,
+          "policy_status": null,
+          "submit_date": null,
+          "estimated_approval_days": null,
+          "expected_decision_date": null,
+          "not_applicable_reason": "Client follow-up candidate; no pending policy attached",
+          "client_tags": [
+            "Retiree",
+            "Standard",
+            "Liability",
+            "Renewal Due"
+          ],
+          "product_type": "Public Liability Insurance",
+          "eligible": true,
+          "eligibility_information": {
+            "decision": true,
+            "basis": "Active client or actionable renewal/follow-up tag"
+          },
+          "urgency": 0.9,
+          "actionability": 0.85,
+          "business_fit": 0.6,
+          "source_record_id": "CLI-00949-008",
+          "source_path": "data/mock/clients.json#AGT00949/CLI-00949-008",
+          "source_client_id": "CLI-00949-008",
+          "data_origin": {
+            "candidate_record": "synthetic_representative_client",
+            "scores": "deterministic_derived"
+          },
+          "reference_relevance_grade": 3
+        },
+        {
+          "scenario_id": "SCN-AGT00949",
+          "agent_id": "AGT00949",
+          "candidate_id": "CLI-00949-015",
+          "currency": "USD",
+          "permission_allowed": true,
+          "permission_information": {
+            "decision": true,
+            "basis": "Candidate is stored under the same agent_id"
+          },
+          "compliance_allowed": true,
+          "compliance_information": {
+            "decision": true,
+            "basis": "Agent training-compliance gate is not blocking sales"
+          },
+          "candidate_type": "client",
+          "premium": 3110.0,
+          "expected_contribution": 2417.71,
+          "policy_status": null,
+          "submit_date": null,
+          "estimated_approval_days": null,
+          "expected_decision_date": null,
+          "not_applicable_reason": "Client follow-up candidate; no pending policy attached",
+          "client_tags": [
+            "Retiree",
+            "Standard",
+            "Specialty",
+            "Renewal Due"
+          ],
+          "product_type": "Personal Liability Insurance",
+          "eligible": true,
+          "eligibility_information": {
+            "decision": true,
+            "basis": "Active client or actionable renewal/follow-up tag"
+          },
+          "urgency": 0.9,
+          "actionability": 0.85,
+          "business_fit": 0.6,
+          "source_record_id": "CLI-00949-015",
+          "source_path": "data/mock/clients.json#AGT00949/CLI-00949-015",
+          "source_client_id": "CLI-00949-015",
+          "data_origin": {
+            "candidate_record": "synthetic_representative_client",
+            "scores": "deterministic_derived"
+          },
+          "reference_relevance_grade": 3
+        },
+        {
+          "scenario_id": "SCN-AGT00949",
+          "agent_id": "AGT00949",
+          "candidate_id": "CLI-00949-006",
+          "currency": "USD",
+          "permission_allowed": true,
+          "permission_information": {
+            "decision": true,
+            "basis": "Candidate is stored under the same agent_id"
+          },
+          "compliance_allowed": true,
+          "compliance_information": {
+            "decision": true,
+            "basis": "Agent training-compliance gate is not blocking sales"
+          },
+          "candidate_type": "client",
+          "premium": 7630.0,
+          "expected_contribution": 5931.56,
+          "policy_status": null,
+          "submit_date": null,
+          "estimated_approval_days": null,
+          "expected_decision_date": null,
+          "not_applicable_reason": "Client follow-up candidate; no pending policy attached",
+          "client_tags": [
+            "Family Builder",
+            "Growth",
+            "Motor",
+            "Follow-up"
+          ],
+          "product_type": "Private Motor Insurance",
+          "eligible": true,
+          "eligibility_information": {
+            "decision": true,
+            "basis": "Active client or actionable renewal/follow-up tag"
+          },
+          "urgency": 0.75,
+          "actionability": 0.9,
+          "business_fit": 0.9,
+          "source_record_id": "CLI-00949-006",
+          "source_path": "data/mock/clients.json#AGT00949/CLI-00949-006",
+          "source_client_id": "CLI-00949-006",
+          "data_origin": {
+            "candidate_record": "synthetic_representative_client",
+            "scores": "deterministic_derived"
+          },
+          "reference_relevance_grade": 2
+        },
+        {
+          "scenario_id": "SCN-AGT00949",
+          "agent_id": "AGT00949",
+          "candidate_id": "CLI-00949-011",
+          "currency": "USD",
+          "permission_allowed": true,
+          "permission_information": {
+            "decision": true,
+            "basis": "Candidate is stored under the same agent_id"
+          },
+          "compliance_allowed": true,
+          "compliance_information": {
+            "decision": true,
+            "basis": "Agent training-compliance gate is not blocking sales"
+          },
+          "candidate_type": "client",
+          "premium": 5820.0,
+          "expected_contribution": 4524.47,
+          "policy_status": null,
+          "submit_date": null,
+          "estimated_approval_days": null,
+          "expected_decision_date": null,
+          "not_applicable_reason": "Client follow-up candidate; no pending policy attached",
+          "client_tags": [
+            "Family Builder",
+            "Standard",
+            "Motor",
+            "Follow-up"
+          ],
+          "product_type": "Private Motor Insurance",
+          "eligible": true,
+          "eligibility_information": {
+            "decision": true,
+            "basis": "Active client or actionable renewal/follow-up tag"
+          },
+          "urgency": 0.75,
+          "actionability": 0.9,
+          "business_fit": 0.9,
+          "source_record_id": "CLI-00949-011",
+          "source_path": "data/mock/clients.json#AGT00949/CLI-00949-011",
+          "source_client_id": "CLI-00949-011",
+          "data_origin": {
+            "candidate_record": "synthetic_representative_client",
+            "scores": "deterministic_derived"
+          },
+          "reference_relevance_grade": 2
+        }
+      ],
+      "relevance": {
+        "POL-00949-001": 2,
+        "POL-00949-002": 2,
+        "POL-00949-003": 2,
+        "POL-00949-004": 3,
+        "CLI-00949-008": 3,
+        "CLI-00949-015": 3,
+        "CLI-00949-006": 2,
+        "CLI-00949-011": 2
+      }
+    },
+    {
+      "scenario_id": "SCN-AGT01191",
+      "agent_id": "AGT01191",
+      "objective": {
+        "metric": "written_premium",
+        "current": 184070.0,
+        "target": 455000.0,
+        "open_gap": 270930.0,
+        "unit": "USD",
+        "deadline": "2026-12-31"
+      },
+      "constraints": {
+        "top_k": 5
+      },
+      "candidates": [
+        {
+          "scenario_id": "SCN-AGT01191",
+          "agent_id": "AGT01191",
+          "candidate_id": "POL-01191-001",
+          "currency": "USD",
+          "permission_allowed": true,
+          "permission_information": {
+            "decision": true,
+            "basis": "Candidate is stored under the same agent_id"
+          },
+          "compliance_allowed": true,
+          "compliance_information": {
+            "decision": true,
+            "basis": "Agent training-compliance gate is not blocking sales"
+          },
+          "candidate_type": "policy",
+          "premium": 1050.0,
+          "expected_contribution": 129.36,
+          "policy_status": "Underwriting",
+          "submit_date": "2026-04-20",
+          "estimated_approval_days": {
+            "min": 4,
+            "max": 7
+          },
+          "expected_decision_date": "2026-04-27",
+          "client_tags": [
+            "Retiree",
+            "High Value",
+            "Motor",
+            "Renewal Due"
+          ],
+          "product_type": "Private Motor Insurance",
+          "eligible": true,
+          "eligibility_information": {
+            "decision": true,
+            "basis": "Pending status and positive premium"
+          },
+          "urgency": 1.0,
+          "actionability": 0.65,
+          "business_fit": 1.0,
+          "source_record_id": "POL-01191-001",
+          "source_path": "data/mock/policies.json#AGT01191/POL-01191-001",
+          "source_client_id": "CLI-01191-001",
+          "data_origin": {
+            "candidate_record": "synthetic_recent_policy_from_agent_mix",
+            "client_record": "synthetic_representative_client",
+            "scores": "deterministic_derived"
+          },
+          "reference_relevance_grade": 2
+        },
+        {
+          "scenario_id": "SCN-AGT01191",
+          "agent_id": "AGT01191",
+          "candidate_id": "POL-01191-002",
+          "currency": "USD",
+          "permission_allowed": true,
+          "permission_information": {
+            "decision": true,
+            "basis": "Candidate is stored under the same agent_id"
+          },
+          "compliance_allowed": true,
+          "compliance_information": {
+            "decision": true,
+            "basis": "Agent training-compliance gate is not blocking sales"
+          },
+          "candidate_type": "policy",
+          "premium": 1330.0,
+          "expected_contribution": 163.86,
+          "policy_status": "Underwriting",
+          "submit_date": "2026-04-09",
+          "estimated_approval_days": {
+            "min": 5,
+            "max": 8
+          },
+          "expected_decision_date": "2026-04-17",
+          "client_tags": [
+            "Young Professional",
+            "High Value",
+            "Property",
+            "Active"
+          ],
+          "product_type": "Home Contents Insurance",
+          "eligible": true,
+          "eligibility_information": {
+            "decision": true,
+            "basis": "Pending status and positive premium"
+          },
+          "urgency": 1.0,
+          "actionability": 0.65,
+          "business_fit": 1.0,
+          "source_record_id": "POL-01191-002",
+          "source_path": "data/mock/policies.json#AGT01191/POL-01191-002",
+          "source_client_id": "CLI-01191-002",
+          "data_origin": {
+            "candidate_record": "synthetic_recent_policy_from_agent_mix",
+            "client_record": "synthetic_representative_client",
+            "scores": "deterministic_derived"
+          },
+          "reference_relevance_grade": 2
+        },
+        {
+          "scenario_id": "SCN-AGT01191",
+          "agent_id": "AGT01191",
+          "candidate_id": "POL-01191-003",
+          "currency": "USD",
+          "permission_allowed": true,
+          "permission_information": {
+            "decision": true,
+            "basis": "Candidate is stored under the same agent_id"
+          },
+          "compliance_allowed": true,
+          "compliance_information": {
+            "decision": true,
+            "basis": "Agent training-compliance gate is not blocking sales"
+          },
+          "candidate_type": "policy",
+          "premium": 1620.0,
+          "expected_contribution": 199.58,
+          "policy_status": "Underwriting",
+          "submit_date": "2026-03-29",
+          "estimated_approval_days": {
+            "min": 6,
+            "max": 9
+          },
+          "expected_decision_date": "2026-04-07",
+          "client_tags": [
+            "Family Builder",
+            "Growth",
+            "Liability",
+            "Active"
+          ],
+          "product_type": "Private Motor Insurance - Annual",
+          "eligible": true,
+          "eligibility_information": {
+            "decision": true,
+            "basis": "Pending status and positive premium"
+          },
+          "urgency": 1.0,
+          "actionability": 0.65,
+          "business_fit": 0.9,
+          "source_record_id": "POL-01191-003",
+          "source_path": "data/mock/policies.json#AGT01191/POL-01191-003",
+          "source_client_id": "CLI-01191-003",
+          "data_origin": {
+            "candidate_record": "synthetic_recent_policy_from_agent_mix",
+            "client_record": "synthetic_representative_client",
+            "scores": "deterministic_derived"
+          },
+          "reference_relevance_grade": 2
+        },
+        {
+          "scenario_id": "SCN-AGT01191",
+          "agent_id": "AGT01191",
+          "candidate_id": "POL-01191-004",
+          "currency": "USD",
+          "permission_allowed": true,
+          "permission_information": {
+            "decision": true,
+            "basis": "Candidate is stored under the same agent_id"
+          },
+          "compliance_allowed": true,
+          "compliance_information": {
+            "decision": true,
+            "basis": "Agent training-compliance gate is not blocking sales"
+          },
+          "candidate_type": "policy",
+          "premium": 1910.0,
+          "expected_contribution": 235.31,
+          "policy_status": "Awaiting Documents",
+          "submit_date": "2026-03-18",
+          "estimated_approval_days": {
+            "min": 7,
+            "max": 12
+          },
+          "expected_decision_date": "2026-03-30",
+          "client_tags": [
+            "Family Builder",
+            "Growth",
+            "Commercial",
+            "Active"
+          ],
+          "product_type": "Residential Fire Insurance",
+          "eligible": true,
+          "eligibility_information": {
+            "decision": true,
+            "basis": "Pending status and positive premium"
+          },
+          "urgency": 1.0,
+          "actionability": 1.0,
+          "business_fit": 0.6,
+          "source_record_id": "POL-01191-004",
+          "source_path": "data/mock/policies.json#AGT01191/POL-01191-004",
+          "source_client_id": "CLI-01191-004",
+          "data_origin": {
+            "candidate_record": "synthetic_recent_policy_from_agent_mix",
+            "client_record": "synthetic_representative_client",
+            "scores": "deterministic_derived"
+          },
+          "reference_relevance_grade": 3
+        },
+        {
+          "scenario_id": "SCN-AGT01191",
+          "agent_id": "AGT01191",
+          "candidate_id": "CLI-01191-008",
+          "currency": "USD",
+          "permission_allowed": true,
+          "permission_information": {
+            "decision": true,
+            "basis": "Candidate is stored under the same agent_id"
+          },
+          "compliance_allowed": true,
+          "compliance_information": {
+            "decision": true,
+            "basis": "Agent training-compliance gate is not blocking sales"
+          },
+          "candidate_type": "client",
+          "premium": 3220.0,
+          "expected_contribution": 2602.08,
+          "policy_status": null,
+          "submit_date": null,
+          "estimated_approval_days": null,
+          "expected_decision_date": null,
+          "not_applicable_reason": "Client follow-up candidate; no pending policy attached",
+          "client_tags": [
+            "Young Professional",
+            "Standard",
+            "Liability",
+            "Renewal Due"
+          ],
+          "product_type": "Public Liability Insurance",
+          "eligible": true,
+          "eligibility_information": {
+            "decision": true,
+            "basis": "Active client or actionable renewal/follow-up tag"
+          },
+          "urgency": 0.9,
+          "actionability": 0.85,
+          "business_fit": 0.6,
+          "source_record_id": "CLI-01191-008",
+          "source_path": "data/mock/clients.json#AGT01191/CLI-01191-008",
+          "source_client_id": "CLI-01191-008",
+          "data_origin": {
+            "candidate_record": "synthetic_representative_client",
+            "scores": "deterministic_derived"
+          },
+          "reference_relevance_grade": 3
+        },
+        {
+          "scenario_id": "SCN-AGT01191",
+          "agent_id": "AGT01191",
+          "candidate_id": "CLI-01191-015",
+          "currency": "USD",
+          "permission_allowed": true,
+          "permission_information": {
+            "decision": true,
+            "basis": "Candidate is stored under the same agent_id"
+          },
+          "compliance_allowed": true,
+          "compliance_information": {
+            "decision": true,
+            "basis": "Agent training-compliance gate is not blocking sales"
+          },
+          "candidate_type": "client",
+          "premium": 3220.0,
+          "expected_contribution": 2602.08,
+          "policy_status": null,
+          "submit_date": null,
+          "estimated_approval_days": null,
+          "expected_decision_date": null,
+          "not_applicable_reason": "Client follow-up candidate; no pending policy attached",
+          "client_tags": [
+            "Young Professional",
+            "Standard",
+            "Specialty",
+            "Renewal Due"
+          ],
+          "product_type": "Personal Liability Insurance",
+          "eligible": true,
+          "eligibility_information": {
+            "decision": true,
+            "basis": "Active client or actionable renewal/follow-up tag"
+          },
+          "urgency": 0.9,
+          "actionability": 0.85,
+          "business_fit": 0.6,
+          "source_record_id": "CLI-01191-015",
+          "source_path": "data/mock/clients.json#AGT01191/CLI-01191-015",
+          "source_client_id": "CLI-01191-015",
+          "data_origin": {
+            "candidate_record": "synthetic_representative_client",
+            "scores": "deterministic_derived"
+          },
+          "reference_relevance_grade": 3
+        },
+        {
+          "scenario_id": "SCN-AGT01191",
+          "agent_id": "AGT01191",
+          "candidate_id": "CLI-01191-006",
+          "currency": "USD",
+          "permission_allowed": true,
+          "permission_information": {
+            "decision": true,
+            "basis": "Candidate is stored under the same agent_id"
+          },
+          "compliance_allowed": true,
+          "compliance_information": {
+            "decision": true,
+            "basis": "Agent training-compliance gate is not blocking sales"
+          },
+          "candidate_type": "client",
+          "premium": 7900.0,
+          "expected_contribution": 6383.99,
+          "policy_status": null,
+          "submit_date": null,
+          "estimated_approval_days": null,
+          "expected_decision_date": null,
+          "not_applicable_reason": "Client follow-up candidate; no pending policy attached",
+          "client_tags": [
+            "Pre-retirement",
+            "Growth",
+            "Motor",
+            "Follow-up"
+          ],
+          "product_type": "Private Motor Insurance",
+          "eligible": true,
+          "eligibility_information": {
+            "decision": true,
+            "basis": "Active client or actionable renewal/follow-up tag"
+          },
+          "urgency": 0.75,
+          "actionability": 0.9,
+          "business_fit": 0.9,
+          "source_record_id": "CLI-01191-006",
+          "source_path": "data/mock/clients.json#AGT01191/CLI-01191-006",
+          "source_client_id": "CLI-01191-006",
+          "data_origin": {
+            "candidate_record": "synthetic_representative_client",
+            "scores": "deterministic_derived"
+          },
+          "reference_relevance_grade": 2
+        },
+        {
+          "scenario_id": "SCN-AGT01191",
+          "agent_id": "AGT01191",
+          "candidate_id": "CLI-01191-011",
+          "currency": "USD",
+          "permission_allowed": true,
+          "permission_information": {
+            "decision": true,
+            "basis": "Candidate is stored under the same agent_id"
+          },
+          "compliance_allowed": true,
+          "compliance_information": {
+            "decision": true,
+            "basis": "Agent training-compliance gate is not blocking sales"
+          },
+          "candidate_type": "client",
+          "premium": 6030.0,
+          "expected_contribution": 4872.84,
+          "policy_status": null,
+          "submit_date": null,
+          "estimated_approval_days": null,
+          "expected_decision_date": null,
+          "not_applicable_reason": "Client follow-up candidate; no pending policy attached",
+          "client_tags": [
+            "Family Builder",
+            "Standard",
+            "Motor",
+            "Follow-up"
+          ],
+          "product_type": "Private Motor Insurance",
+          "eligible": true,
+          "eligibility_information": {
+            "decision": true,
+            "basis": "Active client or actionable renewal/follow-up tag"
+          },
+          "urgency": 0.75,
+          "actionability": 0.9,
+          "business_fit": 0.9,
+          "source_record_id": "CLI-01191-011",
+          "source_path": "data/mock/clients.json#AGT01191/CLI-01191-011",
+          "source_client_id": "CLI-01191-011",
+          "data_origin": {
+            "candidate_record": "synthetic_representative_client",
+            "scores": "deterministic_derived"
+          },
+          "reference_relevance_grade": 2
+        }
+      ],
+      "relevance": {
+        "POL-01191-001": 2,
+        "POL-01191-002": 2,
+        "POL-01191-003": 2,
+        "POL-01191-004": 3,
+        "CLI-01191-008": 3,
+        "CLI-01191-015": 3,
+        "CLI-01191-006": 2,
+        "CLI-01191-011": 2
+      }
+    }
+  ]
+}
