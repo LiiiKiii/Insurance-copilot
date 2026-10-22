@@ -17,7 +17,7 @@ class PrioritizationTests(unittest.IsolatedAsyncioTestCase):
     def setUp(self) -> None:
         self.payload = {
             "agent_id": "AGT001",
-            "objective": {"open_gap": 100_000, "unit": "HKD"},
+            "objective": {"open_gap": 100_000, "unit": "USD"},
             "constraints": {"top_k": 3},
             "candidates": [
                 {
