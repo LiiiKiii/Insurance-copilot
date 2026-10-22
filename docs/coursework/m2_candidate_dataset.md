@@ -3,19 +3,22 @@
 ## Delivery scope
 
 `data/evaluation/m2_candidate_scenarios.json` contains ten deterministic agent
-scenarios and one hundred raw candidates. Each scenario contains four pending
-policies, two clients with explicit renewal/follow-up signals, and four
-filter-control clients without such a signal. The eligibility filter therefore
-retains six candidates per scenario and sixty candidates overall. This meets
+scenarios and one hundred raw candidates. Each scenario contains four
+source-linked policy records and six source-linked client records. Stratified
+synthetic action contexts vary which records need action. After eligibility,
+permission, and compliance filtering, six candidates per scenario and sixty
+candidates overall remain. This meets
 the requested range of 8–10 scenarios, 10–15 raw candidates per scenario,
 80–120 raw candidates overall, and at least 50–60 candidates after filtering.
 No random row sampling is used.
 
-To avoid repeated ranking templates, the ten scenarios use all ten unique
-pairs drawn from five available actionable clients per agent. This produces
-renewal/renewal, renewal/follow-up, and follow-up/follow-up cases while leaving
-the source customer and policy records unchanged. Candidate cards are shown in
-a stable annotator-specific order to reduce presentation-order bias.
+To avoid repeated ranking templates, the eligible mix varies across scenarios:
+two to four actionable policies and two to four actionable clients. Action
+states include missing documents, underwriter queries, client confirmations,
+callbacks, renewals, quote requests, and scheduled reviews. Closed/no-action
+cases plus permission and compliance controls remain in the raw input for
+filtering tests. Candidate cards are shown in a stable annotator-specific order
+to reduce presentation-order bias.
 
 The primary evaluation cut-offs are `K = 1, 3, 5`.
 
@@ -37,7 +40,8 @@ The generator writes two files:
   independent human ranking.
 
 Human rankings and consensus labels are stored separately in
-`data/evaluation/m2_candidate_annotations.json`. The generator never reads,
+`data/evaluation/m2_candidate_annotations_v3.json`. The earlier v2 file is
+retained only as a pilot record and must not be used for v3 evaluation. The generator never reads,
 creates, or overwrites that annotation file.
 
 ## Human annotation UI
@@ -53,7 +57,7 @@ question: which candidate should the agent follow up first to reduce the open
 gap before the deadline? Rank all six candidates without ties. Consider, in
 order, whether there is a clear action to take, time pressure, and potential
 premium impact. Premium must not determine the ranking by itself. The UI saves
-only the human ordering to `data/evaluation/m2_candidate_annotations.json`.
+only the human ordering to `data/evaluation/m2_candidate_annotations_v3.json`.
 If evidence is otherwise tied, use higher premium, earlier submission date,
 then ascending candidate ID as deterministic tie-breakers. The initial display
 order has no recommendation meaning. The raw agent product specialties are
@@ -108,10 +112,10 @@ relevance labels and are not included in the blinded annotation view.
 
 ## Filtering and evaluation scope
 
-Each scenario starts with ten candidates. Four pending policies and two
-renewal/follow-up clients pass the deterministic eligibility, permission, and
-compliance gates. Four ordinary active clients are retained in the raw input as
-filter-control records and are excluded with the explicit `ineligible` reason.
+Each scenario starts with ten candidates. Exactly six pass all eligibility,
+permission, and compliance gates, but their type split varies between 2/4,
+3/3, and 4/2 policy/client candidates. The other four exercise closed or
+no-action eligibility, missing contact permission, and compliance holds.
 Consequently the complete dataset contains 100 raw candidates and 60 eligible
 candidates.
 
@@ -151,8 +155,13 @@ records generated from source-derived agent and product distributions.
 The candidate file preserves this distinction in `data_origin`:
 
 - candidate and client records retain their existing synthetic origin labels;
-- identifiers, premium, status, dates, tags, and products are copied from the
-  existing project records;
+- identifiers, premium, submission dates, and products are copied from existing
+  project records;
+- ownership is derived from the source `agent_id`, while `tenant_id` explicitly
+  identifies the synthetic coursework tenant;
+- the original policy status and source client tags are retained separately;
+- displayed status, action signal, and action deadline are transparent
+  synthetic coursework scenario evidence used to create genuine trade-offs;
 - contribution estimates, decisions, scores, and dates are marked and
   documented as derived values;
 - final relevance labels are collected independently from blinded human

@@ -16,7 +16,7 @@ from scripts import build_m2_candidate_dataset as builder
 ROOT = Path(__file__).resolve().parents[1]
 DATASET = ROOT / "data" / "evaluation" / "m2_candidate_scenarios.json"
 BLIND_DATASET = ROOT / "data" / "evaluation" / "m2_candidate_blind.json"
-ANNOTATIONS = ROOT / "data" / "evaluation" / "m2_candidate_annotations.json"
+ANNOTATIONS = ROOT / "data" / "evaluation" / "m2_candidate_annotations_v3.json"
 
 
 class M2CandidateDatasetTests(unittest.TestCase):
@@ -61,7 +61,8 @@ class M2CandidateDatasetTests(unittest.TestCase):
             "submit_date", "estimated_approval_days", "client_tags",
             "product_type", "eligible", "permission_allowed",
             "compliance_allowed", "urgency", "actionability", "business_fit",
-            "source_record_id", "source_path", "data_origin",
+            "source_record_id", "source_path", "data_origin", "tenant_id",
+            "owner_agent_id", "action_signal", "action_deadline",
         }
         forbidden = {"reference_relevance_grade", "rule_based_provisional_grade"}
         seen: set[str] = set()
@@ -100,17 +101,42 @@ class M2CandidateDatasetTests(unittest.TestCase):
             self.assertEqual(result["eligible_count"], 6)
             self.assertEqual(len(result["recommendations"]), 5)
             self.assertEqual(len(result["excluded_candidates"]), 4)
-            self.assertEqual(
-                {row["reason"] for row in result["excluded_candidates"]},
-                {"ineligible"},
+            self.assertTrue(
+                {row["reason"] for row in result["excluded_candidates"]}
+                <= {"ineligible", "permission_denied", "compliance_excluded"}
             )
+
+    def test_m4_top_choice_is_not_a_highest_premium_shortcut(self) -> None:
+        highest_premium_wins = 0
+        top_types = set()
+        for scenario in self.dataset["scenarios"]:
+            result = prioritize_followups({
+                key: scenario[key]
+                for key in ("agent_id", "objective", "constraints", "candidates")
+            })
+            eligible = [
+                row for row in scenario["candidates"]
+                if row["eligible"]
+                and row["permission_allowed"]
+                and row["compliance_allowed"]
+            ]
+            top_id = result["recommendations"][0]["candidate_id"]
+            highest_premium_id = max(eligible, key=lambda row: row["premium"])["candidate_id"]
+            highest_premium_wins += top_id == highest_premium_id
+            top_types.add(next(
+                row["candidate_type"] for row in eligible
+                if row["candidate_id"] == top_id
+            ))
+        self.assertLessEqual(highest_premium_wins, 3)
+        self.assertEqual(top_types, {"policy", "client"})
 
     def test_blind_view_contains_only_evidence_for_eligible_candidates(self) -> None:
         allowed = {
             "candidate_id", "candidate_type", "premium", "currency",
             "policy_status", "submit_date", "estimated_approval_days",
             "client_tags", "product_type", "eligible", "permission_allowed",
-            "compliance_allowed", "source_record_id",
+            "compliance_allowed", "source_record_id", "tenant_id",
+            "owner_agent_id", "action_signal", "action_deadline",
         }
         forbidden = {
             "expected_contribution", "urgency", "actionability", "business_fit",
@@ -135,32 +161,27 @@ class M2CandidateDatasetTests(unittest.TestCase):
                 self.assertTrue(row["permission_allowed"])
                 self.assertTrue(row["compliance_allowed"])
 
-    def test_actionable_client_pairs_are_diverse_across_scenarios(self) -> None:
-        pairs = []
-        signal_combinations = set()
-        unequal_premium_pairs = 0
+    def test_eligible_mix_and_action_evidence_are_diverse(self) -> None:
+        type_splits = set()
+        signal_sets = set()
+        premium_is_most_urgent = 0
         for scenario in self.blind["scenarios"]:
-            clients = [
-                row for row in scenario["candidates"]
-                if row["candidate_type"] == "client"
-            ]
-            self.assertEqual(len(clients), 2)
-            pairs.append(tuple(sorted(row["candidate_id"].rsplit("-", 1)[-1] for row in clients)))
-            signal_combinations.add(tuple(sorted(
-                "renewal" if "Renewal Due" in row["client_tags"] else "follow-up"
-                for row in clients
-            )))
-            unequal_premium_pairs += clients[0]["premium"] != clients[1]["premium"]
-        self.assertEqual(len(set(pairs)), 10)
-        self.assertEqual(
-            signal_combinations,
-            {("follow-up", "follow-up"), ("follow-up", "renewal"), ("renewal", "renewal")},
-        )
-        self.assertGreaterEqual(unequal_premium_pairs, 9)
+            policies = sum(row["candidate_type"] == "policy" for row in scenario["candidates"])
+            clients = 6 - policies
+            type_splits.add((policies, clients))
+            signal_sets.add(tuple(sorted(row["action_signal"] for row in scenario["candidates"])))
+            highest_premium = max(scenario["candidates"], key=lambda row: row["premium"])
+            full = next(row for row in self.dataset["scenarios"] if row["scenario_id"] == scenario["scenario_id"])
+            full_by_id = {row["candidate_id"]: row for row in full["candidates"]}
+            most_urgent = max(scenario["candidates"], key=lambda row: full_by_id[row["candidate_id"]]["urgency"])
+            premium_is_most_urgent += highest_premium["candidate_id"] == most_urgent["candidate_id"]
+        self.assertEqual(type_splits, {(2, 4), (3, 3), (4, 2)})
+        self.assertGreaterEqual(len(signal_sets), 8)
+        self.assertLessEqual(premium_is_most_urgent, 3)
 
     def test_annotation_template_is_separate_and_valid_when_completed(self) -> None:
         self.assertEqual(self.annotations["dataset_id"], self.dataset["dataset_id"])
-        self.assertEqual(self.annotations["annotation_version"], "human-v2")
+        self.assertEqual(self.annotations["annotation_version"], "human-v3")
         self.assertIn(self.annotations["annotation_status"], {"pending", "complete"})
         blind_by_id = {
             row["scenario_id"]: {

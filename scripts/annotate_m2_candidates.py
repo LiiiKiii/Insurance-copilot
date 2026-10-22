@@ -22,7 +22,7 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_BLIND_DATASET = ROOT / "data" / "evaluation" / "m2_candidate_blind.json"
-DEFAULT_ANNOTATIONS = ROOT / "data" / "evaluation" / "m2_candidate_annotations.json"
+DEFAULT_ANNOTATIONS = ROOT / "data" / "evaluation" / "m2_candidate_annotations_v3.json"
 ANNOTATOR_IDS = ("non_m4_annotator_1", "non_m4_annotator_2")
 
 
@@ -174,7 +174,7 @@ HTML_PAGE = r"""<!doctype html>
 </div>
 <script>
 let state, current = 0, orders = {};
-const statusText = {"Awaiting Documents":"等待补充材料（有明确行动）", "Underwriting":"核保中（直接行动较少）"};
+const statusText = {"Awaiting Documents":"等待补充材料", "Underwriter Query":"核保人问询", "Client Confirmation Pending":"等待客户确认", "Underwriting":"核保中"};
 
 async function start() {
   state = await (await fetch('/api/state')).json();
@@ -190,8 +190,8 @@ function renderNav() {
 }
 function facts(c) {
   if (c.candidate_type === 'policy') return `<span><b>状态：</b>${statusText[c.policy_status]||c.policy_status}</span>
-    <span><b>提交：</b>${c.submit_date}</span><span><b>审批周期：</b>${c.estimated_approval_days.min}–${c.estimated_approval_days.max} 天</span>`;
-  return `<span><b>状态：</b>客户跟进线索</span><span><b>行动信号：</b>${c.client_tags.includes('Renewal Due')?'续保到期':c.client_tags.includes('Follow-up')?'需跟进':'一般'}</span>`;
+    <span><b>提交：</b>${c.submit_date}</span><span><b>行动截止：</b>${c.action_deadline||'无'}</span>`;
+  return `<span><b>状态：</b>客户跟进线索</span><span><b>行动截止：</b>${c.action_deadline||'无'}</span>`;
 }
 function render() {
   const s=state.scenarios[current], byId=Object.fromEntries(s.candidates.map(c=>[c.candidate_id,c]));
@@ -200,7 +200,7 @@ function render() {
   orders[s.scenario_id].forEach((id,index)=>{const c=byId[id], card=document.createElement('div'); card.className='candidate'; card.draggable=true; card.dataset.id=id;
     card.innerHTML=`<div class="rank">${index+1}</div><div><h3>${id}<span class="badge">${c.candidate_type==='policy'?'待处理保单':'候选客户'}</span></h3>
       <div class="facts"><span><b>保费：</b>${money(c.premium)}</span><span><b>产品：</b>${c.product_type}</span>${facts(c)}</div>
-      <div class="tags"><b>客户标签：</b>${c.client_tags.join(' · ')}</div></div>
+      <div class="tags"><b>行动证据：</b>${c.action_signal}</div><div class="tags"><b>客户标签：</b>${c.client_tags.join(' · ')}</div></div>
       <div class="moves"><button title="上移">▲</button><button title="下移">▼</button></div>`;
     card.querySelectorAll('button')[0].onclick=()=>move(index,-1); card.querySelectorAll('button')[1].onclick=()=>move(index,1);
     card.ondragstart=()=>card.classList.add('dragging'); card.ondragend=()=>card.classList.remove('dragging');
