@@ -4,7 +4,7 @@
   "agent_id": "AGT001",
   "objective": {
     "open_gap": 100000,
-    "unit": "HKD",
+    "unit": "USD",
     "deadline": "2026-12-31"
   },
   "constraints": {
