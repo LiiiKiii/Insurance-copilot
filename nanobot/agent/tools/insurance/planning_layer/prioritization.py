@@ -262,7 +262,67 @@ class PrioritizeFollowupsTool(Tool):
                     "properties": {"open_gap": {"type": "number", "minimum": 0}},
                     "required": ["open_gap"],
                 },
-                "candidates": {"type": "array", "items": {"type": "object"}},
+                "candidates": {
+                    "type": "array",
+                    "description": (
+                        "Verified follow-up candidates. Scores must be supplied "
+                        "by an authoritative data or preparation tool, not guessed."
+                    ),
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "candidate_id": {
+                                "type": "string",
+                                "minLength": 1,
+                                "description": (
+                                    "Stable customer or policy identifier."
+                                ),
+                            },
+                            "expected_contribution": {
+                                "type": "number",
+                                "minimum": 0,
+                                "description": (
+                                    "Non-negative expected contribution in the "
+                                    "same unit as objective.open_gap."
+                                ),
+                            },
+                            "urgency": {
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 1,
+                                "description": "Normalised urgency score from 0 to 1.",
+                            },
+                            "actionability": {
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 1,
+                                "description": (
+                                    "Normalised actionability score from 0 to 1."
+                                ),
+                            },
+                            "business_fit": {
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 1,
+                                "description": (
+                                    "Optional normalised business-fit score; "
+                                    "defaults to 0.5 when omitted."
+                                ),
+                            },
+                            "eligible": {"type": "boolean"},
+                            "permission_allowed": {"type": "boolean"},
+                            "compliance_allowed": {"type": "boolean"},
+                            "recommended_action": {"type": "string"},
+                            "evidence": {"type": "object"},
+                        },
+                        "required": [
+                            "candidate_id",
+                            "expected_contribution",
+                            "urgency",
+                            "actionability",
+                        ],
+                    },
+                },
                 "constraints": {"type": "object"},
                 "weights": {"type": "object"},
             },
