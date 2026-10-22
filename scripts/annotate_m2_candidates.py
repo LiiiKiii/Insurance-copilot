@@ -149,6 +149,7 @@ HTML_PAGE = r"""<!doctype html>
     <div class="rule"><strong>评判什么？</strong>谁最值得代理人现在优先跟进，以便在截止日前缩小 open gap。</div>
     <div class="rule"><strong>怎么看？</strong>先看是否有明确行动，再看时间紧迫性与保费影响；金额不能单独决定排名。</div>
     <div class="rule"><strong>怎么填？</strong>拖动卡片或点箭头。第 1 名最优先，第 6 名最不优先；不允许并列。</div>
+    <div class="rule"><strong>仍然相同时</strong>依次比较保费较高、提交较早、候选编号较小。初始显示顺序没有推荐含义。</div>
     <div id="nav" class="scenario-nav"></div>
   </aside>
   <main>

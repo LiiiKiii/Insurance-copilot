@@ -44,6 +44,9 @@ gap before the deadline? Rank all six candidates without ties. Consider, in
 order, whether there is a clear action to take, time pressure, and potential
 premium impact. Premium must not determine the ranking by itself. The UI saves
 only the human ordering to `data/evaluation/m2_candidate_annotations.json`.
+If evidence is otherwise tied, use higher premium, earlier submission date,
+then ascending candidate ID as deterministic tie-breakers. The initial display
+order has no recommendation meaning.
 
 A later independent annotator should avoid viewing the first ranking and run:
 
