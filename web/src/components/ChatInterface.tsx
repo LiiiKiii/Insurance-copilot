@@ -18,7 +18,7 @@ import {
 	type BriefingSummary,
 	type BriefingActionItem,
 } from "@/lib/briefingApi";
-import type { ChatMessage } from "@/lib/chatTypes";
+import type { ChatMessage, RetrievalMode } from "@/lib/chatTypes";
 import { VoiceButton, type VoiceStatus } from './chat/VoiceButton'
 import { FileButton } from './chat/FileButton'
 import { UploadPill } from './chat/UploadPill'
@@ -31,7 +31,14 @@ interface ChatInterfaceProps {
 	isTyping: boolean;
 	agentId?: string;
 	status: "connecting" | "connected" | "disconnected";
-	onSend: (message: string, opts?: { uploadIds?: string[]; attachmentLabels?: string[] }) => void;
+	onSend: (
+		message: string,
+		opts?: {
+			uploadIds?: string[];
+			attachmentLabels?: string[];
+			retrievalMode?: RetrievalMode;
+		},
+	) => void;
 	onOpenConfig?: () => void;
 	apiConfigured?: boolean;
 	sessionKey: string;
@@ -86,7 +93,7 @@ export function ChatInterface({
 	const [agentName, setAgentName] = useState<string>("");
 	useEffect(() => {
 		if (!agentId) return;
-		fetch(`/api/agent-info?agent_id=${agentId}`, { headers: authHeaders() })
+		fetch(`/api/agent-info?agent_id=${encodeURIComponent(agentId)}`, { headers: authHeaders() })
 			.then((r) => r.json())
 			.then((d) => setAgentName(d?.data?.nickname || d?.data?.name_en || d?.data?.name_zh || ""))
 			.catch(() => {});
@@ -96,6 +103,41 @@ export function ChatInterface({
 	const [voiceStatus, setVoiceStatus] = useState<VoiceStatus | null>(null);
 	const [pendingUploads, setPendingUploads] = useState<UploadPillState[]>([]);
 	const [isInputFocused, setIsInputFocused] = useState(false);
+	const [retrievalMode, setRetrievalMode] = useState<RetrievalMode>("keyword");
+	const [vectorCapability, setVectorCapability] = useState<{
+		available: boolean;
+		reason: string | null;
+	}>({ available: false, reason: null });
+	const [capabilityLoading, setCapabilityLoading] = useState(true);
+
+	useEffect(() => {
+		const controller = new AbortController();
+		fetch("/api/retrieval/capabilities", { signal: controller.signal })
+			.then(async (response) => {
+				if (!response.ok) throw new Error(`HTTP ${response.status}`);
+				return response.json();
+			})
+			.then((body) => {
+				const available = body?.vector?.available === true;
+				setVectorCapability({
+					available,
+					reason:
+						typeof body?.vector?.reason === "string"
+							? body.vector.reason
+							: null,
+				});
+				if (!available) setRetrievalMode("keyword");
+			})
+			.catch((error) => {
+				if (error instanceof DOMException && error.name === "AbortError") return;
+				setVectorCapability({ available: false, reason: null });
+				setRetrievalMode("keyword");
+			})
+			.finally(() => {
+				if (!controller.signal.aborted) setCapabilityLoading(false);
+			});
+		return () => controller.abort();
+	}, []);
 
 	const removeUpload = (uploadId: string) =>
 		setPendingUploads((prev: UploadPillState[]) =>
@@ -167,6 +209,7 @@ export function ChatInterface({
 		onSend(trimmed, {
 			uploadIds: ready.map((p: UploadPillState) => p.uploadId),
 			attachmentLabels: ready.map((p: UploadPillState) => p.filename),
+			retrievalMode,
 		});
 		setInput("");
 		setPendingUploads([]);
@@ -183,6 +226,7 @@ export function ChatInterface({
 		onSend(trimmed, {
 			uploadIds: ready.map((p: UploadPillState) => p.uploadId),
 			attachmentLabels: ready.map((p: UploadPillState) => p.filename),
+			retrievalMode,
 		})
 		setPendingUploads([])
 	}
@@ -557,7 +601,9 @@ export function ChatInterface({
 									key={item.qKey}
 									onClick={() => {
 										const q = t(item.qKey, { name: agentName || "" });
-										status === "connected" && !isTyping && onSend(q);
+										if (status === "connected" && !isTyping) {
+											onSend(q, { retrievalMode });
+										}
 									}}
 									disabled={status !== "connected" || isTyping}
 									className="border-gradient relative flex-none text-xs px-3 py-1.5 rounded-full bg-white/80 dark:bg-slate-900/70 text-slate-600 dark:text-slate-300 hover:text-insurance-gold dark:hover:text-insurance-gold-light transition-all duration-200 ease-out hover:scale-[1.02] hover:shadow-lg active:scale-[0.98] whitespace-nowrap disabled:opacity-50 cursor-pointer"
@@ -621,6 +667,58 @@ export function ChatInterface({
 						</div>
 					)}
 					<div className="glass border-gradient rounded-xl px-2 sm:px-3 py-2 sm:py-3">
+						<div className="mb-2 flex items-center justify-between gap-3 px-1">
+							<span className="text-[11px] font-medium text-slate-500 dark:text-slate-400">
+								{t("chat.retrieval.label")}
+							</span>
+							<div
+								role="radiogroup"
+								aria-label={t("chat.retrieval.label")}
+								className="inline-flex rounded-lg border border-slate-200/80 bg-slate-100/80 p-0.5 dark:border-slate-700 dark:bg-slate-800/80"
+							>
+								<button
+									type="button"
+									role="radio"
+									aria-checked={retrievalMode === "keyword"}
+									onClick={() => setRetrievalMode("keyword")}
+									className={cn(
+										"rounded-md px-2.5 py-1 text-[11px] font-medium transition-colors",
+										retrievalMode === "keyword"
+											? "bg-white text-insurance-blue shadow-sm dark:bg-slate-700 dark:text-white"
+											: "text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200",
+									)}
+								>
+									{t("chat.retrieval.keyword")}
+								</button>
+								<button
+									type="button"
+									role="radio"
+									aria-checked={retrievalMode === "vector"}
+									disabled={capabilityLoading || !vectorCapability.available}
+									onClick={() =>
+										vectorCapability.available && setRetrievalMode("vector")
+									}
+									title={
+										capabilityLoading
+											? t("chat.retrieval.checking")
+											: vectorCapability.available
+												? t("chat.retrieval.vectorAvailable")
+												: vectorCapability.reason ||
+													t("chat.retrieval.vectorUnavailable")
+									}
+									className={cn(
+										"rounded-md px-2.5 py-1 text-[11px] font-medium transition-colors",
+										retrievalMode === "vector"
+											? "bg-white text-insurance-blue shadow-sm dark:bg-slate-700 dark:text-white"
+											: "text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200",
+										(capabilityLoading || !vectorCapability.available) &&
+											"cursor-not-allowed opacity-40",
+									)}
+								>
+									{t("chat.retrieval.vector")}
+								</button>
+							</div>
+						</div>
 						<div className="flex items-center gap-2">
 							<VoiceButton
 								onTranscribed={(text) => sendDirectly(text)}

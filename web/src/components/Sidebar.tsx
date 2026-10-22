@@ -119,7 +119,7 @@ export function SidebarContent({
 	useEffect(() => {
 		if (!agentId) return;
 		let cancelled = false;
-		fetch(`/api/agent-info?agent_id=${agentId}`, { headers: authHeaders() })
+		fetch(`/api/agent-info?agent_id=${encodeURIComponent(agentId)}`, { headers: authHeaders() })
 			.then((r) => r.json())
 			.then((d) => {
 				if (!cancelled && d?.data) setCurrentAgent(d.data);

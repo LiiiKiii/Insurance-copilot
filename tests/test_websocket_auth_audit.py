@@ -17,7 +17,7 @@ from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
 
 from admin.db import Base
 from admin.models.audit import AiAuditLog
-from admin.models.chat import ChatMessage
+from admin.models.chat import ChatMessage, ChatSession
 from admin.models.flow_log import FlowLog
 from admin.models.tenant import Tenant
 from admin.models.usage import TokenUsageLog
@@ -197,6 +197,14 @@ class WebSocketAuthAuditTests(unittest.IsolatedAsyncioTestCase):
             ai = (await db.scalars(select(AiAuditLog).order_by(AiAuditLog.created_at))).all()
             flows = (await db.scalars(select(FlowLog))).all()
             usage = (await db.scalars(select(TokenUsageLog))).all()
+            chat_session = await db.get(ChatSession, response["session_id"])
+            chat_messages = (
+                await db.scalars(
+                    select(ChatMessage)
+                    .where(ChatMessage.session_id == response["session_id"])
+                    .order_by(ChatMessage.created_at, ChatMessage.id)
+                )
+            ).all()
         self.assertEqual(len(ai), 2)
         self.assertEqual(len(flows), 6)
         self.assertEqual(len(usage), 0)
@@ -206,6 +214,12 @@ class WebSocketAuthAuditTests(unittest.IsolatedAsyncioTestCase):
         self.assertNotIn("input-secret", ai[0].user_query)
         self.assertNotIn("response-secret", ai[0].ai_response)
         self.assertEqual([item.step_type for item in flows[:3]], ["user_input", "llm_call", "response"])
+        self.assertEqual(chat_session.user_id, "user-a")
+        self.assertEqual(chat_session.message_count, 4)
+        self.assertEqual(
+            [message.role for message in chat_messages],
+            ["user", "assistant", "user", "assistant"],
+        )
 
         other, _ = await self.authenticate(self.token_b)
         await other.send({"message": "other tenant", "agent_id": "bob", "session_id": "ws:target"})

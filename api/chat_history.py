@@ -1,6 +1,7 @@
 """Persistence helpers shared by the chat HTTP and WebSocket transports."""
 from __future__ import annotations
 
+from datetime import timedelta
 from typing import Any
 
 from sqlalchemy import func, select
@@ -24,10 +25,12 @@ async def persist_turn(
     agent_id: str,
     user_message: str,
     assistant_message: str,
+    user_metadata: dict[str, Any] | None = None,
     assistant_metadata: dict[str, Any] | None = None,
 ) -> None:
     """Create or update one user-owned session and append a complete turn."""
     session = await db.get(ChatSession, session_id)
+    now = now_beijing()
     if session is None:
         session = ChatSession(
             id=session_id,
@@ -35,6 +38,10 @@ async def persist_turn(
             user_id=user.id,
             agent_id=agent_id,
             title=_title(user_message),
+            created_at=now,
+            updated_at=now,
+            last_message_at=now,
+            message_count=0,
         )
         db.add(session)
     elif (
@@ -44,19 +51,24 @@ async def persist_turn(
     ):
         raise PermissionError("Chat session ownership does not match the caller")
 
-    session.updated_at = now_beijing()
+    session.updated_at = now
+    session.last_message_at = now
+    session.message_count = (session.message_count or 0) + 2
     db.add_all(
         [
             ChatMessage(
                 session_id=session_id,
                 role="user",
                 content=user_message,
+                metadata_json=user_metadata,
+                created_at=now,
             ),
             ChatMessage(
                 session_id=session_id,
                 role="assistant",
                 content=assistant_message,
                 metadata_json=assistant_metadata,
+                created_at=now + timedelta(microseconds=1),
             ),
         ]
     )
@@ -77,7 +89,7 @@ async def list_sessions(db: AsyncSession, user: User) -> list[dict[str, Any]]:
                 ChatSession.tenant_id == user.tenant_id,
                 ChatSession.user_id == user.id,
             )
-            .order_by(ChatSession.updated_at.desc(), ChatSession.id.asc())
+            .order_by(ChatSession.last_message_at.desc(), ChatSession.id.asc())
         )
     ).all()
     return [

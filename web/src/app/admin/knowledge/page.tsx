@@ -13,6 +13,7 @@ export default function KnowledgePage() {
   const { can } = useAdminAuth()
   const [kbs, setKbs] = useState<KnowledgeBase[]>([])
   const [loading, setLoading] = useState(true)
+  const [loadError, setLoadError] = useState<string | null>(null)
   const [selected, setSelected] = useState<KnowledgeBase | null>(null)
   const [docs, setDocs] = useState<KBDocument[]>([])
   const [docsLoading, setDocsLoading] = useState(false)
@@ -27,10 +28,15 @@ export default function KnowledgePage() {
 
   const load = useCallback(async () => {
     setLoading(true)
+    setLoadError(null)
     const r = await adminApi.knowledge.list()
-    if (r.ok) setKbs(r.data)
+    if (r.ok) {
+      setKbs(r.data)
+    } else {
+      setLoadError(r.error?.message ?? t('admin.knowledge.error.loadFailed'))
+    }
     setLoading(false)
-  }, [])
+  }, [t])
 
   useEffect(() => { load() }, [load])
 
@@ -107,6 +113,13 @@ export default function KnowledgePage() {
       {loading ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
           {Array.from({ length: 3 }).map((_, i) => <div key={i} className="h-32 rounded-xl bg-slate-200 dark:bg-slate-800 animate-pulse" />)}
+        </div>
+      ) : loadError ? (
+        <div className="mb-6 rounded-xl border border-red-200 bg-red-50 p-8 text-center dark:border-red-900/50 dark:bg-red-950/20">
+          <p className="text-sm text-red-700 dark:text-red-300">{loadError}</p>
+          <button className={`${btnSecondary} mt-4`} onClick={() => void load()}>
+            {t('admin.knowledge.button.retry')}
+          </button>
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">

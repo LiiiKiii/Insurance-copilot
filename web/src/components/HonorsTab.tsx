@@ -44,7 +44,7 @@ export function HonorsTab({ agentId }: HonorsTabProps) {
     if (!agentId) return
     let cancelled = false
     setLoading(true)
-    fetch(`/api/competitions?agent_id=${agentId}`, { headers: authHeaders() })
+    fetch(`/api/competitions?agent_id=${encodeURIComponent(agentId)}`, { headers: authHeaders() })
       .then((r) => r.json())
       .then((data) => {
         if (cancelled) return

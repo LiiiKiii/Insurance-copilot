@@ -40,3 +40,6 @@ class Chunk:
     heading_path: list[str]
     token_count: int
     chunk_type: str        # "section" in MVP
+    chunk_size: int = 0
+    chunk_overlap: int = 0
+    overlap_from_previous_tokens: int = 0

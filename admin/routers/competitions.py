@@ -120,6 +120,7 @@ async def _load_entry(
     return entry, competition
 
 
+@router.get("", include_in_schema=False)
 @router.get("/")
 async def list_competitions(
     current_user: RoleAny,
@@ -168,6 +169,7 @@ async def list_competitions(
     }
 
 
+@router.post("", include_in_schema=False)
 @router.post("/")
 async def create_competition(
     body: CompetitionRequest,

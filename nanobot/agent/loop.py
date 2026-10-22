@@ -23,6 +23,12 @@ from nanobot.agent.tools.registry import ToolRegistry
 from nanobot.bus.events import InboundMessage, OutboundMessage
 from nanobot.bus.queue import MessageBus
 from nanobot.providers.base import LLMProvider
+from nanobot.retrieval import apply_retrieval_mode
+from nanobot.retrieval_citations import (
+    deduplicate_citations,
+    extract_retrieval_citations,
+    strip_retrieval_citations,
+)
 
 
 _AGENT_SCOPED_TOOLS = frozenset({
@@ -56,6 +62,7 @@ class AgentLoop:
         workspace: Path,
         model: str | None = None,
         tool_registry: ToolRegistry | None = None,
+        supplemental_tool_registry: ToolRegistry | None = None,
         max_tool_iterations: int = 4,
         coursework_source: CourseworkCandidateSource | None = None,
     ):
@@ -67,6 +74,7 @@ class AgentLoop:
         self.workspace = workspace
         self.model = model or provider.get_default_model()
         self.tool_registry = tool_registry or ToolRegistry()
+        self.supplemental_tool_registry = supplemental_tool_registry
         self.coursework_source = coursework_source or CourseworkCandidateSource()
         self.max_tool_iterations = max_tool_iterations
 
@@ -177,6 +185,10 @@ class AgentLoop:
             chat_id=msg.chat_id,
         )
 
+        tool_definitions = self.tool_registry.get_definitions()
+        if self.supplemental_tool_registry is not None:
+            tool_definitions.extend(self.supplemental_tool_registry.get_definitions())
+
         prepared: PreparedCoursework | None = None
         if (msg.channel == "websocket" and demo_scope is not None
                 and demo_scope.agent_id == msg.chat_id
@@ -186,7 +198,6 @@ class AgentLoop:
             except CourseworkCandidateError:
                 pass
 
-        tool_definitions = self.tool_registry.get_definitions() or None
         if tool_definitions:
             # The model sees a no-argument facade only after server-side scope
             # and candidate validation. Other callers keep the fail-closed path.
@@ -196,13 +207,14 @@ class AgentLoop:
             ]
             if prepared is not None:
                 tool_definitions.append(_COURSEWORK_TOOL_SCHEMA)
-            tool_definitions = tool_definitions or None
+        tool_definitions = tool_definitions or None
         tool_iterations = 0
         tool_events: list[dict[str, str]] = []
         metadata = dict(msg.metadata or {})
         metadata.pop("tool_events", None)
         metadata.pop("structured_result", None)
         structured_result: dict | None = None
+        citations: list[dict] = []
 
         while True:
             response = await self.provider.chat_with_retry(
@@ -249,6 +261,10 @@ class AgentLoop:
                     metadata={**metadata, "tool_events": tool_events} if tool_events else metadata,
                 )
 
+            apply_retrieval_mode(
+                response.tool_calls,
+                (msg.metadata or {}).get("retrieval_mode"),
+            )
             self.context.add_assistant_message(
                 messages,
                 response.content,
@@ -260,9 +276,15 @@ class AgentLoop:
                 thinking_blocks=response.thinking_blocks,
             )
             for tool_call in response.tool_calls:
+                registry = (
+                    self.supplemental_tool_registry
+                    if self.supplemental_tool_registry is not None
+                    and self.supplemental_tool_registry.has(tool_call.name)
+                    else self.tool_registry
+                )
                 arguments = dict(tool_call.arguments)
                 if tool_call.name == _TRUSTED_CANDIDATE_TOOL and prepared is not None:
-                    result, status = await self.tool_registry.execute_with_status(
+                    result, status = await registry.execute_with_status(
                         tool_call.name, prepared.payload,
                     )
                     if status == "completed":
@@ -282,21 +304,24 @@ class AgentLoop:
                         status = "agent_access_denied"
                     else:
                         arguments["agent_id"] = msg.chat_id
-                        result, status = await self.tool_registry.execute_with_status(
+                        result, status = await registry.execute_with_status(
                             tool_call.name, arguments,
                         )
                 else:
-                    result, status = await self.tool_registry.execute_with_status(
+                    result, status = await registry.execute_with_status(
                         tool_call.name, arguments,
                     )
+                citations.extend(
+                    extract_retrieval_citations(tool_call.name, result)
+                )
                 self.context.add_tool_result(
                     messages,
                     tool_call.id,
                     tool_call.name,
-                    result,
+                    strip_retrieval_citations(tool_call.name, result),
                 )
                 event = {
-                    "name": tool_call.name if self.tool_registry.has(tool_call.name) else "unknown_tool",
+                    "name": tool_call.name if registry.has(tool_call.name) else "unknown_tool",
                     "status": status,
                 }
                 if isinstance(tool_call.id, str) and _SAFE_TOOL_CALL_ID.fullmatch(tool_call.id):
@@ -325,6 +350,7 @@ class AgentLoop:
                     thinking_blocks=response.thinking_blocks,
                 )
 
+        metadata["citations"] = deduplicate_citations(citations)
         return OutboundMessage(
             channel=msg.channel,
             chat_id=msg.chat_id,
@@ -345,6 +371,7 @@ class AgentLoop:
         on_progress: Callable[[str], Awaitable[None]] | None = None,
         on_stream: Callable[[str], Awaitable[None]] | None = None,
         on_stream_end: Callable[..., Awaitable[None]] | None = None,
+        retrieval_mode: str = "keyword",
         demo_scope: CourseworkDemoScope | None = None,
     ) -> OutboundMessage:
         """Process a text message directly without using the message bus."""
@@ -365,6 +392,7 @@ class AgentLoop:
             sender_id="user",
             chat_id=chat_id,
             content=content,
+            metadata={"retrieval_mode": retrieval_mode},
         )
 
         return await self._process_message(msg, demo_scope=demo_scope)
