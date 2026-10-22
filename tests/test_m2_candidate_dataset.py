@@ -9,6 +9,7 @@ from pathlib import Path
 from nanobot.agent.tools.insurance.planning_layer.prioritization import (
     prioritize_followups,
 )
+from scripts import annotate_m2_candidates as annotator
 from scripts import build_m2_candidate_dataset as builder
 
 
@@ -161,6 +162,32 @@ class M2CandidateDatasetTests(unittest.TestCase):
 
         generator_source = Path(builder.__file__).read_text(encoding="utf-8")
         self.assertNotIn("m2_candidate_annotations.json", generator_source)
+
+    def test_annotation_tool_accepts_only_a_full_permutation(self) -> None:
+        scenario = self.annotations["scenarios"][0]
+        expected = scenario["eligible_candidate_ids"]
+        reversed_ids = list(reversed(expected))
+        self.assertEqual(
+            annotator.validate_ranking(reversed_ids, expected), reversed_ids
+        )
+        with self.assertRaises(ValueError):
+            annotator.validate_ranking(expected[:-1], expected)
+        with self.assertRaises(ValueError):
+            annotator.validate_ranking([expected[0]] * 6, expected)
+
+    def test_annotation_tool_updates_only_selected_human_slot(self) -> None:
+        document = json.loads(json.dumps(self.annotations))
+        scenario = document["scenarios"][0]
+        ranking = list(reversed(scenario["eligible_candidate_ids"]))
+        annotator.apply_ranking(
+            document,
+            scenario["scenario_id"],
+            "non_m4_annotator_1",
+            ranking,
+        )
+        self.assertEqual(scenario["annotations"][0]["ranking"], ranking)
+        self.assertEqual(scenario["annotations"][1]["ranking"], [])
+        self.assertEqual(scenario["consensus_relevance"], {})
 
 
 if __name__ == "__main__":

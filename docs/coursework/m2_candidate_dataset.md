@@ -30,6 +30,27 @@ Human rankings and consensus labels are stored separately in
 `data/evaluation/m2_candidate_annotations.json`. The generator never reads,
 creates, or overwrites that annotation file.
 
+## Human annotation UI
+
+Start the first annotator's local interface from the repository root:
+
+```powershell
+python scripts/annotate_m2_candidates.py
+```
+
+The interface displays six eligible candidates per scenario and asks one
+question: which candidate should the agent follow up first to reduce the open
+gap before the deadline? Rank all six candidates without ties. Consider, in
+order, whether there is a clear action to take, time pressure, and potential
+premium impact. Premium must not determine the ranking by itself. The UI saves
+only the human ordering to `data/evaluation/m2_candidate_annotations.json`.
+
+A later independent annotator should avoid viewing the first ranking and run:
+
+```powershell
+python scripts/annotate_m2_candidates.py --annotator non_m4_annotator_2
+```
+
 ## Field mapping
 
 | Candidate field | Existing project field or rule | Lineage |
