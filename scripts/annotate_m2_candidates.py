@@ -9,7 +9,9 @@ annotation file.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
+import random
 import threading
 import webbrowser
 from http import HTTPStatus
@@ -86,12 +88,20 @@ def build_state(
         )
         for scenario in annotations["scenarios"]
     }
+    presentation_orders = {}
+    for scenario in blind["scenarios"]:
+        candidate_ids = [row["candidate_id"] for row in scenario["candidates"]]
+        seed_material = f"{annotator_id}|{scenario['scenario_id']}".encode("utf-8")
+        seed = int.from_bytes(hashlib.sha256(seed_material).digest()[:8], "big")
+        random.Random(seed).shuffle(candidate_ids)
+        presentation_orders[scenario["scenario_id"]] = candidate_ids
     return {
         "dataset_id": blind["dataset_id"],
         "annotator_id": annotator_id,
         "as_of_date": "2026-05-31",
         "scenarios": blind["scenarios"],
         "saved_rankings": saved,
+        "presentation_orders": presentation_orders,
     }
 
 
@@ -169,7 +179,7 @@ const statusText = {"Awaiting Documents":"等待补充材料（有明确行动�
 async function start() {
   state = await (await fetch('/api/state')).json();
   state.scenarios.forEach(s => orders[s.scenario_id] =
-    state.saved_rankings[s.scenario_id].length ? [...state.saved_rankings[s.scenario_id]] : s.candidates.map(c => c.candidate_id));
+    state.saved_rankings[s.scenario_id].length ? [...state.saved_rankings[s.scenario_id]] : [...state.presentation_orders[s.scenario_id]]);
   renderNav(); render();
 }
 function renderNav() {
@@ -185,7 +195,7 @@ function facts(c) {
 }
 function render() {
   const s=state.scenarios[current], byId=Object.fromEntries(s.candidates.map(c=>[c.candidate_id,c]));
-  document.getElementById('meta').innerHTML=`<span>代理人：${s.agent_id}</span><span>Open gap：${money(s.open_gap)}</span><span>截止日：${s.deadline}</span><span>证据截至：${state.as_of_date}</span>`;
+  document.getElementById('meta').innerHTML=`<span>代理人：${s.agent_id}</span><span>Open gap：${money(s.open_gap)}</span><span>截止日：${s.deadline}</span><span>证据截至：${state.as_of_date}</span><span>产品专长：${s.agent_specialties.join(' · ')}</span>`;
   const box=document.getElementById('candidates'); box.innerHTML='';
   orders[s.scenario_id].forEach((id,index)=>{const c=byId[id], card=document.createElement('div'); card.className='candidate'; card.draggable=true; card.dataset.id=id;
     card.innerHTML=`<div class="rank">${index+1}</div><div><h3>${id}<span class="badge">${c.candidate_type==='policy'?'待处理保单':'候选客户'}</span></h3>

@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import json
 from datetime import date, timedelta
+from itertools import combinations
 from pathlib import Path
 from typing import Any
 
@@ -94,7 +95,7 @@ def build_dataset() -> dict[str, Any]:
     attribution_by_agent = load("attribution.json")
     scenarios: list[dict[str, Any]] = []
 
-    for agent in agents[:SCENARIO_COUNT]:
+    for scenario_index, agent in enumerate(agents[:SCENARIO_COUNT]):
         agent_id = agent["agent_id"]
         performance = performance_by_agent[agent_id]
         client_rows = clients_by_agent[agent_id]["clients"]
@@ -176,17 +177,18 @@ def build_dataset() -> dict[str, Any]:
             for row in available_clients
             if not ({"Renewal Due", "Follow-up"} & set(row["tag_labels"]))
         ]
-        actionable_clients.sort(
-            key=lambda row: (
-                -(3 * ("Renewal Due" in row["tag_labels"])
-                  + 2 * ("Follow-up" in row["tag_labels"])
-                  + ("High Value" in row["tag_labels"])),
-                row["client_id"],
-            )
-        )
+        actionable_clients.sort(key=lambda row: row["client_id"])
         filtered_clients.sort(key=lambda row: row["client_id"])
+        actionable_pairs = list(combinations(actionable_clients, 2))
+        if len(actionable_pairs) < SCENARIO_COUNT:
+            raise ValueError(
+                f"{agent_id} needs at least five independent actionable clients"
+            )
+        selected_actionable_clients = list(
+            actionable_pairs[scenario_index % len(actionable_pairs)]
+        )
         client_candidates = (
-            actionable_clients[:ACTIONABLE_CLIENTS_PER_SCENARIO]
+            selected_actionable_clients
             + filtered_clients[:FILTERED_CLIENTS_PER_SCENARIO]
         )
         for client in client_candidates:
@@ -233,6 +235,7 @@ def build_dataset() -> dict[str, Any]:
         scenarios.append({
             "scenario_id": f"SCN-{agent_id}",
             "agent_id": agent_id,
+            "agent_specialties": agent["specialties"],
             "objective": {
                 "metric": "written_premium",
                 "current": current,
@@ -246,13 +249,13 @@ def build_dataset() -> dict[str, Any]:
         })
 
     return {
-        "dataset_id": "m2-coursework-candidates-v1",
+        "dataset_id": "m2-coursework-candidates-v2",
         "description": "Deterministic coursework candidate set for M4 ranking integration.",
         "as_of_date": AS_OF.isoformat(),
         "currency": "USD",
         "evaluation_k": [1, 3, 5],
         "selection": {
-            "method": "First ten agent IDs in ascending order; four policies, two actionable clients, and four filter-control clients per agent",
+            "method": "First ten agent IDs in ascending order; four policies, a different deterministic pair from five actionable clients per scenario, and four filter-control clients per agent",
             "random_sampling": False,
             "scenario_count": len(scenarios),
             "candidates_per_scenario": 10,
@@ -274,7 +277,7 @@ def build_dataset() -> dict[str, Any]:
         ],
         "field_lineage": {
             "direct_project_fields": [
-                "agent_id", "candidate_id", "premium", "policy_status",
+                "agent_id", "agent_specialties", "candidate_id", "premium", "policy_status",
                 "submit_date", "estimated_approval_days", "client_tags",
                 "product_type", "source_record_id",
             ],
@@ -332,6 +335,7 @@ def build_blind_dataset(dataset: dict[str, Any]) -> dict[str, Any]:
         scenarios.append({
             "scenario_id": scenario["scenario_id"],
             "agent_id": scenario["agent_id"],
+            "agent_specialties": scenario["agent_specialties"],
             "open_gap": scenario["objective"]["open_gap"],
             "currency": scenario["objective"]["unit"],
             "deadline": scenario["objective"]["deadline"],
@@ -339,7 +343,7 @@ def build_blind_dataset(dataset: dict[str, Any]) -> dict[str, Any]:
         })
     return {
         "dataset_id": dataset["dataset_id"],
-        "blind_version": "human-ranking-v1",
+        "blind_version": "human-ranking-v2",
         "description": "Blinded evidence-only view for independent human ranking.",
         "scenarios": scenarios,
     }

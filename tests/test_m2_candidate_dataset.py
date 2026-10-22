@@ -39,6 +39,7 @@ class M2CandidateDatasetTests(unittest.TestCase):
         for scenario in self.dataset["scenarios"]:
             self.assertEqual(len(scenario["candidates"]), 10)
             self.assertEqual(scenario["objective"]["unit"], "USD")
+            self.assertGreaterEqual(len(scenario["agent_specialties"]), 1)
             self.assertEqual(
                 {row["candidate_type"] for row in scenario["candidates"]},
                 {"policy", "client"},
@@ -117,8 +118,16 @@ class M2CandidateDatasetTests(unittest.TestCase):
             "reference_relevance_grade", "rule_based_provisional_grade",
         }
         self.assertEqual(len(self.blind["scenarios"]), 10)
+        full_by_id = {
+            row["scenario_id"]: row for row in self.dataset["scenarios"]
+        }
         for scenario in self.blind["scenarios"]:
             self.assertEqual(len(scenario["candidates"]), 6)
+            self.assertGreaterEqual(len(scenario["agent_specialties"]), 1)
+            self.assertEqual(
+                scenario["agent_specialties"],
+                full_by_id[scenario["scenario_id"]]["agent_specialties"],
+            )
             for row in scenario["candidates"]:
                 self.assertEqual(set(row), allowed)
                 self.assertTrue(forbidden.isdisjoint(row))
@@ -126,9 +135,32 @@ class M2CandidateDatasetTests(unittest.TestCase):
                 self.assertTrue(row["permission_allowed"])
                 self.assertTrue(row["compliance_allowed"])
 
+    def test_actionable_client_pairs_are_diverse_across_scenarios(self) -> None:
+        pairs = []
+        signal_combinations = set()
+        unequal_premium_pairs = 0
+        for scenario in self.blind["scenarios"]:
+            clients = [
+                row for row in scenario["candidates"]
+                if row["candidate_type"] == "client"
+            ]
+            self.assertEqual(len(clients), 2)
+            pairs.append(tuple(sorted(row["candidate_id"].rsplit("-", 1)[-1] for row in clients)))
+            signal_combinations.add(tuple(sorted(
+                "renewal" if "Renewal Due" in row["client_tags"] else "follow-up"
+                for row in clients
+            )))
+            unequal_premium_pairs += clients[0]["premium"] != clients[1]["premium"]
+        self.assertEqual(len(set(pairs)), 10)
+        self.assertEqual(
+            signal_combinations,
+            {("follow-up", "follow-up"), ("follow-up", "renewal"), ("renewal", "renewal")},
+        )
+        self.assertGreaterEqual(unequal_premium_pairs, 9)
+
     def test_annotation_template_is_separate_and_valid_when_completed(self) -> None:
         self.assertEqual(self.annotations["dataset_id"], self.dataset["dataset_id"])
-        self.assertEqual(self.annotations["annotation_version"], "human-v1")
+        self.assertEqual(self.annotations["annotation_version"], "human-v2")
         self.assertIn(self.annotations["annotation_status"], {"pending", "complete"})
         blind_by_id = {
             row["scenario_id"]: {
@@ -188,6 +220,30 @@ class M2CandidateDatasetTests(unittest.TestCase):
         self.assertEqual(scenario["annotations"][0]["ranking"], ranking)
         self.assertEqual(scenario["annotations"][1]["ranking"], [])
         self.assertEqual(scenario["consensus_relevance"], {})
+
+    def test_annotation_presentation_order_is_blinded_and_deterministic(self) -> None:
+        first = annotator.build_state(
+            self.blind, self.annotations, "non_m4_annotator_1"
+        )
+        repeated = annotator.build_state(
+            self.blind, self.annotations, "non_m4_annotator_1"
+        )
+        second = annotator.build_state(
+            self.blind, self.annotations, "non_m4_annotator_2"
+        )
+        self.assertEqual(first["presentation_orders"], repeated["presentation_orders"])
+        changed_from_source = 0
+        changed_between_annotators = 0
+        for scenario in self.blind["scenarios"]:
+            scenario_id = scenario["scenario_id"]
+            source = [row["candidate_id"] for row in scenario["candidates"]]
+            first_order = first["presentation_orders"][scenario_id]
+            second_order = second["presentation_orders"][scenario_id]
+            self.assertEqual(set(first_order), set(source))
+            changed_from_source += first_order != source
+            changed_between_annotators += first_order != second_order
+        self.assertGreaterEqual(changed_from_source, 8)
+        self.assertGreaterEqual(changed_between_annotators, 8)
 
 
 if __name__ == "__main__":

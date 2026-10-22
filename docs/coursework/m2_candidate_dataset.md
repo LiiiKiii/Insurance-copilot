@@ -11,6 +11,12 @@ the requested range of 8–10 scenarios, 10–15 raw candidates per scenario,
 80–120 raw candidates overall, and at least 50–60 candidates after filtering.
 No random row sampling is used.
 
+To avoid repeated ranking templates, the ten scenarios use all ten unique
+pairs drawn from five available actionable clients per agent. This produces
+renewal/renewal, renewal/follow-up, and follow-up/follow-up cases while leaving
+the source customer and policy records unchanged. Candidate cards are shown in
+a stable annotator-specific order to reduce presentation-order bias.
+
 The primary evaluation cut-offs are `K = 1, 3, 5`.
 
 All monetary values are denominated in USD. The file is regenerated with:
@@ -46,7 +52,9 @@ premium impact. Premium must not determine the ranking by itself. The UI saves
 only the human ordering to `data/evaluation/m2_candidate_annotations.json`.
 If evidence is otherwise tied, use higher premium, earlier submission date,
 then ascending candidate ID as deterministic tie-breakers. The initial display
-order has no recommendation meaning.
+order has no recommendation meaning. The raw agent product specialties are
+shown as scenario context so annotators can assess product fit without seeing
+M4's derived business-fit score.
 
 A later independent annotator should avoid viewing the first ranking and run:
 
@@ -60,6 +68,7 @@ python scripts/annotate_m2_candidates.py --annotator non_m4_annotator_2
 | --- | --- | --- |
 | `scenario_id` | `SCN-<agent_id>` | Derived identifier |
 | `agent_id` | Agent record `agent_id` | Source-derived project field |
+| `agent_specialties` | Agent record `specialties` | Existing project field used as blinded scenario context |
 | `candidate_id` | Policy `policy_id` or client `client_id` | Existing project field |
 | `premium` | Policy or client `premium` | Existing project field |
 | `expected_contribution` | Policy premium × agent conversion rate; client premium × agent retention rate | Derived |

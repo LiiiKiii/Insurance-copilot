@@ -1,6 +1,6 @@
 {
-  "dataset_id": "m2-coursework-candidates-v1",
-  "annotation_version": "human-v1",
+  "dataset_id": "m2-coursework-candidates-v2",
+  "annotation_version": "human-v2",
   "annotation_status": "pending",
   "recommended_method": "Two non-M4 annotators rank independently; one annotator is acceptable only if reported as a limitation.",
   "grading_rule": {
@@ -17,20 +17,13 @@
         "POL-00690-002",
         "POL-00690-003",
         "POL-00690-004",
-        "CLI-00690-008",
-        "CLI-00690-015"
+        "CLI-00690-006",
+        "CLI-00690-008"
       ],
       "annotations": [
         {
           "annotator_id": "non_m4_annotator_1",
-          "ranking": [
-            "POL-00690-004",
-            "CLI-00690-008",
-            "CLI-00690-015",
-            "POL-00690-003",
-            "POL-00690-002",
-            "POL-00690-001"
-          ]
+          "ranking": []
         },
         {
           "annotator_id": "non_m4_annotator_2",
@@ -46,20 +39,13 @@
         "POL-00770-002",
         "POL-00770-003",
         "POL-00770-004",
-        "CLI-00770-008",
-        "CLI-00770-015"
+        "CLI-00770-006",
+        "CLI-00770-011"
       ],
       "annotations": [
         {
           "annotator_id": "non_m4_annotator_1",
-          "ranking": [
-            "POL-00770-004",
-            "CLI-00770-008",
-            "CLI-00770-015",
-            "POL-00770-003",
-            "POL-00770-002",
-            "POL-00770-001"
-          ]
+          "ranking": []
         },
         {
           "annotator_id": "non_m4_annotator_2",
@@ -75,20 +61,13 @@
         "POL-00817-002",
         "POL-00817-003",
         "POL-00817-004",
-        "CLI-00817-008",
+        "CLI-00817-006",
         "CLI-00817-015"
       ],
       "annotations": [
         {
           "annotator_id": "non_m4_annotator_1",
-          "ranking": [
-            "CLI-00817-008",
-            "CLI-00817-015",
-            "POL-00817-004",
-            "POL-00817-003",
-            "POL-00817-002",
-            "POL-00817-001"
-          ]
+          "ranking": []
         },
         {
           "annotator_id": "non_m4_annotator_2",
@@ -104,20 +83,13 @@
         "POL-00949-002",
         "POL-00949-003",
         "POL-00949-004",
-        "CLI-00949-008",
-        "CLI-00949-015"
+        "CLI-00949-006",
+        "CLI-00949-016"
       ],
       "annotations": [
         {
           "annotator_id": "non_m4_annotator_1",
-          "ranking": [
-            "CLI-00949-008",
-            "CLI-00949-015",
-            "POL-00949-004",
-            "POL-00949-001",
-            "POL-00949-002",
-            "POL-00949-003"
-          ]
+          "ranking": []
         },
         {
           "annotator_id": "non_m4_annotator_2",
@@ -134,19 +106,12 @@
         "POL-01191-003",
         "POL-01191-004",
         "CLI-01191-008",
-        "CLI-01191-015"
+        "CLI-01191-011"
       ],
       "annotations": [
         {
           "annotator_id": "non_m4_annotator_1",
-          "ranking": [
-            "CLI-01191-008",
-            "CLI-01191-015",
-            "POL-01191-004",
-            "POL-01191-003",
-            "POL-01191-002",
-            "POL-01191-001"
-          ]
+          "ranking": []
         },
         {
           "annotator_id": "non_m4_annotator_2",
@@ -168,14 +133,7 @@
       "annotations": [
         {
           "annotator_id": "non_m4_annotator_1",
-          "ranking": [
-            "CLI-01448-008",
-            "CLI-01448-015",
-            "POL-01448-004",
-            "POL-01448-003",
-            "POL-01448-002",
-            "POL-01448-001"
-          ]
+          "ranking": []
         },
         {
           "annotator_id": "non_m4_annotator_2",
@@ -192,19 +150,12 @@
         "POL-01525-003",
         "POL-01525-004",
         "CLI-01525-008",
-        "CLI-01525-015"
+        "CLI-01525-016"
       ],
       "annotations": [
         {
           "annotator_id": "non_m4_annotator_1",
-          "ranking": [
-            "POL-01525-004",
-            "CLI-01525-008",
-            "CLI-01525-015",
-            "POL-01525-003",
-            "POL-01525-002",
-            "POL-01525-001"
-          ]
+          "ranking": []
         },
         {
           "annotator_id": "non_m4_annotator_2",
@@ -220,20 +171,13 @@
         "POL-01569-002",
         "POL-01569-003",
         "POL-01569-004",
-        "CLI-01569-008",
+        "CLI-01569-011",
         "CLI-01569-015"
       ],
       "annotations": [
         {
           "annotator_id": "non_m4_annotator_1",
-          "ranking": [
-            "CLI-01569-008",
-            "CLI-01569-015",
-            "POL-01569-004",
-            "POL-01569-003",
-            "POL-01569-002",
-            "POL-01569-001"
-          ]
+          "ranking": []
         },
         {
           "annotator_id": "non_m4_annotator_2",
@@ -249,20 +193,13 @@
         "POL-01662-002",
         "POL-01662-003",
         "POL-01662-004",
-        "CLI-01662-008",
-        "CLI-01662-015"
+        "CLI-01662-011",
+        "CLI-01662-016"
       ],
       "annotations": [
         {
           "annotator_id": "non_m4_annotator_1",
-          "ranking": [
-            "CLI-01662-008",
-            "CLI-01662-015",
-            "POL-01662-004",
-            "POL-01662-003",
-            "POL-01662-002",
-            "POL-01662-001"
-          ]
+          "ranking": []
         },
         {
           "annotator_id": "non_m4_annotator_2",
@@ -278,20 +215,13 @@
         "POL-01876-002",
         "POL-01876-003",
         "POL-01876-004",
-        "CLI-01876-008",
-        "CLI-01876-015"
+        "CLI-01876-015",
+        "CLI-01876-016"
       ],
       "annotations": [
         {
           "annotator_id": "non_m4_annotator_1",
-          "ranking": [
-            "CLI-01876-008",
-            "CLI-01876-015",
-            "POL-01876-004",
-            "POL-01876-003",
-            "POL-01876-002",
-            "POL-01876-001"
-          ]
+          "ranking": []
         },
         {
           "annotator_id": "non_m4_annotator_2",

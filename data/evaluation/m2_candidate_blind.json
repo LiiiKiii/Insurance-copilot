@@ -1,11 +1,16 @@
 {
-  "dataset_id": "m2-coursework-candidates-v1",
-  "blind_version": "human-ranking-v1",
+  "dataset_id": "m2-coursework-candidates-v2",
+  "blind_version": "human-ranking-v2",
   "description": "Blinded evidence-only view for independent human ranking.",
   "scenarios": [
     {
       "scenario_id": "SCN-AGT00690",
       "agent_id": "AGT00690",
+      "agent_specialties": [
+        "Private Motor Insurance",
+        "Home Contents Insurance",
+        "SME Business Package"
+      ],
       "open_gap": 228250.0,
       "currency": "USD",
       "deadline": "2026-12-31",
@@ -103,6 +108,26 @@
           "source_record_id": "POL-00690-004"
         },
         {
+          "candidate_id": "CLI-00690-006",
+          "candidate_type": "client",
+          "premium": 7480.0,
+          "currency": "USD",
+          "policy_status": null,
+          "submit_date": null,
+          "estimated_approval_days": null,
+          "client_tags": [
+            "Retiree",
+            "Growth",
+            "Motor",
+            "Follow-up"
+          ],
+          "product_type": "Private Motor Insurance",
+          "eligible": true,
+          "permission_allowed": true,
+          "compliance_allowed": true,
+          "source_record_id": "CLI-00690-006"
+        },
+        {
           "candidate_id": "CLI-00690-008",
           "candidate_type": "client",
           "premium": 3050.0,
@@ -121,32 +146,17 @@
           "permission_allowed": true,
           "compliance_allowed": true,
           "source_record_id": "CLI-00690-008"
-        },
-        {
-          "candidate_id": "CLI-00690-015",
-          "candidate_type": "client",
-          "premium": 3050.0,
-          "currency": "USD",
-          "policy_status": null,
-          "submit_date": null,
-          "estimated_approval_days": null,
-          "client_tags": [
-            "Young Professional",
-            "Standard",
-            "Specialty",
-            "Renewal Due"
-          ],
-          "product_type": "Personal Liability Insurance",
-          "eligible": true,
-          "permission_allowed": true,
-          "compliance_allowed": true,
-          "source_record_id": "CLI-00690-015"
         }
       ]
     },
     {
       "scenario_id": "SCN-AGT00770",
       "agent_id": "AGT00770",
+      "agent_specialties": [
+        "Private Motor Insurance - Annual",
+        "Private Motor Insurance",
+        "Home Contents Insurance"
+      ],
       "open_gap": 211350.0,
       "currency": "USD",
       "deadline": "2026-12-31",
@@ -244,50 +254,55 @@
           "source_record_id": "POL-00770-004"
         },
         {
-          "candidate_id": "CLI-00770-008",
+          "candidate_id": "CLI-00770-006",
           "candidate_type": "client",
-          "premium": 3340.0,
+          "premium": 8210.0,
           "currency": "USD",
           "policy_status": null,
           "submit_date": null,
           "estimated_approval_days": null,
           "client_tags": [
-            "Family Builder",
-            "Standard",
-            "Liability",
-            "Renewal Due"
+            "Young Professional",
+            "Growth",
+            "Motor",
+            "Follow-up"
           ],
-          "product_type": "Public Liability Insurance",
+          "product_type": "Private Motor Insurance",
           "eligible": true,
           "permission_allowed": true,
           "compliance_allowed": true,
-          "source_record_id": "CLI-00770-008"
+          "source_record_id": "CLI-00770-006"
         },
         {
-          "candidate_id": "CLI-00770-015",
+          "candidate_id": "CLI-00770-011",
           "candidate_type": "client",
-          "premium": 3340.0,
+          "premium": 6260.0,
           "currency": "USD",
           "policy_status": null,
           "submit_date": null,
           "estimated_approval_days": null,
           "client_tags": [
-            "Family Builder",
+            "Retiree",
             "Standard",
-            "Specialty",
-            "Renewal Due"
+            "Motor",
+            "Follow-up"
           ],
-          "product_type": "Personal Liability Insurance",
+          "product_type": "Private Motor Insurance",
           "eligible": true,
           "permission_allowed": true,
           "compliance_allowed": true,
-          "source_record_id": "CLI-00770-015"
+          "source_record_id": "CLI-00770-011"
         }
       ]
     },
     {
       "scenario_id": "SCN-AGT00817",
       "agent_id": "AGT00817",
+      "agent_specialties": [
+        "Private Motor Insurance",
+        "Home Contents Insurance",
+        "Commercial Motor Insurance"
+      ],
       "open_gap": 139270.0,
       "currency": "USD",
       "deadline": "2026-12-31",
@@ -385,24 +400,24 @@
           "source_record_id": "POL-00817-004"
         },
         {
-          "candidate_id": "CLI-00817-008",
+          "candidate_id": "CLI-00817-006",
           "candidate_type": "client",
-          "premium": 2260.0,
+          "premium": 5550.0,
           "currency": "USD",
           "policy_status": null,
           "submit_date": null,
           "estimated_approval_days": null,
           "client_tags": [
-            "Pre-retirement",
-            "Standard",
-            "Liability",
-            "Renewal Due"
+            "Family Builder",
+            "Growth",
+            "Motor",
+            "Follow-up"
           ],
-          "product_type": "Public Liability Insurance",
+          "product_type": "Private Motor Insurance",
           "eligible": true,
           "permission_allowed": true,
           "compliance_allowed": true,
-          "source_record_id": "CLI-00817-008"
+          "source_record_id": "CLI-00817-006"
         },
         {
           "candidate_id": "CLI-00817-015",
@@ -429,6 +444,11 @@
     {
       "scenario_id": "SCN-AGT00949",
       "agent_id": "AGT00949",
+      "agent_specialties": [
+        "Private Motor Insurance",
+        "Home Contents Insurance",
+        "Private Motor Insurance - Annual"
+      ],
       "open_gap": 273280.0,
       "currency": "USD",
       "deadline": "2026-12-31",
@@ -526,50 +546,55 @@
           "source_record_id": "POL-00949-004"
         },
         {
-          "candidate_id": "CLI-00949-008",
+          "candidate_id": "CLI-00949-006",
           "candidate_type": "client",
-          "premium": 3110.0,
+          "premium": 7630.0,
           "currency": "USD",
           "policy_status": null,
           "submit_date": null,
           "estimated_approval_days": null,
           "client_tags": [
-            "Retiree",
-            "Standard",
-            "Liability",
-            "Renewal Due"
+            "Family Builder",
+            "Growth",
+            "Motor",
+            "Follow-up"
           ],
-          "product_type": "Public Liability Insurance",
+          "product_type": "Private Motor Insurance",
           "eligible": true,
           "permission_allowed": true,
           "compliance_allowed": true,
-          "source_record_id": "CLI-00949-008"
+          "source_record_id": "CLI-00949-006"
         },
         {
-          "candidate_id": "CLI-00949-015",
+          "candidate_id": "CLI-00949-016",
           "candidate_type": "client",
-          "premium": 3110.0,
+          "premium": 4010.0,
           "currency": "USD",
           "policy_status": null,
           "submit_date": null,
           "estimated_approval_days": null,
           "client_tags": [
-            "Retiree",
+            "Young Professional",
             "Standard",
-            "Specialty",
-            "Renewal Due"
+            "Motor",
+            "Follow-up"
           ],
-          "product_type": "Personal Liability Insurance",
+          "product_type": "Private Motor Insurance",
           "eligible": true,
           "permission_allowed": true,
           "compliance_allowed": true,
-          "source_record_id": "CLI-00949-015"
+          "source_record_id": "CLI-00949-016"
         }
       ]
     },
     {
       "scenario_id": "SCN-AGT01191",
       "agent_id": "AGT01191",
+      "agent_specialties": [
+        "Private Motor Insurance",
+        "Home Contents Insurance",
+        "Private Motor Insurance - Annual"
+      ],
       "open_gap": 270930.0,
       "currency": "USD",
       "deadline": "2026-12-31",
@@ -687,30 +712,35 @@
           "source_record_id": "CLI-01191-008"
         },
         {
-          "candidate_id": "CLI-01191-015",
+          "candidate_id": "CLI-01191-011",
           "candidate_type": "client",
-          "premium": 3220.0,
+          "premium": 6030.0,
           "currency": "USD",
           "policy_status": null,
           "submit_date": null,
           "estimated_approval_days": null,
           "client_tags": [
-            "Young Professional",
+            "Family Builder",
             "Standard",
-            "Specialty",
-            "Renewal Due"
+            "Motor",
+            "Follow-up"
           ],
-          "product_type": "Personal Liability Insurance",
+          "product_type": "Private Motor Insurance",
           "eligible": true,
           "permission_allowed": true,
           "compliance_allowed": true,
-          "source_record_id": "CLI-01191-015"
+          "source_record_id": "CLI-01191-011"
         }
       ]
     },
     {
       "scenario_id": "SCN-AGT01448",
       "agent_id": "AGT01448",
+      "agent_specialties": [
+        "Private Motor Insurance",
+        "Private Motor Insurance - Annual",
+        "Home Contents Insurance"
+      ],
       "open_gap": 671640.0,
       "currency": "USD",
       "deadline": "2026-12-31",
@@ -852,6 +882,11 @@
     {
       "scenario_id": "SCN-AGT01525",
       "agent_id": "AGT01525",
+      "agent_specialties": [
+        "Private Motor Insurance",
+        "Home Contents Insurance",
+        "Public Liability Insurance"
+      ],
       "open_gap": 168720.0,
       "currency": "USD",
       "deadline": "2026-12-31",
@@ -969,30 +1004,35 @@
           "source_record_id": "CLI-01525-008"
         },
         {
-          "candidate_id": "CLI-01525-015",
+          "candidate_id": "CLI-01525-016",
           "candidate_type": "client",
-          "premium": 2480.0,
+          "premium": 3200.0,
           "currency": "USD",
           "policy_status": null,
           "submit_date": null,
           "estimated_approval_days": null,
           "client_tags": [
-            "Pre-retirement",
+            "Retiree",
             "Standard",
-            "Specialty",
-            "Renewal Due"
+            "Motor",
+            "Follow-up"
           ],
-          "product_type": "Personal Liability Insurance",
+          "product_type": "Private Motor Insurance",
           "eligible": true,
           "permission_allowed": true,
           "compliance_allowed": true,
-          "source_record_id": "CLI-01525-015"
+          "source_record_id": "CLI-01525-016"
         }
       ]
     },
     {
       "scenario_id": "SCN-AGT01569",
       "agent_id": "AGT01569",
+      "agent_specialties": [
+        "Private Motor Insurance",
+        "Home Contents Insurance",
+        "Private Motor Insurance - Annual"
+      ],
       "open_gap": 248880.0,
       "currency": "USD",
       "deadline": "2026-12-31",
@@ -1090,24 +1130,24 @@
           "source_record_id": "POL-01569-004"
         },
         {
-          "candidate_id": "CLI-01569-008",
+          "candidate_id": "CLI-01569-011",
           "candidate_type": "client",
-          "premium": 3010.0,
+          "premium": 5640.0,
           "currency": "USD",
           "policy_status": null,
           "submit_date": null,
           "estimated_approval_days": null,
           "client_tags": [
-            "Retiree",
+            "Family Builder",
             "Standard",
-            "Liability",
-            "Renewal Due"
+            "Motor",
+            "Follow-up"
           ],
-          "product_type": "Public Liability Insurance",
+          "product_type": "Private Motor Insurance",
           "eligible": true,
           "permission_allowed": true,
           "compliance_allowed": true,
-          "source_record_id": "CLI-01569-008"
+          "source_record_id": "CLI-01569-011"
         },
         {
           "candidate_id": "CLI-01569-015",
@@ -1134,6 +1174,11 @@
     {
       "scenario_id": "SCN-AGT01662",
       "agent_id": "AGT01662",
+      "agent_specialties": [
+        "Private Motor Insurance",
+        "Home Contents Insurance",
+        "Private Motor Insurance - Annual"
+      ],
       "open_gap": 564540.0,
       "currency": "USD",
       "deadline": "2026-12-31",
@@ -1231,50 +1276,55 @@
           "source_record_id": "POL-01662-004"
         },
         {
-          "candidate_id": "CLI-01662-008",
+          "candidate_id": "CLI-01662-011",
           "candidate_type": "client",
-          "premium": 4820.0,
+          "premium": 9030.0,
           "currency": "USD",
           "policy_status": null,
           "submit_date": null,
           "estimated_approval_days": null,
           "client_tags": [
-            "Young Professional",
+            "Family Builder",
             "Standard",
-            "Liability",
-            "Renewal Due"
+            "Motor",
+            "Follow-up"
           ],
-          "product_type": "Public Liability Insurance",
+          "product_type": "Private Motor Insurance",
           "eligible": true,
           "permission_allowed": true,
           "compliance_allowed": true,
-          "source_record_id": "CLI-01662-008"
+          "source_record_id": "CLI-01662-011"
         },
         {
-          "candidate_id": "CLI-01662-015",
+          "candidate_id": "CLI-01662-016",
           "candidate_type": "client",
-          "premium": 4820.0,
+          "premium": 6220.0,
           "currency": "USD",
           "policy_status": null,
           "submit_date": null,
           "estimated_approval_days": null,
           "client_tags": [
-            "Young Professional",
+            "Family Builder",
             "Standard",
-            "Specialty",
-            "Renewal Due"
+            "Motor",
+            "Follow-up"
           ],
-          "product_type": "Personal Liability Insurance",
+          "product_type": "Private Motor Insurance",
           "eligible": true,
           "permission_allowed": true,
           "compliance_allowed": true,
-          "source_record_id": "CLI-01662-015"
+          "source_record_id": "CLI-01662-016"
         }
       ]
     },
     {
       "scenario_id": "SCN-AGT01876",
       "agent_id": "AGT01876",
+      "agent_specialties": [
+        "Home Contents Insurance",
+        "Private Motor Insurance",
+        "Private Motor Insurance - Annual"
+      ],
       "open_gap": 120190.0,
       "currency": "USD",
       "deadline": "2026-12-31",
@@ -1372,26 +1422,6 @@
           "source_record_id": "POL-01876-004"
         },
         {
-          "candidate_id": "CLI-01876-008",
-          "candidate_type": "client",
-          "premium": 2330.0,
-          "currency": "USD",
-          "policy_status": null,
-          "submit_date": null,
-          "estimated_approval_days": null,
-          "client_tags": [
-            "Family Builder",
-            "Standard",
-            "Liability",
-            "Renewal Due"
-          ],
-          "product_type": "Public Liability Insurance",
-          "eligible": true,
-          "permission_allowed": true,
-          "compliance_allowed": true,
-          "source_record_id": "CLI-01876-008"
-        },
-        {
           "candidate_id": "CLI-01876-015",
           "candidate_type": "client",
           "premium": 2330.0,
@@ -1410,6 +1440,26 @@
           "permission_allowed": true,
           "compliance_allowed": true,
           "source_record_id": "CLI-01876-015"
+        },
+        {
+          "candidate_id": "CLI-01876-016",
+          "candidate_type": "client",
+          "premium": 3010.0,
+          "currency": "USD",
+          "policy_status": null,
+          "submit_date": null,
+          "estimated_approval_days": null,
+          "client_tags": [
+            "Family Builder",
+            "Standard",
+            "Motor",
+            "Follow-up"
+          ],
+          "product_type": "Private Motor Insurance",
+          "eligible": true,
+          "permission_allowed": true,
+          "compliance_allowed": true,
+          "source_record_id": "CLI-01876-016"
         }
       ]
     }
