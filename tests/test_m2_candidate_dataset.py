@@ -231,6 +231,7 @@ class M2CandidateDatasetTests(unittest.TestCase):
     def test_annotation_tool_updates_only_selected_human_slot(self) -> None:
         document = json.loads(json.dumps(self.annotations))
         scenario = document["scenarios"][0]
+        other_annotator_ranking = list(scenario["annotations"][1]["ranking"])
         ranking = list(reversed(scenario["eligible_candidate_ids"]))
         annotator.apply_ranking(
             document,
@@ -239,7 +240,7 @@ class M2CandidateDatasetTests(unittest.TestCase):
             ranking,
         )
         self.assertEqual(scenario["annotations"][0]["ranking"], ranking)
-        self.assertEqual(scenario["annotations"][1]["ranking"], [])
+        self.assertEqual(scenario["annotations"][1]["ranking"], other_annotator_ranking)
         self.assertEqual(scenario["consensus_relevance"], {})
 
     def test_annotation_presentation_order_is_blinded_and_deterministic(self) -> None:
