@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { KPIRingCard } from "@/components/KPIRingCard";
 import { TeamMemberEditModal } from "@/components/TeamMemberEditModal";
 import { useTranslation, type MessageKey } from "@/lib/i18n";
+import { authFetch } from "@/lib/auth";
 
 /* ─── Types ─── */
 
@@ -328,7 +329,7 @@ function MemberDetail({ memberId }: { memberId: string }) {
 			fetch(`/api/targets?agent_id=${memberId}`)
 				.then((r) => r.json())
 				.catch(() => ({ data: [] })),
-			fetch(`/api/competitions?agent_id=${memberId}`)
+			authFetch(`/api/competitions?agent_id=${encodeURIComponent(memberId)}`)
 				.then((r) => r.json())
 				.catch(() => ({ competitions: [] })),
 		]).then(([perfData, targetsData, compData]) => {
@@ -783,7 +784,7 @@ function MyGoalsTab({ agentId }: { agentId: string }) {
 			fetch(`/api/targets?agent_id=${agentId}`)
 				.then((r) => r.json())
 				.catch(() => ({ data: [] })),
-			fetch(`/api/competitions?agent_id=${agentId}`)
+			authFetch(`/api/competitions?agent_id=${encodeURIComponent(agentId)}`)
 				.then((r) => r.json())
 				.catch(() => ({ competitions: [] })),
 		]).then(([perfData, targetsData, compData]) => {

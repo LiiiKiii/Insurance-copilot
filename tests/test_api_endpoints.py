@@ -1,8 +1,4 @@
-"""Offline HTTP contracts for the business routes currently mounted by the New Repo.
-
-The Original /api/{performance,competitions,...} routes have not been migrated.
-These tests exercise the existing tenant-scoped administrative counterparts.
-"""
+"""Offline HTTP contracts for tenant-scoped business and compatibility routes."""
 
 from __future__ import annotations
 
@@ -10,6 +6,7 @@ import os
 import tempfile
 import unittest
 from contextlib import contextmanager
+from datetime import date, timedelta
 from pathlib import Path
 from unittest.mock import patch
 
@@ -19,7 +16,8 @@ from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_asyn
 from sqlalchemy.orm import sessionmaker
 
 from admin.db import Base, get_db
-from admin.models.competition import Competition
+from admin.models.chat_session import ChatMessage, ChatSession
+from admin.models.competition import Competition, CompetitionEntry
 from admin.models.inbox import InboxMessage
 from admin.models.performance_target import PerformanceTarget
 from admin.models.tenant import Tenant
@@ -114,10 +112,37 @@ class ApiEndpointTests(unittest.IsolatedAsyncioTestCase):
                         name=f"Contest {suffix}",
                         type="competition",
                         target_metric="premium",
-                        deadline="2026-12-31",
+                        target_value=1000,
+                        deadline=(date.today() + timedelta(days=10)).isoformat(),
                     )
                     for suffix in ("a", "b")
                 ]
+            )
+            session.add_all(
+                [
+                    CompetitionEntry(
+                        id=f"entry-{suffix}",
+                        competition_id=f"competition-{suffix}",
+                        agent_id="admin-a" if suffix == "a" else "reader-b",
+                        current_value=500,
+                        gap=500,
+                        status="active",
+                    )
+                    for suffix in ("a", "b")
+                ]
+            )
+            session.add(
+                ChatSession(
+                    id="ws:session-a",
+                    user_id="admin-a",
+                    agent_id="admin-a",
+                    title="Persisted chat",
+                    message_count=2,
+                    messages=[
+                        ChatMessage(role="user", content="Hello"),
+                        ChatMessage(role="assistant", content="Hi"),
+                    ],
+                )
             )
             session.add_all([
                 InboxMessage(
@@ -179,6 +204,62 @@ class ApiEndpointTests(unittest.IsolatedAsyncioTestCase):
             "ok": True,
             "data": [{"agent_id": "agent-b"}, {"agent_id": "reader-b"}],
         })
+
+    async def test_compatibility_business_reads_match_frontend_contracts(self) -> None:
+        paths = self.app.openapi()["paths"]
+        for path in (
+            "/api/agent-info",
+            "/api/competitions",
+            "/api/proactive-alerts",
+        ):
+            self.assertIn("get", paths[path])
+
+        anonymous = await self.client.get("/api/agent-info?agent_id=admin-a")
+        profile = await self.client.get(
+            "/api/agent-info?agent_id=admin-a", headers=self.admin_headers
+        )
+        competitions = await self.client.get(
+            "/api/competitions?agent_id=admin-a", headers=self.admin_headers
+        )
+        alerts = await self.client.get(
+            "/api/proactive-alerts?agent_id=admin-a", headers=self.admin_headers
+        )
+
+        self.assertEqual(anonymous.status_code, 401)
+        self.assertEqual(profile.status_code, 200)
+        self.assertEqual(profile.json()["data"]["agent_id"], "admin-a")
+        self.assertEqual(competitions.status_code, 200)
+        self.assertEqual(competitions.json()["total_competitions"], 1)
+        competition = competitions.json()["competitions"][0]
+        self.assertEqual(competition["id"], "competition-a")
+        self.assertEqual(competition["urgency_level"], "critical")
+        self.assertIn("feasibility_hint", competition)
+        self.assertEqual(alerts.status_code, 200)
+        self.assertEqual(alerts.json()["alerts"][0]["competition_name"], "Contest a")
+
+    async def test_chat_sessions_are_authenticated_and_user_owned(self) -> None:
+        anonymous = await self.client.get("/api/chat-sessions")
+        listing = await self.client.get(
+            "/api/chat-sessions", headers=self.admin_headers
+        )
+        detail = await self.client.get(
+            "/api/chat-sessions/ws:session-a", headers=self.admin_headers
+        )
+        foreign = await self.client.get(
+            "/api/chat-sessions/ws:session-a", headers=self.reader_headers
+        )
+
+        self.assertEqual(anonymous.status_code, 401)
+        self.assertEqual(listing.status_code, 200)
+        self.assertEqual(
+            [item["id"] for item in listing.json()["data"]], ["ws:session-a"]
+        )
+        self.assertEqual(detail.status_code, 200)
+        self.assertEqual(
+            [item["role"] for item in detail.json()["data"]["messages"]],
+            ["user", "assistant"],
+        )
+        self.assertEqual(foreign.status_code, 404)
 
     async def test_briefing_mount_preserves_paths_and_requires_identity(self) -> None:
         paths = self.app.openapi()["paths"]

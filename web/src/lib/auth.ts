@@ -22,6 +22,67 @@ export function getToken(): string | null {
   return localStorage.getItem(TOKEN_KEY)
 }
 
+export function getRefreshToken(): string | null {
+  if (typeof window === 'undefined') return null
+  return localStorage.getItem(REFRESH_KEY)
+}
+
+let refreshInFlight: Promise<boolean> | null = null
+
+export async function refreshAccessToken(): Promise<boolean> {
+  if (typeof window === 'undefined') return false
+  if (refreshInFlight) return refreshInFlight
+
+  refreshInFlight = (async () => {
+    const refreshToken = getRefreshToken()
+    if (!refreshToken) return false
+    try {
+      const response = await fetch(`${API_CONFIG.BASE_URL}/api/admin/auth/refresh`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ refresh_token: refreshToken }),
+      })
+      const body = await response.json().catch(() => null)
+      if (!response.ok || !body?.ok || !body?.data?.access_token) return false
+      localStorage.setItem(TOKEN_KEY, body.data.access_token)
+      return true
+    } catch {
+      return false
+    }
+  })()
+
+  try {
+    return await refreshInFlight
+  } finally {
+    refreshInFlight = null
+  }
+}
+
+export function redirectToLogin(): void {
+  clearAuth()
+  if (typeof window === 'undefined' || window.location.pathname === '/login') return
+  const next = encodeURIComponent(window.location.pathname + window.location.search)
+  window.location.href = `/login?next=${next}`
+}
+
+/** Fetch a protected API route, refreshing an expired access token once. */
+export async function authFetch(input: RequestInfo | URL, init: RequestInit = {}) {
+  const headers = new Headers(init.headers)
+  const token = getToken()
+  if (token) headers.set('Authorization', `Bearer ${token}`)
+
+  let response = await fetch(input, { ...init, headers })
+  if (response.status !== 401) return response
+
+  if (await refreshAccessToken()) {
+    const refreshedToken = getToken()
+    if (refreshedToken) headers.set('Authorization', `Bearer ${refreshedToken}`)
+    response = await fetch(input, { ...init, headers })
+  }
+  if (response.status === 401) redirectToLogin()
+  return response
+}
+
 export function getChatUser(): ChatUser | null {
   if (typeof window === 'undefined') return null
   try {

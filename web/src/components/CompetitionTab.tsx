@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { cn } from '@/lib/utils'
 import { useTranslation, type MessageKey } from '@/lib/i18n'
+import { authFetch } from '@/lib/auth'
 
 // Frontend-side mapping from the backend's feasibility-hint enum
 // to translation keys, so the badge text follows the UI locale. Unknown
@@ -99,7 +100,7 @@ export function CompetitionTab({ agentId }: CompetitionTabProps) {
     if (!agentId) return
     let cancelled = false
     setLoading(true)
-    fetch(`/api/competitions?agent_id=${agentId}`, {})
+    authFetch(`/api/competitions?agent_id=${encodeURIComponent(agentId)}`)
       .then(r => r.json())
       .then(data => {
         if (cancelled) return

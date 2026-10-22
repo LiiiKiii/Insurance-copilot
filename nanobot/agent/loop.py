@@ -14,6 +14,12 @@ from nanobot.agent.tools.registry import ToolRegistry
 from nanobot.bus.events import InboundMessage, OutboundMessage
 from nanobot.bus.queue import MessageBus
 from nanobot.providers.base import LLMProvider
+from nanobot.retrieval import apply_retrieval_mode
+from nanobot.retrieval_citations import (
+    deduplicate_citations,
+    extract_retrieval_citations,
+    strip_retrieval_citations,
+)
 
 
 class AgentLoop:
@@ -26,6 +32,7 @@ class AgentLoop:
         workspace: Path,
         model: str | None = None,
         tool_registry: ToolRegistry | None = None,
+        supplemental_tool_registry: ToolRegistry | None = None,
         max_tool_iterations: int = 4,
     ):
         if max_tool_iterations < 0:
@@ -36,6 +43,7 @@ class AgentLoop:
         self.workspace = workspace
         self.model = model or provider.get_default_model()
         self.tool_registry = tool_registry or ToolRegistry()
+        self.supplemental_tool_registry = supplemental_tool_registry
         self.max_tool_iterations = max_tool_iterations
 
         self.context = ContextBuilder(workspace)
@@ -144,8 +152,12 @@ class AgentLoop:
             chat_id=msg.chat_id,
         )
 
-        tool_definitions = self.tool_registry.get_definitions() or None
+        tool_definitions = self.tool_registry.get_definitions()
+        if self.supplemental_tool_registry is not None:
+            tool_definitions.extend(self.supplemental_tool_registry.get_definitions())
+        tool_definitions = tool_definitions or None
         tool_iterations = 0
+        citations: list[dict] = []
 
         while True:
             response = await self.provider.chat_with_retry(
@@ -167,6 +179,10 @@ class AgentLoop:
                     metadata=dict(msg.metadata or {}),
                 )
 
+            apply_retrieval_mode(
+                response.tool_calls,
+                (msg.metadata or {}).get("retrieval_mode"),
+            )
             self.context.add_assistant_message(
                 messages,
                 response.content,
@@ -178,15 +194,24 @@ class AgentLoop:
                 thinking_blocks=response.thinking_blocks,
             )
             for tool_call in response.tool_calls:
-                result = await self.tool_registry.execute(
+                registry = (
+                    self.supplemental_tool_registry
+                    if self.supplemental_tool_registry is not None
+                    and self.supplemental_tool_registry.has(tool_call.name)
+                    else self.tool_registry
+                )
+                result = await registry.execute(
                     tool_call.name,
                     tool_call.arguments,
+                )
+                citations.extend(
+                    extract_retrieval_citations(tool_call.name, result)
                 )
                 self.context.add_tool_result(
                     messages,
                     tool_call.id,
                     tool_call.name,
-                    result,
+                    strip_retrieval_citations(tool_call.name, result),
                 )
 
             tool_iterations += 1
@@ -211,11 +236,13 @@ class AgentLoop:
                     thinking_blocks=response.thinking_blocks,
                 )
 
+        metadata = dict(msg.metadata or {})
+        metadata["citations"] = deduplicate_citations(citations)
         return OutboundMessage(
             channel=msg.channel,
             chat_id=msg.chat_id,
             content=final_content,
-            metadata=dict(msg.metadata or {}),
+            metadata=metadata,
         )
 
     async def process_direct(
@@ -227,6 +254,7 @@ class AgentLoop:
         on_progress: Callable[[str], Awaitable[None]] | None = None,
         on_stream: Callable[[str], Awaitable[None]] | None = None,
         on_stream_end: Callable[..., Awaitable[None]] | None = None,
+        retrieval_mode: str = "keyword",
     ) -> OutboundMessage:
         """Process a text message directly without using the message bus."""
 
@@ -246,6 +274,7 @@ class AgentLoop:
             sender_id="user",
             chat_id=chat_id,
             content=content,
+            metadata={"retrieval_mode": retrieval_mode},
         )
 
         return await self._process_message(msg)

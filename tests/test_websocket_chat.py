@@ -119,6 +119,10 @@ class WebSocketChatTests(unittest.IsolatedAsyncioTestCase):
         self.flow_mock = self.flow_patch.start()
         self.ai_patch = patch("api.ws.log_ai_audit", new_callable=AsyncMock)
         self.ai_mock = self.ai_patch.start()
+        self.persistence_patch = patch(
+            "api.ws._persist_chat_turn", new_callable=AsyncMock
+        )
+        self.persistence_mock = self.persistence_patch.start()
         await self.socket.connect()
 
     async def asyncTearDown(self) -> None:
@@ -126,6 +130,7 @@ class WebSocketChatTests(unittest.IsolatedAsyncioTestCase):
             await self.socket.disconnect()
         self.ai_patch.stop()
         self.flow_patch.stop()
+        self.persistence_patch.stop()
         self.auth_patch.stop()
 
     async def test_route_is_registered(self) -> None:

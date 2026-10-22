@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { cn } from '@/lib/utils'
 import { useTranslation } from '@/lib/i18n'
+import { authFetch } from '@/lib/auth'
 
 interface Alert {
   competition_name: string
@@ -25,7 +26,7 @@ export function AlertBanner({ agentId, className }: AlertBannerProps) {
 
   useEffect(() => {
     setDismissed(false)
-    fetch(`/api/proactive-alerts?agent_id=${encodeURIComponent(agentId)}`)
+    authFetch(`/api/proactive-alerts?agent_id=${encodeURIComponent(agentId)}`)
       .then(response => response.json())
       .then(data => setAlerts(data.alerts || []))
       .catch(() => setAlerts([]))

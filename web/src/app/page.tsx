@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import { useInsuranceChat } from '@/lib/useWebSocket'
 import { Sidebar, SidebarContent } from '@/components/Sidebar'
 import { ConfirmModal } from '@/components/ConfirmModal'
-import { clearAuth } from '@/lib/auth'
+import { clearAuth, getChatUser, getRefreshToken, getToken } from '@/lib/auth'
 import { ChatInterface } from '@/components/ChatInterface'
 import { AlertBanner } from '@/components/AlertBanner'
 import { PerformanceTab } from '@/components/PerformanceTab'
@@ -18,7 +18,6 @@ import { DataBottomSheet } from '@/components/mobile/DataBottomSheet'
 import { DataFab } from '@/components/mobile/DataFab'
 import { useTranslation } from '@/lib/i18n'
 import { cn } from '@/lib/utils'
-import { getChatUser } from '@/lib/auth'
 
 type TabKey = 'performance' | 'competition' | 'honors'
 
@@ -38,7 +37,8 @@ export default function Home() {
   // Auth guard: redirect to /login if not logged in
   useEffect(() => {
     const user = getChatUser()
-    if (!user) {
+    if (!user || (!getToken() && !getRefreshToken())) {
+      clearAuth()
       router.replace('/login')
       return
     }

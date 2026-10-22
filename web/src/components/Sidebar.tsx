@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
-import { clearAuth, getChatUser } from "@/lib/auth";
+import { authFetch, clearAuth, getChatUser } from "@/lib/auth";
 import { ThemeToggle } from "./ThemeToggle";
 import { ConfirmModal } from "./ConfirmModal";
 import { useTranslation, LOCALE_BCP47 } from "@/lib/i18n";
@@ -118,7 +118,7 @@ export function SidebarContent({
 	useEffect(() => {
 		if (!agentId) return;
 		let cancelled = false;
-		fetch(`/api/agent-info?agent_id=${agentId}`)
+		authFetch(`/api/agent-info?agent_id=${encodeURIComponent(agentId)}`)
 			.then((r) => r.json())
 			.then((d) => {
 				if (!cancelled && d?.data) setCurrentAgent(d.data);

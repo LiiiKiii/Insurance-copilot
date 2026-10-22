@@ -9,6 +9,7 @@ engines.
 from __future__ import annotations
 
 import logging
+import os
 from collections.abc import AsyncIterator, Callable
 from contextlib import asynccontextmanager
 from importlib import import_module
@@ -16,7 +17,7 @@ from typing import Any
 
 from fastapi import APIRouter, Depends, FastAPI
 
-from admin.db import close_db, init_db
+from admin.db import PROJECT_ROOT, close_db, init_db
 from admin.routers import admin_router
 from api.briefing_access import require_briefing_access
 from api.routers.config import router as config_router
@@ -122,6 +123,21 @@ def create_app(
                 active_runtime = application.state.runtime_factory()
                 application.state.runtime = active_runtime
 
+            if os.environ.get("BUILTIN_KNOWLEDGE_AUTO_SYNC", "1") == "1":
+                try:
+                    from admin.services.builtin_knowledge import (
+                        sync_builtin_knowledge,
+                    )
+
+                    # Built-in Markdown is versioned under the repository's
+                    # data/knowledge directory, not the configurable Agent
+                    # workspace (which normally lives under ~/.nanobot).
+                    await sync_builtin_knowledge(PROJECT_ROOT)
+                except Exception:
+                    # Built-in indexing is repairable through the explicit
+                    # sync command and must not make the whole API unavailable.
+                    logger.exception("Built-in knowledge synchronization failed")
+
             await active_runtime.start()
         except BaseException:
             if active_runtime is not None:
@@ -180,6 +196,11 @@ def create_app(
     # Shared platform and prior-stage API routes.
     application.include_router(config_router)
 
+    for module_name in ("api.routers.retrieval", "api.routers.audio"):
+        service_router = _optional_router(module_name)
+        if service_router is not None:
+            application.include_router(service_router)
+
     # ``api.routers.config`` always exports ``router``; its later-stage feature
     # router is loaded separately to avoid registering the base router twice.
     feature_router = _optional_attribute("api.routers.config", "feature_router")
@@ -195,6 +216,11 @@ def create_app(
     agents_router = _optional_router("api.routers.agents")
     if agents_router is not None:
         application.include_router(agents_router)
+
+    for module_name in ("api.routers.business", "api.routers.sessions"):
+        compatibility_router = _optional_router(module_name)
+        if compatibility_router is not None:
+            application.include_router(compatibility_router)
 
     briefing_router = _optional_router("api.routers.briefing")
     if briefing_router is not None:

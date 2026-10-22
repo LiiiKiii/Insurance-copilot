@@ -61,6 +61,12 @@ export const messages = {
   'chat.placeholder.disconnected': 'Waiting for connection…',
   'chat.send.aria': 'Send',
   'chat.dismissError.aria': 'Dismiss',
+  'chat.retrieval.label': 'Knowledge retrieval',
+  'chat.retrieval.keyword': 'Keyword',
+  'chat.retrieval.vector': 'Vector',
+  'chat.retrieval.checking': 'Checking vector retrieval availability…',
+  'chat.retrieval.vectorAvailable': 'Use semantic vector retrieval',
+  'chat.retrieval.vectorUnavailable': 'Vector retrieval is not available',
 
   'chat.empty.title': 'Your senior business coach',
   'chat.empty.subtitle': 'One-on-one coaching analysis on performance gaps, competition progress, and action recommendations.',
@@ -1114,6 +1120,7 @@ export const messages = {
   'admin.knowledge.kb.statusInactive': 'Inactive',
   'admin.knowledge.kb.docCount': '{count} documents',
   'admin.knowledge.kb.empty': 'No knowledge bases — click "New knowledge base" to start',
+  'admin.knowledge.button.retry': 'Retry',
   'admin.knowledge.docs.heading': '{name} — Documents',
   'admin.knowledge.button.addDoc': 'Add document',
   'admin.knowledge.button.deleteKb': 'Delete KB',
@@ -1151,4 +1158,5 @@ export const messages = {
   'admin.knowledge.chunks.section': 'Chunk {index}',
   'admin.knowledge.chunks.tokens': '{count} tokens',
   'admin.knowledge.error.failed': 'Failed',
+  'admin.knowledge.error.loadFailed': 'Could not load knowledge bases.',
 }

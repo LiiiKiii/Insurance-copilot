@@ -36,7 +36,7 @@ def get_document_processor() -> DocumentProcessor:
             rasterizer=PdfRasterizer(),
             ocr=OcrExtractor(),
             recoverer=LayoutRecoverer(),
-            chunker=MarkdownChunker(),
+            chunker=MarkdownChunker.from_env(),
             indexer=KnowledgeIndexer(),
         )
     return _processor

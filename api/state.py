@@ -9,7 +9,18 @@ from nanobot.agent.loop import AgentLoop
 from nanobot.agent.tools.insurance.reasoning_layer.composition import (
     build_reasoning_registry,
 )
+from nanobot.agent.tools.admin import (
+    AdminKBImportTool,
+    AdminListKnowledgeTool,
+)
+from nanobot.agent.tools.insurance.knowledge_layer import (
+    SearchBestPracticeTool,
+    SearchCompetitionRulesTool,
+    SearchKnowledgeBaseTool,
+    SearchSalesScriptsTool,
+)
 from nanobot.bus.queue import MessageBus
+from nanobot.agent.tools.registry import ToolRegistry
 from nanobot.config.schema import Config
 from nanobot.providers import OpenAICompatProvider
 from nanobot.providers.base import LLMProvider
@@ -38,12 +49,25 @@ class RuntimeState:
         self.bus = MessageBus()
         self.provider = provider or self._create_provider()
         self.tool_registry = build_reasoning_registry()
+        # Keep the pre-existing reasoning registry contract intact. Knowledge
+        # tools are composed separately and injected as supplemental abilities.
+        self.knowledge_tool_registry = ToolRegistry(max_result_chars=100_000)
+        for tool in (
+            SearchKnowledgeBaseTool(self.workspace),
+            SearchCompetitionRulesTool(self.workspace),
+            SearchBestPracticeTool(self.workspace),
+            SearchSalesScriptsTool(self.workspace),
+            AdminListKnowledgeTool(self.workspace),
+            AdminKBImportTool(self.workspace),
+        ):
+            self.knowledge_tool_registry.register(tool)
         self.agent_loop = AgentLoop(
             bus=self.bus,
             provider=self.provider,
             workspace=self.workspace,
             model=self.config.agents.defaults.model,
             tool_registry=self.tool_registry,
+            supplemental_tool_registry=self.knowledge_tool_registry,
         )
         self._agent_task: asyncio.Task[None] | None = None
         self._lifecycle_lock = asyncio.Lock()

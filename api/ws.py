@@ -2,19 +2,24 @@
 
 from __future__ import annotations
 
+import asyncio
 import json
 import logging
 import os
-import asyncio
+from datetime import timedelta
 from typing import Any
 from urllib.parse import urlsplit
 from uuid import uuid4
 
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect
+from sqlalchemy import select
 
 from admin.db import AsyncSessionFactory
 from admin.dependencies import authenticate_access_token
 from admin.hooks import log_ai_audit, log_flow_step
+from admin.models.chat_session import ChatMessage, ChatSession
+from admin.services.retrieval_capabilities import get_retrieval_capabilities
+from admin.utils import now_beijing
 from api.compliance import apply_compliance
 
 
@@ -28,6 +33,13 @@ _MAX_SESSION_ALIASES = 64
 def _new_session_id() -> str:
     """Return a session identifier in the WebSocket namespace."""
     return f"ws:{uuid4().hex}"
+
+
+def _is_server_session_id(value: str) -> bool:
+    suffix = value.removeprefix("ws:")
+    return value.startswith("ws:") and len(suffix) == 32 and all(
+        character in "0123456789abcdef" for character in suffix.casefold()
+    )
 
 
 def _new_turn_id() -> str:
@@ -108,6 +120,85 @@ async def _audit_write(operation, **kwargs) -> None:
         logger.warning("WebSocket audit persistence failed")
 
 
+async def _owned_session_exists(session_id: str, user_id: str) -> bool:
+    """Return whether a server-issued session belongs to the authenticated user."""
+    async with AsyncSessionFactory() as db:
+        owner_id = await db.scalar(
+            select(ChatSession.user_id).where(ChatSession.id == session_id)
+        )
+    return owner_id == user_id
+
+
+async def _persist_chat_turn(
+    *,
+    session_id: str,
+    user_id: str,
+    agent_id: str,
+    user_content: str,
+    assistant_content: str,
+    user_metadata: dict[str, Any] | None = None,
+    assistant_metadata: dict[str, Any] | None = None,
+) -> None:
+    """Upsert an owned session and append one complete conversation turn."""
+    async with AsyncSessionFactory() as db:
+        session = await db.get(ChatSession, session_id)
+        now = now_beijing()
+        if session is None:
+            session = ChatSession(
+                id=session_id,
+                user_id=user_id,
+                agent_id=agent_id,
+                title=(user_content.strip() or "New Chat")[:200],
+                created_at=now,
+                updated_at=now,
+                last_message_at=now,
+                message_count=0,
+            )
+            db.add(session)
+        elif session.user_id != user_id:
+            raise PermissionError("Chat session ownership mismatch")
+        else:
+            session.agent_id = agent_id
+            session.updated_at = now
+            session.last_message_at = now
+
+        db.add_all(
+            [
+                ChatMessage(
+                    session_id=session_id,
+                    role="user",
+                    content=user_content,
+                    metadata_json=(
+                        json.dumps(user_metadata, ensure_ascii=False, default=str)
+                        if user_metadata
+                        else None
+                    ),
+                    created_at=now,
+                ),
+                ChatMessage(
+                    session_id=session_id,
+                    role="assistant",
+                    content=assistant_content,
+                    metadata_json=(
+                        json.dumps(assistant_metadata, ensure_ascii=False, default=str)
+                        if assistant_metadata
+                        else None
+                    ),
+                    created_at=now + timedelta(microseconds=1),
+                ),
+            ]
+        )
+        session.message_count = (session.message_count or 0) + 2
+        await db.commit()
+
+
+def _safe_string_list(payload: dict[str, Any], field: str) -> list[str]:
+    value = payload.get(field)
+    if not isinstance(value, list):
+        return []
+    return [item[:300] for item in value[:20] if isinstance(item, str) and item]
+
+
 def _model_id(agent_loop: Any) -> str | None:
     configured = getattr(agent_loop, "model", None)
     if isinstance(configured, str) and configured:
@@ -148,8 +239,10 @@ async def chat(websocket: WebSocket) -> None:
         await websocket.send_json({"type": "auth_ok"})
     except WebSocketDisconnect:
         return
-    session_aliases: dict[str, str] = {}
     connection_session_id = _new_session_id()
+    session_aliases: dict[str, str] = {
+        connection_session_id: connection_session_id
+    }
 
     while True:
         try:
@@ -192,6 +285,25 @@ async def chat(websocket: WebSocket) -> None:
             await websocket.send_json(_error("agent_id is not authorized.", turn_id))
             continue
 
+        retrieval_mode = payload.get("retrieval_mode", "keyword")
+        if retrieval_mode not in {"keyword", "vector"}:
+            await websocket.send_json(
+                _error("retrieval_mode must be 'keyword' or 'vector'.", turn_id)
+            )
+            continue
+        if retrieval_mode == "vector":
+            capabilities = await get_retrieval_capabilities()
+            if not capabilities.vector.available:
+                await websocket.send_json(
+                    _error(
+                        capabilities.vector.reason or "Vector retrieval is unavailable.",
+                        turn_id,
+                    )
+                )
+                continue
+        upload_ids = _safe_string_list(payload, "upload_ids")
+        attachment_labels = _safe_string_list(payload, "attachment_labels")
+
         try:
             requested_session = _optional_identifier(
                 payload,
@@ -207,6 +319,11 @@ async def chat(websocket: WebSocket) -> None:
             session_id = requested_session
         elif requested_session in session_aliases:
             session_id = session_aliases[requested_session]
+        elif _is_server_session_id(requested_session) and await _owned_session_exists(
+            requested_session, user.id
+        ):
+            session_id = requested_session
+            session_aliases[requested_session] = requested_session
         elif len(session_aliases) >= _MAX_SESSION_ALIASES:
             await websocket.send_json(_error("Too many sessions on this connection.", turn_id))
             continue
@@ -226,7 +343,15 @@ async def chat(websocket: WebSocket) -> None:
                 model_id = _model_id(agent_loop)
                 await _audit_write(log_flow_step, session_id=session_id, agent_id=user.username,
                                    step_index=1, step_type="llm_call", content=model_id or "")
-                result = await agent_loop.process_direct(content=message, session_key=session_id, channel="websocket", chat_id=agent_id)
+                process_kwargs = {
+                    "content": message,
+                    "session_key": session_id,
+                    "channel": "websocket",
+                    "chat_id": agent_id,
+                }
+                if "retrieval_mode" in payload:
+                    process_kwargs["retrieval_mode"] = retrieval_mode
+                result = await agent_loop.process_direct(**process_kwargs)
             else:
                 async with coordinator.turn():
                     agent_loop = _get_agent_loop(websocket)
@@ -236,7 +361,15 @@ async def chat(websocket: WebSocket) -> None:
                     model_id = _model_id(agent_loop)
                     await _audit_write(log_flow_step, session_id=session_id, agent_id=user.username,
                                        step_index=1, step_type="llm_call", content=model_id or "")
-                    result = await agent_loop.process_direct(content=message, session_key=session_id, channel="websocket", chat_id=agent_id)
+                    process_kwargs = {
+                        "content": message,
+                        "session_key": session_id,
+                        "channel": "websocket",
+                        "chat_id": agent_id,
+                    }
+                    if "retrieval_mode" in payload:
+                        process_kwargs["retrieval_mode"] = retrieval_mode
+                    result = await agent_loop.process_direct(**process_kwargs)
         except WebSocketDisconnect:
             return
         except Exception as exc:
@@ -257,6 +390,12 @@ async def chat(websocket: WebSocket) -> None:
             continue
 
         processed_content, has_compliance_issue, matched_keywords = apply_compliance(content)
+        result_metadata = getattr(result, "metadata", None)
+        citations = (
+            result_metadata.get("citations", [])
+            if isinstance(result_metadata, dict)
+            else []
+        )
 
         await _audit_write(log_flow_step, session_id=session_id, agent_id=user.username,
                            step_index=2, step_type="response", content=processed_content)
@@ -268,12 +407,29 @@ async def chat(websocket: WebSocket) -> None:
             tenant_id=user.tenant_id, user_id=user.id,
         )
         try:
+            await _persist_chat_turn(
+                session_id=session_id,
+                user_id=user.id,
+                agent_id=user.username,
+                user_content=message,
+                assistant_content=processed_content,
+                user_metadata={
+                    "upload_ids": upload_ids,
+                    "attachment_labels": attachment_labels,
+                    "retrieval_mode": retrieval_mode,
+                },
+                assistant_metadata={"citations": citations},
+            )
+        except Exception:
+            logger.warning("WebSocket chat persistence failed", exc_info=True)
+        try:
             await websocket.send_json(
                 {
                     "type": "response",
                     "content": processed_content,
                     "session_id": session_id,
                     "turn_id": turn_id,
+                    "citations": citations,
                 }
             )
         except WebSocketDisconnect:

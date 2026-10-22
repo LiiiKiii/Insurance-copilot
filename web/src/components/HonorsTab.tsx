@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { cn } from '@/lib/utils'
 import { useTranslation } from '@/lib/i18n'
+import { authFetch } from '@/lib/auth'
 
 interface Honor {
   id: string
@@ -43,7 +44,7 @@ export function HonorsTab({ agentId }: HonorsTabProps) {
     if (!agentId) return
     let cancelled = false
     setLoading(true)
-    fetch(`/api/competitions?agent_id=${agentId}`)
+    authFetch(`/api/competitions?agent_id=${encodeURIComponent(agentId)}`)
       .then((r) => r.json())
       .then((data) => {
         if (cancelled) return

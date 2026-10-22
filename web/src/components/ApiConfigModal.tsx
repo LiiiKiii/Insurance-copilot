@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useTranslation } from '@/lib/i18n'
+import { authFetch } from '@/lib/auth'
 
 const STORAGE_KEY = 'insurance_copilot_config'
 
@@ -295,7 +296,7 @@ export function ApiConfigModal({ open, onClose, onSave }: Props) {
   // Load feature models from backend
   const loadFeatureModels = async () => {
     try {
-      const res = await fetch('/api/feature-models')
+      const res = await authFetch('/api/feature-models')
       const data = await res.json()
       if (data.ok) setFeatureModels(data.data)
     } catch { /* silent */ }
@@ -350,7 +351,7 @@ export function ApiConfigModal({ open, onClose, onSave }: Props) {
     setTesting(true)
     setTestResult(null)
     try {
-      const res = await fetch('/api/config/test', {
+      const res = await authFetch('/api/config/test', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(cfg),
@@ -463,7 +464,7 @@ export function ApiConfigModal({ open, onClose, onSave }: Props) {
                           ))
                           setFeatureSaving(entry.slug)
                           try {
-                            await fetch('/api/feature-models', {
+                            await authFetch('/api/feature-models', {
                               method: 'POST',
                               headers: { 'Content-Type': 'application/json' },
                               body: JSON.stringify({ slug: entry.slug, model: newModel }),
@@ -496,7 +497,7 @@ export function ApiConfigModal({ open, onClose, onSave }: Props) {
 
             <button
               onClick={async () => {
-                await fetch('/api/feature-models/reset', { method: 'POST' })
+                await authFetch('/api/feature-models/reset', { method: 'POST' })
                 await loadFeatureModels()
               }}
               className="w-full py-2 text-xs text-slate-500 dark:text-slate-400 hover:text-red-500 dark:hover:text-red-400 border border-dashed border-slate-300 dark:border-slate-600 rounded-lg transition-colors"
