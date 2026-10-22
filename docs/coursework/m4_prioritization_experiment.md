@@ -38,6 +38,9 @@ exclude the candidate with a deterministic reason.
 
 ## Reproducible synthetic experiment
 
+All monetary values in the tracked M4 fixture are denominated in USD, matching
+the integrated general-insurance dataset.
+
 Run:
 
 ```bash
