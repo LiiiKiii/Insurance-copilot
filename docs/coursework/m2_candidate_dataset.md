@@ -19,6 +19,17 @@ All monetary values are denominated in USD. The file is regenerated with:
 python scripts/build_m2_candidate_dataset.py
 ```
 
+The generator writes two files:
+
+- `data/evaluation/m2_candidate_scenarios.json` contains complete candidate
+  inputs, derived features, filtering evidence, and source traceability;
+- `data/evaluation/m2_candidate_blind.json` contains only evidence fields for
+  independent human ranking.
+
+Human rankings and consensus labels are stored separately in
+`data/evaluation/m2_candidate_annotations.json`. The generator never reads,
+creates, or overwrites that annotation file.
+
 ## Field mapping
 
 | Candidate field | Existing project field or rule | Lineage |
@@ -54,8 +65,9 @@ python scripts/build_m2_candidate_dataset.py
 - **Business fit:** starts at 0.4 and adds documented increments for matching
   the agent's product specialties, matching client need category, and a
   high-value tag. The result is capped at 1.
-- **Reference relevance:** a deterministic 0–3 coursework label supports
-  offline evaluation. It is explicitly not a production judgement label.
+
+These derived scores are M4 inputs and data-quality aids. They are not final
+relevance labels and are not included in the blinded annotation view.
 
 ## Filtering and evaluation scope
 
@@ -67,8 +79,30 @@ Consequently the complete dataset contains 100 raw candidates and 60 eligible
 candidates.
 
 M4 should report Precision@K and NDCG@K at `K = 1`, `K = 3`, and `K = 5`.
-The scenario relevance mapping contains labels for both retained and excluded
-candidates so that filtering and ranking can be audited separately.
+M2 supplies the candidate structure but does not implement the final ranking
+comparison or tune M4 results against the labels.
+
+## Blinded human annotation
+
+The blind file contains, for each scenario, only the scenario ID, agent ID,
+open gap, deadline, currency, and the six eligible candidates' business
+evidence. It excludes expected contribution, urgency, actionability, business
+fit, M4 scores/rankings, baseline rankings, and generated relevance grades.
+
+Two non-M4 team members should independently rank the six eligible candidates
+in each scenario. After resolving disagreements, convert the consensus order
+to graded relevance:
+
+- positions 1–2: grade 3;
+- positions 3–4: grade 2;
+- position 5: grade 1;
+- position 6: grade 0.
+
+The forty filtered candidates remain in the full dataset for filtering tests
+but do not participate in ranking-quality evaluation. A single annotator is
+acceptable for a preliminary coursework run, but it must be reported as a
+single-annotator limitation. Two independent annotators are preferred because
+they provide a defensible consensus process and reduce individual bias.
 
 ## Data provenance
 
@@ -82,8 +116,10 @@ The candidate file preserves this distinction in `data_origin`:
 - candidate and client records retain their existing synthetic origin labels;
 - identifiers, premium, status, dates, tags, and products are copied from the
   existing project records;
-- contribution estimates, decisions, scores, dates, and relevance grades are
-  marked and documented as derived values.
+- contribution estimates, decisions, scores, and dates are marked and
+  documented as derived values;
+- final relevance labels are collected independently from blinded human
+  rankings and never generated from the M4 input features.
 
 The dataset is suitable for coursework integration and deterministic testing.
 It must not be presented as real customer-level production data or evidence of

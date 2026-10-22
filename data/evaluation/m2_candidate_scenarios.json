@@ -43,8 +43,7 @@
       "compliance_allowed",
       "urgency",
       "actionability",
-      "business_fit",
-      "reference_relevance_grade"
+      "business_fit"
     ],
     "synthetic_record_notice": "Customer and policy records are coursework demonstration records generated from source-derived agent and product distributions; they are not individual Kaggle customer or policy records."
   },
@@ -56,12 +55,11 @@
     "business_fit": "Base 0.4 plus product-specialty, need-category, and high-value matches, capped at 1",
     "eligibility": "Pending positive-premium policy, or client with an explicit renewal-due/follow-up signal",
     "permission": "Candidate record belongs to the scenario agent",
-    "compliance": "Agent training-compliance gate permits sales",
-    "reference_relevance": "Deterministic 0-3 coursework label from stated operational thresholds"
+    "compliance": "Agent training-compliance gate permits sales"
   },
   "limitations": [
-    "Reference relevance grades validate the coursework pipeline only and are not production labels.",
-    "Expected contribution is a transparent rule-based estimate, not a trained probability prediction."
+    "Expected contribution is a transparent rule-based estimate, not a trained probability prediction.",
+    "Final M4 relevance labels are collected independently from blinded human rankings and are not generated here."
   ],
   "scenarios": [
     {
@@ -126,8 +124,7 @@
             "candidate_record": "synthetic_recent_policy_from_agent_mix",
             "client_record": "synthetic_representative_client",
             "scores": "deterministic_derived"
-          },
-          "reference_relevance_grade": 2
+          }
         },
         {
           "scenario_id": "SCN-AGT00690",
@@ -176,8 +173,7 @@
             "candidate_record": "synthetic_recent_policy_from_agent_mix",
             "client_record": "synthetic_representative_client",
             "scores": "deterministic_derived"
-          },
-          "reference_relevance_grade": 2
+          }
         },
         {
           "scenario_id": "SCN-AGT00690",
@@ -226,8 +222,7 @@
             "candidate_record": "synthetic_recent_policy_from_agent_mix",
             "client_record": "synthetic_representative_client",
             "scores": "deterministic_derived"
-          },
-          "reference_relevance_grade": 2
+          }
         },
         {
           "scenario_id": "SCN-AGT00690",
@@ -276,8 +271,7 @@
             "candidate_record": "synthetic_recent_policy_from_agent_mix",
             "client_record": "synthetic_representative_client",
             "scores": "deterministic_derived"
-          },
-          "reference_relevance_grade": 3
+          }
         },
         {
           "scenario_id": "SCN-AGT00690",
@@ -323,8 +317,7 @@
           "data_origin": {
             "candidate_record": "synthetic_representative_client",
             "scores": "deterministic_derived"
-          },
-          "reference_relevance_grade": 3
+          }
         },
         {
           "scenario_id": "SCN-AGT00690",
@@ -370,8 +363,7 @@
           "data_origin": {
             "candidate_record": "synthetic_representative_client",
             "scores": "deterministic_derived"
-          },
-          "reference_relevance_grade": 3
+          }
         },
         {
           "scenario_id": "SCN-AGT00690",
@@ -417,8 +409,7 @@
           "data_origin": {
             "candidate_record": "synthetic_representative_client",
             "scores": "deterministic_derived"
-          },
-          "reference_relevance_grade": 0
+          }
         },
         {
           "scenario_id": "SCN-AGT00690",
@@ -464,8 +455,7 @@
           "data_origin": {
             "candidate_record": "synthetic_representative_client",
             "scores": "deterministic_derived"
-          },
-          "reference_relevance_grade": 0
+          }
         },
         {
           "scenario_id": "SCN-AGT00690",
@@ -511,8 +501,7 @@
           "data_origin": {
             "candidate_record": "synthetic_representative_client",
             "scores": "deterministic_derived"
-          },
-          "reference_relevance_grade": 0
+          }
         },
         {
           "scenario_id": "SCN-AGT00690",
@@ -558,22 +547,9 @@
           "data_origin": {
             "candidate_record": "synthetic_representative_client",
             "scores": "deterministic_derived"
-          },
-          "reference_relevance_grade": 0
+          }
         }
-      ],
-      "relevance": {
-        "POL-00690-001": 2,
-        "POL-00690-002": 2,
-        "POL-00690-003": 2,
-        "POL-00690-004": 3,
-        "CLI-00690-008": 3,
-        "CLI-00690-015": 3,
-        "CLI-00690-005": 0,
-        "CLI-00690-007": 0,
-        "CLI-00690-009": 0,
-        "CLI-00690-010": 0
-      }
+      ]
     },
     {
       "scenario_id": "SCN-AGT00770",
@@ -637,8 +613,7 @@
             "candidate_record": "synthetic_recent_policy_from_agent_mix",
             "client_record": "synthetic_representative_client",
             "scores": "deterministic_derived"
-          },
-          "reference_relevance_grade": 2
+          }
         },
         {
           "scenario_id": "SCN-AGT00770",
@@ -687,8 +662,7 @@
             "candidate_record": "synthetic_recent_policy_from_agent_mix",
             "client_record": "synthetic_representative_client",
             "scores": "deterministic_derived"
-          },
-          "reference_relevance_grade": 2
+          }
         },
         {
           "scenario_id": "SCN-AGT00770",
@@ -737,8 +711,7 @@
             "candidate_record": "synthetic_recent_policy_from_agent_mix",
             "client_record": "synthetic_representative_client",
             "scores": "deterministic_derived"
-          },
-          "reference_relevance_grade": 2
+          }
         },
         {
           "scenario_id": "SCN-AGT00770",
@@ -787,8 +760,7 @@
             "candidate_record": "synthetic_recent_policy_from_agent_mix",
             "client_record": "synthetic_representative_client",
             "scores": "deterministic_derived"
-          },
-          "reference_relevance_grade": 3
+          }
         },
         {
           "scenario_id": "SCN-AGT00770",
@@ -834,8 +806,7 @@
           "data_origin": {
             "candidate_record": "synthetic_representative_client",
             "scores": "deterministic_derived"
-          },
-          "reference_relevance_grade": 3
+          }
         },
         {
           "scenario_id": "SCN-AGT00770",
@@ -881,8 +852,7 @@
           "data_origin": {
             "candidate_record": "synthetic_representative_client",
             "scores": "deterministic_derived"
-          },
-          "reference_relevance_grade": 3
+          }
         },
         {
           "scenario_id": "SCN-AGT00770",
@@ -928,8 +898,7 @@
           "data_origin": {
             "candidate_record": "synthetic_representative_client",
             "scores": "deterministic_derived"
-          },
-          "reference_relevance_grade": 0
+          }
         },
         {
           "scenario_id": "SCN-AGT00770",
@@ -975,8 +944,7 @@
           "data_origin": {
             "candidate_record": "synthetic_representative_client",
             "scores": "deterministic_derived"
-          },
-          "reference_relevance_grade": 0
+          }
         },
         {
           "scenario_id": "SCN-AGT00770",
@@ -1022,8 +990,7 @@
           "data_origin": {
             "candidate_record": "synthetic_representative_client",
             "scores": "deterministic_derived"
-          },
-          "reference_relevance_grade": 0
+          }
         },
         {
           "scenario_id": "SCN-AGT00770",
@@ -1069,22 +1036,9 @@
           "data_origin": {
             "candidate_record": "synthetic_representative_client",
             "scores": "deterministic_derived"
-          },
-          "reference_relevance_grade": 0
+          }
         }
-      ],
-      "relevance": {
-        "POL-00770-001": 2,
-        "POL-00770-002": 2,
-        "POL-00770-003": 2,
-        "POL-00770-004": 3,
-        "CLI-00770-008": 3,
-        "CLI-00770-015": 3,
-        "CLI-00770-005": 0,
-        "CLI-00770-007": 0,
-        "CLI-00770-009": 0,
-        "CLI-00770-010": 0
-      }
+      ]
     },
     {
       "scenario_id": "SCN-AGT00817",
@@ -1148,8 +1102,7 @@
             "candidate_record": "synthetic_recent_policy_from_agent_mix",
             "client_record": "synthetic_representative_client",
             "scores": "deterministic_derived"
-          },
-          "reference_relevance_grade": 2
+          }
         },
         {
           "scenario_id": "SCN-AGT00817",
@@ -1198,8 +1151,7 @@
             "candidate_record": "synthetic_recent_policy_from_agent_mix",
             "client_record": "synthetic_representative_client",
             "scores": "deterministic_derived"
-          },
-          "reference_relevance_grade": 2
+          }
         },
         {
           "scenario_id": "SCN-AGT00817",
@@ -1248,8 +1200,7 @@
             "candidate_record": "synthetic_recent_policy_from_agent_mix",
             "client_record": "synthetic_representative_client",
             "scores": "deterministic_derived"
-          },
-          "reference_relevance_grade": 2
+          }
         },
         {
           "scenario_id": "SCN-AGT00817",
@@ -1298,8 +1249,7 @@
             "candidate_record": "synthetic_recent_policy_from_agent_mix",
             "client_record": "synthetic_representative_client",
             "scores": "deterministic_derived"
-          },
-          "reference_relevance_grade": 3
+          }
         },
         {
           "scenario_id": "SCN-AGT00817",
@@ -1345,8 +1295,7 @@
           "data_origin": {
             "candidate_record": "synthetic_representative_client",
             "scores": "deterministic_derived"
-          },
-          "reference_relevance_grade": 3
+          }
         },
         {
           "scenario_id": "SCN-AGT00817",
@@ -1392,8 +1341,7 @@
           "data_origin": {
             "candidate_record": "synthetic_representative_client",
             "scores": "deterministic_derived"
-          },
-          "reference_relevance_grade": 3
+          }
         },
         {
           "scenario_id": "SCN-AGT00817",
@@ -1439,8 +1387,7 @@
           "data_origin": {
             "candidate_record": "synthetic_representative_client",
             "scores": "deterministic_derived"
-          },
-          "reference_relevance_grade": 0
+          }
         },
         {
           "scenario_id": "SCN-AGT00817",
@@ -1486,8 +1433,7 @@
           "data_origin": {
             "candidate_record": "synthetic_representative_client",
             "scores": "deterministic_derived"
-          },
-          "reference_relevance_grade": 0
+          }
         },
         {
           "scenario_id": "SCN-AGT00817",
@@ -1533,8 +1479,7 @@
           "data_origin": {
             "candidate_record": "synthetic_representative_client",
             "scores": "deterministic_derived"
-          },
-          "reference_relevance_grade": 0
+          }
         },
         {
           "scenario_id": "SCN-AGT00817",
@@ -1580,22 +1525,9 @@
           "data_origin": {
             "candidate_record": "synthetic_representative_client",
             "scores": "deterministic_derived"
-          },
-          "reference_relevance_grade": 0
+          }
         }
-      ],
-      "relevance": {
-        "POL-00817-001": 2,
-        "POL-00817-002": 2,
-        "POL-00817-003": 2,
-        "POL-00817-004": 3,
-        "CLI-00817-008": 3,
-        "CLI-00817-015": 3,
-        "CLI-00817-005": 0,
-        "CLI-00817-007": 0,
-        "CLI-00817-009": 0,
-        "CLI-00817-010": 0
-      }
+      ]
     },
     {
       "scenario_id": "SCN-AGT00949",
@@ -1659,8 +1591,7 @@
             "candidate_record": "synthetic_recent_policy_from_agent_mix",
             "client_record": "synthetic_representative_client",
             "scores": "deterministic_derived"
-          },
-          "reference_relevance_grade": 2
+          }
         },
         {
           "scenario_id": "SCN-AGT00949",
@@ -1709,8 +1640,7 @@
             "candidate_record": "synthetic_recent_policy_from_agent_mix",
             "client_record": "synthetic_representative_client",
             "scores": "deterministic_derived"
-          },
-          "reference_relevance_grade": 2
+          }
         },
         {
           "scenario_id": "SCN-AGT00949",
@@ -1759,8 +1689,7 @@
             "candidate_record": "synthetic_recent_policy_from_agent_mix",
             "client_record": "synthetic_representative_client",
             "scores": "deterministic_derived"
-          },
-          "reference_relevance_grade": 2
+          }
         },
         {
           "scenario_id": "SCN-AGT00949",
@@ -1809,8 +1738,7 @@
             "candidate_record": "synthetic_recent_policy_from_agent_mix",
             "client_record": "synthetic_representative_client",
             "scores": "deterministic_derived"
-          },
-          "reference_relevance_grade": 3
+          }
         },
         {
           "scenario_id": "SCN-AGT00949",
@@ -1856,8 +1784,7 @@
           "data_origin": {
             "candidate_record": "synthetic_representative_client",
             "scores": "deterministic_derived"
-          },
-          "reference_relevance_grade": 3
+          }
         },
         {
           "scenario_id": "SCN-AGT00949",
@@ -1903,8 +1830,7 @@
           "data_origin": {
             "candidate_record": "synthetic_representative_client",
             "scores": "deterministic_derived"
-          },
-          "reference_relevance_grade": 3
+          }
         },
         {
           "scenario_id": "SCN-AGT00949",
@@ -1950,8 +1876,7 @@
           "data_origin": {
             "candidate_record": "synthetic_representative_client",
             "scores": "deterministic_derived"
-          },
-          "reference_relevance_grade": 0
+          }
         },
         {
           "scenario_id": "SCN-AGT00949",
@@ -1997,8 +1922,7 @@
           "data_origin": {
             "candidate_record": "synthetic_representative_client",
             "scores": "deterministic_derived"
-          },
-          "reference_relevance_grade": 0
+          }
         },
         {
           "scenario_id": "SCN-AGT00949",
@@ -2044,8 +1968,7 @@
           "data_origin": {
             "candidate_record": "synthetic_representative_client",
             "scores": "deterministic_derived"
-          },
-          "reference_relevance_grade": 0
+          }
         },
         {
           "scenario_id": "SCN-AGT00949",
@@ -2091,22 +2014,9 @@
           "data_origin": {
             "candidate_record": "synthetic_representative_client",
             "scores": "deterministic_derived"
-          },
-          "reference_relevance_grade": 0
+          }
         }
-      ],
-      "relevance": {
-        "POL-00949-001": 2,
-        "POL-00949-002": 2,
-        "POL-00949-003": 2,
-        "POL-00949-004": 3,
-        "CLI-00949-008": 3,
-        "CLI-00949-015": 3,
-        "CLI-00949-005": 0,
-        "CLI-00949-007": 0,
-        "CLI-00949-009": 0,
-        "CLI-00949-010": 0
-      }
+      ]
     },
     {
       "scenario_id": "SCN-AGT01191",
@@ -2170,8 +2080,7 @@
             "candidate_record": "synthetic_recent_policy_from_agent_mix",
             "client_record": "synthetic_representative_client",
             "scores": "deterministic_derived"
-          },
-          "reference_relevance_grade": 2
+          }
         },
         {
           "scenario_id": "SCN-AGT01191",
@@ -2220,8 +2129,7 @@
             "candidate_record": "synthetic_recent_policy_from_agent_mix",
             "client_record": "synthetic_representative_client",
             "scores": "deterministic_derived"
-          },
-          "reference_relevance_grade": 2
+          }
         },
         {
           "scenario_id": "SCN-AGT01191",
@@ -2270,8 +2178,7 @@
             "candidate_record": "synthetic_recent_policy_from_agent_mix",
             "client_record": "synthetic_representative_client",
             "scores": "deterministic_derived"
-          },
-          "reference_relevance_grade": 2
+          }
         },
         {
           "scenario_id": "SCN-AGT01191",
@@ -2320,8 +2227,7 @@
             "candidate_record": "synthetic_recent_policy_from_agent_mix",
             "client_record": "synthetic_representative_client",
             "scores": "deterministic_derived"
-          },
-          "reference_relevance_grade": 3
+          }
         },
         {
           "scenario_id": "SCN-AGT01191",
@@ -2367,8 +2273,7 @@
           "data_origin": {
             "candidate_record": "synthetic_representative_client",
             "scores": "deterministic_derived"
-          },
-          "reference_relevance_grade": 3
+          }
         },
         {
           "scenario_id": "SCN-AGT01191",
@@ -2414,8 +2319,7 @@
           "data_origin": {
             "candidate_record": "synthetic_representative_client",
             "scores": "deterministic_derived"
-          },
-          "reference_relevance_grade": 3
+          }
         },
         {
           "scenario_id": "SCN-AGT01191",
@@ -2461,8 +2365,7 @@
           "data_origin": {
             "candidate_record": "synthetic_representative_client",
             "scores": "deterministic_derived"
-          },
-          "reference_relevance_grade": 0
+          }
         },
         {
           "scenario_id": "SCN-AGT01191",
@@ -2508,8 +2411,7 @@
           "data_origin": {
             "candidate_record": "synthetic_representative_client",
             "scores": "deterministic_derived"
-          },
-          "reference_relevance_grade": 0
+          }
         },
         {
           "scenario_id": "SCN-AGT01191",
@@ -2555,8 +2457,7 @@
           "data_origin": {
             "candidate_record": "synthetic_representative_client",
             "scores": "deterministic_derived"
-          },
-          "reference_relevance_grade": 0
+          }
         },
         {
           "scenario_id": "SCN-AGT01191",
@@ -2602,22 +2503,9 @@
           "data_origin": {
             "candidate_record": "synthetic_representative_client",
             "scores": "deterministic_derived"
-          },
-          "reference_relevance_grade": 0
+          }
         }
-      ],
-      "relevance": {
-        "POL-01191-001": 2,
-        "POL-01191-002": 2,
-        "POL-01191-003": 2,
-        "POL-01191-004": 3,
-        "CLI-01191-008": 3,
-        "CLI-01191-015": 3,
-        "CLI-01191-005": 0,
-        "CLI-01191-007": 0,
-        "CLI-01191-009": 0,
-        "CLI-01191-010": 0
-      }
+      ]
     },
     {
       "scenario_id": "SCN-AGT01448",
@@ -2681,8 +2569,7 @@
             "candidate_record": "synthetic_recent_policy_from_agent_mix",
             "client_record": "synthetic_representative_client",
             "scores": "deterministic_derived"
-          },
-          "reference_relevance_grade": 2
+          }
         },
         {
           "scenario_id": "SCN-AGT01448",
@@ -2731,8 +2618,7 @@
             "candidate_record": "synthetic_recent_policy_from_agent_mix",
             "client_record": "synthetic_representative_client",
             "scores": "deterministic_derived"
-          },
-          "reference_relevance_grade": 2
+          }
         },
         {
           "scenario_id": "SCN-AGT01448",
@@ -2781,8 +2667,7 @@
             "candidate_record": "synthetic_recent_policy_from_agent_mix",
             "client_record": "synthetic_representative_client",
             "scores": "deterministic_derived"
-          },
-          "reference_relevance_grade": 2
+          }
         },
         {
           "scenario_id": "SCN-AGT01448",
@@ -2831,8 +2716,7 @@
             "candidate_record": "synthetic_recent_policy_from_agent_mix",
             "client_record": "synthetic_representative_client",
             "scores": "deterministic_derived"
-          },
-          "reference_relevance_grade": 3
+          }
         },
         {
           "scenario_id": "SCN-AGT01448",
@@ -2878,8 +2762,7 @@
           "data_origin": {
             "candidate_record": "synthetic_representative_client",
             "scores": "deterministic_derived"
-          },
-          "reference_relevance_grade": 3
+          }
         },
         {
           "scenario_id": "SCN-AGT01448",
@@ -2925,8 +2808,7 @@
           "data_origin": {
             "candidate_record": "synthetic_representative_client",
             "scores": "deterministic_derived"
-          },
-          "reference_relevance_grade": 3
+          }
         },
         {
           "scenario_id": "SCN-AGT01448",
@@ -2972,8 +2854,7 @@
           "data_origin": {
             "candidate_record": "synthetic_representative_client",
             "scores": "deterministic_derived"
-          },
-          "reference_relevance_grade": 0
+          }
         },
         {
           "scenario_id": "SCN-AGT01448",
@@ -3019,8 +2900,7 @@
           "data_origin": {
             "candidate_record": "synthetic_representative_client",
             "scores": "deterministic_derived"
-          },
-          "reference_relevance_grade": 0
+          }
         },
         {
           "scenario_id": "SCN-AGT01448",
@@ -3066,8 +2946,7 @@
           "data_origin": {
             "candidate_record": "synthetic_representative_client",
             "scores": "deterministic_derived"
-          },
-          "reference_relevance_grade": 0
+          }
         },
         {
           "scenario_id": "SCN-AGT01448",
@@ -3113,22 +2992,9 @@
           "data_origin": {
             "candidate_record": "synthetic_representative_client",
             "scores": "deterministic_derived"
-          },
-          "reference_relevance_grade": 0
+          }
         }
-      ],
-      "relevance": {
-        "POL-01448-001": 2,
-        "POL-01448-002": 2,
-        "POL-01448-003": 2,
-        "POL-01448-004": 3,
-        "CLI-01448-008": 3,
-        "CLI-01448-015": 3,
-        "CLI-01448-005": 0,
-        "CLI-01448-007": 0,
-        "CLI-01448-009": 0,
-        "CLI-01448-010": 0
-      }
+      ]
     },
     {
       "scenario_id": "SCN-AGT01525",
@@ -3192,8 +3058,7 @@
             "candidate_record": "synthetic_recent_policy_from_agent_mix",
             "client_record": "synthetic_representative_client",
             "scores": "deterministic_derived"
-          },
-          "reference_relevance_grade": 2
+          }
         },
         {
           "scenario_id": "SCN-AGT01525",
@@ -3242,8 +3107,7 @@
             "candidate_record": "synthetic_recent_policy_from_agent_mix",
             "client_record": "synthetic_representative_client",
             "scores": "deterministic_derived"
-          },
-          "reference_relevance_grade": 2
+          }
         },
         {
           "scenario_id": "SCN-AGT01525",
@@ -3292,8 +3156,7 @@
             "candidate_record": "synthetic_recent_policy_from_agent_mix",
             "client_record": "synthetic_representative_client",
             "scores": "deterministic_derived"
-          },
-          "reference_relevance_grade": 2
+          }
         },
         {
           "scenario_id": "SCN-AGT01525",
@@ -3342,8 +3205,7 @@
             "candidate_record": "synthetic_recent_policy_from_agent_mix",
             "client_record": "synthetic_representative_client",
             "scores": "deterministic_derived"
-          },
-          "reference_relevance_grade": 3
+          }
         },
         {
           "scenario_id": "SCN-AGT01525",
@@ -3389,8 +3251,7 @@
           "data_origin": {
             "candidate_record": "synthetic_representative_client",
             "scores": "deterministic_derived"
-          },
-          "reference_relevance_grade": 3
+          }
         },
         {
           "scenario_id": "SCN-AGT01525",
@@ -3436,8 +3297,7 @@
           "data_origin": {
             "candidate_record": "synthetic_representative_client",
             "scores": "deterministic_derived"
-          },
-          "reference_relevance_grade": 3
+          }
         },
         {
           "scenario_id": "SCN-AGT01525",
@@ -3483,8 +3343,7 @@
           "data_origin": {
             "candidate_record": "synthetic_representative_client",
             "scores": "deterministic_derived"
-          },
-          "reference_relevance_grade": 0
+          }
         },
         {
           "scenario_id": "SCN-AGT01525",
@@ -3530,8 +3389,7 @@
           "data_origin": {
             "candidate_record": "synthetic_representative_client",
             "scores": "deterministic_derived"
-          },
-          "reference_relevance_grade": 0
+          }
         },
         {
           "scenario_id": "SCN-AGT01525",
@@ -3577,8 +3435,7 @@
           "data_origin": {
             "candidate_record": "synthetic_representative_client",
             "scores": "deterministic_derived"
-          },
-          "reference_relevance_grade": 0
+          }
         },
         {
           "scenario_id": "SCN-AGT01525",
@@ -3624,22 +3481,9 @@
           "data_origin": {
             "candidate_record": "synthetic_representative_client",
             "scores": "deterministic_derived"
-          },
-          "reference_relevance_grade": 0
+          }
         }
-      ],
-      "relevance": {
-        "POL-01525-001": 2,
-        "POL-01525-002": 2,
-        "POL-01525-003": 2,
-        "POL-01525-004": 3,
-        "CLI-01525-008": 3,
-        "CLI-01525-015": 3,
-        "CLI-01525-005": 0,
-        "CLI-01525-007": 0,
-        "CLI-01525-009": 0,
-        "CLI-01525-010": 0
-      }
+      ]
     },
     {
       "scenario_id": "SCN-AGT01569",
@@ -3703,8 +3547,7 @@
             "candidate_record": "synthetic_recent_policy_from_agent_mix",
             "client_record": "synthetic_representative_client",
             "scores": "deterministic_derived"
-          },
-          "reference_relevance_grade": 2
+          }
         },
         {
           "scenario_id": "SCN-AGT01569",
@@ -3753,8 +3596,7 @@
             "candidate_record": "synthetic_recent_policy_from_agent_mix",
             "client_record": "synthetic_representative_client",
             "scores": "deterministic_derived"
-          },
-          "reference_relevance_grade": 2
+          }
         },
         {
           "scenario_id": "SCN-AGT01569",
@@ -3803,8 +3645,7 @@
             "candidate_record": "synthetic_recent_policy_from_agent_mix",
             "client_record": "synthetic_representative_client",
             "scores": "deterministic_derived"
-          },
-          "reference_relevance_grade": 2
+          }
         },
         {
           "scenario_id": "SCN-AGT01569",
@@ -3853,8 +3694,7 @@
             "candidate_record": "synthetic_recent_policy_from_agent_mix",
             "client_record": "synthetic_representative_client",
             "scores": "deterministic_derived"
-          },
-          "reference_relevance_grade": 3
+          }
         },
         {
           "scenario_id": "SCN-AGT01569",
@@ -3900,8 +3740,7 @@
           "data_origin": {
             "candidate_record": "synthetic_representative_client",
             "scores": "deterministic_derived"
-          },
-          "reference_relevance_grade": 3
+          }
         },
         {
           "scenario_id": "SCN-AGT01569",
@@ -3947,8 +3786,7 @@
           "data_origin": {
             "candidate_record": "synthetic_representative_client",
             "scores": "deterministic_derived"
-          },
-          "reference_relevance_grade": 3
+          }
         },
         {
           "scenario_id": "SCN-AGT01569",
@@ -3994,8 +3832,7 @@
           "data_origin": {
             "candidate_record": "synthetic_representative_client",
             "scores": "deterministic_derived"
-          },
-          "reference_relevance_grade": 0
+          }
         },
         {
           "scenario_id": "SCN-AGT01569",
@@ -4041,8 +3878,7 @@
           "data_origin": {
             "candidate_record": "synthetic_representative_client",
             "scores": "deterministic_derived"
-          },
-          "reference_relevance_grade": 0
+          }
         },
         {
           "scenario_id": "SCN-AGT01569",
@@ -4088,8 +3924,7 @@
           "data_origin": {
             "candidate_record": "synthetic_representative_client",
             "scores": "deterministic_derived"
-          },
-          "reference_relevance_grade": 0
+          }
         },
         {
           "scenario_id": "SCN-AGT01569",
@@ -4135,22 +3970,9 @@
           "data_origin": {
             "candidate_record": "synthetic_representative_client",
             "scores": "deterministic_derived"
-          },
-          "reference_relevance_grade": 0
+          }
         }
-      ],
-      "relevance": {
-        "POL-01569-001": 2,
-        "POL-01569-002": 2,
-        "POL-01569-003": 2,
-        "POL-01569-004": 3,
-        "CLI-01569-008": 3,
-        "CLI-01569-015": 3,
-        "CLI-01569-005": 0,
-        "CLI-01569-007": 0,
-        "CLI-01569-009": 0,
-        "CLI-01569-010": 0
-      }
+      ]
     },
     {
       "scenario_id": "SCN-AGT01662",
@@ -4214,8 +4036,7 @@
             "candidate_record": "synthetic_recent_policy_from_agent_mix",
             "client_record": "synthetic_representative_client",
             "scores": "deterministic_derived"
-          },
-          "reference_relevance_grade": 2
+          }
         },
         {
           "scenario_id": "SCN-AGT01662",
@@ -4264,8 +4085,7 @@
             "candidate_record": "synthetic_recent_policy_from_agent_mix",
             "client_record": "synthetic_representative_client",
             "scores": "deterministic_derived"
-          },
-          "reference_relevance_grade": 2
+          }
         },
         {
           "scenario_id": "SCN-AGT01662",
@@ -4314,8 +4134,7 @@
             "candidate_record": "synthetic_recent_policy_from_agent_mix",
             "client_record": "synthetic_representative_client",
             "scores": "deterministic_derived"
-          },
-          "reference_relevance_grade": 2
+          }
         },
         {
           "scenario_id": "SCN-AGT01662",
@@ -4364,8 +4183,7 @@
             "candidate_record": "synthetic_recent_policy_from_agent_mix",
             "client_record": "synthetic_representative_client",
             "scores": "deterministic_derived"
-          },
-          "reference_relevance_grade": 3
+          }
         },
         {
           "scenario_id": "SCN-AGT01662",
@@ -4411,8 +4229,7 @@
           "data_origin": {
             "candidate_record": "synthetic_representative_client",
             "scores": "deterministic_derived"
-          },
-          "reference_relevance_grade": 3
+          }
         },
         {
           "scenario_id": "SCN-AGT01662",
@@ -4458,8 +4275,7 @@
           "data_origin": {
             "candidate_record": "synthetic_representative_client",
             "scores": "deterministic_derived"
-          },
-          "reference_relevance_grade": 3
+          }
         },
         {
           "scenario_id": "SCN-AGT01662",
@@ -4505,8 +4321,7 @@
           "data_origin": {
             "candidate_record": "synthetic_representative_client",
             "scores": "deterministic_derived"
-          },
-          "reference_relevance_grade": 0
+          }
         },
         {
           "scenario_id": "SCN-AGT01662",
@@ -4552,8 +4367,7 @@
           "data_origin": {
             "candidate_record": "synthetic_representative_client",
             "scores": "deterministic_derived"
-          },
-          "reference_relevance_grade": 0
+          }
         },
         {
           "scenario_id": "SCN-AGT01662",
@@ -4599,8 +4413,7 @@
           "data_origin": {
             "candidate_record": "synthetic_representative_client",
             "scores": "deterministic_derived"
-          },
-          "reference_relevance_grade": 0
+          }
         },
         {
           "scenario_id": "SCN-AGT01662",
@@ -4646,22 +4459,9 @@
           "data_origin": {
             "candidate_record": "synthetic_representative_client",
             "scores": "deterministic_derived"
-          },
-          "reference_relevance_grade": 0
+          }
         }
-      ],
-      "relevance": {
-        "POL-01662-001": 2,
-        "POL-01662-002": 2,
-        "POL-01662-003": 2,
-        "POL-01662-004": 3,
-        "CLI-01662-008": 3,
-        "CLI-01662-015": 3,
-        "CLI-01662-005": 0,
-        "CLI-01662-007": 0,
-        "CLI-01662-009": 0,
-        "CLI-01662-010": 0
-      }
+      ]
     },
     {
       "scenario_id": "SCN-AGT01876",
@@ -4725,8 +4525,7 @@
             "candidate_record": "synthetic_recent_policy_from_agent_mix",
             "client_record": "synthetic_representative_client",
             "scores": "deterministic_derived"
-          },
-          "reference_relevance_grade": 2
+          }
         },
         {
           "scenario_id": "SCN-AGT01876",
@@ -4775,8 +4574,7 @@
             "candidate_record": "synthetic_recent_policy_from_agent_mix",
             "client_record": "synthetic_representative_client",
             "scores": "deterministic_derived"
-          },
-          "reference_relevance_grade": 2
+          }
         },
         {
           "scenario_id": "SCN-AGT01876",
@@ -4825,8 +4623,7 @@
             "candidate_record": "synthetic_recent_policy_from_agent_mix",
             "client_record": "synthetic_representative_client",
             "scores": "deterministic_derived"
-          },
-          "reference_relevance_grade": 2
+          }
         },
         {
           "scenario_id": "SCN-AGT01876",
@@ -4875,8 +4672,7 @@
             "candidate_record": "synthetic_recent_policy_from_agent_mix",
             "client_record": "synthetic_representative_client",
             "scores": "deterministic_derived"
-          },
-          "reference_relevance_grade": 3
+          }
         },
         {
           "scenario_id": "SCN-AGT01876",
@@ -4922,8 +4718,7 @@
           "data_origin": {
             "candidate_record": "synthetic_representative_client",
             "scores": "deterministic_derived"
-          },
-          "reference_relevance_grade": 3
+          }
         },
         {
           "scenario_id": "SCN-AGT01876",
@@ -4969,8 +4764,7 @@
           "data_origin": {
             "candidate_record": "synthetic_representative_client",
             "scores": "deterministic_derived"
-          },
-          "reference_relevance_grade": 3
+          }
         },
         {
           "scenario_id": "SCN-AGT01876",
@@ -5016,8 +4810,7 @@
           "data_origin": {
             "candidate_record": "synthetic_representative_client",
             "scores": "deterministic_derived"
-          },
-          "reference_relevance_grade": 0
+          }
         },
         {
           "scenario_id": "SCN-AGT01876",
@@ -5063,8 +4856,7 @@
           "data_origin": {
             "candidate_record": "synthetic_representative_client",
             "scores": "deterministic_derived"
-          },
-          "reference_relevance_grade": 0
+          }
         },
         {
           "scenario_id": "SCN-AGT01876",
@@ -5110,8 +4902,7 @@
           "data_origin": {
             "candidate_record": "synthetic_representative_client",
             "scores": "deterministic_derived"
-          },
-          "reference_relevance_grade": 0
+          }
         },
         {
           "scenario_id": "SCN-AGT01876",
@@ -5157,22 +4948,9 @@
           "data_origin": {
             "candidate_record": "synthetic_representative_client",
             "scores": "deterministic_derived"
-          },
-          "reference_relevance_grade": 0
+          }
         }
-      ],
-      "relevance": {
-        "POL-01876-001": 2,
-        "POL-01876-002": 2,
-        "POL-01876-003": 2,
-        "POL-01876-004": 3,
-        "CLI-01876-008": 3,
-        "CLI-01876-015": 3,
-        "CLI-01876-005": 0,
-        "CLI-01876-007": 0,
-        "CLI-01876-009": 0,
-        "CLI-01876-010": 0
-      }
+      ]
     }
   ]
 }

@@ -16,6 +16,7 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "data" / "evaluation" / "m2_candidate_scenarios.json"
+BLIND_OUTPUT = ROOT / "data" / "evaluation" / "m2_candidate_blind.json"
 AS_OF = date(2026, 5, 31)
 SCENARIO_COUNT = 10
 POLICIES_PER_SCENARIO = 4
@@ -64,16 +65,6 @@ def business_fit(
     score += 0.2 if category and (category in tags or category in specialty_categories) else 0
     score += 0.1 if "High Value" in tags else 0
     return bounded(score)
-
-
-def relevance(candidate: dict[str, Any]) -> int:
-    if not all(candidate[key] for key in ("eligible", "permission_allowed", "compliance_allowed")):
-        return 0
-    if candidate["urgency"] >= 0.85 and candidate["actionability"] >= 0.85:
-        return 3
-    if candidate["urgency"] >= 0.65 or candidate["business_fit"] >= 0.85:
-        return 2
-    return 1 if candidate["expected_contribution"] > 0 else 0
 
 
 def common_fields(agent_id: str, candidate_id: str, allowed: bool) -> dict[str, Any]:
@@ -169,7 +160,6 @@ def build_dataset() -> dict[str, Any]:
                     "scores": "deterministic_derived",
                 },
             }
-            candidate["reference_relevance_grade"] = relevance(candidate)
             candidates.append(candidate)
 
         linked_clients = {row["customer_id"] for row in policies}
@@ -236,7 +226,6 @@ def build_dataset() -> dict[str, Any]:
                     "scores": "deterministic_derived",
                 },
             }
-            candidate["reference_relevance_grade"] = relevance(candidate)
             candidates.append(candidate)
 
         current = float(performance["metrics"]["protection_premium"]["current"])
@@ -254,10 +243,6 @@ def build_dataset() -> dict[str, Any]:
             },
             "constraints": {"top_k": 5},
             "candidates": candidates,
-            "relevance": {
-                row["candidate_id"]: row["reference_relevance_grade"]
-                for row in candidates
-            },
         })
 
     return {
@@ -296,7 +281,7 @@ def build_dataset() -> dict[str, Any]:
             "derived_fields": [
                 "expected_contribution", "expected_decision_date", "eligible",
                 "permission_allowed", "compliance_allowed", "urgency",
-                "actionability", "business_fit", "reference_relevance_grade",
+                "actionability", "business_fit",
             ],
             "synthetic_record_notice": "Customer and policy records are coursework demonstration records generated from source-derived agent and product distributions; they are not individual Kaggle customer or policy records.",
         },
@@ -309,24 +294,71 @@ def build_dataset() -> dict[str, Any]:
             "eligibility": "Pending positive-premium policy, or client with an explicit renewal-due/follow-up signal",
             "permission": "Candidate record belongs to the scenario agent",
             "compliance": "Agent training-compliance gate permits sales",
-            "reference_relevance": "Deterministic 0-3 coursework label from stated operational thresholds",
         },
         "limitations": [
-            "Reference relevance grades validate the coursework pipeline only and are not production labels.",
             "Expected contribution is a transparent rule-based estimate, not a trained probability prediction.",
+            "Final M4 relevance labels are collected independently from blinded human rankings and are not generated here.",
         ],
+        "scenarios": scenarios,
+    }
+
+
+def build_blind_dataset(dataset: dict[str, Any]) -> dict[str, Any]:
+    """Return only evidence fields needed for independent human ranking."""
+    scenarios: list[dict[str, Any]] = []
+    for scenario in dataset["scenarios"]:
+        candidates = []
+        for row in scenario["candidates"]:
+            if not all(
+                row[field]
+                for field in ("eligible", "permission_allowed", "compliance_allowed")
+            ):
+                continue
+            candidates.append({
+                "candidate_id": row["candidate_id"],
+                "candidate_type": row["candidate_type"],
+                "premium": row["premium"],
+                "currency": row["currency"],
+                "policy_status": row["policy_status"],
+                "submit_date": row["submit_date"],
+                "estimated_approval_days": row["estimated_approval_days"],
+                "client_tags": row["client_tags"],
+                "product_type": row["product_type"],
+                "eligible": row["eligible"],
+                "permission_allowed": row["permission_allowed"],
+                "compliance_allowed": row["compliance_allowed"],
+                "source_record_id": row["source_record_id"],
+            })
+        scenarios.append({
+            "scenario_id": scenario["scenario_id"],
+            "agent_id": scenario["agent_id"],
+            "open_gap": scenario["objective"]["open_gap"],
+            "currency": scenario["objective"]["unit"],
+            "deadline": scenario["objective"]["deadline"],
+            "candidates": candidates,
+        })
+    return {
+        "dataset_id": dataset["dataset_id"],
+        "blind_version": "human-ranking-v1",
+        "description": "Blinded evidence-only view for independent human ranking.",
         "scenarios": scenarios,
     }
 
 
 def main() -> None:
     dataset = build_dataset()
+    blind_dataset = build_blind_dataset(dataset)
     OUTPUT.write_text(
         json.dumps(dataset, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
     )
+    BLIND_OUTPUT.write_text(
+        json.dumps(blind_dataset, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
     print(
         f"Wrote {dataset['selection']['scenario_count']} scenarios and "
-        f"{dataset['selection']['candidate_count']} candidates to {OUTPUT}"
+        f"{dataset['selection']['candidate_count']} candidates to {OUTPUT}; "
+        f"wrote blinded evidence to {BLIND_OUTPUT}"
     )
 
 

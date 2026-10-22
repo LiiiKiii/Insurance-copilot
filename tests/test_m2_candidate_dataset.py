@@ -6,24 +6,24 @@ import json
 import unittest
 from pathlib import Path
 
-from nanobot.agent.tools.insurance.planning_layer.evaluation import (
-    evaluate_ranking,
-    expected_contribution_baseline,
-)
 from nanobot.agent.tools.insurance.planning_layer.prioritization import (
     prioritize_followups,
 )
-from scripts.build_m2_candidate_dataset import build_dataset
+from scripts import build_m2_candidate_dataset as builder
 
 
 ROOT = Path(__file__).resolve().parents[1]
 DATASET = ROOT / "data" / "evaluation" / "m2_candidate_scenarios.json"
+BLIND_DATASET = ROOT / "data" / "evaluation" / "m2_candidate_blind.json"
+ANNOTATIONS = ROOT / "data" / "evaluation" / "m2_candidate_annotations.json"
 
 
 class M2CandidateDatasetTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         cls.dataset = json.loads(DATASET.read_text(encoding="utf-8"))
+        cls.blind = json.loads(BLIND_DATASET.read_text(encoding="utf-8"))
+        cls.annotations = json.loads(ANNOTATIONS.read_text(encoding="utf-8"))
 
     def test_scope_and_currency_match_coursework_request(self) -> None:
         selection = self.dataset["selection"]
@@ -47,8 +47,10 @@ class M2CandidateDatasetTests(unittest.TestCase):
                 4,
             )
 
-    def test_checked_in_dataset_is_reproducible(self) -> None:
-        self.assertEqual(build_dataset(), self.dataset)
+    def test_checked_in_datasets_are_reproducible(self) -> None:
+        generated = builder.build_dataset()
+        self.assertEqual(generated, self.dataset)
+        self.assertEqual(builder.build_blind_dataset(generated), self.blind)
 
     def test_candidate_contract_lineage_and_ranges(self) -> None:
         required = {
@@ -59,11 +61,14 @@ class M2CandidateDatasetTests(unittest.TestCase):
             "compliance_allowed", "urgency", "actionability", "business_fit",
             "source_record_id", "source_path", "data_origin",
         }
+        forbidden = {"reference_relevance_grade", "rule_based_provisional_grade"}
         seen: set[str] = set()
         for scenario in self.dataset["scenarios"]:
-            relevance = scenario["relevance"]
+            self.assertNotIn("relevance", scenario)
+            self.assertNotIn("consensus_relevance", scenario)
             for row in scenario["candidates"]:
                 self.assertTrue(required <= row.keys())
+                self.assertTrue(forbidden.isdisjoint(row))
                 self.assertNotIn(row["candidate_id"], seen)
                 seen.add(row["candidate_id"])
                 self.assertEqual(row["currency"], "USD")
@@ -75,8 +80,6 @@ class M2CandidateDatasetTests(unittest.TestCase):
                 self.assertIsInstance(row["eligible"], bool)
                 self.assertIsInstance(row["permission_allowed"], bool)
                 self.assertIsInstance(row["compliance_allowed"], bool)
-                self.assertIn(row["candidate_id"], relevance)
-                self.assertIn(relevance[row["candidate_id"]], range(4))
                 if row["candidate_type"] == "policy":
                     self.assertIsNotNone(row["policy_status"])
                     self.assertIsNotNone(row["submit_date"])
@@ -100,28 +103,64 @@ class M2CandidateDatasetTests(unittest.TestCase):
                 {"ineligible"},
             )
 
-    def test_report_metrics_are_available_at_k_1_3_and_5(self) -> None:
-        for scenario in self.dataset["scenarios"]:
-            result = prioritize_followups({
-                key: scenario[key]
-                for key in ("agent_id", "objective", "constraints", "candidates")
-            })
-            proposed = [row["candidate_id"] for row in result["recommendations"]]
-            eligible_ids = {
-                row["candidate_id"]
-                for row in scenario["candidates"]
-                if row["eligible"]
-                and row["permission_allowed"]
-                and row["compliance_allowed"]
+    def test_blind_view_contains_only_evidence_for_eligible_candidates(self) -> None:
+        allowed = {
+            "candidate_id", "candidate_type", "premium", "currency",
+            "policy_status", "submit_date", "estimated_approval_days",
+            "client_tags", "product_type", "eligible", "permission_allowed",
+            "compliance_allowed", "source_record_id",
+        }
+        forbidden = {
+            "expected_contribution", "urgency", "actionability", "business_fit",
+            "priority_score", "ranking", "baseline_ranking",
+            "reference_relevance_grade", "rule_based_provisional_grade",
+        }
+        self.assertEqual(len(self.blind["scenarios"]), 10)
+        for scenario in self.blind["scenarios"]:
+            self.assertEqual(len(scenario["candidates"]), 6)
+            for row in scenario["candidates"]:
+                self.assertEqual(set(row), allowed)
+                self.assertTrue(forbidden.isdisjoint(row))
+                self.assertTrue(row["eligible"])
+                self.assertTrue(row["permission_allowed"])
+                self.assertTrue(row["compliance_allowed"])
+
+    def test_annotation_template_is_separate_and_valid_when_completed(self) -> None:
+        self.assertEqual(self.annotations["dataset_id"], self.dataset["dataset_id"])
+        self.assertEqual(self.annotations["annotation_version"], "human-v1")
+        self.assertIn(self.annotations["annotation_status"], {"pending", "complete"})
+        blind_by_id = {
+            row["scenario_id"]: {
+                candidate["candidate_id"] for candidate in row["candidates"]
             }
-            baseline = expected_contribution_baseline(
-                scenario["candidates"], eligible_ids
-            )
-            for k in self.dataset["evaluation_k"]:
-                metrics = evaluate_ranking(
-                    proposed, baseline, scenario["relevance"], k
+            for row in self.blind["scenarios"]
+        }
+        self.assertEqual(len(self.annotations["scenarios"]), 10)
+        for scenario in self.annotations["scenarios"]:
+            expected_ids = blind_by_id[scenario["scenario_id"]]
+            self.assertEqual(set(scenario["eligible_candidate_ids"]), expected_ids)
+            self.assertGreaterEqual(len(scenario["annotations"]), 1)
+            for annotation in scenario["annotations"]:
+                ranking = annotation["ranking"]
+                if ranking:
+                    self.assertEqual(set(ranking), expected_ids)
+                    self.assertEqual(len(ranking), 6)
+            consensus = scenario["consensus_relevance"]
+            if consensus:
+                self.assertEqual(set(consensus), expected_ids)
+                self.assertTrue(set(consensus.values()) <= {0, 1, 2, 3})
+                self.assertTrue(set(consensus.values()) & {0, 1})
+                self.assertTrue(set(consensus.values()) & {2, 3})
+        if self.annotations["annotation_status"] == "complete":
+            self.assertTrue(
+                all(
+                    row["consensus_relevance"]
+                    for row in self.annotations["scenarios"]
                 )
-                self.assertEqual(metrics["k"], k)
+            )
+
+        generator_source = Path(builder.__file__).read_text(encoding="utf-8")
+        self.assertNotIn("m2_candidate_annotations.json", generator_source)
 
 
 if __name__ == "__main__":
