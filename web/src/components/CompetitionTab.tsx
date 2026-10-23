@@ -9,6 +9,11 @@ import { authenticatedFetch as fetch, authHeaders } from '@/lib/auth'
 // to translation keys, so the badge text follows the UI locale. Unknown
 // values fall through and are rendered verbatim.
 const STATUS_KEY: Record<string, MessageKey> = {
+  '已達標': 'status.met',
+  '已覆蓋': 'status.covered',
+  '可追': 'status.achievable',
+  '挑戰性大': 'status.challenging',
+  '極困難': 'status.difficult',
   'Achieved': 'status.met',
   'Covered': 'status.covered',
   'Achievable': 'status.achievable',
@@ -73,6 +78,11 @@ function getDaysColor(urgencyLevel: string | undefined): string {
 // Style table is keyed by the backend's stable Chinese enum so the colour
 // follows the data even when the rendered label is translated.
 const FEASIBILITY_STYLE: Record<string, string> = {
+  '已達標': 'bg-blue-50 text-blue-700 dark:bg-blue-500/10 dark:text-blue-400',
+  '已覆蓋': 'bg-blue-50 text-blue-700 dark:bg-blue-500/10 dark:text-blue-400',
+  '可追': 'bg-emerald-50 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-400',
+  '挑戰性大': 'bg-amber-50 text-amber-700 dark:bg-amber-500/10 dark:text-amber-400',
+  '極困難': 'bg-red-50 text-red-700 dark:bg-red-500/10 dark:text-red-400',
   'Achieved': 'bg-blue-50 text-blue-700 dark:bg-blue-500/10 dark:text-blue-400',
   'Covered': 'bg-blue-50 text-blue-700 dark:bg-blue-500/10 dark:text-blue-400',
   'Achievable': 'bg-emerald-50 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-400',

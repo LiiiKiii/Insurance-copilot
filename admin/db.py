@@ -32,7 +32,15 @@ for _async_driver, _sync_driver in _SYNC_URL_MAP.items():
     SYNC_DATABASE_URL = SYNC_DATABASE_URL.replace(_async_driver, _sync_driver)
 
 _is_sqlite = DATABASE_URL.startswith("sqlite")
-_connect_args = {"check_same_thread": False} if _is_sqlite else {}
+if _is_sqlite:
+    _async_connect_args: dict = {"check_same_thread": False}
+    _sync_connect_args: dict = {"check_same_thread": False}
+else:
+    # Supabase transaction pooler (PgBouncer, port 6543) requires disabling the
+    # asyncpg prepared-statement cache. The psycopg sync driver rejects that
+    # kwarg, so keep the async and sync argument sets separate.
+    _async_connect_args = {"statement_cache_size": 0}
+    _sync_connect_args = {}
 _pool_config = {} if _is_sqlite else {
     "pool_pre_ping": True,
     "pool_size": 5,
@@ -44,7 +52,7 @@ _pool_config = {} if _is_sqlite else {
 engine = create_async_engine(
     DATABASE_URL,
     echo=os.environ.get("ADMIN_DB_ECHO", "0") == "1",
-    connect_args=_connect_args,
+    connect_args=_async_connect_args,
     **_pool_config,
 )
 AsyncSessionFactory = async_sessionmaker(
@@ -56,7 +64,7 @@ AsyncSessionFactory = async_sessionmaker(
 sync_engine = create_engine(
     SYNC_DATABASE_URL,
     echo=os.environ.get("ADMIN_DB_ECHO", "0") == "1",
-    connect_args=_connect_args,
+    connect_args=_sync_connect_args,
     **_pool_config,
 )
 SyncSessionFactory = sessionmaker(sync_engine, expire_on_commit=False)

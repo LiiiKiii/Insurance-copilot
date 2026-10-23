@@ -63,6 +63,11 @@ const TIER_LABEL_KEY: Record<string, MessageKey> = {
 // Backend-side feasibility-hint enum → translation key. Mirrors the
 // CompetitionTab map; unknown values fall through to verbatim render.
 const STATUS_KEY: Record<string, MessageKey> = {
+	"已達標": "status.met",
+	"已覆蓋": "status.covered",
+	"可追": "status.achievable",
+	"挑戰性大": "status.challenging",
+	"極困難": "status.difficult",
 	"Achieved": "status.met",
 	"Covered": "status.covered",
 	"Achievable": "status.achievable",
@@ -121,6 +126,12 @@ function formatGap(gap: number | null | undefined, unit: string): string {
 }
 
 const FEASIBILITY_STYLES: Record<string, string> = {
+	"已達標": "bg-blue-50 text-blue-700 dark:bg-blue-500/10 dark:text-blue-400",
+	"已覆蓋": "bg-blue-50 text-blue-700 dark:bg-blue-500/10 dark:text-blue-400",
+	"可追": "bg-emerald-50 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-400",
+	"挑戰性大":
+		"bg-amber-50 text-amber-700 dark:bg-amber-500/10 dark:text-amber-400",
+	"極困難": "bg-red-50 text-red-700 dark:bg-red-500/10 dark:text-red-400",
 	Achieved: "bg-blue-50 text-blue-700 dark:bg-blue-500/10 dark:text-blue-400",
 	Covered: "bg-blue-50 text-blue-700 dark:bg-blue-500/10 dark:text-blue-400",
 	Achievable: "bg-emerald-50 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-400",
@@ -1103,47 +1114,10 @@ interface TargetsTabProps {
 	agentId: string;
 }
 
-type SubTab = "my" | "team";
-
 export function TargetsTab({ agentId }: TargetsTabProps) {
-	const [activeTab, setActiveTab] = useState<SubTab>("my");
-
 	return (
 		<div className="p-4 space-y-4">
-			<div className="grid grid-cols-2 rounded-lg bg-slate-100 p-1 dark:bg-slate-800">
-				<button
-					type="button"
-					onClick={() => setActiveTab("my")}
-					className={cn(
-						"flex items-center justify-center gap-2 rounded-md px-3 py-2 text-xs font-medium transition-colors",
-						activeTab === "my"
-							? "bg-white text-insurance-blue shadow-sm dark:bg-slate-700 dark:text-white"
-							: "text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200",
-					)}
-				>
-					<IconTarget />
-					My Targets
-				</button>
-				<button
-					type="button"
-					onClick={() => setActiveTab("team")}
-					className={cn(
-						"flex items-center justify-center gap-2 rounded-md px-3 py-2 text-xs font-medium transition-colors",
-						activeTab === "team"
-							? "bg-white text-insurance-blue shadow-sm dark:bg-slate-700 dark:text-white"
-							: "text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200",
-					)}
-				>
-					<IconUsers />
-					Team Targets
-				</button>
-			</div>
-
-			{activeTab === "my" ? (
-				<MyGoalsTab agentId={agentId} />
-			) : (
-				<TeamGoalsTab agentId={agentId} />
-			)}
+			<TeamGoalsTab agentId={agentId} />
 		</div>
 	);
 }
