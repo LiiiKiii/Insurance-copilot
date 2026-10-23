@@ -1,84 +1,84 @@
-# 季度衝刺賽 2026
+# Quarterly Sprint 2026
 
-## 競賽概要
+## Competition Summary
 
-| 項目 | 詳情 |
+|project|Details|
 |------|------|
-| 競賽名稱 | 2026年度季度衝刺賽 (Quarterly Sprint) |
-| 主辦單位 | 營銷發展部 |
-| 競賽期間 | 每季度獨立計算（Q1: 1-3月, Q2: 4-6月, Q3: 7-9月, Q4: 10-12月） |
-| 當前賽季 | Q2（2026年4月1日 — 2026年6月30日） |
-| 結果公佈 | 每季結束後10個工作天內 |
+|Competition name|2026 Quarterly Sprint|
+|Organizer|Marketing Development Department|
+|During the competition|Calculated independently each quarter (Q1: January-March, Q2: April-June, Q3: July-September, Q4: October-December)|
+|current season|Q2 (April 1, 2026 - June 30, 2026)|
+|Results announced|Within 10 working days after the end of each quarter|
 
-## 參賽資格
+## Eligibility
 
-- 所有在職持牌代理人均可參加
-- 無入職時間限制
-- 無重大合規違規記錄
-- 每季度自動參賽，無需額外報名
+- All current licensed agents are welcome to participate
+- No entry time limit
+- No record of major compliance violations
+- Automatically participate every quarter, no additional registration required
 
-## 競賽規則
+## Contest rules
 
-### 計分標準
+### Scoring criteria
 
-以**新單遞交件數（Submission Count）**為核心指標：
+Taking **Submission Count** as the core indicator:
 
-| 職級 | 季度目標 (件) | 說明 |
+|Rank|Quarterly target (pieces)|illustrate|
 |------|-------------|------|
-| 業務主任 | 6 | 入門級目標 |
-| 業務經理 | 8 | 中級目標 |
-| 高級業務經理 | 10 | 高級目標 |
-| 區域總監 | 12 | 管理層目標 |
+|Business Director| 6 |entry level goals|
+|business manager| 8 |Intermediate goals|
+|Senior Business Manager| 10 |high level goals|
+|Regional Director| 12 |management goals|
 
-### 合資格保單
+### Eligible policy
 
-- 所有個人壽險及健康險新單
-- 包括保障型、儲蓄型、投連險
-- 加保保單計為獨立件數
-- 團單不計入
-- **以遞交日期為準**，無需等待核保結果
+- All new personal life and health insurance policies
+- Including protection type, savings type, investment-linked insurance
+- Additional insurance policies are counted as independent pieces
+- Group orders are not included in the calculation
+- **Based on the submission date**, no need to wait for the underwriting result
 
-### 計算規則
+### Calculation rules
 
-- 遞交日期必須在當季度內
-- 同一客戶的不同產品保單分別計算
-- 撤件（客戶主動撤回）將從件數中扣除
-- 重複遞交同一保單不重複計算
-- 月中入職的新人按實際在職天數折算目標
+- Submission date must be within the current quarter
+- Policies for different products of the same customer are calculated separately
+- Withdrawal (voluntarily withdrawn by the customer) will be deducted from the number of pieces
+- Repeat submission of the same policy will not be counted twice
+- New employees who join the company in the middle of the month will be converted into targets based on the actual number of days they have been on the job.
 
-## 獎勵方案
+## Incentive program
 
-### 達標獎
-- 完成100%目標：現金獎勵 HKD 15,000
-- 完成130%目標：現金獎勵 HKD 25,000
-- 完成160%目標：現金獎勵 HKD 40,000
+### Compliance Award
+- Achieve 100% goal: cash reward HKD 15,000
+- Achieving 130% of the target: cash reward HKD 25,000
+- Achieving 160% of the target: cash reward HKD 40,000
 
-### 連續達標獎
-- 連續2個季度達標：額外 HKD 10,000
-- 連續4個季度達標：額外 HKD 30,000 + 「全年衝刺王」稱號
+### Continuous achievement award
+- Complying with the standard for 2 consecutive quarters: additional HKD 10,000
+- Reaching the target for 4 consecutive quarters: Extra HKD 30,000 + "Year-round Sprint King" title
 
-### 排名獎
-- 各區域季度第1名：區域衝刺冠軍獎 + HKD 8,000
-- 全公司季度前5名：公司衝刺之星 + HKD 15,000
+### Ranking Award
+- First place in each regional quarter: Regional Sprint Champion Award + HKD 8,000
+- Top 5 in the company in the quarter: Company Sprint Star + HKD 15,000
 
-## 策略建議
+## strategic advice
 
-### 快速衝刺技巧
-1. **盤點現有客戶**：檢視已有客戶的加保需求
-2. **加速待跟進線索**：優先處理已約面談但未遞交的個案
-3. **善用轉介紹**：每位滿意客戶平均可轉介2-3位準客戶
-4. **簡化產品組合**：聚焦1-2款主推產品，提升銷售效率
+### Quick sprint techniques
+1. **Inventory of existing customers**: Review the insurance requirements of existing customers
+2. **Accelerate leads to be followed up**: Prioritize processing of cases that have been scheduled for interviews but have not been submitted.
+3. **Make good use of referrals**: Each satisfied customer can refer an average of 2-3 potential customers.
+4. **Simplify product portfolio**: Focus on 1-2 main products to improve sales efficiency
 
-## 注意事項
+## Things to note
 
-1. 每季度獨立計算，不可跨季累積
-2. 獎金於季度結束後30天內發放
-3. 如發現不正當銷售行為，取消當季及後續參賽資格
-4. 衝刺賽與其他競賽（星光大道、精英挑戰賽）可同時參加，獎勵疊加
-5. 最終數據以營銷發展部核實為準
+1. Each quarter is calculated independently and cannot be accumulated across quarters.
+2. Bonuses are paid within 30 days after the end of the quarter
+3. If any unfair sales behavior is discovered, the qualification for the current season and subsequent entries will be cancelled.
+4. You can participate in the sprint race and other competitions (Avenue of Stars, Elite Challenge) at the same time, and the rewards will be stacked
+5. The final data is subject to verification by the Marketing and Development Department
 
-## 往屆數據參考
+## Previous data reference
 
-- 2026年Q4達標率：55%
-- 2026年全年最高單季件數：28件（全公司第1名）
-- 2026年平均季度遞交件數：6.2件
+- Q4 compliance rate in 2026: 55%
+- Highest number of cases in a single quarter in 2026: 28 (No. 1 in the company)
+- Average number of submissions per quarter in 2026: 6.2

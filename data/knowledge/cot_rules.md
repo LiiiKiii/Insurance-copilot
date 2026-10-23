@@ -1,60 +1,60 @@
-# COT 超級會員標準 (Court of the Table) 2026
+# COT Super Member Standard (Court of the Table) 2026
 
-## 概述
+## Overview
 
-COT（Court of the Table）是 MDRT 體系中的高級會員等級，代表壽險從業者達到基本 MDRT 標準的3倍業績。COT 會員在全球 MDRT 會員中佔比約為前 20%。
+COT (Court of the Table) is a senior membership level in the MDRT system, representing life insurance practitioners who have achieved three times the performance of the basic MDRT standards. COT members account for approximately the top 20% of global MDRT members.
 
-## 2026年資格要求（香港地區）
+## 2026 Eligibility Requirements (Hong Kong Region)
 
-### 入會門檻
+### Membership threshold
 
-達到以下**任一**標準即可獲得 COT 資格：
+Eligibility for COT is achieved by meeting **any** of the following criteria:
 
-| 指標 | 要求金額 (HKD) | 基本MDRT的倍數 |
+|index|Requested amount (HKD)|Multiples of basic MDRT|
 |------|---------------|---------------|
-| FYC（首年佣金） | ≥ 2,400,000 | 3倍 |
-| FYP（首年保費） | ≥ 12,000,000 | 3倍 |
-| 收入（Income） | ≥ 3,600,000 | 3倍 |
+|FYC (First Year Commission)| ≥ 2,400,000 |3 times|
+|FYP (First Year Premium)| ≥ 12,000,000 |3 times|
+|Income| ≥ 3,600,000 |3 times|
 
-### 計算說明
+### Calculation instructions
 
-- 計算規則與 MDRT 基本會員完全一致
-- 合資格產品範圍相同
-- 計算期間：2026年1月1日 至 2026年12月31日
+- Calculation rules are exactly the same as MDRT basic membership
+- Eligible product range is the same
+- Calculation period: January 1, 2026 to December 31, 2026
 
-## COT vs MDRT vs TOT 對比
+## COT vs MDRT vs TOT comparison
 
-| 等級 | FYC 要求 (HKD) | 全球佔比 | 難度 |
+|grade|FYC requirements (HKD)|Global share|difficulty|
 |------|---------------|---------|------|
-| MDRT Member | 800,000 | 100% | 基準 |
-| COT | 2,400,000 | ~20% | 高 |
-| TOT | 4,800,000 | ~5% | 極高 |
+| MDRT Member | 800,000 | 100% |benchmark|
+| COT | 2,400,000 | ~20% |high|
+| TOT | 4,800,000 | ~5% |extremely high|
 
-## 達成路徑建議
+## Reach path suggestions
 
-### 以 FYC 2,400,000 為目標
+### Target FYC 2,400,000
 
-假設平均佣金率為 35%：
-- 需要年度保費約 **6,857,000 HKD**
-- 月均保費約 **571,400 HKD**
-- 若件均保費 50,000 HKD，月均需 **11.4 件**
+Assume an average commission rate of 35%:
+- Annual premium required is approximately **6,857,000 HKD**
+- The average monthly premium is approximately **571,400 HKD**
+- If the average premium per piece is HKD 50,000, the average monthly requirement is **11.4 pieces**
 
-### 策略方向
-1. **提升件均保費**：聚焦高淨值客戶，提升單均保費
-2. **增加保障型佔比**：保障型產品佣金率（30-55%）高於儲蓄型（15-25%）
-3. **加強客戶轉介**：老客戶轉介成功率通常高於冷線索
-4. **縮短銷售週期**：提升需求分析能力，減少每單耗時
+### strategic direction
+1. **Increase average premium per piece**: Focus on high-net-worth customers and increase average premium per piece
+2. **Increase the proportion of protection products**: The commission rate of protection products (30-55%) is higher than that of savings products (15-25%)
+3. **Enhance customer referrals**: The success rate of referrals from old customers is usually higher than that of cold leads
+4. **Shorten the sales cycle**: Improve demand analysis capabilities and reduce the time spent on each order
 
-## COT 專屬權益
+## COT exclusive rights
 
-- **COT 年度峰會**：與全球頂級從業者交流
-- **高級培訓資源**：獨家銷售策略及市場分析報告
-- **品牌效應**：COT 標誌在客戶開發中的信任加成
-- **人脈網絡**：加入香港及大中華區 COT 精英圈
-- **表彰典禮**：年度頒獎晚宴及媒體曝光
+- **COT Annual Summit**: Network with top global practitioners
+- **Advanced Training Resources**: Exclusive sales strategies and market analysis reports
+- **Brand Effect**: The trust bonus of the COT logo in customer development
+- **Network**: Join the COT elite circle in Hong Kong and Greater China
+- **Recognition Ceremony**: Annual Awards Dinner and Media Exposure
 
-## 歷史數據參考
+## Historical data reference
 
-- 2026年香港地區 COT 會員數：約 320 人
-- 2026年香港地區 MDRT 會員數：約 1,600 人
-- COT 達成率：約 20%
+- Number of COT members in Hong Kong in 2026: about 320 people
+- Number of MDRT members in Hong Kong in 2026: approximately 1,600
+- COT achievement rate: about 20%

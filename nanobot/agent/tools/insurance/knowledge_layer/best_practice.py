@@ -17,12 +17,49 @@ from nanobot.retrieval_citations import (
 
 
 TOPIC_KEYWORDS = {
-    "件均": ["件均", "case size", "保費偏低", "avg_case", "保額"],
-    "轉化": ["轉化", "conversion", "成交", "跟進", "线索", "線索"],
-    "mdrt": ["mdrt", "百萬圓桌", "里程碑"],
-    "衝刺": ["衝刺", "最後", "截止", "冲刺", "30天"],
-    "老客": ["老客", "加保", "續保", "轉介紹", "介绍", "转介绍"],
-    "線索": ["線索", "跟進", "lead", "客源"],
+    "average_case_size": {
+        "query_aliases": [
+            "件均", "保費偏低", "保费偏低", "保額", "保额", "avg_case",
+            "case size", "average case size", "average premium",
+        ],
+        "document_terms": [
+            "average premium per case", "average case size", "average premium",
+            "premium per policy",
+        ],
+    },
+    "conversion": {
+        "query_aliases": [
+            "轉化", "转化", "成交", "跟進", "跟进", "線索", "线索", "客源",
+            "conversion", "lead", "lead conversion", "follow-up rate",
+        ],
+        "document_terms": [
+            "low lead follow-up rate", "lead conversion rate", "72-hour rule",
+            "three-contact method",
+        ],
+    },
+    "mdrt": {
+        "query_aliases": ["mdrt", "百萬圓桌", "百万圆桌", "里程碑"],
+        "document_terms": ["mdrt", "career milestone"],
+    },
+    "sprint": {
+        "query_aliases": [
+            "衝刺", "冲刺", "最後", "最后", "截止", "30天",
+            "sprint", "deadline", "last 30 days",
+        ],
+        "document_terms": [
+            "sprint tactics", "sprint mode", "competition deadline", "last 30 days",
+        ],
+    },
+    "existing_client": {
+        "query_aliases": [
+            "老客", "加保", "續保", "续保", "轉介紹", "转介绍", "介紹", "介绍",
+            "existing client", "additional coverage", "referral", "upsell",
+        ],
+        "document_terms": [
+            "timing for old customers to add insurance", "best entry timing",
+            "annual coverage assessment",
+        ],
+    },
 }
 
 
@@ -40,9 +77,10 @@ class SearchBestPracticeTool(Tool):
     @property
     def description(self) -> str:
         return (
-            "【知識層】以關鍵詞或語義向量搜索保險銷售最佳實踐和成功策略。"
-            "覆蓋：提升件均保費、提升線索轉化率、競賽衝刺戰術、MDRT衝刺策略、老客加保。"
-            "返回相關策略和行動建議。"
+            "[Knowledge layer / 知識層] Search insurance-sales best practices by keyword or "
+            "semantic vector. Supports average premium (件均保費), lead conversion (線索轉化), "
+            "competition and MDRT sprints (競賽/MDRT衝刺), and existing-client upsell/referrals "
+            "(老客加保/轉介紹). Returns English strategies and action guidance."
         )
 
     @property
@@ -52,16 +90,16 @@ class SearchBestPracticeTool(Tool):
             "properties": {
                 "topic": {
                     "type": "string",
-                    "description": "主題，如 '件均保費偏低'、'MDRT衝刺'、'線索轉化率低'、'競賽最後30天'",
+                    "description": "Topic / 主題, e.g. 'average premium is low' or '件均保費偏低', 'MDRT sprint' or 'MDRT衝刺'",
                 },
                 "context": {
                     "type": "string",
-                    "description": "額外上下文（可選），如代理人職級、具體問題",
+                    "description": "Optional context / 額外上下文, such as agent level or the specific problem",
                 },
                 "search_mode": {
                     "type": "string",
                     "enum": ["keyword", "vector"],
-                    "description": "keyword 使用關鍵詞匹配；vector 使用語義向量匹配",
+                    "description": "keyword for term matching / 關鍵詞匹配; vector for semantic search / 語義向量匹配",
                     "default": "keyword",
                 },
             },
@@ -76,7 +114,7 @@ class SearchBestPracticeTool(Tool):
         bp_path = self._workspace / "data" / "knowledge" / "best_practices.md"
 
         if not bp_path.exists():
-            return json.dumps({"error": "最佳實踐知識庫不存在"}, ensure_ascii=False)
+            return json.dumps({"error": "Best-practice knowledge base not found / 最佳實踐知識庫不存在"}, ensure_ascii=False)
 
         content = bp_path.read_text(encoding="utf-8")
         sections = content.split("\n## ")
@@ -111,22 +149,29 @@ class SearchBestPracticeTool(Tool):
                 if len(matched) >= 3:
                     break
         else:
-            for section in sections[1:]:
-                section_lower = section.lower()
-                for key, keywords in TOPIC_KEYWORDS.items():
-                    if key in topic or any(kw in topic for kw in keywords):
-                        if any(kw in section_lower for kw in keywords):
-                            matched.append(section.strip())
-                            break
+            matched_rules = [
+                rule
+                for rule in TOPIC_KEYWORDS.values()
+                if any(alias in topic for alias in rule["query_aliases"])
+            ]
+            for rule in matched_rules:
+                for section in sections[1:]:
+                    section_lower = section.lower()
+                    normalized = section.strip()
+                    if (
+                        normalized not in matched
+                        and any(term in section_lower for term in rule["document_terms"])
+                    ):
+                        matched.append(normalized)
 
         if not matched and search_mode == "keyword":
             # Return first 2 sections as fallback
             matched = [s.strip() for s in sections[1:3]]
 
         terms = [*topic.split()]
-        for key, keywords in TOPIC_KEYWORDS.items():
-            if key in topic or any(term in topic for term in keywords):
-                terms.extend([key, *keywords])
+        for key, rule in TOPIC_KEYWORDS.items():
+            if any(alias in topic for alias in rule["query_aliases"]):
+                terms.extend([key, *rule["query_aliases"], *rule["document_terms"]])
         terms = unique_terms(terms)
         citations = []
         for rank, section in enumerate(matched[:3], start=1):

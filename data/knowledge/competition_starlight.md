@@ -1,75 +1,75 @@
-# 星光大道競賽 2026
+# Walk of Fame Competition 2026
 
-## 競賽概要
+## Competition Summary
 
-| 項目 | 詳情 |
+|project|Details|
 |------|------|
-| 競賽名稱 | 2026年度星光大道競賽 (Starlight Avenue Competition) |
-| 主辦單位 | 營銷發展部 |
-| 競賽期間 | 2026年1月1日 — 2026年6月30日 |
-| 公佈結果 | 2026年7月15日 |
-| 頒獎典禮 | 2026年8月（暫定） |
+|Competition name|2026 Starlight Avenue Competition|
+|Organizer|Marketing Development Department|
+|During the competition|January 1, 2026 - June 30, 2026|
+|Announce results|July 15, 2026|
+|Award Ceremony|August 2026 (tentative)|
 
-## 參賽資格
+## Eligibility
 
-- 所有在職持牌代理人均可參加
-- 入職滿3個月以上
-- 無重大合規違規記錄
-- 牌照處於有效狀態
+- All current licensed agents are welcome to participate
+- Worked for more than 3 months
+- No record of major compliance violations
+- The license plate is valid
 
-## 競賽規則
+## Contest rules
 
-### 計分標準
+### Scoring criteria
 
-以**保障保費（Protection Premium）**為核心指標：
+Taking **Protection Premium** as the core indicator:
 
-| 職級 | 目標保費 (HKD) | 說明 |
+|Rank|Target premium (HKD)|illustrate|
 |------|---------------|------|
-| 業務主任 | 800,000 | 入門級目標 |
-| 業務經理 | 1,800,000 | 中級目標 |
-| 高級業務經理 | 2,500,000 | 高級目標 |
-| 區域總監 | 4,000,000 | 管理層目標 |
+|Business Director| 800,000 |entry level goals|
+|business manager| 1,800,000 |Intermediate goals|
+|Senior Business Manager| 2,500,000 |high level goals|
+|Regional Director| 4,000,000 |management goals|
 
-### 合資格產品
-- 定期壽險
-- 終身壽險
-- 危疾保險
-- 醫療保險
-- 意外保險
-- **不包括**：儲蓄型保險、投資相連保險、年金
+### Eligible products
+- term life insurance
+- whole life insurance
+- critical illness insurance
+- medical insurance
+- accident insurance
+- **Excludes**: savings insurance, investment-linked insurance, annuity
 
-### 計算規則
-- 以核保通過日期為準
-- 保費以年繳化保費（Annualized Premium）計算
-- 團單不計入
-- 躉繳保費按 10% 折算為年繳化保費
-- 待批保單保費不計入，核保通過後方可納入
+### Calculation rules
+- Subject to the date of approval of underwriting
+- Premiums are calculated based on annualized premiums (Annualized Premium)
+- Group orders are not included in the calculation
+- Single payment premiums are converted into annual premiums at a rate of 10%
+- Premiums for policies that are pending approval are not included and can only be included after the underwriting is approved.
 
-## 獎勵方案
+## Incentive program
 
-### 達標獎
-- 完成100%目標：星光大道獎盃 + 海外旅遊獎勵（日本5天4夜豪華團）
-- 完成120%目標：以上獎勵 + 額外現金獎 HKD 20,000
-- 完成150%目標：以上獎勵 + 升級商務艙
+### Compliance Award
+- Complete 100% of the goal: Avenue of Stars trophy + overseas travel reward (5 days and 4 nights luxury tour in Japan)
+- Completing 120% of the target: above rewards + additional cash prize HKD 20,000
+- Completing 150% of the goal: above rewards + upgrade to business class
 
-### 排名獎
-- 全公司前3名：鑽石星光獎 + 額外現金 HKD 50,000
-- 全公司前10名：黃金星光獎 + 額外現金 HKD 20,000
-- 各區域第1名：區域之星獎 + 額外現金 HKD 10,000
+### Ranking Award
+- Top 3 in the company: Diamond Star Award + extra cash HKD 50,000
+- Top 10 in the company: Golden Star Award + Extra Cash HKD 20,000
+- First place in each region: Regional Star Award + Extra Cash HKD 10,000
 
-### 團隊獎
-- 團隊平均達成率最高的前3組：團隊旅遊基金 HKD 100,000
+### Team Award
+- The top 3 groups with the highest average team achievement rate: Team Travel Fund HKD 100,000
 
-## 注意事項
+## Things to note
 
-1. 競賽期間退保的保單將從已計業績中扣除
-2. 不正當銷售行為一經查實，取消參賽資格
-3. 同一客戶的加保保單可累計計算
-4. 競賽結果以精算部最終核實數據為準
-5. 主辦方保留最終解釋權
+1. Policies surrendered during the competition period will be deducted from the calculated performance
+2. Once the unfair sales behavior is verified, the qualification will be disqualified.
+3. Additional insurance policies of the same customer can be calculated cumulatively
+4. The results of the competition are subject to the final verification data by the Actuarial Department.
+5. The organizer reserves the right of final interpretation
 
-## 往屆數據參考
+## Previous data reference
 
-- 2026年達標率：42%
-- 2026年冠軍業績：HKD 5,200,000
-- 2026年參賽人數：380人
+- Compliance rate in 2026: 42%
+- Champion performance in 2026: HKD 5,200,000
+- Number of participants in 2026: 380

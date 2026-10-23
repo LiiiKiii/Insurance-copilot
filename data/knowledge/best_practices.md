@@ -1,99 +1,99 @@
-# 保險銷售最佳實踐庫
+# Insurance Sales Best Practices Library
 
-## 件均保費偏低的改善策略
+## Improvement strategies for low average premium per case
 
-當代理人件均保費低於公司均值（HKD 42,000）時，常見原因是過度聚焦儲蓄型小額保單。
+When the average premium per agent is lower than the company average (HKD 42,000), the common reason is an over-focus on savings-based small policies.
 
-**核心策略：**
-1. **需求重演法**：面談時先問「如果明天你不能工作6個月，家庭財務會怎樣？」再引導至保障缺口
-2. **保額升級話術**：報價時從客戶實際保障需求出發，建議保額 = 年收入 × 10 + 負債
-3. **附加險搭配**：每份主險搭配至少1份附加險（危疾+醫療），件均自然提升 30-40%
-4. **高淨值客戶識別**：轉介紹時篩選收入 HKD 100K+ 的潛在客戶，優先跟進
+**Core Strategy:**
+1. **Demand Reenactment Method**: During the interview, first ask, "If you can't work for 6 months tomorrow, what will happen to your family's finances?" and then guide you to the protection gap.
+2. **Insured Amount Upgrade Technique**: When quoting, we base our quotation on the customer’s actual protection needs. It is recommended that the insured amount = annual income × 10 + liability
+3. **Additional insurance matching**: Each main insurance is matched with at least one additional insurance (critical illness + medical), and the average insurance will naturally increase by 30-40%
+4. **High net worth client identification**: Screen potential clients with an income of HKD 100K+ during referral and give priority to follow up
 
-**成功案例**：陳志明 2026年Q1通過需求重演法，件均從 HKD 28,000 提升至 HKD 35,000，季度增長 25%。
+**Successful Case**: Chen Zhiming passed the demand recurrence method in Q1 of 2026, and the average item price increased from HKD 28,000 to HKD 35,000, a quarterly increase of 25%.
 
-**行動計劃**：
-- 本週起每次面談必問保障缺口問題（2分鐘）
-- 報價時預設保障型主險 + 1份附加險組合
-- 目標：3個月內件均提升至 HKD 35,000+
-
----
-
-## 線索跟進率偏低的改善方法
-
-當線索轉化率低於同級均值（61%）時，通常是跟進節奏問題，而非產品問題。
-
-**核心策略：**
-1. **72小時法則**：新線索72小時內必須首次電話聯繫，逾期轉化率下降 60%
-2. **三次接觸法**：
-   - 第1次：電話了解需求（目標：預約面談）
-   - 第2次：發送定制方案 PDF（目標：確認面談）
-   - 第3次：面談+報價（目標：簽單或獲取轉介紹）
-3. **情感賬戶積累**：每週至少1次非銷售聯繫（節日祝福/有用文章/行業資訊）
-4. **跟進管理工具**：每天09:00花15分鐘回顧線索狀態，今日必跟進清單不超過5條
-
-**行動計劃**：
-- 建立線索跟進表格，每條線索記錄最後聯繫時間
-- 設定每天16:00為固定跟進時間（30分鐘）
-- 本週目標：所有 >72小時未跟進的線索全部清零
+**Action Plan**:
+- Starting from this week, every interview must ask about the protection gap question (2 minutes)
+- The main protection insurance + 1 additional insurance combination is preset when quoting
+- Target: Increase the price of each item to HKD 35,000+ within 3 months
 
 ---
 
-## 競賽最後30天衝刺戰術
+## How to improve low lead follow-up rate
 
-當競賽截止日剩餘30天以內時，需要切換到「衝刺模式」。
+When lead conversion rates are lower than the category average (61%), it’s usually a follow-up cadence issue, not a product issue.
 
-**衝刺三板斧：**
-1. **優先高概率案件**：已報價未成交的案件轉化率最高，先追這批
-   - 列出所有30天內的未成交報價
-   - 每天電話跟進1-2個，詢問「還有什麼顧慮我可以幫你解決？」
-2. **老客加保/轉介紹**：成本最低、成交率最高（老客成交率約 40-60%）
-   - 聯繫最近2年的客戶，以「保障更新評估」為由預約面談
-   - 每位老客請求轉介紹1個朋友
-3. **聯合開單**：與同事合作互相介紹客戶
-   - 找團隊中互補的同事（你擅長保障型，對方擅長儲蓄型）
-   - 互相介紹各自的潛在客戶
+**Core Strategy:**
+1. **72-Hour Rule**: New leads must be contacted by phone for the first time within 72 hours, overdue conversion rate drops by 60%
+2. **Three Contact Method**:
+   - The 1st time: Call to understand the needs (Target: Make an appointment for an interview)
+   - Time 2: Send customized plan PDF (Target: Confirm interview)
+   - The 3rd time: Interview + quotation (goal: sign a contract or obtain a referral)
+3. **Emotional Account Accumulation**: At least 1 non-sales contact per week (holiday greetings/useful articles/industry information)
+4. **Follow-up Management Tool**: Spend 15 minutes at 09:00 every day to review the status of leads. The list of must-follow-ups today will not exceed 5 items.
 
-**行動計劃**：
-- 每週一晨會前更新衝刺進度表
-- 每天下班前確認「今日簽了幾單/接觸了幾個客戶」
-
----
-
-## MDRT衝刺期時間管理
-
-當 MDRT 缺口在 HKD 50,000 以內時，這是職業生涯的重要里程碑，需要特別對待。
-
-**核心策略：**
-1. **聚焦高淨值客戶**：1-2個大單（HKD 30,000+）即可解決問題
-   - 從現有客戶中篩選有加保空間的（子女出生/房屋按揭/收入增加）
-   - 優先預約面談，不要等轉介紹
-2. **借力 MDRT 情感訴求**：向老客戶坦誠說明正在衝 MDRT 里程碑
-   - 「我快到 MDRT 了，你們一直是我最重要的客戶，有沒有認識的朋友需要保障規劃？」
-   - 客戶往往很樂意幫忙，轉介紹成功率提升 2-3 倍
-3. **舊案復活**：查看過去6個月所有未成交的報價
-   - 尤其是那些說「考慮一下」的客戶，主動跟進詢問
-4. **待批保單跟進**：加速核保流程
-   - 主動聯繫核保部門，確認所需補充材料
-   - 催促客戶盡快提交所需文件
-
-**注意**：MDRT 是你職業里程碑，心態上要平靜，不要讓急迫感影響面談質量。
+**Action Plan**:
+- Create a lead follow-up form and record the last contact time for each lead
+- Set 16:00 every day as a fixed follow-up time (30 minutes)
+- This week’s goal: Clear all leads that have not been followed up for >72 hours
 
 ---
 
-## 老客戶加保切入時機
+## Sprint tactics for the last 30 days of the competition
 
-老客戶加保是成本最低、成交率最高的業務來源（約 40-60% 成交率）。
+When there are less than 30 days left before the competition deadline, you need to switch to "sprint mode".
 
-**最佳切入時機：**
-1. **保單周年日前2-3個月**：以「年度保障評估」為由聯繫
-2. **重大生活變化**：
-   - 結婚/生育 → 提升人壽保額、增加子女保障
-   - 買房/按揭 → 定期壽險覆蓋按揭金額
-   - 升職/加薪 → 保障跟上收入增長
-   - 父母年邁 → 長者醫療保障
-3. **醫療費用上漲時**：切入醫療險升級（每年都有很好的時機）
-4. **市場波動期**：儲蓄型客戶對保障型產品興趣上升
+**Sprint three-axe:**
+1. **Priority to high-probability cases**: Cases that have been quoted but not completed have the highest conversion rate, pursue these batches first
+   - List all unfilled quotes within 30 days
+   - Follow up with 1-2 phone calls every day, asking "What other concerns can I help you solve?"
+2. **Old customer insurance/referral**: the lowest cost and the highest transaction rate (the transaction rate for regular customers is about 40-60%)
+   - Contact customers in the past 2 years and make an appointment for an interview on the grounds of "protection renewal assessment"
+   - Each old customer requests to introduce 1 friend
+3. **Joint Billing**: Cooperate with colleagues to introduce customers to each other
+   - Find colleagues who complement each other in the team (you are good at protection type, and the other person is good at saving type)
+   - Introduce each other’s potential customers
 
-**開場白示範**：
-「[客戶姓名]，距離你投保已經[X]年了，這期間你的家庭和收入都有些變化。我想為你做一個免費的保障更新評估，看看有沒有保障缺口，大概10分鐘，你這週什麼時候方便？」
+**Action Plan**:
+- Update the sprint schedule every Monday morning before the meeting
+- Before getting off work every day, confirm "how many orders were signed/how many customers were contacted today"
+
+---
+
+## MDRT sprint time management
+
+When the MDRT gap is within HKD 50,000, it is an important career milestone and requires special treatment.
+
+**Core Strategy:**
+1. **Focus on high net worth clients**: 1-2 large orders (HKD 30,000+) can solve the problem
+   - Screen existing customers who have room for additional insurance (birth of a child/house mortgage/increase in income)
+   - Prioritize appointments for interviews, don’t wait for referrals
+2. **Leverage MDRT’s emotional appeal**: Frankly explain to old customers that we are reaching MDRT milestones
+   - "I'm almost here at MDRT, and you have always been my most important customers. Do you know anyone who needs protection planning?"
+   - Customers are often willing to help, and the success rate of referrals increases by 2-3 times
+3. **Old case resurrected**: View all unsettled quotes in the past 6 months
+   - Especially those customers who said "think about it", take the initiative to follow up and ask
+4. **Pending policy follow-up**: Speed ​​up the underwriting process
+   - Proactively contact the underwriting department to confirm the required supplementary materials
+   - Urging clients to submit required documents as soon as possible
+
+**Note**: MDRT is a milestone in your career. You should be calm and don't let urgency affect the quality of the interview.
+
+---
+
+## Timing for old customers to add insurance
+
+Adding insurance to old customers is the source of business with the lowest cost and the highest closing rate (approximately 40-60% closing rate).
+
+**Best time to enter:**
+1. **2-3 months before the policy anniversary**: Contact based on "Annual Protection Review"
+2. **Major Life Changes**:
+   - Marriage/childbirth → Increase life insurance amount and increase child protection
+   - Buying a house/mortgage → Term life insurance covers the mortgage amount
+   - Promotion/salary increase → Ensure to keep up with income growth
+   - Elderly parents → Elderly medical insurance
+3. **When medical expenses rise**: Take advantage of medical insurance upgrades (a good time every year)
+4. **Market Volatility Period**: Savings customers are increasingly interested in protection products
+
+**Opening Statement Demonstration**:
+"[Customer Name], it has been [X] years since you signed up for insurance. During this period, your family and income have changed. I would like to do a free protection update assessment for you to see if there are any protection gaps. It will take about 10 minutes. When is it convenient for you this week?"
