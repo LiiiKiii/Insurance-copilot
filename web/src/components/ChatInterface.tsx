@@ -95,7 +95,7 @@ export function ChatInterface({
 		if (!agentId) return;
 		fetch(`/api/agent-info?agent_id=${encodeURIComponent(agentId)}`, { headers: authHeaders() })
 			.then((r) => r.json())
-			.then((d) => setAgentName(d?.data?.nickname || d?.data?.name_en || d?.data?.name_zh || ""))
+			.then((d) => setAgentName(d?.data?.nickname || d?.data?.name_zh || d?.data?.name_en || ""))
 			.catch(() => {});
 	}, [agentId]);
 	const [input, setInput] = useState("");

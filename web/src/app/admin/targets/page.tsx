@@ -13,7 +13,7 @@ interface MetricOption {
 }
 
 const METRIC_OPTIONS: MetricOption[] = [
-  { key: 'protection_premium', labelKey: 'admin.targets.metric.protectionPremium', unit: 'USD' },
+  { key: 'protection_premium', labelKey: 'admin.targets.metric.protectionPremium', unit: 'Credit' },
   { key: 'submission_count',   labelKey: 'admin.targets.metric.submissionCount',   unitKey: 'admin.targets.unit.cases' },
   { key: 'conversion_rate',    labelKey: 'admin.targets.metric.conversionRate',    unit: '%' },
   { key: 'new_clients',        labelKey: 'admin.targets.metric.newClients',        unitKey: 'admin.targets.unit.persons' },
@@ -40,7 +40,7 @@ export default function TargetsPage() {
   const [editingId, setEditingId] = useState<string | null>(null)
   const [editValue, setEditValue] = useState<string>('')
   const [form, setForm] = useState({
-    agent_id: '', metric_key: 'protection_premium', target_value: '',
+    agent_id: '', metric_key: 'protection_premium', target_value: '', unit: 'Credit',
     period_start: '2026-01-01', period_end: '2026-12-31',
   })
 
@@ -71,9 +71,9 @@ export default function TargetsPage() {
   useEffect(() => { load() }, [load])
 
   const resolveUnit = (mo: MetricOption | undefined): string => {
-    if (!mo) return 'USD'
+    if (!mo) return 'HKD'
     if (mo.unitKey) return t(mo.unitKey)
-    return mo.unit || 'USD'
+    return mo.unit || 'HKD'
   }
 
   const handleCreate = async () => {
@@ -84,7 +84,7 @@ export default function TargetsPage() {
         metric_key: form.metric_key,
         metric_label: mo ? t(mo.labelKey) : form.metric_key,
         target_value: parseFloat(form.target_value),
-        unit: resolveUnit(mo),
+        unit: form.unit.trim(),
         period_type: 'annual',
         period_start: form.period_start,
         period_end: form.period_end,
@@ -239,7 +239,7 @@ export default function TargetsPage() {
               </div>
               <div>
                 <label className="block text-xs text-slate-500 mb-1">{t('admin.targets.field.metric')}</label>
-                <select value={form.metric_key} onChange={e => setForm({...form, metric_key: e.target.value})}
+                <select value={form.metric_key} onChange={e => setForm({...form, metric_key: e.target.value, unit: resolveUnit(METRIC_OPTIONS.find(m => m.key === e.target.value))})}
                   className="w-full px-3 py-2 text-sm border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-900 text-slate-800 dark:text-white">
                   {METRIC_OPTIONS.map(m => <option key={m.key} value={m.key}>{t(m.labelKey)}</option>)}
                 </select>
@@ -248,6 +248,11 @@ export default function TargetsPage() {
                 <label className="block text-xs text-slate-500 mb-1">{t('admin.targets.field.targetValue')}</label>
                 <input type="number" value={form.target_value} onChange={e => setForm({...form, target_value: e.target.value})}
                   placeholder={t('admin.targets.field.targetValue.placeholder')}
+                  className="w-full px-3 py-2 text-sm border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-900 text-slate-800 dark:text-white" />
+              </div>
+              <div>
+                <label className="block text-xs text-slate-500 mb-1" htmlFor="target-unit">{t('admin.targets.col.unit')}</label>
+                <input id="target-unit" value={form.unit} maxLength={20} onChange={e => setForm({...form, unit: e.target.value})}
                   className="w-full px-3 py-2 text-sm border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-900 text-slate-800 dark:text-white" />
               </div>
               <div className="grid grid-cols-2 gap-3">
@@ -265,7 +270,7 @@ export default function TargetsPage() {
             </div>
             <div className="flex justify-end gap-3 mt-6">
               <button onClick={() => setShowCreate(false)} className="px-4 py-2 text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors">{t('admin.targets.button.cancel')}</button>
-              <button onClick={handleCreate} disabled={!form.target_value} className="px-4 py-2 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 transition-colors">{t('admin.targets.button.create')}</button>
+              <button onClick={handleCreate} disabled={!form.target_value || !form.unit.trim()} className="px-4 py-2 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 transition-colors">{t('admin.targets.button.create')}</button>
             </div>
           </div>
         </div>

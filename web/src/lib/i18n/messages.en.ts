@@ -42,6 +42,9 @@ export const messages = {
   'tab.competition': 'Competitions',
   'tab.honors': 'Honors',
   'tab.targets': 'Targets',
+  'tab.targets.my': 'My targets',
+  'tab.targets.performance': 'Performance',
+  'tab.targets.team': 'Team targets',
 
   'confirm.deleteSession.title': 'Delete chat',
   'confirm.deleteSession.message': 'Delete this chat history? This cannot be undone.',
@@ -309,7 +312,7 @@ export const messages = {
 
   'tab.targets.team.empty': 'No team members yet',
   'tab.targets.team.emptyHint': 'When you have direct reports, team target management appears here.',
-  'tab.targets.team.totalPremium': 'Team total premium',
+  'tab.targets.team.totalPremium': 'Team production by unit',
   'tab.targets.team.totalCount': 'Team total count',
   'tab.targets.team.avgAchievement': 'Avg achievement rate',
   'tab.targets.team.peopleCount': '{count} people',

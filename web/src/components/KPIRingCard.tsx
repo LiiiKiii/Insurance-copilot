@@ -89,14 +89,15 @@ export function KPIRingCard({
 }: KPIRingCardProps) {
 	const { t } = useTranslation();
 	// Without a target, show a plain current-value card with no ring, so it is not misread as "far behind"
-	const hasTarget = target != null && target > 0;
+	const hasTarget = target != null && Number.isFinite(target) && target > 0;
+	const showProgress = hasTarget && current != null && Number.isFinite(current) && Number.isFinite(rate);
 
 	const ringSize = size === "sm" ? 56 : 72;
 	const strokeWidth = size === "sm" ? 5 : 6;
 	const radius = (ringSize - strokeWidth) / 2;
 	const circumference = 2 * Math.PI * radius;
 
-	const pct = Math.min(rate * 100, 100);
+	const pct = Math.max(0, Math.min(rate * 100, 100));
 	const offset = circumference * (1 - pct / 100);
 
 	const ringColor =
@@ -110,7 +111,7 @@ export function KPIRingCard({
 
 	return (
 		<div className="flex flex-col items-center gap-2 p-3 rounded-xl border border-slate-200 dark:border-slate-700/50 bg-white dark:bg-slate-800/50 hover:shadow-md transition-shadow">
-			{hasTarget ? (
+			{showProgress ? (
 				/* Ring + percentage */
 				<div className="relative">
 					<svg width={ringSize} height={ringSize} className="-rotate-90">
