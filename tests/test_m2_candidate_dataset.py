@@ -231,6 +231,7 @@ class M2CandidateDatasetTests(unittest.TestCase):
     def test_annotation_tool_updates_only_selected_human_slot(self) -> None:
         document = json.loads(json.dumps(self.annotations))
         scenario = document["scenarios"][0]
+        scenario["consensus_relevance"] = {}  # Exercise the pending annotation fixture.
         other_annotator_ranking = list(scenario["annotations"][1]["ranking"])
         ranking = list(reversed(scenario["eligible_candidate_ids"]))
         annotator.apply_ranking(
