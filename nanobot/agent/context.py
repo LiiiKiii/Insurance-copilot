@@ -22,18 +22,23 @@ class ContextBuilder:
     def build_system_prompt(
         self,
         skill_names: list[str] | None = None,
+        trusted_skill_guidance: str | None = None,
     ) -> str:
-        """Build the minimal system prompt.
-
-        Skills are intentionally not loaded during A1.
-        """
-        return (
+        """Build the system prompt with optional server-selected workflow guidance."""
+        prompt = (
             "You are nanobot, a helpful AI assistant for "
             "Insurance Performance Intelligence Copilot.\n\n"
             "Answer based on the information available in the conversation. "
             "Do not invent insurance performance figures, policy details, "
             "or results from tools that have not been executed."
         )
+        if trusted_skill_guidance:
+            prompt += (
+                "\n\n[Trusted Insurance Workflow]\n"
+                + trusted_skill_guidance
+                + "\n[/Trusted Insurance Workflow]"
+            )
+        return prompt
 
     @staticmethod
     def _build_runtime_context(
@@ -72,6 +77,7 @@ class ContextBuilder:
         channel: str | None = None,
         chat_id: str | None = None,
         current_role: str = "user",
+        trusted_skill_guidance: str | None = None,
     ) -> list[dict[str, Any]]:
         """Build the messages for one LLM request."""
         if media:
@@ -91,7 +97,7 @@ class ContextBuilder:
         return [
             {
                 "role": "system",
-                "content": self.build_system_prompt(skill_names),
+                "content": self.build_system_prompt(skill_names, trusted_skill_guidance),
             },
             *history,
             {
