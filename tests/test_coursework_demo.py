@@ -17,16 +17,20 @@ from nanobot.agent.coursework_demo import (
     recommendation_result,
 )
 from nanobot.agent.tools.insurance.planning_layer.prioritization import prioritize_followups
+from admin.seeds import DEFAULT_TENANT_ID
 
 
 _ROOT = Path(__file__).resolve().parents[1]
 _DATASET = _ROOT / "data/evaluation/m2_candidate_scenarios.json"
-_SCOPE = CourseworkDemoScope("demo-tenant", "AGT00690")
+_SCOPE = CourseworkDemoScope(DEFAULT_TENANT_ID, "AGT00690")
 
 
 class CourseworkDemoTests(unittest.TestCase):
     def setUp(self) -> None:
-        self.environment = patch.dict(os.environ, {"M1_COURSEWORK_DEMO_TENANT_ID": "demo-tenant"})
+        self.environment = patch.dict(os.environ, {
+            "M1_COURSEWORK_DEMO_TENANT_ID": DEFAULT_TENANT_ID,
+            "M1_COURSEWORK_DEMO_AGENT_ID": "AGT00690",
+        })
         self.environment.start()
         self.addCleanup(self.environment.stop)
         self.dataset = json.loads(_DATASET.read_text(encoding="utf-8"))
@@ -41,7 +45,8 @@ class CourseworkDemoTests(unittest.TestCase):
         source = CourseworkCandidateSource()
         for scenario in self.dataset["scenarios"]:
             with self.subTest(agent=scenario["agent_id"]):
-                prepared = source.prepare(CourseworkDemoScope("demo-tenant", scenario["agent_id"]))
+                with patch.dict(os.environ, {"M1_COURSEWORK_DEMO_AGENT_ID": scenario["agent_id"]}):
+                    prepared = source.prepare(CourseworkDemoScope(DEFAULT_TENANT_ID, scenario["agent_id"]))
                 self.assertEqual(len(prepared.payload["candidates"]), 6)
                 excluded_ids = {
                     row["candidate_id"] for row in scenario["candidates"]
@@ -60,7 +65,13 @@ class CourseworkDemoTests(unittest.TestCase):
         with self.assertRaises(CourseworkCandidateError):
             source.prepare(CourseworkDemoScope("other-tenant", "AGT00690"))
         with self.assertRaises(CourseworkCandidateError):
-            source.prepare(CourseworkDemoScope("demo-tenant", "unknown-agent"))
+            source.prepare(CourseworkDemoScope(DEFAULT_TENANT_ID, "unknown-agent"))
+        with patch.dict(os.environ, {"M1_COURSEWORK_DEMO_AGENT_ID": ""}):
+            with self.assertRaises(CourseworkCandidateError):
+                source.prepare(_SCOPE)
+        with patch.dict(os.environ, {"M1_COURSEWORK_DEMO_AGENT_ID": "AGT00770"}):
+            with self.assertRaises(CourseworkCandidateError):
+                source.prepare(_SCOPE)
         with patch.dict(os.environ, {"M1_COURSEWORK_DEMO_TENANT_ID": ""}):
             with self.assertRaises(CourseworkCandidateError):
                 source.prepare(_SCOPE)

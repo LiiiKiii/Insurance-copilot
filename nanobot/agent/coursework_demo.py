@@ -12,7 +12,7 @@ from typing import Any
 
 
 _ROOT = Path(__file__).resolve().parents[2]
-_DATASET_TENANT = "coursework-demo"
+_DATASET_TENANT = "coursework-demo"  # Source provenance, not the database tenant.
 _DATASET_ID = "m2-coursework-candidates-v3"
 
 
@@ -61,7 +61,9 @@ class CourseworkCandidateSource:
 
     def prepare(self, scope: CourseworkDemoScope) -> PreparedCoursework:
         configured_tenant = os.getenv("M1_COURSEWORK_DEMO_TENANT_ID", "").strip()
-        if not configured_tenant or scope.tenant_id != configured_tenant or not scope.agent_id:
+        configured_agent = os.getenv("M1_COURSEWORK_DEMO_AGENT_ID", "").strip()
+        if (not configured_tenant or scope.tenant_id != configured_tenant
+                or not configured_agent or scope.agent_id != configured_agent):
             raise CourseworkCandidateError("Demo scope unavailable")
         dataset = self._load_json(self.dataset_path)
         if not isinstance(dataset, dict) or dataset.get("dataset_id") != _DATASET_ID:

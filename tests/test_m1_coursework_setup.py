@@ -1,4 +1,4 @@
-"""Isolated setup checks for the explicitly opted-in M1 coursework tenant."""
+"""Read-only M1 setup checks against seeded default-tenant identities."""
 
 from __future__ import annotations
 
@@ -9,13 +9,11 @@ from unittest.mock import patch
 
 from sqlalchemy import insert, select
 from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
-from sqlalchemy.orm import selectinload
 
 from admin.db import Base
-from admin.dependencies import has_admin_access
 from admin.models.tenant import Tenant
-from admin.models.user import Permission, Role, User, role_permissions, user_roles
-from admin.services.auth_service import verify_password
+from admin.models.user import Role, User, user_roles
+from admin.seeds import DEFAULT_TENANT_ID
 from scripts import setup_m1_coursework_demo as setup
 
 
@@ -28,103 +26,92 @@ class DemoSetupTests(unittest.IsolatedAsyncioTestCase):
         self.sessions = async_sessionmaker(self.engine, expire_on_commit=False)
         async with self.engine.begin() as connection:
             await connection.run_sync(lambda sync: Base.metadata.create_all(
-                sync, tables=[Tenant.__table__, User.__table__, Role.__table__,
-                              Permission.__table__, user_roles, role_permissions],
+                sync, tables=[Tenant.__table__, User.__table__, Role.__table__, user_roles],
             ))
 
     async def asyncTearDown(self) -> None:
         await self.engine.dispose()
         self.folder.cleanup()
 
-    async def test_creates_authenticatable_agent_and_repeat_preserves_password(self) -> None:
+    async def seed_identity(self, *, tenant_id=DEFAULT_TENANT_ID, slug="default",
+                            enabled=True, active=True, superadmin=False,
+                            role="agent_manager", agent_id="AGT00690") -> None:
         async with self.sessions() as session:
-            first = await setup.setup_coursework_agent(session, "AGT00690", "demo-test-password-1")
-        self.assertEqual(first["scenario_id"], "SCN-AGT00690")
-        async with self.sessions() as session:
-            repeated = await setup.setup_coursework_agent(session, "AGT00690", None)
-        self.assertEqual(first, repeated)
-        async with self.sessions() as session:
-            self.assertEqual(
-                await setup.setup_coursework_agent(session, "AGT00690", "changed-password"),
-                first,
-            )
-        async with self.sessions() as session:
-            tenants = (await session.scalars(select(Tenant))).all()
-            users = (await session.scalars(select(User).options(selectinload(User.roles)))).all()
-            roles = (await session.scalars(select(Role))).all()
-        self.assertEqual(len(tenants), 1)
-        self.assertEqual((len(users), len(roles)), (1, 1))
-        self.assertEqual((tenants[0].slug, tenants[0].enabled), ("coursework-demo", True))
-        self.assertEqual(users[0].tenant_id, first["tenant_id"])
-        self.assertFalse(users[0].is_superadmin)
-        self.assertTrue(has_admin_access(users[0]))
-        self.assertTrue(verify_password("demo-test-password-1", users[0].password_hash))
-        self.assertFalse(verify_password("changed-password", users[0].password_hash))
-
-    async def test_rejects_other_tenant_without_modifying_it(self) -> None:
-        async with self.sessions() as session:
-            session.add(Tenant(id="foreign", slug="real-tenant", name="Real Tenant"))
+            session.add(Tenant(id=tenant_id, slug=slug, name="Default", enabled=enabled))
+            session.add(User(id="agent", tenant_id=tenant_id, username=agent_id,
+                             email="agent@example.test", password_hash="original-hash",
+                             is_active=active, is_superadmin=superadmin))
+            session.add(Role(id="role", tenant_id=tenant_id, name=role))
+            await session.flush()
+            await session.execute(insert(user_roles).values(user_id="agent", role_id="role"))
             await session.commit()
-        async with self.sessions() as session:
-            with self.assertRaisesRegex(RuntimeError, "non-demo tenant"):
-                await setup.setup_coursework_agent(session, "AGT00690", "demo-test-password-1")
-        async with self.sessions() as session:
-            self.assertEqual((await session.scalars(select(Tenant))).one().slug, "real-tenant")
-            self.assertEqual((await session.scalars(select(User))).all(), [])
 
-    async def test_rejects_invalid_scenario_and_missing_password(self) -> None:
+    async def test_repeated_validation_does_not_change_password_roles_or_counts(self) -> None:
+        await self.seed_identity()
         async with self.sessions() as session:
-            with self.assertRaisesRegex(RuntimeError, "unique M2 v3 scenario"):
-                await setup.setup_coursework_agent(session, "not-an-agent", "demo-test-password-1")
+            first = await setup.setup_coursework_agent(session, "AGT00690")
+            second = await setup.setup_coursework_agent(session, "AGT00690")
+        self.assertEqual(first, second)
+        self.assertEqual(first, {"tenant_id": DEFAULT_TENANT_ID,
+                                 "agent_id": "AGT00690", "scenario_id": "SCN-AGT00690"})
         async with self.sessions() as session:
-            with self.assertRaisesRegex(RuntimeError, "M1_COURSEWORK_DEMO_PASSWORD"):
-                await setup.setup_coursework_agent(session, "AGT00690", None)
+            self.assertEqual((await session.scalars(select(Tenant))).one().slug, "default")
+            self.assertEqual((await session.scalars(select(User))).one().password_hash, "original-hash")
+            self.assertEqual((await session.scalars(select(Role))).one().name, "agent_manager")
+            self.assertEqual(len((await session.execute(select(user_roles))).all()), 1)
+
+    async def test_missing_seed_fails_without_creating_records(self) -> None:
         async with self.sessions() as session:
+            with self.assertRaisesRegex(RuntimeError, "run admin.seeds"):
+                await setup.setup_coursework_agent(session, "AGT00690")
             self.assertEqual((await session.scalars(select(Tenant))).all(), [])
 
-    async def test_disabled_existing_user_is_not_reenabled(self) -> None:
+    async def test_missing_agent_fails(self) -> None:
+        await self.seed_identity(agent_id="AGT00770")
         async with self.sessions() as session:
-            session.add(Tenant(id="demo", slug="coursework-demo", name="Demo"))
-            session.add(User(id="disabled", tenant_id="demo", username="AGT00690",
-                             email="disabled@example.invalid", password_hash="unchanged",
-                             is_active=False, is_superadmin=False))
-            await session.commit()
-        async with self.sessions() as session:
-            with self.assertRaisesRegex(RuntimeError, "disabled or privileged"):
-                await setup.setup_coursework_agent(session, "AGT00690", "replacement-password")
-        async with self.sessions() as session:
-            user = (await session.scalars(select(User))).one()
-        self.assertEqual(user.password_hash, "unchanged")
-        self.assertFalse(user.is_active)
+            with self.assertRaisesRegex(RuntimeError, "run admin.seeds"):
+                await setup.setup_coursework_agent(session, "AGT00690")
 
-    async def test_existing_privileged_role_is_rejected(self) -> None:
+    async def test_invalid_scenario_fails(self) -> None:
+        await self.seed_identity()
         async with self.sessions() as session:
-            session.add(Tenant(id="demo", slug="coursework-demo", name="Demo"))
-            session.add(User(id="agent", tenant_id="demo", username="AGT00690",
-                             email="agent@example.invalid", password_hash="unchanged"))
-            session.add(Role(id="admin-role", tenant_id="demo", name="admin"))
-            await session.flush()
-            await session.execute(insert(user_roles).values(user_id="agent", role_id="admin-role"))
-            await session.commit()
-        async with self.sessions() as session:
-            with self.assertRaisesRegex(RuntimeError, "privileged or foreign roles"):
-                await setup.setup_coursework_agent(session, "AGT00690", None)
+            with self.assertRaisesRegex(RuntimeError, "unique M2 v3 scenario"):
+                await setup.setup_coursework_agent(session, "not-an-agent")
 
-    async def test_existing_readonly_role_with_permissions_is_rejected(self) -> None:
+    async def test_disabled_or_wrong_default_tenant_fails(self) -> None:
+        for kwargs in ({"enabled": False}, {"tenant_id": "wrong-id"}, {"slug": "other"}):
+            with self.subTest(kwargs=kwargs):
+                await self.seed_identity(**kwargs)
+                async with self.sessions() as session:
+                    with self.assertRaises(RuntimeError):
+                        await setup.setup_coursework_agent(session, "AGT00690")
+                    for table in (user_roles, User.__table__, Role.__table__, Tenant.__table__):
+                        await session.execute(table.delete())
+                    await session.commit()
+
+    async def test_disabled_privileged_or_wrong_role_fails_without_escalation(self) -> None:
+        for kwargs in ({"active": False}, {"superadmin": True}, {"role": "admin"}):
+            with self.subTest(kwargs=kwargs):
+                await self.seed_identity(**kwargs)
+                async with self.sessions() as session:
+                    with self.assertRaises(RuntimeError):
+                        await setup.setup_coursework_agent(session, "AGT00690")
+                    self.assertEqual((await session.scalars(select(User))).one().password_hash,
+                                     "original-hash")
+                    for table in (user_roles, User.__table__, Role.__table__, Tenant.__table__):
+                        await session.execute(table.delete())
+                    await session.commit()
+
+    async def test_cross_tenant_duplicate_login_fails(self) -> None:
+        await self.seed_identity()
         async with self.sessions() as session:
-            session.add(Tenant(id="demo", slug="coursework-demo", name="Demo"))
-            session.add(Role(id="readonly-role", tenant_id="demo", name="readonly"))
-            session.add(Permission(id="permission", resource="knowledge_bases", action="write"))
-            await session.flush()
-            await session.execute(insert(role_permissions).values(
-                role_id="readonly-role", permission_id="permission",
-            ))
+            session.add(Tenant(id="other", slug="other", name="Other"))
+            session.add(User(id="other-user", tenant_id="other", username="AGT00690",
+                             email="other@example.test", password_hash="untouched"))
             await session.commit()
         async with self.sessions() as session:
-            with self.assertRaisesRegex(RuntimeError, "resource permissions"):
-                await setup.setup_coursework_agent(session, "AGT00690", "demo-test-password-1")
-        async with self.sessions() as session:
-            self.assertEqual((await session.scalars(select(User))).all(), [])
+            with self.assertRaisesRegex(RuntimeError, "ambiguous"):
+                await setup.setup_coursework_agent(session, "AGT00690")
 
     async def test_unmigrated_schema_fails_with_migration_instruction(self) -> None:
         async with self.sessions() as session:

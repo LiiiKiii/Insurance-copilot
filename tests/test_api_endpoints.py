@@ -6,7 +6,7 @@ import os
 import tempfile
 import unittest
 from contextlib import contextmanager
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta
 from pathlib import Path
 from unittest.mock import patch
 
@@ -140,8 +140,8 @@ class ApiEndpointTests(unittest.IsolatedAsyncioTestCase):
                     title="Persisted chat",
                     message_count=2,
                     messages=[
-                        ChatMessage(role="user", content="Hello"),
-                        ChatMessage(role="assistant", content="Hi"),
+                        ChatMessage(role="user", content="Hello", created_at=datetime(2026, 1, 1, 0, 0, 0)),
+                        ChatMessage(role="assistant", content="Hi", created_at=datetime(2026, 1, 1, 0, 0, 1)),
                     ],
                 )
             )

@@ -228,10 +228,12 @@ Apply the tracked migrations to a new development database, then create the init
 ### Isolated M1 coursework demo
 
 Use a **separate** SQLite database for this synthetic demo. The setup command
-refuses the default/shared database, creates or validates only the
-`coursework-demo` tenant, and creates one account matching an M2 v3 scenario.
-It never resets an existing password. Do not run `admin.seeds` against this
-demo database, since that command creates the unrelated default tenant.
+refuses any other database target. Run migrations and `admin.seeds` there first;
+the seed creates the `default` tenant and agent logins used by M2 business data
+and M3 built-in knowledge. The M1 command only validates an existing enabled
+default tenant and scenario-matching seeded agent. It does not create accounts,
+reset passwords, or change roles. Configure `ADMIN_DEFAULT_PASSWORD` and
+`AGENT_DEFAULT_PASSWORD` as described above before the first seed run.
 
 ```powershell
 New-Item -ItemType Directory -Force data/demo | Out-Null
@@ -239,21 +241,23 @@ $demoDb = (Join-Path (Get-Location) 'data/demo/m1_coursework.db').Replace('\', '
 $env:ADMIN_DATABASE_URL = 'sqlite+aiosqlite:///' + $demoDb
 .\.venv\Scripts\python.exe -m alembic upgrade head
 if ($LASTEXITCODE -ne 0) { throw 'Demo database migration failed' }
-$secure = Read-Host 'New demo agent password' -AsSecureString
-$pointer = [Runtime.InteropServices.Marshal]::SecureStringToBSTR($secure)
-try { $env:M1_COURSEWORK_DEMO_PASSWORD = [Runtime.InteropServices.Marshal]::PtrToStringBSTR($pointer) }
-finally { [Runtime.InteropServices.Marshal]::ZeroFreeBSTR($pointer) }
-try {
-    .\.venv\Scripts\python.exe -m scripts.setup_m1_coursework_demo --agent-id AGT00690
-    if ($LASTEXITCODE -ne 0) { throw 'Demo account setup failed' }
-} finally { Remove-Item Env:M1_COURSEWORK_DEMO_PASSWORD -ErrorAction SilentlyContinue }
+.\.venv\Scripts\python.exe -m admin.seeds
+if ($LASTEXITCODE -ne 0) { throw 'Demo database seed failed' }
+.\.venv\Scripts\python.exe -m scripts.setup_m1_coursework_demo --agent-id AGT00690
+if ($LASTEXITCODE -ne 0) { throw 'Demo agent validation failed' }
+.\.venv\Scripts\python.exe -m scripts.sync_builtin_knowledge
+if ($LASTEXITCODE -ne 0) { throw 'Demo knowledge sync failed' }
 ```
 
-Set `M1_COURSEWORK_DEMO_TENANT_ID` in the backend environment to the ID printed
-by the setup command, and use the same isolated `ADMIN_DATABASE_URL` when
+Set both `M1_COURSEWORK_DEMO_TENANT_ID` and `M1_COURSEWORK_DEMO_AGENT_ID` in the
+backend environment to the IDs printed by the setup command, and use the same isolated `ADMIN_DATABASE_URL` when
 starting the backend. Keep `ADMIN_SECRET_KEY` configured as described above.
-Log in as `AGT00690` with the chosen password. A repeat setup accepts the
-existing account without the password variable and leaves its hash unchanged.
+Log in as `AGT00690` with the seeded agent password. A repeat setup only reads
+the existing tenant, user, and role. The knowledge sync uses local Markdown
+and does not request embeddings on SQLite.
+The dataset's `coursework-demo` tenant label records synthetic source provenance;
+it is not the database tenant. This demo does not authorize production customer
+candidate retrieval.
 The dataset is a dated `2026-05-31` coursework snapshot, not live customer
 data. The WebSocket result card is supported by the current M5 hook; a browser
 or live-provider E2E has not been established by the offline tests.
