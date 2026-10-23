@@ -12,6 +12,7 @@ import {
 } from './auth'
 import type {
   ChatMessage,
+  ChatResult,
   ChatSession,
   RetrievalCitation,
   RetrievalMode,
@@ -62,6 +63,26 @@ interface InboundWsEvent {
   /** Server may echo back per-event metadata used for tool/thinking dedup. */
   metadata?: Record<string, unknown> | null
   citations?: RetrievalCitation[]
+  /** Structured recommendation sent alongside a validated `response`. */
+  result?: unknown
+}
+
+// Accept only a result shape the cards can render; anything else is dropped
+// so a malformed payload never breaks the message bubble.
+function toChatResult(value: unknown): ChatResult | undefined {
+  if (!value || typeof value !== 'object') return undefined
+  const r = value as Record<string, unknown>
+  if (typeof r.title !== 'string') return undefined
+  if (r.kind === 'action_plan' && Array.isArray(r.actions)) {
+    const valid = r.actions.every(
+      (a) => a && typeof a === 'object'
+        && ['P0', 'P1', 'P2'].includes((a as Record<string, unknown>).priority as string)
+        && typeof (a as Record<string, unknown>).action === 'string',
+    )
+    return valid ? (value as ChatResult) : undefined
+  }
+  if (r.kind === 'metrics' && Array.isArray(r.metrics)) return value as ChatResult
+  return undefined
 }
 
 type ConnectionStatus = 'connecting' | 'connected' | 'disconnected'
@@ -167,6 +188,10 @@ function dtoToChatMessage(dto: PersistedMessageDTO): ChatMessage {
         : undefined),
     citations: Array.isArray(metadataCitations)
       ? metadataCitations as RetrievalCitation[]
+      : undefined,
+    // Reopened sessions keep the recommendation card the live turn showed.
+    result: role === 'assistant'
+      ? toChatResult((dto.metadata as { structured_result?: unknown } | null | undefined)?.structured_result)
       : undefined,
   }
 }
@@ -359,6 +384,7 @@ export function useInsuranceChat() {
               content: data.content ?? '',
               timestamp: new Date(),
               citations: Array.isArray(data.citations) ? data.citations : undefined,
+              result: toChatResult(data.result),
             },
           ]
         })

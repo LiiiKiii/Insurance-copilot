@@ -53,15 +53,36 @@ function ActionPlanResultCard({ result }: { result: Extract<ChatResult, { kind: 
             <span className={`mt-0.5 rounded border px-1.5 py-0.5 text-[10px] font-bold ${PRIORITY_STYLES[item.priority]}`}>
               {item.priority}
             </span>
-            <span className="text-sm leading-relaxed text-slate-700 dark:text-slate-200">
-              {item.action}
-            </span>
+            <div className="min-w-0 flex-1">
+              {(item.rank !== undefined || item.candidate_id) && (
+                <div className="flex flex-wrap items-baseline gap-x-2 text-xs text-slate-500 dark:text-slate-400">
+                  {item.rank !== undefined && <span className="font-semibold">#{item.rank}</span>}
+                  {item.candidate_id && <span className="font-mono">{item.candidate_id}</span>}
+                  {typeof item.priority_score === 'number' && (
+                    <span>Score {item.priority_score.toFixed(1)}</span>
+                  )}
+                </div>
+              )}
+              <p className="text-sm leading-relaxed text-slate-700 dark:text-slate-200">
+                {item.action}
+              </p>
+              {item.timing && (
+                <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">{item.timing}</p>
+              )}
+            </div>
           </li>
         ))}
       </ol>
       {result.summary && (
         <p className="border-t border-violet-200 px-3 py-2 text-xs leading-relaxed text-slate-600 dark:border-violet-800 dark:text-slate-300">
           {result.summary}
+        </p>
+      )}
+      {(result.source || result.as_of_date) && (
+        <p className="border-t border-violet-200 px-3 py-2 text-[11px] text-slate-500 dark:border-violet-800 dark:text-slate-400">
+          {result.as_of_date && <>Historical snapshot as of {result.as_of_date}</>}
+          {result.as_of_date && result.source && ' · '}
+          {result.source && <>Source: <span className="font-mono">{result.source}</span></>}
         </p>
       )}
     </section>
