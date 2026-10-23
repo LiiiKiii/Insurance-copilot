@@ -18,7 +18,10 @@ from nanobot.agent.coursework_demo import (
     CourseworkDemoScope,
     PreparedCoursework,
     recommendation_result,
+    with_requested_coursework_top_k,
 )
+from nanobot.agent.feasibility_gate import assess_authenticated_feasibility
+from nanobot.agent.skills.insurance.check_feasibility import CheckFeasibilitySkill
 from nanobot.agent.skills.insurance.registry import SkillRegistry
 from nanobot.agent.tools.registry import ToolRegistry
 from nanobot.bus.events import InboundMessage, OutboundMessage
@@ -192,6 +195,7 @@ class AgentLoop:
                 and self.tool_registry.has(_TRUSTED_CANDIDATE_TOOL)):
             try:
                 prepared = self.coursework_source.prepare(demo_scope)
+                prepared = with_requested_coursework_top_k(prepared, msg.content)
             except CourseworkCandidateError:
                 pass
 
@@ -222,6 +226,40 @@ class AgentLoop:
         metadata.pop("structured_result", None)
         structured_result: dict | None = None
         citations: list[dict] = []
+
+        if (msg.channel == "websocket" and authenticated_agent_id
+                and authenticated_agent_id == msg.chat_id
+                and CheckFeasibilitySkill().match_intent(msg.content)):
+            decision = await assess_authenticated_feasibility(
+                msg.content, authenticated_agent_id, self.tool_registry,
+            )
+            # The provider sees the evidence; its unverified wording cannot
+            # replace the server's deterministic conclusion.
+            messages[0]["content"] = self.context.build_system_prompt(
+                trusted_skill_guidance=(
+                    "The server has completed the authoritative feasibility check. "
+                    "No further tool calls are available for this turn. "
+                    + decision.content
+                ),
+            )
+            try:
+                await self.provider.chat_with_retry(
+                    messages=messages, tools=None, model=self.model,
+                )
+            except asyncio.CancelledError:
+                raise
+            except Exception as exc:
+                logger.warning("Feasibility explanation unavailable (%s)", type(exc).__name__)
+            return OutboundMessage(
+                channel=msg.channel, chat_id=msg.chat_id, content=decision.content,
+                metadata={
+                    **metadata, "citations": [], "tool_events": list(decision.tool_events),
+                    "feasibility_decision": {
+                        "status": decision.status, "reason": decision.reason,
+                        "target_id": decision.target_id,
+                    },
+                },
+            )
 
         while True:
             response = await self.provider.chat_with_retry(
@@ -349,10 +387,17 @@ class AgentLoop:
                 or "I've completed processing but have no response to give."
             )
 
+            if structured_result is not None:
+                count = len(structured_result["actions"])
+                final_content = (
+                    f"Here are {count} authorized follow-up recommendations. "
+                    "Review the ranked action plan for their actions and evidence."
+                )
+
             if response.content:
                 self.context.add_assistant_message(
                     messages,
-                    response.content,
+                    final_content,
                     reasoning_content=response.reasoning_content,
                     thinking_blocks=response.thinking_blocks,
                 )

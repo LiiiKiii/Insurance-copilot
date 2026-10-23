@@ -7,6 +7,7 @@ import json
 import os
 import tempfile
 import unittest
+from dataclasses import replace
 from pathlib import Path
 from unittest.mock import patch
 
@@ -15,6 +16,8 @@ from nanobot.agent.coursework_demo import (
     CourseworkCandidateSource,
     CourseworkDemoScope,
     recommendation_result,
+    requested_coursework_top_k,
+    with_requested_coursework_top_k,
 )
 from nanobot.agent.tools.insurance.planning_layer.prioritization import prioritize_followups
 from admin.seeds import DEFAULT_TENANT_ID
@@ -109,6 +112,55 @@ class CourseworkDemoTests(unittest.TestCase):
         ranking["recommendations"][0]["candidate_id"] = "foreign-policy"
         with self.assertRaises(CourseworkCandidateError):
             recommendation_result(prepared, ranking, "trusted-call")
+
+    def test_explicit_top_k_is_server_selected_without_changing_candidates(self) -> None:
+        prepared = CourseworkCandidateSource().prepare(_SCOPE)
+        cases = (
+            ("top 1", 1), ("top 3", 3), ("top three", 3),
+            ("recommend the first 3", 3), ("推荐前三名", 3),
+            ("推荐前3个", 3), ("top 5", 5),
+        )
+        for message, expected in cases:
+            with self.subTest(message=message):
+                self.assertEqual(requested_coursework_top_k(message), expected)
+                selected = with_requested_coursework_top_k(prepared, message)
+                self.assertEqual(selected.payload["constraints"], {"top_k": expected})
+                self.assertEqual(selected.payload["candidates"], prepared.payload["candidates"])
+                self.assertEqual(selected.candidate_ids, prepared.candidate_ids)
+                ranking = prioritize_followups(selected.payload)
+                card = recommendation_result(selected, ranking, "trusted-call")
+                self.assertEqual(len(ranking["recommendations"]), expected)
+                self.assertEqual([row["candidate_id"] for row in card["actions"]],
+                                 [row["candidate_id"] for row in ranking["recommendations"]])
+        self.assertEqual(prepared.payload["constraints"], {"top_k": 5})
+
+    def test_invalid_or_ambiguous_top_k_preserves_prepared_default(self) -> None:
+        prepared = CourseworkCandidateSource().prepare(_SCOPE)
+        for message in ("What should I follow up first?", "top 0", "top 6",
+                        "top 3.5", "top 3 or top 5", "top 3 or 5",
+                        "top 3 and 5", "top three to five", "推荐前6个",
+                        "推荐前三名或前五名", "推荐前三名或五名"):
+            with self.subTest(message=message):
+                self.assertIsNone(requested_coursework_top_k(message))
+                self.assertIs(with_requested_coursework_top_k(prepared, message), prepared)
+
+    def test_card_requires_exact_available_recommendation_count(self) -> None:
+        prepared = CourseworkCandidateSource().prepare(_SCOPE)
+        selected = with_requested_coursework_top_k(prepared, "top 3")
+        ranking = prioritize_followups(selected.payload)
+        ranking["recommendations"] = ranking["recommendations"][:2]
+        with self.assertRaises(CourseworkCandidateError):
+            recommendation_result(selected, ranking, "trusted-call")
+
+        candidates = prepared.payload["candidates"][:2]
+        limited = replace(prepared, payload={
+            **prepared.payload, "candidates": candidates,
+            "constraints": {"top_k": 3},
+        }, candidate_ids=frozenset(row["candidate_id"] for row in candidates))
+        ranking = prioritize_followups(limited.payload)
+        card = recommendation_result(limited, ranking, "trusted-call")
+        self.assertEqual(len(ranking["recommendations"]), 2)
+        self.assertEqual(len(card["actions"]), 2)
 
 
 if __name__ == "__main__":
