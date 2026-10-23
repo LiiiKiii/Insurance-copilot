@@ -1,1351 +1,1501 @@
 {
   "AGT00690": {
     "agent_id": "AGT00690",
-    "currency": "USD",
+    "currency": "HKD",
     "assessments": [
       {
-        "subject": "Written Premium",
-        "target_value": 383000,
-        "current_value": 154750,
+        "subject": "Issued protection premium",
+        "unit": "HKD",
+        "current_value": 576000,
+        "target_value": 3200000,
         "status": "Needs Attention",
-        "remark": "Source-derived YTD written premium compared with the annual target."
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       },
       {
-        "subject": "New Business Commission",
-        "target_value": 5000,
-        "current_value": 1130,
+        "subject": "Eligible first-year commission (demo)",
+        "unit": "HKD",
+        "current_value": 172800.0,
+        "target_value": 800000,
         "status": "Needs Attention",
-        "remark": "Derived from new-business premium and documented product commission assumptions."
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       },
       {
-        "subject": "Average Case Size",
-        "target_value": 1200,
-        "current_value": 1190,
-        "status": "Below Benchmark",
-        "remark": "Derived from normalised bound-policy volume and new-business premium."
+        "subject": "Average case premium",
+        "unit": "HKD",
+        "current_value": 24000,
+        "target_value": 50000,
+        "status": "Needs Attention",
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       }
     ]
   },
   "AGT00770": {
     "agent_id": "AGT00770",
-    "currency": "USD",
+    "currency": "HKD",
     "assessments": [
       {
-        "subject": "Written Premium",
-        "target_value": 355000,
-        "current_value": 143650,
+        "subject": "Issued protection premium",
+        "unit": "HKD",
+        "current_value": 796700,
+        "target_value": 3200000,
         "status": "Needs Attention",
-        "remark": "Source-derived YTD written premium compared with the annual target."
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       },
       {
-        "subject": "New Business Commission",
-        "target_value": 14200,
-        "current_value": 5640,
+        "subject": "Eligible first-year commission (demo)",
+        "unit": "HKD",
+        "current_value": 239010.0,
+        "target_value": 800000,
         "status": "Needs Attention",
-        "remark": "Derived from new-business premium and documented product commission assumptions."
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       },
       {
-        "subject": "Average Case Size",
-        "target_value": 4800,
-        "current_value": 4590,
-        "status": "Below Benchmark",
-        "remark": "Derived from normalised bound-policy volume and new-business premium."
+        "subject": "Average case premium",
+        "unit": "HKD",
+        "current_value": 25700,
+        "target_value": 50000,
+        "status": "Needs Attention",
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       }
     ]
   },
   "AGT00817": {
     "agent_id": "AGT00817",
-    "currency": "USD",
+    "currency": "HKD",
     "assessments": [
       {
-        "subject": "Written Premium",
-        "target_value": 234000,
-        "current_value": 94730,
+        "subject": "Issued protection premium",
+        "unit": "HKD",
+        "current_value": 1041200,
+        "target_value": 3200000,
         "status": "Needs Attention",
-        "remark": "Source-derived YTD written premium compared with the annual target."
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       },
       {
-        "subject": "New Business Commission",
-        "target_value": 5000,
-        "current_value": 90,
+        "subject": "Eligible first-year commission (demo)",
+        "unit": "HKD",
+        "current_value": 312360.0,
+        "target_value": 800000,
         "status": "Needs Attention",
-        "remark": "Derived from new-business premium and documented product commission assumptions."
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       },
       {
-        "subject": "Average Case Size",
-        "target_value": 1100,
-        "current_value": 720,
-        "status": "Below Benchmark",
-        "remark": "Derived from normalised bound-policy volume and new-business premium."
+        "subject": "Average case premium",
+        "unit": "HKD",
+        "current_value": 27400,
+        "target_value": 50000,
+        "status": "Needs Attention",
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       }
     ]
   },
   "AGT00949": {
     "agent_id": "AGT00949",
-    "currency": "USD",
+    "currency": "HKD",
     "assessments": [
       {
-        "subject": "Written Premium",
-        "target_value": 459000,
-        "current_value": 185720,
+        "subject": "Issued protection premium",
+        "unit": "HKD",
+        "current_value": 1309500,
+        "target_value": 3200000,
         "status": "Needs Attention",
-        "remark": "Source-derived YTD written premium compared with the annual target."
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       },
       {
-        "subject": "New Business Commission",
-        "target_value": 6000,
-        "current_value": 2400,
+        "subject": "Eligible first-year commission (demo)",
+        "unit": "HKD",
+        "current_value": 392850.0,
+        "target_value": 800000,
         "status": "Needs Attention",
-        "remark": "Derived from new-business premium and documented product commission assumptions."
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       },
       {
-        "subject": "Average Case Size",
-        "target_value": 1800,
-        "current_value": 1670,
-        "status": "Below Benchmark",
-        "remark": "Derived from normalised bound-policy volume and new-business premium."
+        "subject": "Average case premium",
+        "unit": "HKD",
+        "current_value": 29100,
+        "target_value": 50000,
+        "status": "Needs Attention",
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       }
     ]
   },
   "AGT01191": {
     "agent_id": "AGT01191",
-    "currency": "USD",
+    "currency": "HKD",
     "assessments": [
       {
-        "subject": "Written Premium",
-        "target_value": 455000,
-        "current_value": 184070,
+        "subject": "Issued protection premium",
+        "unit": "HKD",
+        "current_value": 1601600,
+        "target_value": 3200000,
         "status": "Needs Attention",
-        "remark": "Source-derived YTD written premium compared with the annual target."
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       },
       {
-        "subject": "New Business Commission",
-        "target_value": 5000,
-        "current_value": 600,
+        "subject": "Eligible first-year commission (demo)",
+        "unit": "HKD",
+        "current_value": 480480.0,
+        "target_value": 800000,
         "status": "Needs Attention",
-        "remark": "Derived from new-business premium and documented product commission assumptions."
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       },
       {
-        "subject": "Average Case Size",
-        "target_value": 1800,
-        "current_value": 1690,
-        "status": "Below Benchmark",
-        "remark": "Derived from normalised bound-policy volume and new-business premium."
+        "subject": "Average case premium",
+        "unit": "HKD",
+        "current_value": 30800,
+        "target_value": 50000,
+        "status": "Needs Attention",
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       }
     ]
   },
   "AGT01448": {
     "agent_id": "AGT01448",
-    "currency": "USD",
+    "currency": "HKD",
     "assessments": [
       {
-        "subject": "Written Premium",
-        "target_value": 1128000,
-        "current_value": 456360,
+        "subject": "Issued protection premium",
+        "unit": "HKD",
+        "current_value": 1917500,
+        "target_value": 3200000,
         "status": "Needs Attention",
-        "remark": "Source-derived YTD written premium compared with the annual target."
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       },
       {
-        "subject": "New Business Commission",
-        "target_value": 19600,
-        "current_value": 7770,
+        "subject": "Eligible first-year commission (demo)",
+        "unit": "HKD",
+        "current_value": 575250.0,
+        "target_value": 800000,
         "status": "Needs Attention",
-        "remark": "Derived from new-business premium and documented product commission assumptions."
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       },
       {
-        "subject": "Average Case Size",
-        "target_value": 3200,
-        "current_value": 3060,
-        "status": "Below Benchmark",
-        "remark": "Derived from normalised bound-policy volume and new-business premium."
+        "subject": "Average case premium",
+        "unit": "HKD",
+        "current_value": 32500,
+        "target_value": 50000,
+        "status": "Needs Attention",
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       }
     ]
   },
   "AGT01525": {
     "agent_id": "AGT01525",
-    "currency": "USD",
+    "currency": "HKD",
     "assessments": [
       {
-        "subject": "Written Premium",
-        "target_value": 283000,
-        "current_value": 114280,
+        "subject": "Issued protection premium",
+        "unit": "HKD",
+        "current_value": 2257200,
+        "target_value": 3200000,
         "status": "Needs Attention",
-        "remark": "Source-derived YTD written premium compared with the annual target."
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       },
       {
-        "subject": "New Business Commission",
-        "target_value": 5000,
-        "current_value": 280,
+        "subject": "Eligible first-year commission (demo)",
+        "unit": "HKD",
+        "current_value": 677160.0,
+        "target_value": 800000,
         "status": "Needs Attention",
-        "remark": "Derived from new-business premium and documented product commission assumptions."
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       },
       {
-        "subject": "Average Case Size",
-        "target_value": 2400,
-        "current_value": 2310,
-        "status": "Below Benchmark",
-        "remark": "Derived from normalised bound-policy volume and new-business premium."
+        "subject": "Average case premium",
+        "unit": "HKD",
+        "current_value": 34200,
+        "target_value": 50000,
+        "status": "Needs Attention",
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       }
     ]
   },
   "AGT01569": {
     "agent_id": "AGT01569",
-    "currency": "USD",
+    "currency": "HKD",
     "assessments": [
       {
-        "subject": "Written Premium",
-        "target_value": 418000,
-        "current_value": 169120,
+        "subject": "Issued protection premium",
+        "unit": "HKD",
+        "current_value": 2620700,
+        "target_value": 3200000,
         "status": "Needs Attention",
-        "remark": "Source-derived YTD written premium compared with the annual target."
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       },
       {
-        "subject": "New Business Commission",
-        "target_value": 5000,
-        "current_value": 150,
+        "subject": "Eligible first-year commission (demo)",
+        "unit": "HKD",
+        "current_value": 786210.0,
+        "target_value": 800000,
         "status": "Needs Attention",
-        "remark": "Derived from new-business premium and documented product commission assumptions."
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       },
       {
-        "subject": "Average Case Size",
-        "target_value": 700,
-        "current_value": 500,
-        "status": "Below Benchmark",
-        "remark": "Derived from normalised bound-policy volume and new-business premium."
+        "subject": "Average case premium",
+        "unit": "HKD",
+        "current_value": 35900,
+        "target_value": 50000,
+        "status": "Needs Attention",
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       }
     ]
   },
   "AGT01662": {
     "agent_id": "AGT01662",
-    "currency": "USD",
+    "currency": "HKD",
     "assessments": [
       {
-        "subject": "Written Premium",
-        "target_value": 948000,
-        "current_value": 383460,
+        "subject": "Issued protection premium",
+        "unit": "HKD",
+        "current_value": 3008000,
+        "target_value": 3200000,
         "status": "Needs Attention",
-        "remark": "Source-derived YTD written premium compared with the annual target."
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       },
       {
-        "subject": "New Business Commission",
-        "target_value": 7400,
-        "current_value": 2920,
-        "status": "Needs Attention",
-        "remark": "Derived from new-business premium and documented product commission assumptions."
+        "subject": "Eligible first-year commission (demo)",
+        "unit": "HKD",
+        "current_value": 902400.0,
+        "target_value": 800000,
+        "status": "Met",
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       },
       {
-        "subject": "Average Case Size",
-        "target_value": 2900,
-        "current_value": 2780,
-        "status": "Below Benchmark",
-        "remark": "Derived from normalised bound-policy volume and new-business premium."
+        "subject": "Average case premium",
+        "unit": "HKD",
+        "current_value": 37600,
+        "target_value": 50000,
+        "status": "Needs Attention",
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       }
     ]
   },
   "AGT01876": {
     "agent_id": "AGT01876",
-    "currency": "USD",
+    "currency": "HKD",
     "assessments": [
       {
-        "subject": "Written Premium",
-        "target_value": 202000,
-        "current_value": 81810,
-        "status": "Needs Attention",
-        "remark": "Source-derived YTD written premium compared with the annual target."
+        "subject": "Issued protection premium",
+        "unit": "HKD",
+        "current_value": 3419100,
+        "target_value": 3200000,
+        "status": "Met",
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       },
       {
-        "subject": "New Business Commission",
-        "target_value": 5000,
-        "current_value": 530,
-        "status": "Needs Attention",
-        "remark": "Derived from new-business premium and documented product commission assumptions."
+        "subject": "Eligible first-year commission (demo)",
+        "unit": "HKD",
+        "current_value": 1025730.0,
+        "target_value": 800000,
+        "status": "Met",
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       },
       {
-        "subject": "Average Case Size",
-        "target_value": 1800,
-        "current_value": 1690,
-        "status": "Below Benchmark",
-        "remark": "Derived from normalised bound-policy volume and new-business premium."
+        "subject": "Average case premium",
+        "unit": "HKD",
+        "current_value": 39300,
+        "target_value": 50000,
+        "status": "Needs Attention",
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       }
     ]
   },
   "AGT02217": {
     "agent_id": "AGT02217",
-    "currency": "USD",
+    "currency": "HKD",
     "assessments": [
       {
-        "subject": "Written Premium",
-        "target_value": 1304000,
-        "current_value": 527370,
-        "status": "Needs Attention",
-        "remark": "Source-derived YTD written premium compared with the annual target."
+        "subject": "Issued protection premium",
+        "unit": "HKD",
+        "current_value": 3854000,
+        "target_value": 3200000,
+        "status": "Met",
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       },
       {
-        "subject": "New Business Commission",
-        "target_value": 13500,
-        "current_value": 5350,
-        "status": "Needs Attention",
-        "remark": "Derived from new-business premium and documented product commission assumptions."
+        "subject": "Eligible first-year commission (demo)",
+        "unit": "HKD",
+        "current_value": 1156200.0,
+        "target_value": 800000,
+        "status": "Met",
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       },
       {
-        "subject": "Average Case Size",
-        "target_value": 1700,
-        "current_value": 1630,
-        "status": "Below Benchmark",
-        "remark": "Derived from normalised bound-policy volume and new-business premium."
+        "subject": "Average case premium",
+        "unit": "HKD",
+        "current_value": 41000,
+        "target_value": 50000,
+        "status": "Needs Attention",
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       }
     ]
   },
   "AGT02393": {
     "agent_id": "AGT02393",
-    "currency": "USD",
+    "currency": "HKD",
     "assessments": [
       {
-        "subject": "Written Premium",
-        "target_value": 1245000,
-        "current_value": 503770,
-        "status": "Needs Attention",
-        "remark": "Source-derived YTD written premium compared with the annual target."
+        "subject": "Issued protection premium",
+        "unit": "HKD",
+        "current_value": 4312700,
+        "target_value": 3200000,
+        "status": "Met",
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       },
       {
-        "subject": "New Business Commission",
-        "target_value": 12200,
-        "current_value": 4840,
-        "status": "Needs Attention",
-        "remark": "Derived from new-business premium and documented product commission assumptions."
+        "subject": "Eligible first-year commission (demo)",
+        "unit": "HKD",
+        "current_value": 1293810.0,
+        "target_value": 800000,
+        "status": "Met",
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       },
       {
-        "subject": "Average Case Size",
-        "target_value": 2200,
-        "current_value": 2060,
-        "status": "Below Benchmark",
-        "remark": "Derived from normalised bound-policy volume and new-business premium."
+        "subject": "Average case premium",
+        "unit": "HKD",
+        "current_value": 42700,
+        "target_value": 50000,
+        "status": "Needs Attention",
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       }
     ]
   },
   "AGT02660": {
     "agent_id": "AGT02660",
-    "currency": "USD",
+    "currency": "HKD",
     "assessments": [
       {
-        "subject": "Written Premium",
-        "target_value": 284000,
-        "current_value": 114820,
-        "status": "Needs Attention",
-        "remark": "Source-derived YTD written premium compared with the annual target."
+        "subject": "Issued protection premium",
+        "unit": "HKD",
+        "current_value": 4795200,
+        "target_value": 3200000,
+        "status": "Met",
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       },
       {
-        "subject": "New Business Commission",
-        "target_value": 5000,
-        "current_value": 1660,
-        "status": "Needs Attention",
-        "remark": "Derived from new-business premium and documented product commission assumptions."
+        "subject": "Eligible first-year commission (demo)",
+        "unit": "HKD",
+        "current_value": 1438560.0,
+        "target_value": 800000,
+        "status": "Met",
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       },
       {
-        "subject": "Average Case Size",
-        "target_value": 1800,
-        "current_value": 1680,
-        "status": "Below Benchmark",
-        "remark": "Derived from normalised bound-policy volume and new-business premium."
+        "subject": "Average case premium",
+        "unit": "HKD",
+        "current_value": 44400,
+        "target_value": 50000,
+        "status": "Needs Attention",
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       }
     ]
   },
   "AGT02837": {
     "agent_id": "AGT02837",
-    "currency": "USD",
+    "currency": "HKD",
     "assessments": [
       {
-        "subject": "Written Premium",
-        "target_value": 61000,
-        "current_value": 24570,
+        "subject": "Issued protection premium",
+        "unit": "HKD",
+        "current_value": 1152500,
+        "target_value": 3200000,
         "status": "Needs Attention",
-        "remark": "Source-derived YTD written premium compared with the annual target."
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       },
       {
-        "subject": "New Business Commission",
-        "target_value": 5000,
-        "current_value": 110,
+        "subject": "Eligible first-year commission (demo)",
+        "unit": "HKD",
+        "current_value": 345750.0,
+        "target_value": 800000,
         "status": "Needs Attention",
-        "remark": "Derived from new-business premium and documented product commission assumptions."
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       },
       {
-        "subject": "Average Case Size",
-        "target_value": 700,
-        "current_value": 500,
-        "status": "Below Benchmark",
-        "remark": "Derived from normalised bound-policy volume and new-business premium."
+        "subject": "Average case premium",
+        "unit": "HKD",
+        "current_value": 46100,
+        "target_value": 50000,
+        "status": "Needs Attention",
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       }
     ]
   },
   "AGT02946": {
     "agent_id": "AGT02946",
-    "currency": "USD",
+    "currency": "HKD",
     "assessments": [
       {
-        "subject": "Written Premium",
-        "target_value": 161000,
-        "current_value": 64950,
+        "subject": "Issued protection premium",
+        "unit": "HKD",
+        "current_value": 1529600,
+        "target_value": 3200000,
         "status": "Needs Attention",
-        "remark": "Source-derived YTD written premium compared with the annual target."
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       },
       {
-        "subject": "New Business Commission",
-        "target_value": 5000,
-        "current_value": 270,
+        "subject": "Eligible first-year commission (demo)",
+        "unit": "HKD",
+        "current_value": 458880.0,
+        "target_value": 800000,
         "status": "Needs Attention",
-        "remark": "Derived from new-business premium and documented product commission assumptions."
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       },
       {
-        "subject": "Average Case Size",
-        "target_value": 800,
-        "current_value": 790,
-        "status": "Below Benchmark",
-        "remark": "Derived from normalised bound-policy volume and new-business premium."
+        "subject": "Average case premium",
+        "unit": "HKD",
+        "current_value": 47800,
+        "target_value": 50000,
+        "status": "Needs Attention",
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       }
     ]
   },
   "AGT03036": {
     "agent_id": "AGT03036",
-    "currency": "USD",
+    "currency": "HKD",
     "assessments": [
       {
-        "subject": "Written Premium",
-        "target_value": 265000,
-        "current_value": 107070,
+        "subject": "Issued protection premium",
+        "unit": "HKD",
+        "current_value": 1930500,
+        "target_value": 3200000,
         "status": "Needs Attention",
-        "remark": "Source-derived YTD written premium compared with the annual target."
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       },
       {
-        "subject": "New Business Commission",
-        "target_value": 5000,
-        "current_value": 40,
+        "subject": "Eligible first-year commission (demo)",
+        "unit": "HKD",
+        "current_value": 579150.0,
+        "target_value": 800000,
         "status": "Needs Attention",
-        "remark": "Derived from new-business premium and documented product commission assumptions."
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       },
       {
-        "subject": "Average Case Size",
-        "target_value": 1100,
-        "current_value": 500,
-        "status": "Below Benchmark",
-        "remark": "Derived from normalised bound-policy volume and new-business premium."
+        "subject": "Average case premium",
+        "unit": "HKD",
+        "current_value": 49500,
+        "target_value": 50000,
+        "status": "Needs Attention",
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       }
     ]
   },
   "AGT03318": {
     "agent_id": "AGT03318",
-    "currency": "USD",
+    "currency": "HKD",
     "assessments": [
       {
-        "subject": "Written Premium",
-        "target_value": 327000,
-        "current_value": 132080,
+        "subject": "Issued protection premium",
+        "unit": "HKD",
+        "current_value": 2355200,
+        "target_value": 3200000,
         "status": "Needs Attention",
-        "remark": "Source-derived YTD written premium compared with the annual target."
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       },
       {
-        "subject": "New Business Commission",
-        "target_value": 5000,
-        "current_value": 470,
+        "subject": "Eligible first-year commission (demo)",
+        "unit": "HKD",
+        "current_value": 706560.0,
+        "target_value": 800000,
         "status": "Needs Attention",
-        "remark": "Derived from new-business premium and documented product commission assumptions."
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       },
       {
-        "subject": "Average Case Size",
-        "target_value": 800,
-        "current_value": 750,
-        "status": "Below Benchmark",
-        "remark": "Derived from normalised bound-policy volume and new-business premium."
+        "subject": "Average case premium",
+        "unit": "HKD",
+        "current_value": 51200,
+        "target_value": 50000,
+        "status": "Met",
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       }
     ]
   },
   "AGT03488": {
     "agent_id": "AGT03488",
-    "currency": "USD",
+    "currency": "HKD",
     "assessments": [
       {
-        "subject": "Written Premium",
-        "target_value": 124000,
-        "current_value": 50330,
+        "subject": "Issued protection premium",
+        "unit": "HKD",
+        "current_value": 2803700,
+        "target_value": 3200000,
         "status": "Needs Attention",
-        "remark": "Source-derived YTD written premium compared with the annual target."
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       },
       {
-        "subject": "New Business Commission",
-        "target_value": 5000,
-        "current_value": 910,
-        "status": "Needs Attention",
-        "remark": "Derived from new-business premium and documented product commission assumptions."
+        "subject": "Eligible first-year commission (demo)",
+        "unit": "HKD",
+        "current_value": 841110.0,
+        "target_value": 800000,
+        "status": "Met",
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       },
       {
-        "subject": "Average Case Size",
-        "target_value": 1100,
-        "current_value": 880,
-        "status": "Below Benchmark",
-        "remark": "Derived from normalised bound-policy volume and new-business premium."
+        "subject": "Average case premium",
+        "unit": "HKD",
+        "current_value": 52900,
+        "target_value": 50000,
+        "status": "Met",
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       }
     ]
   },
   "AGT03724": {
     "agent_id": "AGT03724",
-    "currency": "USD",
+    "currency": "HKD",
     "assessments": [
       {
-        "subject": "Written Premium",
-        "target_value": 1022000,
-        "current_value": 413390,
-        "status": "Needs Attention",
-        "remark": "Source-derived YTD written premium compared with the annual target."
+        "subject": "Issued protection premium",
+        "unit": "HKD",
+        "current_value": 3276000,
+        "target_value": 3200000,
+        "status": "Met",
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       },
       {
-        "subject": "New Business Commission",
-        "target_value": 8800,
-        "current_value": 3500,
-        "status": "Needs Attention",
-        "remark": "Derived from new-business premium and documented product commission assumptions."
+        "subject": "Eligible first-year commission (demo)",
+        "unit": "HKD",
+        "current_value": 982800.0,
+        "target_value": 800000,
+        "status": "Met",
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       },
       {
-        "subject": "Average Case Size",
-        "target_value": 2200,
-        "current_value": 2130,
-        "status": "Below Benchmark",
-        "remark": "Derived from normalised bound-policy volume and new-business premium."
+        "subject": "Average case premium",
+        "unit": "HKD",
+        "current_value": 54600,
+        "target_value": 50000,
+        "status": "Met",
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       }
     ]
   },
   "AGT03826": {
     "agent_id": "AGT03826",
-    "currency": "USD",
+    "currency": "HKD",
     "assessments": [
       {
-        "subject": "Written Premium",
-        "target_value": 245000,
-        "current_value": 98960,
-        "status": "Needs Attention",
-        "remark": "Source-derived YTD written premium compared with the annual target."
+        "subject": "Issued protection premium",
+        "unit": "HKD",
+        "current_value": 3772100,
+        "target_value": 3200000,
+        "status": "Met",
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       },
       {
-        "subject": "New Business Commission",
-        "target_value": 5000,
-        "current_value": 780,
-        "status": "Needs Attention",
-        "remark": "Derived from new-business premium and documented product commission assumptions."
+        "subject": "Eligible first-year commission (demo)",
+        "unit": "HKD",
+        "current_value": 1131630.0,
+        "target_value": 800000,
+        "status": "Met",
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       },
       {
-        "subject": "Average Case Size",
-        "target_value": 2400,
-        "current_value": 2270,
-        "status": "Below Benchmark",
-        "remark": "Derived from normalised bound-policy volume and new-business premium."
+        "subject": "Average case premium",
+        "unit": "HKD",
+        "current_value": 56300,
+        "target_value": 50000,
+        "status": "Met",
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       }
     ]
   },
   "AGT03851": {
     "agent_id": "AGT03851",
-    "currency": "USD",
+    "currency": "HKD",
     "assessments": [
       {
-        "subject": "Written Premium",
-        "target_value": 60000,
-        "current_value": 24130,
-        "status": "Needs Attention",
-        "remark": "Source-derived YTD written premium compared with the annual target."
+        "subject": "Issued protection premium",
+        "unit": "HKD",
+        "current_value": 4292000,
+        "target_value": 3200000,
+        "status": "Met",
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       },
       {
-        "subject": "New Business Commission",
-        "target_value": 5000,
-        "current_value": 0,
-        "status": "Needs Attention",
-        "remark": "Derived from new-business premium and documented product commission assumptions."
+        "subject": "Eligible first-year commission (demo)",
+        "unit": "HKD",
+        "current_value": 1287600.0,
+        "target_value": 800000,
+        "status": "Met",
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       },
       {
-        "subject": "Average Case Size",
-        "target_value": 700,
-        "current_value": 500,
-        "status": "Below Benchmark",
-        "remark": "Derived from normalised bound-policy volume and new-business premium."
+        "subject": "Average case premium",
+        "unit": "HKD",
+        "current_value": 58000,
+        "target_value": 50000,
+        "status": "Met",
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       }
     ]
   },
   "AGT04277": {
     "agent_id": "AGT04277",
-    "currency": "USD",
+    "currency": "HKD",
     "assessments": [
       {
-        "subject": "Written Premium",
-        "target_value": 2106000,
-        "current_value": 852060,
-        "status": "Needs Attention",
-        "remark": "Source-derived YTD written premium compared with the annual target."
+        "subject": "Issued protection premium",
+        "unit": "HKD",
+        "current_value": 4835700,
+        "target_value": 3200000,
+        "status": "Met",
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       },
       {
-        "subject": "New Business Commission",
-        "target_value": 5000,
-        "current_value": 1820,
-        "status": "Needs Attention",
-        "remark": "Derived from new-business premium and documented product commission assumptions."
+        "subject": "Eligible first-year commission (demo)",
+        "unit": "HKD",
+        "current_value": 1450710.0,
+        "target_value": 800000,
+        "status": "Met",
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       },
       {
-        "subject": "Average Case Size",
-        "target_value": 2900,
-        "current_value": 2790,
-        "status": "Below Benchmark",
-        "remark": "Derived from normalised bound-policy volume and new-business premium."
+        "subject": "Average case premium",
+        "unit": "HKD",
+        "current_value": 59700,
+        "target_value": 50000,
+        "status": "Met",
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       }
     ]
   },
   "AGT04310": {
     "agent_id": "AGT04310",
-    "currency": "USD",
+    "currency": "HKD",
     "assessments": [
       {
-        "subject": "Written Premium",
-        "target_value": 225000,
-        "current_value": 91100,
+        "subject": "Issued protection premium",
+        "unit": "HKD",
+        "current_value": 2235200,
+        "target_value": 3200000,
         "status": "Needs Attention",
-        "remark": "Source-derived YTD written premium compared with the annual target."
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       },
       {
-        "subject": "New Business Commission",
-        "target_value": 5000,
-        "current_value": 210,
+        "subject": "Eligible first-year commission (demo)",
+        "unit": "HKD",
+        "current_value": 670560.0,
+        "target_value": 800000,
         "status": "Needs Attention",
-        "remark": "Derived from new-business premium and documented product commission assumptions."
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       },
       {
-        "subject": "Average Case Size",
-        "target_value": 700,
-        "current_value": 500,
-        "status": "Below Benchmark",
-        "remark": "Derived from normalised bound-policy volume and new-business premium."
+        "subject": "Average case premium",
+        "unit": "HKD",
+        "current_value": 25400,
+        "target_value": 50000,
+        "status": "Needs Attention",
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       }
     ]
   },
   "AGT04332": {
     "agent_id": "AGT04332",
-    "currency": "USD",
+    "currency": "HKD",
     "assessments": [
       {
-        "subject": "Written Premium",
-        "target_value": 262000,
-        "current_value": 106100,
+        "subject": "Issued protection premium",
+        "unit": "HKD",
+        "current_value": 2574500,
+        "target_value": 3200000,
         "status": "Needs Attention",
-        "remark": "Source-derived YTD written premium compared with the annual target."
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       },
       {
-        "subject": "New Business Commission",
-        "target_value": 5000,
-        "current_value": 900,
+        "subject": "Eligible first-year commission (demo)",
+        "unit": "HKD",
+        "current_value": 772350.0,
+        "target_value": 800000,
         "status": "Needs Attention",
-        "remark": "Derived from new-business premium and documented product commission assumptions."
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       },
       {
-        "subject": "Average Case Size",
-        "target_value": 1600,
-        "current_value": 1480,
-        "status": "Below Benchmark",
-        "remark": "Derived from normalised bound-policy volume and new-business premium."
+        "subject": "Average case premium",
+        "unit": "HKD",
+        "current_value": 27100,
+        "target_value": 50000,
+        "status": "Needs Attention",
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       }
     ]
   },
   "AGT04578": {
     "agent_id": "AGT04578",
-    "currency": "USD",
+    "currency": "HKD",
     "assessments": [
       {
-        "subject": "Written Premium",
-        "target_value": 224000,
-        "current_value": 90680,
+        "subject": "Issued protection premium",
+        "unit": "HKD",
+        "current_value": 2937600,
+        "target_value": 3200000,
         "status": "Needs Attention",
-        "remark": "Source-derived YTD written premium compared with the annual target."
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       },
       {
-        "subject": "New Business Commission",
-        "target_value": 5000,
-        "current_value": 170,
-        "status": "Needs Attention",
-        "remark": "Derived from new-business premium and documented product commission assumptions."
+        "subject": "Eligible first-year commission (demo)",
+        "unit": "HKD",
+        "current_value": 881280.0,
+        "target_value": 800000,
+        "status": "Met",
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       },
       {
-        "subject": "Average Case Size",
-        "target_value": 1500,
-        "current_value": 1420,
-        "status": "Below Benchmark",
-        "remark": "Derived from normalised bound-policy volume and new-business premium."
+        "subject": "Average case premium",
+        "unit": "HKD",
+        "current_value": 28800,
+        "target_value": 50000,
+        "status": "Needs Attention",
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       }
     ]
   },
   "AGT04976": {
     "agent_id": "AGT04976",
-    "currency": "USD",
+    "currency": "HKD",
     "assessments": [
       {
-        "subject": "Written Premium",
-        "target_value": 274000,
-        "current_value": 110700,
-        "status": "Needs Attention",
-        "remark": "Source-derived YTD written premium compared with the annual target."
+        "subject": "Issued protection premium",
+        "unit": "HKD",
+        "current_value": 3324500,
+        "target_value": 3200000,
+        "status": "Met",
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       },
       {
-        "subject": "New Business Commission",
-        "target_value": 5000,
-        "current_value": 280,
-        "status": "Needs Attention",
-        "remark": "Derived from new-business premium and documented product commission assumptions."
+        "subject": "Eligible first-year commission (demo)",
+        "unit": "HKD",
+        "current_value": 997350.0,
+        "target_value": 800000,
+        "status": "Met",
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       },
       {
-        "subject": "Average Case Size",
-        "target_value": 700,
-        "current_value": 520,
-        "status": "Below Benchmark",
-        "remark": "Derived from normalised bound-policy volume and new-business premium."
+        "subject": "Average case premium",
+        "unit": "HKD",
+        "current_value": 30500,
+        "target_value": 50000,
+        "status": "Needs Attention",
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       }
     ]
   },
   "AGT05246": {
     "agent_id": "AGT05246",
-    "currency": "USD",
+    "currency": "HKD",
     "assessments": [
       {
-        "subject": "Written Premium",
-        "target_value": 121000,
-        "current_value": 49030,
+        "subject": "Issued protection premium",
+        "unit": "HKD",
+        "current_value": 837200,
+        "target_value": 3200000,
         "status": "Needs Attention",
-        "remark": "Source-derived YTD written premium compared with the annual target."
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       },
       {
-        "subject": "New Business Commission",
-        "target_value": 5000,
-        "current_value": 350,
+        "subject": "Eligible first-year commission (demo)",
+        "unit": "HKD",
+        "current_value": 251160.0,
+        "target_value": 800000,
         "status": "Needs Attention",
-        "remark": "Derived from new-business premium and documented product commission assumptions."
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       },
       {
-        "subject": "Average Case Size",
-        "target_value": 700,
-        "current_value": 630,
-        "status": "Below Benchmark",
-        "remark": "Derived from normalised bound-policy volume and new-business premium."
+        "subject": "Average case premium",
+        "unit": "HKD",
+        "current_value": 32200,
+        "target_value": 50000,
+        "status": "Needs Attention",
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       }
     ]
   },
   "AGT05467": {
     "agent_id": "AGT05467",
-    "currency": "USD",
+    "currency": "HKD",
     "assessments": [
       {
-        "subject": "Written Premium",
-        "target_value": 12000,
-        "current_value": 670,
+        "subject": "Issued protection premium",
+        "unit": "HKD",
+        "current_value": 1118700,
+        "target_value": 3200000,
         "status": "Needs Attention",
-        "remark": "Source-derived YTD written premium compared with the annual target."
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       },
       {
-        "subject": "New Business Commission",
-        "target_value": 5000,
-        "current_value": 0,
+        "subject": "Eligible first-year commission (demo)",
+        "unit": "HKD",
+        "current_value": 335610.0,
+        "target_value": 800000,
         "status": "Needs Attention",
-        "remark": "Derived from new-business premium and documented product commission assumptions."
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       },
       {
-        "subject": "Average Case Size",
-        "target_value": 500,
-        "current_value": 500,
-        "status": "Meets Benchmark",
-        "remark": "Derived from normalised bound-policy volume and new-business premium."
+        "subject": "Average case premium",
+        "unit": "HKD",
+        "current_value": 33900,
+        "target_value": 50000,
+        "status": "Needs Attention",
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       }
     ]
   },
   "AGT05922": {
     "agent_id": "AGT05922",
-    "currency": "USD",
+    "currency": "HKD",
     "assessments": [
       {
-        "subject": "Written Premium",
-        "target_value": 279000,
-        "current_value": 112860,
+        "subject": "Issued protection premium",
+        "unit": "HKD",
+        "current_value": 1424000,
+        "target_value": 3200000,
         "status": "Needs Attention",
-        "remark": "Source-derived YTD written premium compared with the annual target."
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       },
       {
-        "subject": "New Business Commission",
-        "target_value": 5000,
-        "current_value": 40,
+        "subject": "Eligible first-year commission (demo)",
+        "unit": "HKD",
+        "current_value": 427200.0,
+        "target_value": 800000,
         "status": "Needs Attention",
-        "remark": "Derived from new-business premium and documented product commission assumptions."
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       },
       {
-        "subject": "Average Case Size",
-        "target_value": 700,
-        "current_value": 500,
-        "status": "Below Benchmark",
-        "remark": "Derived from normalised bound-policy volume and new-business premium."
+        "subject": "Average case premium",
+        "unit": "HKD",
+        "current_value": 35600,
+        "target_value": 50000,
+        "status": "Needs Attention",
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       }
     ]
   },
   "AGT05946": {
     "agent_id": "AGT05946",
-    "currency": "USD",
+    "currency": "HKD",
     "assessments": [
       {
-        "subject": "Written Premium",
-        "target_value": 269000,
-        "current_value": 109000,
+        "subject": "Issued protection premium",
+        "unit": "HKD",
+        "current_value": 1753100,
+        "target_value": 3200000,
         "status": "Needs Attention",
-        "remark": "Source-derived YTD written premium compared with the annual target."
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       },
       {
-        "subject": "New Business Commission",
-        "target_value": 5000,
-        "current_value": 800,
+        "subject": "Eligible first-year commission (demo)",
+        "unit": "HKD",
+        "current_value": 525930.0,
+        "target_value": 800000,
         "status": "Needs Attention",
-        "remark": "Derived from new-business premium and documented product commission assumptions."
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       },
       {
-        "subject": "Average Case Size",
-        "target_value": 900,
-        "current_value": 860,
-        "status": "Below Benchmark",
-        "remark": "Derived from normalised bound-policy volume and new-business premium."
+        "subject": "Average case premium",
+        "unit": "HKD",
+        "current_value": 37300,
+        "target_value": 50000,
+        "status": "Needs Attention",
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       }
     ]
   },
   "AGT05960": {
     "agent_id": "AGT05960",
-    "currency": "USD",
+    "currency": "HKD",
     "assessments": [
       {
-        "subject": "Written Premium",
-        "target_value": 1045000,
-        "current_value": 422920,
+        "subject": "Issued protection premium",
+        "unit": "HKD",
+        "current_value": 2106000,
+        "target_value": 3200000,
         "status": "Needs Attention",
-        "remark": "Source-derived YTD written premium compared with the annual target."
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       },
       {
-        "subject": "New Business Commission",
-        "target_value": 6900,
-        "current_value": 2730,
+        "subject": "Eligible first-year commission (demo)",
+        "unit": "HKD",
+        "current_value": 631800.0,
+        "target_value": 800000,
         "status": "Needs Attention",
-        "remark": "Derived from new-business premium and documented product commission assumptions."
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       },
       {
-        "subject": "Average Case Size",
-        "target_value": 2600,
-        "current_value": 2500,
-        "status": "Below Benchmark",
-        "remark": "Derived from normalised bound-policy volume and new-business premium."
+        "subject": "Average case premium",
+        "unit": "HKD",
+        "current_value": 39000,
+        "target_value": 50000,
+        "status": "Needs Attention",
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       }
     ]
   },
   "AGT06340": {
     "agent_id": "AGT06340",
-    "currency": "USD",
+    "currency": "HKD",
     "assessments": [
       {
-        "subject": "Written Premium",
-        "target_value": 336000,
-        "current_value": 135840,
+        "subject": "Issued protection premium",
+        "unit": "HKD",
+        "current_value": 2482700,
+        "target_value": 3200000,
         "status": "Needs Attention",
-        "remark": "Source-derived YTD written premium compared with the annual target."
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       },
       {
-        "subject": "New Business Commission",
-        "target_value": 5000,
-        "current_value": 1020,
+        "subject": "Eligible first-year commission (demo)",
+        "unit": "HKD",
+        "current_value": 744810.0,
+        "target_value": 800000,
         "status": "Needs Attention",
-        "remark": "Derived from new-business premium and documented product commission assumptions."
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       },
       {
-        "subject": "Average Case Size",
-        "target_value": 1700,
-        "current_value": 1610,
-        "status": "Below Benchmark",
-        "remark": "Derived from normalised bound-policy volume and new-business premium."
+        "subject": "Average case premium",
+        "unit": "HKD",
+        "current_value": 40700,
+        "target_value": 50000,
+        "status": "Needs Attention",
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       }
     ]
   },
   "AGT06392": {
     "agent_id": "AGT06392",
-    "currency": "USD",
+    "currency": "HKD",
     "assessments": [
       {
-        "subject": "Written Premium",
-        "target_value": 239000,
-        "current_value": 96750,
+        "subject": "Issued protection premium",
+        "unit": "HKD",
+        "current_value": 2883200,
+        "target_value": 3200000,
         "status": "Needs Attention",
-        "remark": "Source-derived YTD written premium compared with the annual target."
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       },
       {
-        "subject": "New Business Commission",
-        "target_value": 5000,
-        "current_value": 900,
-        "status": "Needs Attention",
-        "remark": "Derived from new-business premium and documented product commission assumptions."
+        "subject": "Eligible first-year commission (demo)",
+        "unit": "HKD",
+        "current_value": 864960.0,
+        "target_value": 800000,
+        "status": "Met",
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       },
       {
-        "subject": "Average Case Size",
-        "target_value": 1400,
-        "current_value": 1380,
-        "status": "Below Benchmark",
-        "remark": "Derived from normalised bound-policy volume and new-business premium."
+        "subject": "Average case premium",
+        "unit": "HKD",
+        "current_value": 42400,
+        "target_value": 50000,
+        "status": "Needs Attention",
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       }
     ]
   },
   "AGT07043": {
     "agent_id": "AGT07043",
-    "currency": "USD",
+    "currency": "HKD",
     "assessments": [
       {
-        "subject": "Written Premium",
-        "target_value": 633000,
-        "current_value": 256050,
-        "status": "Needs Attention",
-        "remark": "Source-derived YTD written premium compared with the annual target."
+        "subject": "Issued protection premium",
+        "unit": "HKD",
+        "current_value": 3307500,
+        "target_value": 3200000,
+        "status": "Met",
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       },
       {
-        "subject": "New Business Commission",
-        "target_value": 16200,
-        "current_value": 6420,
-        "status": "Needs Attention",
-        "remark": "Derived from new-business premium and documented product commission assumptions."
+        "subject": "Eligible first-year commission (demo)",
+        "unit": "HKD",
+        "current_value": 992250.0,
+        "target_value": 800000,
+        "status": "Met",
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       },
       {
-        "subject": "Average Case Size",
-        "target_value": 8700,
-        "current_value": 8270,
-        "status": "Below Benchmark",
-        "remark": "Derived from normalised bound-policy volume and new-business premium."
+        "subject": "Average case premium",
+        "unit": "HKD",
+        "current_value": 44100,
+        "target_value": 50000,
+        "status": "Needs Attention",
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       }
     ]
   },
   "AGT07655": {
     "agent_id": "AGT07655",
-    "currency": "USD",
+    "currency": "HKD",
     "assessments": [
       {
-        "subject": "Written Premium",
-        "target_value": 457000,
-        "current_value": 184740,
-        "status": "Needs Attention",
-        "remark": "Source-derived YTD written premium compared with the annual target."
+        "subject": "Issued protection premium",
+        "unit": "HKD",
+        "current_value": 3755600,
+        "target_value": 3200000,
+        "status": "Met",
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       },
       {
-        "subject": "New Business Commission",
-        "target_value": 8400,
-        "current_value": 3350,
-        "status": "Needs Attention",
-        "remark": "Derived from new-business premium and documented product commission assumptions."
+        "subject": "Eligible first-year commission (demo)",
+        "unit": "HKD",
+        "current_value": 1126680.0,
+        "target_value": 800000,
+        "status": "Met",
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       },
       {
-        "subject": "Average Case Size",
-        "target_value": 1900,
-        "current_value": 1810,
-        "status": "Below Benchmark",
-        "remark": "Derived from normalised bound-policy volume and new-business premium."
+        "subject": "Average case premium",
+        "unit": "HKD",
+        "current_value": 45800,
+        "target_value": 50000,
+        "status": "Needs Attention",
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       }
     ]
   },
   "AGT07761": {
     "agent_id": "AGT07761",
-    "currency": "USD",
+    "currency": "HKD",
     "assessments": [
       {
-        "subject": "Written Premium",
-        "target_value": 290000,
-        "current_value": 117230,
-        "status": "Needs Attention",
-        "remark": "Source-derived YTD written premium compared with the annual target."
+        "subject": "Issued protection premium",
+        "unit": "HKD",
+        "current_value": 4227500,
+        "target_value": 3200000,
+        "status": "Met",
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       },
       {
-        "subject": "New Business Commission",
-        "target_value": 5000,
-        "current_value": 890,
-        "status": "Needs Attention",
-        "remark": "Derived from new-business premium and documented product commission assumptions."
+        "subject": "Eligible first-year commission (demo)",
+        "unit": "HKD",
+        "current_value": 1268250.0,
+        "target_value": 800000,
+        "status": "Met",
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       },
       {
-        "subject": "Average Case Size",
-        "target_value": 2200,
-        "current_value": 880,
-        "status": "Below Benchmark",
-        "remark": "Derived from normalised bound-policy volume and new-business premium."
+        "subject": "Average case premium",
+        "unit": "HKD",
+        "current_value": 47500,
+        "target_value": 50000,
+        "status": "Needs Attention",
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       }
     ]
   },
   "AGT07985": {
     "agent_id": "AGT07985",
-    "currency": "USD",
+    "currency": "HKD",
     "assessments": [
       {
-        "subject": "Written Premium",
-        "target_value": 398000,
-        "current_value": 161070,
-        "status": "Needs Attention",
-        "remark": "Source-derived YTD written premium compared with the annual target."
+        "subject": "Issued protection premium",
+        "unit": "HKD",
+        "current_value": 4723200,
+        "target_value": 3200000,
+        "status": "Met",
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       },
       {
-        "subject": "New Business Commission",
-        "target_value": 5000,
-        "current_value": 1590,
-        "status": "Needs Attention",
-        "remark": "Derived from new-business premium and documented product commission assumptions."
+        "subject": "Eligible first-year commission (demo)",
+        "unit": "HKD",
+        "current_value": 1416960.0,
+        "target_value": 800000,
+        "status": "Met",
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       },
       {
-        "subject": "Average Case Size",
-        "target_value": 1500,
-        "current_value": 1460,
-        "status": "Below Benchmark",
-        "remark": "Derived from normalised bound-policy volume and new-business premium."
+        "subject": "Average case premium",
+        "unit": "HKD",
+        "current_value": 49200,
+        "target_value": 50000,
+        "status": "Needs Attention",
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       }
     ]
   },
   "AGT08233": {
     "agent_id": "AGT08233",
-    "currency": "USD",
+    "currency": "HKD",
     "assessments": [
       {
-        "subject": "Written Premium",
-        "target_value": 12000,
-        "current_value": 4890,
-        "status": "Needs Attention",
-        "remark": "Source-derived YTD written premium compared with the annual target."
+        "subject": "Issued protection premium",
+        "unit": "HKD",
+        "current_value": 5242700,
+        "target_value": 3200000,
+        "status": "Met",
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       },
       {
-        "subject": "New Business Commission",
-        "target_value": 5000,
-        "current_value": 0,
-        "status": "Needs Attention",
-        "remark": "Derived from new-business premium and documented product commission assumptions."
+        "subject": "Eligible first-year commission (demo)",
+        "unit": "HKD",
+        "current_value": 1572810.0,
+        "target_value": 800000,
+        "status": "Met",
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       },
       {
-        "subject": "Average Case Size",
-        "target_value": 700,
-        "current_value": 500,
-        "status": "Below Benchmark",
-        "remark": "Derived from normalised bound-policy volume and new-business premium."
+        "subject": "Average case premium",
+        "unit": "HKD",
+        "current_value": 50900,
+        "target_value": 50000,
+        "status": "Met",
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       }
     ]
   },
   "AGT08658": {
     "agent_id": "AGT08658",
-    "currency": "USD",
+    "currency": "HKD",
     "assessments": [
       {
-        "subject": "Written Premium",
-        "target_value": 143000,
-        "current_value": 58040,
-        "status": "Needs Attention",
-        "remark": "Source-derived YTD written premium compared with the annual target."
+        "subject": "Issued protection premium",
+        "unit": "HKD",
+        "current_value": 5786000,
+        "target_value": 3200000,
+        "status": "Met",
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       },
       {
-        "subject": "New Business Commission",
-        "target_value": 5000,
-        "current_value": 910,
-        "status": "Needs Attention",
-        "remark": "Derived from new-business premium and documented product commission assumptions."
+        "subject": "Eligible first-year commission (demo)",
+        "unit": "HKD",
+        "current_value": 1735800.0,
+        "target_value": 800000,
+        "status": "Met",
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       },
       {
-        "subject": "Average Case Size",
-        "target_value": 1600,
-        "current_value": 1480,
-        "status": "Below Benchmark",
-        "remark": "Derived from normalised bound-policy volume and new-business premium."
+        "subject": "Average case premium",
+        "unit": "HKD",
+        "current_value": 52600,
+        "target_value": 50000,
+        "status": "Met",
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       }
     ]
   },
   "AGT08696": {
     "agent_id": "AGT08696",
-    "currency": "USD",
+    "currency": "HKD",
     "assessments": [
       {
-        "subject": "Written Premium",
-        "target_value": 275000,
-        "current_value": 111310,
+        "subject": "Issued protection premium",
+        "unit": "HKD",
+        "current_value": 1466100,
+        "target_value": 3200000,
         "status": "Needs Attention",
-        "remark": "Source-derived YTD written premium compared with the annual target."
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       },
       {
-        "subject": "New Business Commission",
-        "target_value": 5000,
-        "current_value": 320,
+        "subject": "Eligible first-year commission (demo)",
+        "unit": "HKD",
+        "current_value": 439830.0,
+        "target_value": 800000,
         "status": "Needs Attention",
-        "remark": "Derived from new-business premium and documented product commission assumptions."
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       },
       {
-        "subject": "Average Case Size",
-        "target_value": 700,
-        "current_value": 670,
-        "status": "Below Benchmark",
-        "remark": "Derived from normalised bound-policy volume and new-business premium."
+        "subject": "Average case premium",
+        "unit": "HKD",
+        "current_value": 54300,
+        "target_value": 50000,
+        "status": "Met",
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       }
     ]
   },
   "AGT08703": {
     "agent_id": "AGT08703",
-    "currency": "USD",
+    "currency": "HKD",
     "assessments": [
       {
-        "subject": "Written Premium",
-        "target_value": 1815000,
-        "current_value": 734090,
+        "subject": "Issued protection premium",
+        "unit": "HKD",
+        "current_value": 1904000,
+        "target_value": 3200000,
         "status": "Needs Attention",
-        "remark": "Source-derived YTD written premium compared with the annual target."
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       },
       {
-        "subject": "New Business Commission",
-        "target_value": 19400,
-        "current_value": 7710,
+        "subject": "Eligible first-year commission (demo)",
+        "unit": "HKD",
+        "current_value": 571200.0,
+        "target_value": 800000,
         "status": "Needs Attention",
-        "remark": "Derived from new-business premium and documented product commission assumptions."
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       },
       {
-        "subject": "Average Case Size",
-        "target_value": 2800,
-        "current_value": 2630,
-        "status": "Below Benchmark",
-        "remark": "Derived from normalised bound-policy volume and new-business premium."
+        "subject": "Average case premium",
+        "unit": "HKD",
+        "current_value": 56000,
+        "target_value": 50000,
+        "status": "Met",
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       }
     ]
   },
   "AGT09144": {
     "agent_id": "AGT09144",
-    "currency": "USD",
+    "currency": "HKD",
     "assessments": [
       {
-        "subject": "Written Premium",
-        "target_value": 1095000,
-        "current_value": 442860,
+        "subject": "Issued protection premium",
+        "unit": "HKD",
+        "current_value": 2365700,
+        "target_value": 3200000,
         "status": "Needs Attention",
-        "remark": "Source-derived YTD written premium compared with the annual target."
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       },
       {
-        "subject": "New Business Commission",
-        "target_value": 12900,
-        "current_value": 5110,
+        "subject": "Eligible first-year commission (demo)",
+        "unit": "HKD",
+        "current_value": 709710.0,
+        "target_value": 800000,
         "status": "Needs Attention",
-        "remark": "Derived from new-business premium and documented product commission assumptions."
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       },
       {
-        "subject": "Average Case Size",
-        "target_value": 2200,
-        "current_value": 2120,
-        "status": "Below Benchmark",
-        "remark": "Derived from normalised bound-policy volume and new-business premium."
+        "subject": "Average case premium",
+        "unit": "HKD",
+        "current_value": 57700,
+        "target_value": 50000,
+        "status": "Met",
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       }
     ]
   },
   "AGT09226": {
     "agent_id": "AGT09226",
-    "currency": "USD",
+    "currency": "HKD",
     "assessments": [
       {
-        "subject": "Written Premium",
-        "target_value": 96000,
-        "current_value": 39020,
+        "subject": "Issued protection premium",
+        "unit": "HKD",
+        "current_value": 2851200,
+        "target_value": 3200000,
         "status": "Needs Attention",
-        "remark": "Source-derived YTD written premium compared with the annual target."
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       },
       {
-        "subject": "New Business Commission",
-        "target_value": 5000,
-        "current_value": 900,
-        "status": "Needs Attention",
-        "remark": "Derived from new-business premium and documented product commission assumptions."
+        "subject": "Eligible first-year commission (demo)",
+        "unit": "HKD",
+        "current_value": 855360.0,
+        "target_value": 800000,
+        "status": "Met",
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       },
       {
-        "subject": "Average Case Size",
-        "target_value": 1800,
-        "current_value": 1740,
-        "status": "Below Benchmark",
-        "remark": "Derived from normalised bound-policy volume and new-business premium."
+        "subject": "Average case premium",
+        "unit": "HKD",
+        "current_value": 59400,
+        "target_value": 50000,
+        "status": "Met",
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       }
     ]
   },
   "AGT09285": {
     "agent_id": "AGT09285",
-    "currency": "USD",
+    "currency": "HKD",
     "assessments": [
       {
-        "subject": "Written Premium",
-        "target_value": 2225000,
-        "current_value": 900250,
+        "subject": "Issued protection premium",
+        "unit": "HKD",
+        "current_value": 1380500,
+        "target_value": 3200000,
         "status": "Needs Attention",
-        "remark": "Source-derived YTD written premium compared with the annual target."
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       },
       {
-        "subject": "New Business Commission",
-        "target_value": 24900,
-        "current_value": 9890,
+        "subject": "Eligible first-year commission (demo)",
+        "unit": "HKD",
+        "current_value": 414150.0,
+        "target_value": 800000,
         "status": "Needs Attention",
-        "remark": "Derived from new-business premium and documented product commission assumptions."
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       },
       {
-        "subject": "Average Case Size",
-        "target_value": 10300,
-        "current_value": 9780,
-        "status": "Below Benchmark",
-        "remark": "Derived from normalised bound-policy volume and new-business premium."
+        "subject": "Average case premium",
+        "unit": "HKD",
+        "current_value": 25100,
+        "target_value": 50000,
+        "status": "Needs Attention",
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       }
     ]
   },
   "AGT09360": {
     "agent_id": "AGT09360",
-    "currency": "USD",
+    "currency": "HKD",
     "assessments": [
       {
-        "subject": "Written Premium",
-        "target_value": 975000,
-        "current_value": 394370,
+        "subject": "Issued protection premium",
+        "unit": "HKD",
+        "current_value": 1661600,
+        "target_value": 3200000,
         "status": "Needs Attention",
-        "remark": "Source-derived YTD written premium compared with the annual target."
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       },
       {
-        "subject": "New Business Commission",
-        "target_value": 38900,
-        "current_value": 15440,
+        "subject": "Eligible first-year commission (demo)",
+        "unit": "HKD",
+        "current_value": 498480.0,
+        "target_value": 800000,
         "status": "Needs Attention",
-        "remark": "Derived from new-business premium and documented product commission assumptions."
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       },
       {
-        "subject": "Average Case Size",
-        "target_value": 8600,
-        "current_value": 8220,
-        "status": "Below Benchmark",
-        "remark": "Derived from normalised bound-policy volume and new-business premium."
+        "subject": "Average case premium",
+        "unit": "HKD",
+        "current_value": 26800,
+        "target_value": 50000,
+        "status": "Needs Attention",
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       }
     ]
   },
   "AGT09458": {
     "agent_id": "AGT09458",
-    "currency": "USD",
+    "currency": "HKD",
     "assessments": [
       {
-        "subject": "Written Premium",
-        "target_value": 113000,
-        "current_value": 45800,
+        "subject": "Issued protection premium",
+        "unit": "HKD",
+        "current_value": 1966500,
+        "target_value": 3200000,
         "status": "Needs Attention",
-        "remark": "Source-derived YTD written premium compared with the annual target."
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       },
       {
-        "subject": "New Business Commission",
-        "target_value": 5000,
-        "current_value": 340,
+        "subject": "Eligible first-year commission (demo)",
+        "unit": "HKD",
+        "current_value": 589950.0,
+        "target_value": 800000,
         "status": "Needs Attention",
-        "remark": "Derived from new-business premium and documented product commission assumptions."
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       },
       {
-        "subject": "Average Case Size",
-        "target_value": 700,
-        "current_value": 500,
-        "status": "Below Benchmark",
-        "remark": "Derived from normalised bound-policy volume and new-business premium."
+        "subject": "Average case premium",
+        "unit": "HKD",
+        "current_value": 28500,
+        "target_value": 50000,
+        "status": "Needs Attention",
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       }
     ]
   },
   "AGT09571": {
     "agent_id": "AGT09571",
-    "currency": "USD",
+    "currency": "HKD",
     "assessments": [
       {
-        "subject": "Written Premium",
-        "target_value": 913000,
-        "current_value": 369330,
+        "subject": "Issued protection premium",
+        "unit": "HKD",
+        "current_value": 2295200,
+        "target_value": 3200000,
         "status": "Needs Attention",
-        "remark": "Source-derived YTD written premium compared with the annual target."
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       },
       {
-        "subject": "New Business Commission",
-        "target_value": 8500,
-        "current_value": 3390,
+        "subject": "Eligible first-year commission (demo)",
+        "unit": "HKD",
+        "current_value": 688560.0,
+        "target_value": 800000,
         "status": "Needs Attention",
-        "remark": "Derived from new-business premium and documented product commission assumptions."
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       },
       {
-        "subject": "Average Case Size",
-        "target_value": 1800,
-        "current_value": 1690,
-        "status": "Below Benchmark",
-        "remark": "Derived from normalised bound-policy volume and new-business premium."
+        "subject": "Average case premium",
+        "unit": "HKD",
+        "current_value": 30200,
+        "target_value": 50000,
+        "status": "Needs Attention",
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       }
     ]
   },
   "AGT09608": {
     "agent_id": "AGT09608",
-    "currency": "USD",
+    "currency": "HKD",
     "assessments": [
       {
-        "subject": "Written Premium",
-        "target_value": 226000,
-        "current_value": 91250,
+        "subject": "Issued protection premium",
+        "unit": "HKD",
+        "current_value": 2647700,
+        "target_value": 3200000,
         "status": "Needs Attention",
-        "remark": "Source-derived YTD written premium compared with the annual target."
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       },
       {
-        "subject": "New Business Commission",
-        "target_value": 5000,
-        "current_value": 240,
+        "subject": "Eligible first-year commission (demo)",
+        "unit": "HKD",
+        "current_value": 794310.0,
+        "target_value": 800000,
         "status": "Needs Attention",
-        "remark": "Derived from new-business premium and documented product commission assumptions."
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       },
       {
-        "subject": "Average Case Size",
-        "target_value": 2100,
-        "current_value": 2040,
-        "status": "Below Benchmark",
-        "remark": "Derived from normalised bound-policy volume and new-business premium."
+        "subject": "Average case premium",
+        "unit": "HKD",
+        "current_value": 31900,
+        "target_value": 50000,
+        "status": "Needs Attention",
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       }
     ]
   },
   "AGT09761": {
     "agent_id": "AGT09761",
-    "currency": "USD",
+    "currency": "HKD",
     "assessments": [
       {
-        "subject": "Written Premium",
-        "target_value": 2528000,
-        "current_value": 1022460,
+        "subject": "Issued protection premium",
+        "unit": "HKD",
+        "current_value": 3024000,
+        "target_value": 3200000,
         "status": "Needs Attention",
-        "remark": "Source-derived YTD written premium compared with the annual target."
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       },
       {
-        "subject": "New Business Commission",
-        "target_value": 31900,
-        "current_value": 12670,
-        "status": "Needs Attention",
-        "remark": "Derived from new-business premium and documented product commission assumptions."
+        "subject": "Eligible first-year commission (demo)",
+        "unit": "HKD",
+        "current_value": 907200.0,
+        "target_value": 800000,
+        "status": "Met",
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       },
       {
-        "subject": "Average Case Size",
-        "target_value": 4200,
-        "current_value": 4030,
-        "status": "Below Benchmark",
-        "remark": "Derived from normalised bound-policy volume and new-business premium."
+        "subject": "Average case premium",
+        "unit": "HKD",
+        "current_value": 33600,
+        "target_value": 50000,
+        "status": "Needs Attention",
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       }
     ]
   },
   "AGT09891": {
     "agent_id": "AGT09891",
-    "currency": "USD",
+    "currency": "HKD",
     "assessments": [
       {
-        "subject": "Written Premium",
-        "target_value": 364000,
-        "current_value": 147250,
-        "status": "Needs Attention",
-        "remark": "Source-derived YTD written premium compared with the annual target."
+        "subject": "Issued protection premium",
+        "unit": "HKD",
+        "current_value": 3424100,
+        "target_value": 3200000,
+        "status": "Met",
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       },
       {
-        "subject": "New Business Commission",
-        "target_value": 5000,
-        "current_value": 640,
-        "status": "Needs Attention",
-        "remark": "Derived from new-business premium and documented product commission assumptions."
+        "subject": "Eligible first-year commission (demo)",
+        "unit": "HKD",
+        "current_value": 1027230.0,
+        "target_value": 800000,
+        "status": "Met",
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       },
       {
-        "subject": "Average Case Size",
-        "target_value": 700,
-        "current_value": 700,
-        "status": "Meets Benchmark",
-        "remark": "Derived from normalised bound-policy volume and new-business premium."
+        "subject": "Average case premium",
+        "unit": "HKD",
+        "current_value": 35300,
+        "target_value": 50000,
+        "status": "Needs Attention",
+        "remark": "Synthetic coursework assessment; not a professional qualification decision."
       }
     ]
   }

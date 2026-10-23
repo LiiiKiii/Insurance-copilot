@@ -56,7 +56,7 @@ class GetPendingPoliciesTool(Tool):
                     .all()
                 )
                 performance = (
-                    db.query(AgentPerformanceMetrics.pending_premium_current)
+                    db.query(AgentPerformanceMetrics.pending_premium_current, AgentPerformanceMetrics.metric_metadata)
                     .filter(AgentPerformanceMetrics.agent_id == agent_id)
                     .order_by(AgentPerformanceMetrics.period_end.desc())
                     .first()
@@ -68,6 +68,9 @@ class GetPendingPoliciesTool(Tool):
                 )
         except Exception as exc:
             return db_error(exc)
+
+        definitions = (performance[1] or {}).get("metrics", {}) if performance else {}
+        currency = definitions.get("pending_premium", {}).get("unit", "USD")
 
         client_map = {
             client.client_id: {
@@ -87,7 +90,7 @@ class GetPendingPoliciesTool(Tool):
                 "policy_id": policy.policy_id,
                 "client_name": policy.client_name,
                 "premium": policy.premium,
-                "currency": "USD",
+                "currency": currency,
                 "product": policy.product,
                 "status": policy.status,
                 "status_detail": policy.status_detail,
@@ -110,7 +113,7 @@ class GetPendingPoliciesTool(Tool):
         return json.dumps(
             {
                 "agent_id": agent_id,
-                "currency": "USD",
+                "currency": currency,
                 "total_count": len(policy_items),
                 "total_pending_premium": (
                     stored_pending if stored_pending is not None else calculated_pending

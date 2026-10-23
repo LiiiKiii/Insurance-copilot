@@ -2,7 +2,6 @@
 
 import math
 
-
 PARTIAL_COVERAGE_THRESHOLD = 0.5
 MONETARY_UNITS = frozenset({"HKD", "USD"})
 
@@ -16,7 +15,9 @@ def compute_gap_analysis(
 
     Pending premium is allocated only to gaps in the same currency, in
     ascending ``days_remaining`` order. The stored performance premium is
-    USD; callers supplying HKD pending premium must say so explicitly.
+    USD for legacy callers; seeded callers supply their stored currency.
+    Pending premium never offsets commission or count targets, even when the
+    currency matches. Missing target_metric retains the legacy premium contract.
     Results retain the caller's original order.
     """
     if pending_unit not in MONETARY_UNITS:
@@ -56,7 +57,7 @@ def compute_gap_analysis(
                 pending_coverage_pct=100.0,
                 status="achieved",
             )
-        elif unit != pending_unit:
+        elif unit != pending_unit or competition.get("target_metric") not in {None, "protection_premium", "written_premium", "pending_premium"}:
             result.update(
                 actual_gap=gap,
                 pending_deduction=0,
@@ -79,7 +80,8 @@ def compute_gap_analysis(
         gap = competition.get("gap")
         unit = competition["unit"]
 
-        if gap is None or gap <= 0 or unit != pending_unit:
+        if (gap is None or gap <= 0 or unit != pending_unit
+                or competition.get("target_metric") not in {None, "protection_premium", "written_premium", "pending_premium"}):
             continue
 
         deduction = min(gap, remaining_pool) if remaining_pool > 0 else 0

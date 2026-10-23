@@ -32,6 +32,7 @@ class AgentAssessment(Base):
         String(36), ForeignKey("tenants.id"), nullable=True, index=True
     )
     agent_id: Mapped[str] = mapped_column(String(20), nullable=False, index=True)
+    unit: Mapped[str | None] = mapped_column(String(20), nullable=True)
     subject: Mapped[str] = mapped_column(String(64), nullable=False)
     target_value: Mapped[float | None] = mapped_column(Float, nullable=True)
     current_value: Mapped[float | None] = mapped_column(Float, nullable=True)

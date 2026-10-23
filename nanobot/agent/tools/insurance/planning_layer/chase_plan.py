@@ -11,10 +11,16 @@ import time
 from datetime import date, timedelta
 from pathlib import Path
 from typing import Any
+
 from nanobot.agent.tools.base import Tool
-from nanobot.agent.tools.insurance.reasoning_layer.gap_analysis import compute_gap_analysis
+from nanobot.agent.tools.insurance.data_layer._db import (
+    load_competitions_from_db,
+    load_performance_row,
+)
+from nanobot.agent.tools.insurance.reasoning_layer.gap_analysis import (
+    compute_gap_analysis,
+)
 from nanobot.agent.tools.insurance.reasoning_layer.run_rate import compute_run_rate
-from nanobot.agent.tools.insurance.data_layer._db import load_competitions_from_db, load_performance_row
 
 logger = logging.getLogger(__name__)
 
@@ -154,6 +160,8 @@ class GenerateChasePlanTool(Tool):
 
         # Retrieve performance data from the ORM
         pending = 0
+        pending_unit = "USD"
+        perf = None
         pp_current = 0
         pp_target = 1
         try:
@@ -162,6 +170,7 @@ class GenerateChasePlanTool(Tool):
                 pp_current = perf.protection_premium_current or 0
                 pp_target = perf.protection_premium_target or 1
                 pending = perf.pending_premium_current or 0
+                pending_unit = ((perf.metric_metadata or {}).get("metrics", {}).get("pending_premium", {}).get("unit", "USD"))
         except Exception:
             pass
 
@@ -169,7 +178,7 @@ class GenerateChasePlanTool(Tool):
         monthly_avg = run_rate["monthly_avg"]
 
         # Select competition
-        gap_analyses = compute_gap_analysis(competitions, pending)
+        gap_analyses = compute_gap_analysis(competitions, pending, pending_unit=pending_unit)
 
         if comp_id:
             comp = next((c for c in competitions if c.get("id") == comp_id), None)
@@ -186,6 +195,15 @@ class GenerateChasePlanTool(Tool):
 
         if not comp or not gap_info:
             return json.dumps({"error": "Competition data not found"}, ensure_ascii=False)
+
+        # A commission or count target needs its own production baseline.
+        columns = {"fyc": "fyc_current", "ytd_fyc": "ytd_fyc", "submission_count": "submission_count_current", "policy_count": "policy_count"}
+        metric_column = columns.get(comp.get("target_metric"))
+        if perf is not None and metric_column:
+            current = getattr(perf, metric_column, None)
+            if current is not None:
+                run_rate = compute_run_rate(current, comp.get("target_value") or 1)
+                monthly_avg = run_rate["monthly_avg"]
 
         actual_gap = gap_info.get("actual_gap", 0)
         days_remaining = comp.get("days_remaining", 30)

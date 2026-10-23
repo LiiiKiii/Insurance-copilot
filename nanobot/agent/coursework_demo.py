@@ -11,7 +11,6 @@ from datetime import date
 from pathlib import Path
 from typing import Any
 
-
 _ROOT = Path(__file__).resolve().parents[2]
 _DATASET_TENANT = "coursework-demo"  # Source provenance, not the database tenant.
 _DATASET_ID = "m2-coursework-candidates-v3"
@@ -101,9 +100,14 @@ class CourseworkCandidateSource:
     def __init__(self, dataset_path: Path | None = None, mock_dir: Path | None = None) -> None:
         self.dataset_path = dataset_path or _ROOT / "data/evaluation/m2_candidate_scenarios.json"
         self.mock_dir = mock_dir or _ROOT / "data/mock"
+        self._use_frozen_source = mock_dir is None
 
     def _load_json(self, path: Path) -> Any:
         try:
+            if self._use_frozen_source and path.parent == self.mock_dir:
+                # v3 source_path names refer to the frozen ea8fce6 snapshot.
+                from scripts.build_life_demo_dataset import load_source
+                return load_source(path.stem)
             return json.loads(path.read_text(encoding="utf-8"))
         except (OSError, ValueError) as exc:
             raise CourseworkCandidateError("Demo source unavailable") from exc

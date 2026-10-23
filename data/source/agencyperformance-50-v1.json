@@ -1,0 +1,7 @@
+{
+  "version": "agencyperformance-50-v1",
+  "source_commit": "ea8fce6",
+  "sha256": "e9a2df919e0d30bf96b8652364663bc672fe12ce57d4538bc2c8423c95ffb248",
+  "purpose": "Immutable USD general-insurance project snapshot. Not life-insurance ground truth. M4 v3 source_path values refer to data/mock at source_commit, not the current runtime directory.",
+  "raw_csv": "Unchanged original CSV retained outside the repository in files/agencyperformance/raw/finalapi.csv."
+}

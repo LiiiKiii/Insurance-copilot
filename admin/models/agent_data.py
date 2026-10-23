@@ -27,6 +27,8 @@ class AgentPerformanceMetrics(Base):
     period_start: Mapped[str] = mapped_column(String(10), nullable=False)
     period_end: Mapped[str] = mapped_column(String(10), nullable=False)
 
+    metric_metadata: Mapped[dict | None] = mapped_column(JSON, nullable=True)
+
     protection_premium_current: Mapped[float | None] = mapped_column(Float, nullable=True)
     protection_premium_target: Mapped[float | None] = mapped_column(Float, nullable=True)
     protection_premium_rate: Mapped[float | None] = mapped_column(Float, nullable=True)
