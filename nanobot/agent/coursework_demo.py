@@ -5,7 +5,8 @@ from __future__ import annotations
 import json
 import math
 import os
-from dataclasses import dataclass
+import re
+from dataclasses import dataclass, replace
 from datetime import date
 from pathlib import Path
 from typing import Any
@@ -32,6 +33,54 @@ class PreparedCoursework:
     as_of_date: str
     payload: dict[str, Any]
     candidate_ids: frozenset[str]
+
+
+_TOP_K_WORDS = {"one": 1, "two": 2, "three": 3, "four": 4, "five": 5,
+                "一": 1, "二": 2, "三": 3, "四": 4, "五": 5}
+_QUANTITY = r"\d+(?:\.\d+)?|[A-Za-z]+|[一二三四五六七八九十]+"
+_TOP_K_PATTERNS = (
+    re.compile(rf"\btop\s+({_QUANTITY})\b", re.IGNORECASE),
+    re.compile(rf"\brecommend\s+(?:the\s+)?first\s+({_QUANTITY})\b", re.IGNORECASE),
+    re.compile(rf"(?:推荐|推薦)\s*前\s*({_QUANTITY})(?:名|个|個)?"),
+    re.compile(rf"前\s*({_QUANTITY})(?:名|个|個)"),
+)
+_AMBIGUOUS_TOP_K = re.compile(
+    rf"\b(?:top|first)\s+(?:{_QUANTITY})\s+(?:or|and|to|through|-)\s+"
+    rf"(?:top\s+|first\s+)?(?:{_QUANTITY})\b|"
+    rf"前\s*(?:{_QUANTITY})(?:名|个|個)?\s*(?:或|和|到|至)\s*"
+    rf"(?:前\s*)?(?:{_QUANTITY})(?:名|个|個)?",
+    re.IGNORECASE,
+)
+
+
+def requested_coursework_top_k(message: str) -> int | None:
+    """Read only an unambiguous 1–5 request from the authenticated user's text."""
+    if not isinstance(message, str) or len(message) > 4096 or _AMBIGUOUS_TOP_K.search(message):
+        return None
+    matches = [match.group(1).lower() for pattern in _TOP_K_PATTERNS
+               for match in pattern.finditer(message)]
+    if not matches:
+        return None
+    values: set[int] = set()
+    for token in matches:
+        value = int(token) if token.isdecimal() else _TOP_K_WORDS.get(token)
+        if value is None or not 1 <= value <= 5:
+            return None
+        values.add(value)
+    return next(iter(values)) if len(values) == 1 else None
+
+
+def with_requested_coursework_top_k(
+    prepared: PreparedCoursework, message: str,
+) -> PreparedCoursework:
+    """Copy only the validated constraint; leave source and candidate evidence intact."""
+    requested = requested_coursework_top_k(message)
+    if requested is None:
+        return prepared
+    return replace(prepared, payload={
+        **prepared.payload,
+        "constraints": {**prepared.payload["constraints"], "top_k": requested},
+    })
 
 
 def _number(value: Any, *, minimum: float = 0, maximum: float | None = None) -> float:
@@ -213,7 +262,9 @@ def recommendation_result(prepared: PreparedCoursework, ranking: Any, call_id: s
             or ranking.get("excluded_candidates") != []):
         raise CourseworkCandidateError("Invalid ranking scope")
     recommendations = ranking.get("recommendations")
-    if not isinstance(recommendations, list) or not recommendations:
+    expected_count = min(prepared.payload["constraints"]["top_k"], len(prepared.candidate_ids))
+    if (not isinstance(recommendations, list)
+            or len(recommendations) != expected_count):
         raise CourseworkCandidateError("Invalid ranking result")
     seen: set[str] = set()
     actions: list[dict[str, Any]] = []

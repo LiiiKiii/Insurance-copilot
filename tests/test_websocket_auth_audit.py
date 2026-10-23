@@ -6,7 +6,7 @@ import json
 import os
 import tempfile
 import unittest
-from datetime import datetime, timedelta, timezone
+from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 from types import SimpleNamespace
 from unittest.mock import AsyncMock, patch
@@ -361,7 +361,7 @@ class WebSocketAuthAuditTests(unittest.IsolatedAsyncioTestCase):
         )
         with patch.dict(os.environ, {"M1_COURSEWORK_DEMO_TENANT_ID": DEFAULT_TENANT_ID, "M1_COURSEWORK_DEMO_AGENT_ID": "AGT00690"}):
             socket, _ = await self.authenticate(self.token_b)
-            await socket.send({"message": "Prioritize", "agent_id": "bob"})
+            await socket.send({"message": "Recommend top 3", "agent_id": "bob"})
             response = await socket.next()
 
         self.assertEqual(response["content"], "Verified follow-up candidates are unavailable.")
@@ -376,7 +376,7 @@ class WebSocketAuthAuditTests(unittest.IsolatedAsyncioTestCase):
         with patch.dict(os.environ, {"M1_COURSEWORK_DEMO_TENANT_ID": DEFAULT_TENANT_ID, "M1_COURSEWORK_DEMO_AGENT_ID": "AGT00690"}):
             socket, _ = await self.authenticate(self.token_demo)
             await socket.send({
-                "message": "Prioritize", "agent_id": "AGT00770",
+                "message": "Recommend top 3", "agent_id": "AGT00770",
                 "scenario_id": "SCN-AGT00770",
             })
             response = await socket.next()
@@ -422,7 +422,7 @@ class WebSocketAuthAuditTests(unittest.IsolatedAsyncioTestCase):
         with patch.dict(os.environ, {"M1_COURSEWORK_DEMO_TENANT_ID": DEFAULT_TENANT_ID,
                                      "M1_COURSEWORK_DEMO_AGENT_ID": "AGT00690"}):
             socket, _ = await self.authenticate(self.token_demo)
-            await socket.send({"message": "Prioritize", "agent_id": "AGT00690"})
+            await socket.send({"message": "Recommend top 3", "agent_id": "AGT00690"})
             self.assertEqual((await socket.next())["type"], "response")
         self.assertNotIn("demo_scope", self.runtime.agent_loop.process_direct.await_args.kwargs)
 
@@ -487,7 +487,9 @@ class WebSocketAuthAuditTests(unittest.IsolatedAsyncioTestCase):
             response = await socket.next()
 
         self.assertEqual(response["type"], "response")
-        self.assertEqual(response["content"], "Contact the customer about the missing documents first.")
+        self.assertEqual(response["content"],
+                         "Here are 5 authorized follow-up recommendations. "
+                         "Review the ranked action plan for their actions and evidence.")
         self.assertEqual(response["turn_id"], "turn:demo")
         card = response["result"]
         self.assertEqual((card["kind"], card["source"], card["scenario_id"], card["tool_call_id"]),
@@ -527,6 +529,128 @@ class WebSocketAuthAuditTests(unittest.IsolatedAsyncioTestCase):
         })
         self.assertEqual(assistant_message.metadata_json["structured_result"], card)
 
+    async def test_requested_top_three_controls_card_tool_result_and_response_text(self):
+        provider = SimpleNamespace(
+            get_default_model=lambda: "scripted-model",
+            chat_with_retry=AsyncMock(side_effect=[
+                LLMResponse(content=None, tool_calls=[ToolCallRequest(
+                    id="top-three-call", name="prioritize_followups", arguments={},
+                )], finish_reason="tool_calls"),
+                LLMResponse(content="Here are five recommendations."),
+            ]),
+        )
+        self.runtime.agent_loop = AgentLoop(
+            MessageBus(), provider, Path(self.folder.name),
+            tool_registry=build_reasoning_registry(Path(self.folder.name)),
+        )
+        with patch.dict(os.environ, {
+            "M1_COURSEWORK_DEMO_TENANT_ID": DEFAULT_TENANT_ID,
+            "M1_COURSEWORK_DEMO_AGENT_ID": "AGT00690",
+        }):
+            socket, _ = await self.authenticate(self.token_demo)
+            await socket.send({"message": "Recommend top 3 follow-ups", "agent_id": "AGT00690"})
+            response = await socket.next()
+        self.assertEqual(response["type"], "response")
+        self.assertEqual(len(response["result"]["actions"]), 3)
+        self.assertIn("3 authorized follow-up recommendations", response["content"])
+        self.assertNotIn("five recommendations", response["content"])
+        offered = provider.chat_with_retry.await_args_list[0].kwargs["tools"]
+        facade = next(row for row in offered if row["function"]["name"] == "prioritize_followups")
+        self.assertEqual(facade["function"]["parameters"]["properties"], {})
+        tool_result = next(row for row in provider.chat_with_retry.await_args_list[1].kwargs["messages"]
+                           if row.get("role") == "tool")
+        ranked = json.loads(tool_result["content"])
+        self.assertEqual([row["candidate_id"] for row in ranked["recommendations"]],
+                         [row["candidate_id"] for row in response["result"]["actions"]])
+        async with self.sessions() as db:
+            audit = (await db.scalars(select(AiAuditLog))).one()
+        self.assertEqual(json.loads(audit.tools_called), ["prioritize_followups"])
+        self.assertIn("3 authorized", audit.ai_response)
+
+    async def test_server_feasibility_decision_overrides_model_and_is_audited(self):
+        registry = build_reasoning_registry(Path(self.folder.name))
+        due = (date.today() + timedelta(days=69)).isoformat()
+        competition = {
+            "id": "COMP_WRITTEN_PREMIUM_2026", "name": "Written Premium Challenge",
+            "name_en": "Written Premium Challenge", "target_metric": "protection_premium",
+            "unit": "USD", "current_value": 154750, "target_value": 818000,
+            "gap": 663250, "days_remaining": 69, "deadline": due,
+        }
+        registry.get("get_competition_status").execute = AsyncMock(
+            return_value=json.dumps({"agent_id": "AGT00690", "competitions": [competition]}),
+        )
+        registry.get("get_performance_snapshot").execute = AsyncMock(
+            return_value=json.dumps({
+                "agent_id": "AGT00690",
+                "period": f"{date.today().year}-01-01 to {date.today().isoformat()}",
+                "metrics": {"protection_premium": {"unit": "USD", "current": 154750}},
+            }),
+        )
+        provider = SimpleNamespace(
+            get_default_model=lambda: "scripted-model",
+            chat_with_retry=AsyncMock(return_value=LLMResponse(
+                content="You can certainly make it; 99% likely.",
+            )),
+        )
+        self.runtime.agent_loop = AgentLoop(
+            MessageBus(), provider, Path(self.folder.name), tool_registry=registry,
+        )
+        socket, _ = await self.authenticate(self.token_demo)
+        await socket.send({
+            "message": "Can I still achieve my written premium target before the deadline?",
+            "agent_id": "AGT00690",
+        })
+        response = await socket.next()
+        self.assertEqual(response["type"], "response")
+        self.assertIn("very low feasibility (5%)", response["content"])
+        self.assertNotIn("99%", response["content"])
+        self.assertNotIn("result", response)
+        self.assertIsNone(provider.chat_with_retry.await_args.kwargs["tools"])
+        async with self.sessions() as db:
+            audit = (await db.scalars(select(AiAuditLog))).one()
+            flow = (await db.scalars(select(FlowLog).where(FlowLog.step_type == "tool_call"))).all()
+            assistant = (await db.scalars(select(ChatMessage).where(ChatMessage.role == "assistant"))).one()
+        self.assertEqual((audit.user_id, audit.tenant_id), ("demo-user", DEFAULT_TENANT_ID))
+        self.assertEqual(json.loads(audit.tools_called), [
+            "get_competition_status", "get_performance_snapshot",
+            "calculate_run_rate", "assess_gap_feasibility",
+        ])
+        self.assertEqual(len(flow), 4)
+        self.assertEqual(assistant.metadata_json["feasibility_decision"], {
+            "status": "completed", "reason": "assessed",
+            "target_id": "COMP_WRITTEN_PREMIUM_2026",
+        })
+
+    async def test_unavailable_feasibility_is_neutral_and_audited(self):
+        registry = build_reasoning_registry(Path(self.folder.name))
+        registry.get("get_competition_status").execute = AsyncMock(
+            return_value=json.dumps({"agent_id": "AGT00690", "competitions": []}),
+        )
+        provider = SimpleNamespace(
+            get_default_model=lambda: "scripted-model",
+            chat_with_retry=AsyncMock(return_value=LLMResponse(
+                content="Yes, you will make it with 99% probability.",
+            )),
+        )
+        self.runtime.agent_loop = AgentLoop(
+            MessageBus(), provider, Path(self.folder.name), tool_registry=registry,
+        )
+        socket, _ = await self.authenticate(self.token_demo)
+        await socket.send({
+            "message": "Can I still achieve my written premium target?",
+            "agent_id": "AGT00690",
+        })
+        response = await socket.next()
+        self.assertIn("assessment unavailable", response["content"].lower())
+        self.assertNotIn("99%", response["content"])
+        async with self.sessions() as db:
+            audit = (await db.scalars(select(AiAuditLog))).one()
+            assistant = (await db.scalars(select(ChatMessage).where(ChatMessage.role == "assistant"))).one()
+        self.assertEqual(json.loads(audit.tools_called), ["get_competition_status"])
+        self.assertEqual(assistant.metadata_json["feasibility_decision"], {
+            "status": "unavailable", "reason": "target", "target_id": None,
+        })
+
     async def test_demo_scope_rejects_model_forged_candidates_before_provider_replay(self):
         provider = SimpleNamespace(
             get_default_model=lambda: "scripted-model",
@@ -543,7 +667,7 @@ class WebSocketAuthAuditTests(unittest.IsolatedAsyncioTestCase):
         )
         with patch.dict(os.environ, {"M1_COURSEWORK_DEMO_TENANT_ID": DEFAULT_TENANT_ID, "M1_COURSEWORK_DEMO_AGENT_ID": "AGT00690"}):
             socket, _ = await self.authenticate(self.token_demo)
-            await socket.send({"message": "Prioritize", "agent_id": "AGT00690"})
+            await socket.send({"message": "Recommend top 3", "agent_id": "AGT00690"})
             response = await socket.next()
         self.assertEqual(response["content"], "Invalid follow-up tool request.")
         self.assertNotIn("result", response)
