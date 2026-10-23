@@ -126,6 +126,15 @@ class PrioritizationTests(unittest.IsolatedAsyncioTestCase):
             for row in result["excluded_candidates"]
         ))
 
+    def test_requested_top_k_controls_recommendation_count(self) -> None:
+        for top_k in (1, 3):
+            payload = copy.deepcopy(self.payload)
+            payload["constraints"] = {"top_k": top_k}
+
+            with self.subTest(top_k=top_k):
+                result = prioritize_followups(payload)
+                self.assertEqual(len(result["recommendations"]), top_k)
+
     def test_request_level_validation_rejects_unsafe_inputs(self) -> None:
         cases = [
             ({**self.payload, "agent_id": ""}, "agent_id"),
@@ -185,6 +194,37 @@ class PrioritizationTests(unittest.IsolatedAsyncioTestCase):
                 self.assertTrue(
                     any(
                         error.startswith(f"candidates[0].{field} ")
+                        and expected_error in error
+                        for error in errors
+                    ),
+                    errors,
+                )
+
+    def test_tool_contract_declares_and_validates_top_k(self) -> None:
+        tool = PrioritizeFollowupsTool()
+        payload = copy.deepcopy(self.payload)
+        payload["constraints"] = {"top_k": "3"}
+
+        cast_payload = tool.cast_params(payload)
+
+        self.assertEqual(cast_payload["constraints"]["top_k"], 3)
+        self.assertEqual(tool.validate_params(cast_payload), [])
+
+        cases = (
+            (0, "must be >= 1"),
+            (51, "must be <= 50"),
+            ("not-a-number", "should be integer"),
+        )
+        for value, expected_error in cases:
+            invalid_payload = copy.deepcopy(self.payload)
+            invalid_payload["constraints"] = {"top_k": value}
+
+            with self.subTest(value=value):
+                cast_invalid = tool.cast_params(invalid_payload)
+                errors = tool.validate_params(cast_invalid)
+                self.assertTrue(
+                    any(
+                        error.startswith("constraints.top_k ")
                         and expected_error in error
                         for error in errors
                     ),
