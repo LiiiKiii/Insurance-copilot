@@ -1,4 +1,4 @@
-"""Run the reproducible M4 ranking comparison on a labelled JSON fixture."""
+"""Run reproducible synthetic or multi-scenario M4 ranking evaluation."""
 
 from __future__ import annotations
 
@@ -11,6 +11,9 @@ from nanobot.agent.tools.insurance.planning_layer.evaluation import (
     evaluate_ranking,
     expected_contribution_baseline,
 )
+from nanobot.agent.tools.insurance.planning_layer.experiment import (
+    evaluate_coursework_dataset,
+)
 from nanobot.agent.tools.insurance.planning_layer.prioritization import (
     prioritize_followups,
 )
@@ -18,6 +21,10 @@ from nanobot.agent.tools.insurance.planning_layer.prioritization import (
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_FIXTURE = PROJECT_ROOT / "data" / "evaluation" / "prioritization_synthetic.json"
+DEFAULT_SCENARIOS = PROJECT_ROOT / "data" / "evaluation" / "m2_candidate_scenarios.json"
+DEFAULT_ANNOTATIONS = (
+    PROJECT_ROOT / "data" / "evaluation" / "m2_candidate_annotations_v3.json"
+)
 
 
 def run(fixture_path: Path) -> dict[str, Any]:
@@ -42,17 +49,56 @@ def run(fixture_path: Path) -> dict[str, Any]:
     }
 
 
+def run_coursework(scenarios_path: Path, annotations_path: Path) -> dict[str, Any]:
+    """Load and evaluate the complete labelled M2 coursework dataset."""
+    scenarios = json.loads(scenarios_path.read_text(encoding="utf-8"))
+    annotations = json.loads(annotations_path.read_text(encoding="utf-8"))
+    return evaluate_coursework_dataset(scenarios, annotations)
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "fixture",
         nargs="?",
         type=Path,
-        default=DEFAULT_FIXTURE,
-        help="Path to a labelled prioritisation fixture.",
+        help=(
+            "Optional legacy single-fixture path. Supplying it preserves the "
+            "original command-line behaviour."
+        ),
+    )
+    parser.add_argument(
+        "--scenarios",
+        type=Path,
+        default=DEFAULT_SCENARIOS,
+        help="Path to the complete M2 candidate scenarios.",
+    )
+    parser.add_argument(
+        "--annotations",
+        type=Path,
+        default=DEFAULT_ANNOTATIONS,
+        help="Path to the completed M2 consensus annotations.",
+    )
+    parser.add_argument(
+        "--synthetic",
+        action="store_true",
+        help="Run the original single-fixture smoke experiment instead.",
+    )
+    parser.add_argument(
+        "--output",
+        type=Path,
+        help="Also write the JSON result to this path.",
     )
     args = parser.parse_args()
-    print(json.dumps(run(args.fixture), ensure_ascii=False, indent=2))
+    result = (
+        run(args.fixture or DEFAULT_FIXTURE)
+        if args.synthetic or args.fixture is not None
+        else run_coursework(args.scenarios, args.annotations)
+    )
+    rendered = json.dumps(result, ensure_ascii=False, indent=2) + "\n"
+    if args.output is not None:
+        args.output.write_text(rendered, encoding="utf-8")
+    print(rendered, end="")
 
 
 if __name__ == "__main__":

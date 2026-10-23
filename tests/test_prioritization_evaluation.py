@@ -12,11 +12,18 @@ from nanobot.agent.tools.insurance.planning_layer.evaluation import (
     ndcg_at_k,
     precision_at_k,
 )
+from nanobot.agent.tools.insurance.planning_layer.experiment import (
+    ExperimentInputError,
+    SENSITIVITY_PROFILES,
+    evaluate_coursework_dataset,
+)
 from nanobot.agent.tools.insurance.planning_layer.prioritization import prioritize_followups
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 FIXTURE = PROJECT_ROOT / "data" / "evaluation" / "prioritization_synthetic.json"
+SCENARIOS = PROJECT_ROOT / "data" / "evaluation" / "m2_candidate_scenarios.json"
+ANNOTATIONS = PROJECT_ROOT / "data" / "evaluation" / "m2_candidate_annotations_v3.json"
 
 
 class PrioritizationEvaluationTests(unittest.TestCase):
@@ -58,6 +65,76 @@ class PrioritizationEvaluationTests(unittest.TestCase):
             metrics["proposed"]["ndcg_at_k"],
             metrics["baseline"]["ndcg_at_k"],
         )
+
+    def test_complete_coursework_evaluation_covers_all_scenarios_and_k_values(self) -> None:
+        dataset = json.loads(SCENARIOS.read_text(encoding="utf-8"))
+        annotations = json.loads(ANNOTATIONS.read_text(encoding="utf-8"))
+
+        result = evaluate_coursework_dataset(dataset, annotations)
+
+        self.assertEqual(result["k_values"], [1, 3, 5])
+        self.assertEqual(result["scenario_count"], 10)
+        self.assertEqual(result["raw_candidate_count"], 100)
+        self.assertEqual(result["eligible_candidate_count"], 60)
+        self.assertEqual(len(result["scenarios"]), 10)
+        self.assertEqual(result["annotation_agreement"]["ranking_pair_count"], 10)
+        self.assertEqual(
+            result["annotation_agreement"]["kendall_tau_a"]["mean"],
+            0.173333,
+        )
+        self.assertEqual(
+            result["feature_diagnostics"]["eligible_candidate_count"],
+            60,
+        )
+        self.assertEqual(
+            result["feature_diagnostics"]["normalised_components"]
+            ["expected_contribution"]["mean"],
+            0.01079,
+        )
+        self.assertEqual(
+            result["feature_diagnostics"]["effective_weighted_points"]
+            ["expected_contribution"]["mean"],
+            0.431432,
+        )
+        self.assertEqual(
+            result["aggregate"]["proposed"]["3"]["ndcg_at_k"]["mean"],
+            0.948759,
+        )
+        self.assertEqual(
+            result["aggregate"]["baseline"]["3"]["ndcg_at_k"]["mean"],
+            0.596313,
+        )
+        self.assertEqual(
+            result["aggregate"]["proposed"]["5"]["ndcg_at_k"]["mean"],
+            0.978259,
+        )
+        self.assertEqual(
+            {row["profile"] for row in result["sensitivity"]["profiles"]},
+            set(SENSITIVITY_PROFILES),
+        )
+        for row in result["scenarios"]:
+            self.assertEqual(len(row["proposed_ranking"]), 5)
+            self.assertEqual(len(row["baseline_ranking"]), 5)
+            self.assertEqual(set(row["metrics"]), {"1", "3", "5"})
+        for ranking_name in ("proposed", "baseline"):
+            for k in ("1", "3", "5"):
+                for metric in ("precision_at_k", "ndcg_at_k"):
+                    summary = result["aggregate"][ranking_name][k][metric]
+                    self.assertGreaterEqual(summary["mean"], 0)
+                    self.assertLessEqual(summary["mean"], 1)
+                    self.assertGreaterEqual(summary["population_std"], 0)
+        for profile in result["sensitivity"]["profiles"]:
+            overlap = profile["top_max_k_overlap_with_default"]
+            self.assertGreaterEqual(overlap["mean"], 0)
+            self.assertLessEqual(overlap["mean"], 1)
+
+    def test_coursework_evaluation_rejects_pending_consensus(self) -> None:
+        dataset = json.loads(SCENARIOS.read_text(encoding="utf-8"))
+        annotations = json.loads(ANNOTATIONS.read_text(encoding="utf-8"))
+        annotations["annotation_status"] = "pending"
+
+        with self.assertRaisesRegex(ExperimentInputError, "complete"):
+            evaluate_coursework_dataset(dataset, annotations)
 
 
 if __name__ == "__main__":
