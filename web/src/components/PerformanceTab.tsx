@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { cn } from '@/lib/utils'
+import { formatMetricValue } from '@/lib/metric-display'
 import { useTranslation } from '@/lib/i18n'
 import { authenticatedFetch as fetch, authHeaders } from '@/lib/auth'
 
@@ -15,6 +16,7 @@ interface Metric {
 
 interface Assessment {
   subject: string
+  unit?: string
   target_value: number | null
   current_value: number | null
   status: string | null
@@ -23,11 +25,6 @@ interface Assessment {
 
 interface PerformanceTabProps {
   agentId: string
-}
-
-function formatUSD(n: number | null | undefined): string {
-  if (n == null) return '—'
-  return `USD ${n.toLocaleString()}`
 }
 
 function formatNum(n: number | null | undefined, unit?: string): string {
@@ -51,7 +48,7 @@ function SectionCard({ title, children }: { title: string; children: React.React
 /* ─── Status Badge ─── */
 
 function StatusBadge({ status }: { status: string | null }) {
-  const isPass = ['Achieved', 'Met', 'On Track', 'Meets Benchmark'].includes(status || '')
+  const isPass = ['Achieved', 'Met', 'On Track', 'Meets Benchmark', '已達標', '達標', '通過'].includes(status || '')
   return (
     <span className={cn(
       'text-[10px] font-medium px-2 py-0.5 rounded-full whitespace-nowrap',
@@ -140,9 +137,9 @@ export function PerformanceTab({ agentId }: PerformanceTabProps) {
         ) : (
           <div className="space-y-3">
             {assessments.map((a, idx) => {
-              const target = a.target_value || 0
-              const current = a.current_value || 0
-              const rate = target > 0 ? Math.min(current / target, 1) : 0
+              const target = a.target_value
+              const current = a.current_value
+              const rate = target != null && target > 0 && current != null ? Math.max(0, Math.min(current / target, 1)) : 0
               return (
                 <div key={idx} className="space-y-1.5">
                   <div className="flex items-center justify-between">
@@ -159,8 +156,8 @@ export function PerformanceTab({ agentId }: PerformanceTabProps) {
                     />
                   </div>
                   <div className="flex justify-between text-[10px] text-slate-400">
-                    <span>{t('metric.current')} {formatUSD(current)}</span>
-                    <span>{t('metric.target')} {formatUSD(target)}</span>
+                    <span>{t('metric.current')} {formatMetricValue(current, a.unit)}</span>
+                    <span>{t('metric.target')} {formatMetricValue(target, a.unit)}</span>
                   </div>
                   {a.remark && <p className="text-[10px] text-slate-400">{a.remark}</p>}
                 </div>
@@ -175,9 +172,9 @@ export function PerformanceTab({ agentId }: PerformanceTabProps) {
         <div className="space-y-0">
           <KVRow label={t('tab.performance.metric.policyCount')} value={formatNum(m('policy_count').current as number, t('metric.unit.items'))} />
           <KVRow label={t('tab.performance.metric.submissionCount')} value={formatNum(m('submission_count').current as number, t('metric.unit.items'))} />
-          <KVRow label={t('tab.performance.metric.quarterFyc')} value={formatUSD(m('quarter_fyc').current as number)} />
-          <KVRow label={t('tab.performance.metric.fyc')} value={formatUSD(m('fyc').current as number)} />
-          <KVRow label={t('tab.performance.metric.dailyFyc')} value={formatUSD(m('daily_fyc').current as number)} />
+          <KVRow label={t('tab.performance.metric.quarterFyc')} value={formatMetricValue(m('quarter_fyc').current as number, m('quarter_fyc').unit)} />
+          <KVRow label={t('tab.performance.metric.fyc')} value={formatMetricValue(m('fyc').current as number, m('fyc').unit)} />
+          <KVRow label={t('tab.performance.metric.dailyFyc')} value={formatMetricValue(m('daily_fyc').current as number, m('daily_fyc').unit)} />
         </div>
       </SectionCard>
 
@@ -207,7 +204,7 @@ export function PerformanceTab({ agentId }: PerformanceTabProps) {
           const aiRate = m('ai_practice_rate').current as number | null
           const aiUsage = m('ai_training_usage').current as number | null
           const university = m('online_university').current as string | null
-          const uniPass = university === 'Completed'
+          const uniPass = university === 'Completed' || university === '已完成'
           return (
             <div className="space-y-3">
               <div className="flex items-center justify-between">

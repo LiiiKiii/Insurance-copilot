@@ -36,6 +36,11 @@ DEFAULT_TENANT_ID = "00000000-0000-0000-0000-000000000001"
 ACTION_TEMPLATES_CONFIG_KEY = "planning.action_templates"
 MANAGED_COMPETITION_IDS = frozenset(
     {
+        "LIFE_DEMO_STARLIGHT_2026",
+        "LIFE_DEMO_CASES_2026",
+        "LIFE_DEMO_ELITE_2026",
+        "LIFE_DEMO_MDRT_2026",
+        "LIFE_DEMO_COT_2026",
         "COMP_STARLIGHT_2026",
         "COMP_SPRINT_2026Q1",
         "COMP_ELITE_2026",
@@ -133,6 +138,7 @@ def _performance_values(payload: dict[str, Any]) -> dict[str, Any]:
     team = payload.get("team_breakdown", {})
 
     return {
+        "metric_metadata": {"metrics": {key: {k: v for k, v in value.items() if k in {"label", "unit", "description"}} for key, value in payload.get("metrics", {}).items()}, "data_origin": payload.get("data_origin", {})},
         "protection_premium_current": protection.get("current"),
         "protection_premium_target": protection.get("target"),
         "protection_premium_rate": _calculated_rate(protection),
@@ -538,6 +544,7 @@ async def _seed_assessments(
                     "subject": assessment["subject"],
                 },
                 {
+                    "unit": assessment.get("unit") or payload.get("currency"),
                     "target_value": assessment.get("target_value"),
                     "current_value": assessment.get("current_value"),
                     "status": assessment.get("status"),
@@ -658,6 +665,14 @@ async def seed(mock_dir: Path = DEFAULT_MOCK_DIR) -> dict[str, int]:
     clients = _read_json(mock_dir, "clients.json")
     assessments = _read_json(mock_dir, "assessments.json")
     attribution = _read_json(mock_dir, "attribution.json")
+
+    if (mock_dir / "dataset_manifest.json").exists():
+        from scripts.build_life_demo_dataset import validate
+        manifest = _read_json(mock_dir, "dataset_manifest.json")
+        if manifest.get("dataset_id") == "life-demo-50-v1":
+            validate({"agents": agents, "performance": performance, "policies": policies,
+                      "competitions": competitions, "clients": clients,
+                      "assessments": assessments, "attribution": attribution})
 
     await init_db()
     async with AsyncSessionFactory() as session:

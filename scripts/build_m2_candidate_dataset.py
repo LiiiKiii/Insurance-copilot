@@ -9,10 +9,10 @@ deterministic, documented scoring fields.
 from __future__ import annotations
 
 import json
+import zipfile
 from datetime import date, timedelta
 from pathlib import Path
 from typing import Any
-
 
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "data" / "evaluation" / "m2_candidate_scenarios.json"
@@ -144,7 +144,10 @@ CLIENT_PROFILE_MATRIX = (
 
 
 def load(name: str) -> Any:
-    return json.loads((ROOT / "data" / "mock" / name).read_text(encoding="utf-8"))
+    # v3 annotations are frozen against this exact general-insurance snapshot.
+    # Existing source_path values name data/mock at commit ea8fce6.
+    with zipfile.ZipFile(ROOT / "data/source/agencyperformance-50-v1.zip") as archive:
+        return json.loads(archive.read(name))
 
 
 def bounded(value: float) -> float:

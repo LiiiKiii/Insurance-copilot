@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { cn } from '@/lib/utils'
+import { formatMetricValue, metricCurrentForUnit } from '@/lib/metric-display'
 import { useTranslation } from '@/lib/i18n'
 import { authenticatedFetch as fetch, authHeaders } from '@/lib/auth'
 
@@ -82,12 +83,6 @@ function IconSpinner({ className }: { className?: string }) {
 }
 
 /* ─── Helpers ─── */
-
-function formatVal(v: number, unit: string): string {
-  if (['HKD', 'USD'].includes(unit)) return v >= 1_000_000 ? `${(v / 1_000_000).toFixed(1)}M` : v >= 1000 ? `${(v / 1000).toFixed(0)}K` : String(v)
-  if (unit === '%') return `${(v * 100).toFixed(1)}%`
-  return String(v)
-}
 
 function formatHKD(n: number | null | undefined): string {
   if (n == null) return '—'
@@ -251,7 +246,7 @@ export function TeamMemberEditModal({ agentId, callerAgentId, memberName, onClos
                   <tbody>
                     {targets.map(t => {
                       const m = metrics[t.metric_key]
-                      const current = m?.current ?? 0
+                      const current = metricCurrentForUnit(m, t.unit)
                       const editVal = editedTargets[t.id]
                       const displayTarget = editVal !== undefined ? editVal : String(t.target_value)
                       return (
@@ -260,7 +255,7 @@ export function TeamMemberEditModal({ agentId, callerAgentId, memberName, onClos
                             {t.metric_label || t.metric_key}
                           </td>
                           <td className="px-3 py-2 text-right font-mono text-slate-600 dark:text-slate-300">
-                            {formatVal(current, t.unit)}
+                            {formatMetricValue(current, t.unit, true)}
                           </td>
                           <td className="px-3 py-2 text-right">
                             <input
@@ -370,9 +365,7 @@ export function TeamMemberEditModal({ agentId, callerAgentId, memberName, onClos
                         <span className="text-slate-400">/ {formatHKD(ac.competition_target)} {ac.unit}</span>
                         {gap > 0 ? (
                           <span className="text-red-500 font-medium">
-                            {ac.unit === 'HKD'
-                              ? t('team.competitions.gap.hkd', { amount: formatHKD(gap) })
-                              : t('team.competitions.gap.unit', { amount: formatHKD(gap) })}
+                            {t('team.competitions.gap.unit', { amount: formatMetricValue(gap, ac.unit, true) })}
                           </span>
                         ) : (
                           <span className="text-emerald-500 font-medium">{t('team.competitions.met')}</span>

@@ -47,8 +47,8 @@ class GetPerformanceSnapshotTool(Tool):
                     "items": {"type": "string"},
                     "description": (
                         "Optional metric keys. Leave empty to return all metrics. "
-                        "Supported keys include protection_premium (written premium; "
-                        "written_premium is accepted as an alias), pending_premium, "
+                        "Supported keys include protection_premium (see returned business definition; "
+                        "written_premium is accepted only for compatible source datasets), pending_premium, "
                         "submission_count, policy_count, quarter_fyc, ytd_fyc, "
                         "daily_fyc, avg_fyc_per_policy, conversion_rate, new_clients, "
                         "total_clients, churn_rate, client_retention, "
@@ -200,8 +200,15 @@ class GetPerformanceSnapshotTool(Tool):
         if row is None:
             return json.dumps({"error": f"No performance data found for agent {agent_id}"})
 
+        definitions = (row.metric_metadata or {}).get("metrics", {})
+        if "written_premium" in (kwargs.get("metrics") or []) and definitions and "written" not in definitions.get("protection_premium", {}).get("label", "").lower():
+            return json.dumps({"error": "written_premium is not an alias for this life-insurance dataset"})
         result: dict[str, Any] = {}
-        for key, metadata in self._metric_map().items():
+        metric_map = self._metric_map()
+        metric_map["fyc"] = {**metric_map["ytd_fyc"], "current_col": "fyc_current", "target_col": "fyc_target", "rate_col": "fyc_rate"}
+        for key, metadata in metric_map.items():
+            definition = definitions.get(key, {})
+            metadata = {**metadata, **{field: definition[field] for field in ("label", "unit", "description") if field in definition}}
             if requested and key not in requested:
                 continue
 
@@ -222,12 +229,12 @@ class GetPerformanceSnapshotTool(Tool):
             result[key] = entry
 
         if not requested or "avg_fyc_per_policy" in requested:
-            ytd_fyc = row.ytd_fyc or row.fyc_current
+            ytd_fyc = row.ytd_fyc if row.ytd_fyc is not None else row.fyc_current
             policy_count = row.policy_count
             if ytd_fyc is not None and policy_count:
                 result["avg_fyc_per_policy"] = {
                     "label": "Average new business commission per policy",
-                    "unit": "USD",
+                    "unit": definitions.get("ytd_fyc", definitions.get("fyc", {})).get("unit", "USD"),
                     "current": round(ytd_fyc / policy_count, 2),
                     "target": None,
                     "rate": None,

@@ -1,37 +1,37 @@
-核保指引手冊（2026 年版）
-文件編號：UW-2026-01　|　適用範圍：人壽、危疾、醫療產品個人投保申請　|　生效日期：2026 年 1 月 1 日
+Underwriting Guidelines Manual (2026 Edition)
+Document No.: UW-2026-01 | Scope: Individual applications for life, critical illness and medical products | Effective date: 1 January 2026
 
-第一章　核保總則
-核保的目的是評估風險並確保保費與風險對等。所有投保申請均須按健康申報、職業、財務狀況及生活習慣四個維度評估。代理人須如實錄入客戶資料，不得代客戶回答健康問題，亦不得在未取得客戶授權下修改問卷內容。
-核保決定分為五類：標準承保、加費承保、除外承保、延期承保及拒保。任何非標準決定均會以書面通知客戶並說明理由。
+Chapter 1 General Underwriting Principles
+The purpose of underwriting is to assess risk and ensure that premiums are commensurate with risk. All applications must be assessed across four dimensions: health declaration, occupation, financial status and lifestyle. Agents must record client information truthfully, must not answer health questions on behalf of clients, and must not modify questionnaire content without the client's authorisation.
+Underwriting decisions fall into five categories: standard acceptance, acceptance with a premium loading, acceptance with exclusions, deferral and declinature. Any non-standard decision will be communicated to the client in writing with the reasons stated.
 
-第二章　體格指數（BMI）與體檢要求
-身高體重指數 BMI 按「體重（公斤）÷ 身高（米）的平方」計算。各年齡及保額組合的體檢要求如下：
-投保年齡 | 保額（HKD） | 體檢要求
-0 至 40 歲 | 500 萬以下 | 免體檢，健康問卷
-41 至 50 歲 | 300 萬以下 | 免體檢；300 萬或以上須驗血及驗尿
-51 至 60 歲 | 100 萬以下 | 簡易體檢；100 萬或以上須全面體檢
-61 歲或以上 | 任何保額 | 全面體檢及心電圖
-BMI 介乎 28 至 32 一般加費 25% 至 50%；BMI 超過 32 須交由再保險公司評估，並可能要求血糖、血脂及肝功能檢查。
+Chapter 2 Body Mass Index (BMI) and Medical Examination Requirements
+BMI is calculated as weight (kg) divided by the square of height (m). The medical examination requirements for each age and sum assured combination are as follows:
+Issue age | Sum assured (HKD) | Medical examination requirements
+0 to 40 | Below 5,000,000 | None required; health questionnaire
+41 to 50 | Below 3,000,000 | None required; blood and urine tests for 3,000,000 and above
+51 to 60 | Below 1,000,000 | Simplified medical examination; full medical examination for 1,000,000 and above
+61 and above | Any sum assured | Full medical examination and ECG
+A BMI between 28 and 32 generally attracts a premium loading of 25% to 50%; a BMI above 32 must be referred to the reinsurer for assessment and may require blood glucose, lipid and liver function tests.
 
-第三章　吸煙與生活習慣
-投保前 12 個月內有吸食任何煙草產品（包括電子煙）者，一律按吸煙費率承保，保費一般較非吸煙費率高 15% 至 25%。客戶若在保單生效後戒煙滿 12 個月，可申請轉為非吸煙費率，須提交尼古丁測試（尿液或唾液）。
-定期參與潛水、滑翔傘、賽車、搏擊等高風險活動者，須填寫運動及康樂問卷，核保部按活動頻率及資歷決定加費或加入除外條款。
+Chapter 3 Smoking and Lifestyle
+Applicants who have used any tobacco product (including e-cigarettes) within the 12 months before application are underwritten at smoker rates, which are generally 15% to 25% higher than non-smoker rates. A client who has quit smoking for a full 12 months after the policy takes effect may apply to switch to non-smoker rates and must submit a nicotine test (urine or saliva).
+Applicants who regularly take part in high-risk activities such as diving, paragliding, motor racing or combat sports must complete a sports and leisure questionnaire; the underwriting department will decide on a premium loading or exclusion clause based on the frequency and level of the activity.
 
-第四章　常見疾病的核保結論
-健康狀況 | 一般核保結論 | 所需文件
-高血壓（控制良好） | 標準或加費 10% 至 20% | 最近 3 次覆診血壓記錄、心電圖
-二型糖尿病 | 人壽加費 50% 起；危疾或除外 | 糖化血紅素、腎功能、眼底檢查報告
-甲狀腺結節（良性） | 穿刺屬良性可標準承保 | 超聲波報告、細胞穿刺報告
-脂肪肝（輕度） | 肝功能正常一般標準承保 | 肝酶檢查、肝臟超聲波報告
-抑鬱或焦慮病史 | 視嚴重程度延期或除外 | 精神科醫生報告、停藥及覆診證明
-妊娠 | 28 週前一般標準承保 | 產檢記錄；產後 6 週可重新評估
+Chapter 4 Common Underwriting Outcomes for Medical Conditions
+Health condition | Typical underwriting outcome | Required documents
+Hypertension (well controlled) | Standard or loading of 10% to 20% | Blood pressure records from the last 3 follow-ups, ECG
+Type 2 diabetes | Life loading from 50%; critical illness loading or exclusion | HbA1c, renal function and fundus examination reports
+Thyroid nodule (benign) | Standard if biopsy is benign | Ultrasound report, fine-needle aspiration report
+Fatty liver (mild) | Generally standard if liver function is normal | Liver enzyme test, liver ultrasound report
+History of depression or anxiety | Deferral or exclusion depending on severity | Psychiatrist's report, proof of discontinuation of medication and follow-up
+Pregnancy | Generally standard before week 28 | Antenatal records; may be reassessed 6 weeks after delivery
 
-第五章　財務核保
-當投保保額超出「年收入 × 15」或身故保額超過 HKD 1,000 萬時，須提交財務證明，包括稅單、強積金供款記錄、銀行結單或公司審計報告。若客戶有現有保單，應合併計算總保額，判斷是否存在超額投保或道德風險。
-大額保單須完成財務需要分析（FNA），說明保額與家庭負債、收入及未來責任的關係；文件須由客戶簽署確認並保存 7 年。
+Chapter 5 Financial Underwriting
+When the sum assured applied for exceeds "annual income x 15" or the death benefit exceeds HKD 10,000,000, financial proof must be submitted, including tax returns, MPF contribution records, bank statements or audited company reports. If the client has existing policies, the total sum assured should be aggregated to determine whether there is over-insurance or moral hazard.
+Large policies require a completed financial needs analysis (FNA) explaining the relationship between the sum assured and the client's family liabilities, income and future responsibilities; the documents must be signed by the client and retained for 7 years.
 
-第六章　審批時限及覆核
-標準件在資料齊全後 3 個工作天內出單；需要體檢或醫療報告的個案一般 10 至 15 個工作天；涉及再保險的個案可延長至 20 個工作天。客戶對核保結論有異議時，可在 30 天內透過代理人提交補充資料申請覆核，覆核由資深核保主任負責。
+Chapter 6 Approval Timelines and Review
+Standard cases are issued within 3 working days once the documentation is complete; cases requiring a medical examination or medical reports generally take 10 to 15 working days; cases involving reinsurance may be extended to 20 working days. If a client disputes the underwriting outcome, they may submit supplementary information through their agent within 30 days to request a review, which is handled by a senior underwriting officer.
 
-合規提示：本手冊內容屬內部核保參考，實際結論以核保部正式批核為準。代理人不得向客戶承諾「一定標準承保」或建議客戶隱瞞病歷。
+Compliance note: This manual is an internal underwriting reference; the actual outcome is subject to the formal approval of the underwriting department. Agents must not promise clients that they will be "guaranteed standard acceptance" or advise clients to conceal their medical history.

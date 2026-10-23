@@ -1,0 +1,25 @@
+{
+  "dataset_id": "life-demo-50-v1",
+  "as_of_date": "2026-10-23",
+  "currency": "HKD",
+  "origin": "synthetic_life_demo_not_kaggle_financial_data",
+  "source_usage": "Only stable fictional identities and client identifiers are reused. No USD source amount is converted or relabelled.",
+  "legacy_accounts": "AGT001/AGT002/AGT003/AGT_TL01 belong to the retired four-agent seed; existing database accounts are not deleted or aliased.",
+  "record_counts": {
+    "agents": 50,
+    "clients": 900,
+    "policies": 200,
+    "assessments": 150,
+    "competitions": 5,
+    "competition_entries": 250
+  },
+  "sha256": {
+    "agents.json": "fa4a9bbb376e518cd37b18025f86edf0d369ebee0007a4ea46029ea900d953ab",
+    "performance.json": "38e91e220c9819e3eb310f191ff25bb9ea8891f41902078c2e722cc8aa415b99",
+    "policies.json": "b2c18c7b10e7de188e20747bdbfad9082148256638ce1c786071d947844c63e2",
+    "clients.json": "7c35b361f8044d21487af165f1eb9db7b547c8b78d87fa3c3425818d4cfec764",
+    "assessments.json": "97f162014ec4c358468fe5f038e2043d08bc9f804f075e4b79f5f3eaf965675d",
+    "attribution.json": "414081fb68330bf24930c76d2035461c0abaab5ffe13d3b82d42d0dd8a3c0f60",
+    "competitions.json": "ea87ff4d3c4b0666a6c0532ce8af76de79f9dd1d59108c9de9ce0142aef5386a"
+  }
+}

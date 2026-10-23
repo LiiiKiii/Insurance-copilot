@@ -4,6 +4,7 @@ from __future__ import annotations
 import asyncio
 import logging
 import os
+import shutil
 import uuid
 from pathlib import Path
 
@@ -19,6 +20,47 @@ from admin.services.pdf import get_document_processor
 router = APIRouter()
 logger = logging.getLogger(__name__)
 MAX_UPLOAD_BYTES = 20 * 1024 * 1024
+_KB_STORAGE_ROOT = Path(__file__).resolve().parents[1] / "data" / "kb"
+
+
+def _kb_storage_dir(kb_id: str) -> Path:
+    """Return a KB storage directory without allowing path traversal."""
+    storage_root = _KB_STORAGE_ROOT.resolve()
+    kb_dir = storage_root / kb_id
+    if kb_dir.parent != storage_root:
+        raise ValueError("Invalid knowledge base storage path")
+    if kb_dir.is_symlink() or kb_dir.resolve().parent != storage_root:
+        raise ValueError("Invalid knowledge base storage path")
+    return kb_dir
+
+
+def _document_storage_path(kb_id: str, filename: str) -> Path:
+    """Return the on-disk path used by the upload and deletion routes."""
+    kb_dir = _kb_storage_dir(kb_id)
+    file_path = kb_dir / Path(filename).name
+    if file_path.parent != kb_dir:
+        raise ValueError("Invalid document storage path")
+    if file_path.is_symlink():
+        raise ValueError("Invalid document storage path")
+    return file_path
+
+
+def _remove_document_file(kb_id: str, filename: str) -> None:
+    """Remove an uploaded document and its directory when it becomes empty."""
+    file_path = _document_storage_path(kb_id, filename)
+    file_path.unlink(missing_ok=True)
+    try:
+        file_path.parent.rmdir()
+    except OSError:
+        # Other documents still belong to this knowledge base.
+        pass
+
+
+def _remove_kb_storage(kb_id: str) -> None:
+    """Remove all uploaded files for a deleted knowledge base."""
+    kb_dir = _kb_storage_dir(kb_id)
+    if kb_dir.exists():
+        shutil.rmtree(kb_dir)
 
 
 async def _run_document_processor(doc_id: str) -> None:
@@ -146,6 +188,10 @@ async def delete_kb(kb_id: str, current_user: RoleAdmin, db: DB):
     document_ids = list((await db.execute(
         select(Document.id).where(Document.knowledge_base_id == kb_id)
     )).scalars().all())
+    # A successful deletion must also remove orphaned uploads. Do this before
+    # committing the database transaction so a filesystem error leaves the KB
+    # visible and the operation can be retried.
+    await run_in_threadpool(_remove_kb_storage, kb_id)
     await _delete_fts_rows(db, document_ids)
     await db.execute(delete(DocumentChunk).where(DocumentChunk.knowledge_base_id == kb_id))
     await db.execute(delete(Document).where(Document.knowledge_base_id == kb_id))
@@ -196,6 +242,9 @@ async def delete_document(kb_id: str, doc_id: str, current_user: RoleAdmin, db: 
     doc = result.scalar_one_or_none()
     if not doc:
         raise HTTPException(404, detail={"ok": False, "error": {"code": "NOT_FOUND", "message": "Document not found"}})
+    # Keep the database record when the file cannot be removed. This prevents
+    # the UI from reporting success while a same-name upload remains blocked.
+    await run_in_threadpool(_remove_document_file, kb_id, doc.filename)
     kb.document_count = max((kb.document_count or 1) - 1, 0)
     kb.chunk_count = max((kb.chunk_count or 0) - (doc.chunk_count or 0), 0)
     await _delete_fts_rows(db, [doc_id])
@@ -254,22 +303,30 @@ async def upload_document(
         )
 
     # Save file to disk
-    _project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    upload_dir = os.path.join(_project_root, "data", "kb", kb_id)
-    os.makedirs(upload_dir, exist_ok=True)
-    file_path = os.path.join(upload_dir, filename)
+    upload_dir = _kb_storage_dir(kb_id)
+    upload_dir.mkdir(parents=True, exist_ok=True)
+    file_path = _document_storage_path(kb_id, filename)
     duplicate = (await db.execute(
         select(Document.id).where(
             Document.knowledge_base_id == kb_id,
             Document.filename == filename,
         )
     )).scalar_one_or_none()
-    if duplicate or os.path.exists(file_path):
+    if duplicate:
         raise HTTPException(
             409,
             detail={"ok": False, "error": {"code": "DUPLICATE_FILE", "message": "A document with this filename already exists"}},
         )
-    with open(file_path, "wb") as f:
+    if file_path.exists():
+        # Older versions deleted the database row but left the uploaded file
+        # behind. With no matching document row, the file is unreachable
+        # orphaned data and must not permanently block a new upload.
+        logger.warning(
+            "Replacing orphaned knowledge-base upload: kb_id=%s filename=%s",
+            kb_id,
+            filename,
+        )
+    with file_path.open("wb") as f:
         f.write(content_bytes)
 
     # Detect file type

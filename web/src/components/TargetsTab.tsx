@@ -2,7 +2,9 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { cn } from "@/lib/utils";
+import { formatMetricValue, summarizeMetricsByUnit, metricCurrentForUnit } from "@/lib/metric-display";
 import { KPIRingCard } from "@/components/KPIRingCard";
+import { PerformanceTab } from "@/components/PerformanceTab";
 import { TeamMemberEditModal } from "@/components/TeamMemberEditModal";
 import { useTranslation, type MessageKey } from "@/lib/i18n";
 import { authenticatedFetch as fetch, authHeaders } from "@/lib/auth";
@@ -99,18 +101,6 @@ const CORE_METRICS = [
 ];
 
 /* ─── Helpers ─── */
-
-function formatVal(v: number, unit: string): string {
-	if (v == null) return "—";
-	if (["HKD", "USD"].includes(unit))
-		return v >= 1_000_000
-			? `${(v / 1_000_000).toFixed(1)}M`
-			: v >= 1000
-				? `${(v / 1000).toFixed(0)}K`
-				: String(v);
-	if (unit === "%") return `${(v * 100).toFixed(1)}%`;
-	return String(v);
-}
 
 function formatHKD(n: number | null | undefined): string {
 	if (n == null) return "—";
@@ -392,8 +382,8 @@ function MemberDetail({ memberId }: { memberId: string }) {
 						<tbody>
 							{targets.map((target) => {
 								const m = metrics[target.metric_key];
-								const current = m?.current ?? 0;
-								const rate = target.target_value > 0 ? current / target.target_value : 0;
+								const current = metricCurrentForUnit(m, target.unit);
+								const rate = target.target_value > 0 && current != null ? current / target.target_value : null;
 								return (
 									<tr
 										key={target.id}
@@ -403,22 +393,21 @@ function MemberDetail({ memberId }: { memberId: string }) {
 											{target.metric_label || target.metric_key}
 										</td>
 										<td className="px-3 py-1.5 text-right font-mono text-slate-600 dark:text-slate-300">
-											{["HKD", "USD"].includes(target.unit) ? `${target.unit} ` : ""}
-											{formatVal(current, target.unit)} /{" "}
-											{formatVal(target.target_value, target.unit)}
+											{formatMetricValue(current, target.unit, true)} /{" "}
+											{formatMetricValue(target.target_value, target.unit, true)}
 										</td>
 										<td className="px-3 py-1.5 text-right">
 											<span
 												className={cn(
 													"font-mono font-semibold",
-													rate >= 0.8
+													rate != null && rate >= 0.8
 														? "text-emerald-600"
-														: rate >= 0.5
+														: rate != null && rate >= 0.5
 															? "text-amber-600"
 															: "text-red-600",
 												)}
 											>
-												{(rate * 100).toFixed(0)}%
+												{rate == null ? "—" : `${(rate * 100).toFixed(0)}%`}
 											</span>
 										</td>
 									</tr>
@@ -512,9 +501,8 @@ function CompetitionRowEnhanced({ comp }: { comp: Competition }) {
 				</div>
 				<div className="flex items-center gap-3 mt-1">
 					<span className="text-[10px] text-slate-500 dark:text-slate-400 font-mono">
-						{["HKD", "USD"].includes(comp.unit) ? `${comp.unit} ` : ""}
-						{formatHKD(comp.current_value ?? 0)} /{" "}
-						{formatHKD(comp.target_value ?? 0)}
+						{formatMetricValue(comp.current_value, comp.unit, true)} /{" "}
+						{formatMetricValue(comp.target_value, comp.unit, true)}
 					</span>
 					{comp.gap !== null && comp.gap > 0 && (
 						<span className="text-[10px] text-red-500 font-medium">
@@ -647,7 +635,7 @@ function TeamMemberCard({
 							TIER_DOT_COLORS[member.tier] || "bg-slate-400",
 						)}
 					>
-						{(member.name_en || member.name_zh || member.agent_id)[0]}
+						{(member.name_zh || member.name_en || member.agent_id)[0]}
 					</button>
 					{/* Info column */}
 					<div className="flex-1 min-w-0">
@@ -657,7 +645,7 @@ function TeamMemberCard({
 								onClick={() => setExpanded(!expanded)}
 								className="font-medium text-sm text-slate-800 dark:text-white truncate cursor-pointer hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
 							>
-								{member.name_en || member.name_zh || member.agent_id}
+								{member.name_zh || member.name_en || member.agent_id}
 							</button>
 							<span
 								className={cn(
@@ -733,12 +721,12 @@ function TeamMemberCard({
 													TIER_DOT_COLORS[sm.tier] || "bg-slate-400",
 												)}
 											>
-											{(sm.name_en || sm.name_zh || sm.agent_id)[0]}
+											{(sm.name_zh || sm.name_en || sm.agent_id)[0]}
 											</div>
 											<div className="flex-1 min-w-0">
 												<div className="flex items-center gap-1.5">
 													<span className="text-xs font-medium text-slate-700 dark:text-slate-200 truncate">
-													{sm.name_en || sm.name_zh || sm.agent_id}
+													{sm.name_zh || sm.name_en || sm.agent_id}
 													</span>
 													<span
 														className={cn(
@@ -770,7 +758,7 @@ function TeamMemberCard({
 				<TeamMemberEditModal
 					agentId={member.agent_id}
 					callerAgentId={callerId}
-					memberName={member.name_en || member.name_zh || member.agent_id}
+					memberName={member.name_zh || member.name_en || member.agent_id}
 					onClose={() => setEditModalOpen(false)}
 					onSave={onTargetSaved}
 				/>
@@ -852,9 +840,11 @@ function MyGoalsTab({ agentId }: { agentId: string }) {
 					const target = targets.find((tg) => tg.metric_key === key);
 					if (!m) return null;
 					const targetValue = target?.target_value ?? m.target;
+					const unit = target?.unit ?? m.unit;
+					const current = metricCurrentForUnit(m, unit);
 					const rate =
-						targetValue != null && targetValue > 0 && m.current != null
-							? m.current / targetValue
+						targetValue != null && targetValue > 0 && current != null
+							? current / targetValue
 							: 0;
 					const fallbackLabel =
 						key === "submission_count"
@@ -868,9 +858,9 @@ function MyGoalsTab({ agentId }: { agentId: string }) {
 						<KPIRingCard
 							key={key}
 							label={target?.metric_label || m.label || fallbackLabel}
-							current={m.current}
+							current={current}
 							target={targetValue}
-							unit={m.unit}
+							unit={unit}
 							rate={rate}
 							trend={rate >= 0.8 ? "up" : rate < 0.5 ? "down" : "flat"}
 							size="sm"
@@ -1005,8 +995,12 @@ function TeamGoalsTab({ agentId }: { agentId: string }) {
 	}
 
 	// Team summary stats
-	let totalPremiumCurrent = 0,
-		totalPremiumTarget = 0;
+	const premiumTotals = summarizeMetricsByUnit(
+		team.flatMap((member) => {
+			const metric = memberMetrics[member.agent_id]?.protection_premium;
+			return metric ? [metric] : [];
+		}),
+	);
 	let totalCountCurrent = 0,
 		totalCountTarget = 0;
 	let memberCount = 0;
@@ -1015,12 +1009,7 @@ function TeamGoalsTab({ agentId }: { agentId: string }) {
 	team.forEach((m) => {
 		const mm = memberMetrics[m.agent_id];
 		if (!mm) return;
-		const pp = mm["protection_premium"];
 		const sc = mm["submission_count"];
-		if (pp && pp.current != null && pp.target != null) {
-			totalPremiumCurrent += pp.current;
-			totalPremiumTarget += pp.target;
-		}
 		if (sc && sc.current != null && sc.target != null) {
 			totalCountCurrent += sc.current;
 			totalCountTarget += sc.target;
@@ -1057,10 +1046,14 @@ function TeamGoalsTab({ agentId }: { agentId: string }) {
 						{t('tab.targets.team.totalPremium')}
 					</div>
 					<div className="text-sm font-bold font-mono text-slate-800 dark:text-white mt-1">
-						{formatHKD(totalPremiumCurrent)}
+						{premiumTotals.length ? premiumTotals.map((total) => (
+							<div key={total.unit}>{formatMetricValue(total.current, total.unit, true)}</div>
+						)) : "—"}
 					</div>
 					<div className="text-[9px] text-slate-400">
-						/ {formatHKD(totalPremiumTarget)}
+						{premiumTotals.map((total) => (
+							<div key={total.unit}>/ {formatMetricValue(total.target, total.unit, true)}</div>
+						))}
 					</div>
 				</div>
 				<div className="rounded-xl border border-slate-200 dark:border-slate-700/50 bg-white dark:bg-slate-800/50 p-3 text-center">
@@ -1115,9 +1108,36 @@ interface TargetsTabProps {
 }
 
 export function TargetsTab({ agentId }: TargetsTabProps) {
+	const { t } = useTranslation();
+	const [activeTab, setActiveTab] = useState<"my" | "performance" | "team">("my");
+	const tabs = [
+		{ key: "my", label: "tab.targets.my", icon: <IconTarget /> },
+		{ key: "performance", label: "tab.targets.performance", icon: <IconTarget /> },
+		{ key: "team", label: "tab.targets.team", icon: <IconUsers /> },
+	] as const;
+
 	return (
 		<div className="p-4 space-y-4">
-			<TeamGoalsTab agentId={agentId} />
+			<div role="tablist" aria-label={t("tab.targets")} className="grid grid-cols-3 rounded-lg bg-slate-100 p-1 dark:bg-slate-800">
+				{tabs.map((tab) => (
+					<button key={tab.key} id={`targets-tab-${tab.key}`} type="button" role="tab"
+						aria-selected={activeTab === tab.key} aria-controls="targets-panel"
+						onClick={() => setActiveTab(tab.key)}
+						className={cn(
+							"flex items-center justify-center gap-1 rounded-md px-2 py-2 text-xs font-medium transition-colors",
+							activeTab === tab.key
+								? "bg-white text-insurance-blue shadow-sm dark:bg-slate-700 dark:text-white"
+								: "text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200",
+						)}>
+						{tab.icon}{t(tab.label)}
+					</button>
+				))}
+			</div>
+			<div id="targets-panel" role="tabpanel" aria-labelledby={`targets-tab-${activeTab}`}>
+				{activeTab === "my" ? <MyGoalsTab key={agentId} agentId={agentId} />
+					: activeTab === "performance" ? <PerformanceTab key={agentId} agentId={agentId} />
+					: <TeamGoalsTab key={agentId} agentId={agentId} />}
+			</div>
 		</div>
 	);
 }

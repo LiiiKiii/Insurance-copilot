@@ -130,7 +130,7 @@ export function SidebarContent({
 		};
 	}, [agentId]);
 
-	const agentName = currentAgent?.name_en || currentAgent?.name_zh || agentId;
+	const agentName = currentAgent?.name_zh || currentAgent?.name_en || agentId;
 	const agentTitle = currentAgent?.rank || "";
 	const agentInitial = agentName[0] || "A";
 

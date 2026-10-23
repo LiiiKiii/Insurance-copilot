@@ -1,116 +1,116 @@
-# 中國人壽（海外）重點產品手冊 2026
+# China Life (Overseas) Key Products Handbook 2026
 
-> 版本：2026 年 1 月版　|　適用區域：香港　|　貨幣單位：港元（HKD）
-> 本手冊供前線代理人培訓及客戶面談使用，保障內容以保單條款及批註為準。
+> Version: January 2026 Edition | Applicable Region: Hong Kong | Currency: Hong Kong Dollars (HKD)
+> This handbook is for frontline agent training and client meetings. Coverage is governed by the policy terms and endorsements.
 
-## 第一章　產品總覽
+## Chapter 1 Product Overview
 
-2026 年公司重點推廣五款產品，分別覆蓋終身壽險、危疾保障、醫療實報、年金儲蓄及定期壽險五個品類。代理人在面談前應先依客戶生命週期判斷主力品類，再從本手冊中挑選對應產品。
+In 2026, the Company is promoting five key products covering five categories: whole life, critical illness, medical reimbursement, annuity savings and term life. Before a meeting, agents should first determine the primary category based on the client's life stage, then select the corresponding product from this handbook.
 
-選品基本原則：家庭支柱優先補足保障缺口（危疾＋醫療＋定期壽險），接近退休或有閒置資金的客戶再配置年金及終身壽險。每份主險建議搭配至少一份附加險，避免裸單。
+Basic product selection principles: family breadwinners should first fill their coverage gaps (critical illness + medical + term life); clients approaching retirement or with idle funds may then be offered annuity and whole life products. Each base policy should be paired with at least one rider to avoid single-product policies.
 
-## 第二章　傳世寶終身壽險（Legacy Treasure）
+## Chapter 2 Legacy Treasure Whole Life Insurance (Legacy Treasure)
 
-### 第一節　產品定位
+### Section 1 Product Positioning
 
-傳世寶為分紅型終身壽險，主打財富傳承與遺產規劃，保證現金價值加上非保證紅益，適合高淨值客戶及有跨代傳承需求的家庭。
+Legacy Treasure is a participating whole life policy focused on wealth transfer and estate planning. It combines guaranteed cash value with non-guaranteed dividends, and suits high-net-worth clients and families with cross-generational transfer needs.
 
-### 第二節　核心條款
+### Section 2 Core Terms
 
-- 保障年期：終身
-- 投保年齡：出生滿 15 日至 70 歲
-- 最低保額：HKD 200,000
-- 保費繳費期：5 年／10 年／15 年／20 年
-- 保單貨幣：港元／美元
-- 首年佣金率（FYC）：45%
-- 適合客群：高淨值客戶、遺產規劃、生意夥伴互保
+- Coverage term: Whole life
+- Issue ages: 15 days old to age 70
+- Minimum sum assured: HKD 200,000
+- Premium payment term: 5 / 10 / 15 / 20 years
+- Policy currency: HKD / USD
+- First-year commission rate (FYC): 45%
+- Target clients: high-net-worth clients, estate planning, business partner cross-cover
 
-### 第三節　銷售要點
+### Section 3 Sales Points
 
-面談時先計算客戶家庭資產與負債缺口，再說明保單的身故賠償如何即時提供流動資金，避免繼承人因變賣資產而折損財富。55 歲以上客戶可重點演示第 15 年及第 25 年的預期總現金價值。注意紅利為非保證，話術中不得承諾具體派發金額。
+During the meeting, first calculate the gap between the client's family assets and liabilities, then explain how the death benefit provides immediate liquidity so that heirs do not lose wealth by being forced to sell assets. For clients aged 55 or above, highlight the projected total cash value at policy year 15 and year 25. Note that dividends are non-guaranteed; sales language must not promise specific payout amounts.
 
-## 第三章　安心守護危疾保（Health Guardian CI）
+## Chapter 3 Health Guardian Critical Illness Plan (Health Guardian CI)
 
-### 第一節　產品定位
+### Section 1 Product Positioning
 
-安心守護為多次賠償終身危疾計劃，覆蓋癌症、心臟病、中風等高發重病，確診即賠，賠款用途不限。
+Health Guardian CI is a multi-claim whole life critical illness plan covering common serious conditions such as cancer, heart disease and stroke. It pays upon diagnosis, and the claim proceeds may be used for any purpose.
 
-### 第二節　核心條款
+### Section 2 Core Terms
 
-- 保障範圍：128 種疾病，其中嚴重疾病 56 種、早期疾病 52 種、良性腫瘤 20 種
-- 等候期：90 天（意外導致者除外）
-- 賠償次數：最多 5 次，癌症、心臟／神經、其他疾病分組，每次賠償 100% 保額
-- 癌症持續／復發等候期：3 年
-- 保費繳費期：18 年／25 年
-- 首年佣金率（FYC）：35%
-- 適合客群：家庭支柱、30 至 50 歲、有家族病史者
+- Coverage: 128 conditions, including 56 critical illnesses, 52 early-stage conditions and 20 benign tumors
+- Waiting period: 90 days (excluding conditions caused by accidents)
+- Number of claims: up to 5, grouped into cancer, cardiac / neurological and other diseases, each paying 100% of the sum assured
+- Waiting period for persistent / recurrent cancer: 3 years
+- Premium payment term: 18 / 25 years
+- First-year commission rate (FYC): 35%
+- Target clients: family breadwinners, ages 30 to 50, those with a family medical history
 
-### 第三節　銷售要點
+### Section 3 Sales Points
 
-用「收入保障」角度切入：危疾康復期一般為 3 至 5 年，建議保額為年收入 5 倍加上康復期開支。強調早期癌症可預先賠償 20% 保額且不影響後續嚴重疾病賠償。客戶說「公司有醫療保險」時，應解釋醫療險是實報實銷、危疾險是確診即賠，兩者功能不同。
+Approach from an "income protection" angle: the critical illness recovery period is generally 3 to 5 years, so the recommended sum assured is 5 times annual income plus recovery expenses. Emphasise that early-stage cancer can be paid 20% of the sum assured in advance without affecting subsequent critical illness claims. When the client says "my company provides medical insurance", explain that medical insurance reimburses actual expenses while critical illness insurance pays on diagnosis — the two serve different functions.
 
-## 第四章　摯守醫療實報實銷計劃（MediCare Plus）
+## Chapter 4 MediCare Plus Hospital Reimbursement Plan (MediCare Plus)
 
-### 第一節　產品定位
+### Section 1 Product Positioning
 
-摯守醫療為終身醫療實報實銷計劃，對標醫院管理局私家病房及半私家病房收費，設環球醫療支援。
+MediCare Plus is a lifetime medical reimbursement plan benchmarked against Hospital Authority private and semi-private ward charges, with global medical support.
 
-### 第二節　核心條款
+### Section 2 Core Terms
 
-- 保障級別：標準半私家房／升級私家房／環球尊尚三個計劃
-- 每年賠償限額：HKD 20,000,000（升級計劃）
-- 終身賠償限額：不設終身上限
-- 墊底費：HKD 0／16,000／25,000 可選
-- 保證續保至 100 歲
-- 首年佣金率（FYC）：28%
-- 適合客群：關注公立醫院排期、希望選擇醫生及病房的客戶
+- Coverage tiers: Standard (semi-private) / Upgrade (private) / Global Premier plans
+- Annual claim limit: HKD 20,000,000 (Upgrade plan)
+- Lifetime claim limit: no lifetime cap
+- Deductible: HKD 0 / 16,000 / 25,000 optional
+- Guaranteed renewable to age 100
+- First-year commission rate (FYC): 28%
+- Target clients: clients concerned about public hospital waiting times who wish to choose their own doctor and ward
 
-### 第三節　銷售要點
+### Section 3 Sales Points
 
-先用真實住院帳單（例如癌症標靶治療一年開支可達 HKD 800,000）製造需求，再說明墊底費如何與公司團體醫療配合。60 歲以上父母投保需提示體檢要求及保費水平，避免誤導。
+First create the need using real hospital bills (e.g. one year of targeted cancer therapy can cost up to HKD 800,000), then explain how the deductible works alongside the client's group medical cover. For parents aged 60 or above, flag the medical examination requirements and premium levels to avoid misunderstanding.
 
-## 第五章　智富年金計劃（Smart Annuity Plan）
+## Chapter 5 Smart Annuity Plan (Smart Annuity Plan)
 
-### 第一節　產品定位
+### Section 1 Product Positioning
 
-智富年金為儲蓄年金計劃，供款期滿後保證每月派發年金，並設非保證紅益，適合退休規劃及穩健回報需求。
+Smart Annuity Plan is a savings annuity plan that guarantees a monthly annuity payout after the contribution period, with non-guaranteed dividends. It suits retirement planning and clients seeking stable returns.
 
-### 第二節　核心條款
+### Section 2 Core Terms
 
-- 供款期：5 年／10 年
-- 年金領取期：15 年／20 年／終身
-- 預期內部回報率（IRR）：3.5% 至 4.2%
-- 保證內部回報率：約 1.5% 至 2.0%
-- 保單貨幣：港元／美元
-- 首年佣金率（FYC）：30%
-- 適合客群：50 歲以上、退休規劃、追求穩定現金流
+- Contribution period: 5 / 10 years
+- Annuity payout period: 15 / 20 years / lifetime
+- Expected internal rate of return (IRR): 3.5% to 4.2%
+- Guaranteed IRR: approximately 1.5% to 2.0%
+- Policy currency: HKD / USD
+- First-year commission rate (FYC): 30%
+- Target clients: ages 50 or above, retirement planning, seeking stable cash flow
 
-### 第三節　銷售要點
+### Section 3 Sales Points
 
-必須同時演示保證與非保證部分，並以「保證現金流能否覆蓋客戶退休後每月基本開支」為評估核心。嚴禁只演示總回報而省略保證部分。客戶比較銀行存款時，可提示流動性差異：年金提早退保可能損失本金。
+Always present both the guaranteed and non-guaranteed components, using "can the guaranteed cash flow cover the client's monthly basic living expenses after retirement" as the core of the assessment. It is strictly prohibited to present only the total return while omitting the guaranteed portion. When clients compare with bank deposits, point out the liquidity difference: early surrender of an annuity may result in loss of principal.
 
-## 第六章　穩守定期壽險（Guardian Term）
+## Chapter 6 Guardian Term Life Insurance (Guardian Term)
 
-### 第一節　產品定位
+### Section 1 Product Positioning
 
-穩守定期壽險為低保費、高槓桿的純保障產品，保費不返還，適合需要在特定年期覆蓋家庭負債的年輕客戶。
+Guardian Term is a pure protection product with low premiums and high leverage; premiums are not refunded. It suits young clients who need to cover family liabilities over a specific period.
 
-### 第二節　核心條款
+### Section 2 Core Terms
 
-- 保障年期：10 年／20 年／至 65 歲
-- 投保年齡：18 至 55 歲
-- 最高保額：HKD 20,000,000
-- 可續保至 75 歲，續保保費按年齡重新計算
-- 首年佣金率（FYC）：25%
-- 適合客群：年輕家庭、樓宇按揭人士、創業初期負債較高者
+- Coverage term: 10 / 20 years / to age 65
+- Issue ages: 18 to 55
+- Maximum sum assured: HKD 20,000,000
+- Renewable to age 75; renewal premiums are recalculated by age
+- First-year commission rate (FYC): 25%
+- Target clients: young families, mortgage holders, entrepreneurs with high early-stage debt
 
-### 第三節　銷售要點
+### Section 3 Sales Points
 
-以「房貸餘額＋子女教育金＋5 年家庭開支」估算保額，30 歲男性每 HKD 1,000,000 保額保費每日約十餘元，適合以「一杯咖啡」比喻成交。提醒客戶定期壽險不儲蓄、不回本，避免與儲蓄險比較時產生誤解。
+Estimate the sum assured using "outstanding mortgage + children's education fund + 5 years of family expenses". For a 30-year-old male, the daily premium for HKD 1,000,000 of cover is roughly a dozen dollars, which suits the "a cup of coffee a day" analogy to close the sale. Remind clients that term life is not a savings product and premiums are not returned, to avoid confusion when compared with savings policies.
 
-## 第七章　合規提示
+## Chapter 7 Compliance Reminders
 
-1. 所有非保證紅利及預期回報均屬參考性質，不得作為承諾。
-2. 話術須符合《承保商專業守則》及公司合規手冊，不得貶低同業。
-3. 客戶健康告知必須如實填寫，不得教唆隱瞞病史，否則保單可能被撤銷。
-4. 遞交投保申請前須完成財務需要分析（FNA）並保存紀錄 7 年。
+1. All non-guaranteed dividends and projected returns are for reference only and must not be presented as commitments.
+2. All sales language must comply with the Code of Practice for Insurers and the Company's compliance handbook; disparaging competitors is prohibited.
+3. The client's health disclosures must be completed truthfully; agents must not instigate concealment of medical history, otherwise the policy may be rescinded.
+4. Complete a financial needs analysis (FNA) and retain the records for 7 years before submitting a policy application.

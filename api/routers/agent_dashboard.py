@@ -102,7 +102,7 @@ def _metric(
 
 
 def _performance_metrics(row: AgentPerformanceMetrics) -> dict[str, dict[str, Any]]:
-    return {
+    metrics = {
         "protection_premium": _metric(row, label="MDRT 年度累積 (MDRT Credit)", unit="Credit", current="protection_premium_current", target="protection_premium_target", rate="protection_premium_rate"),
         "pending_premium": _metric(row, label="待批保費 (Pending Premium)", unit="HKD", current="pending_premium_current"),
         "avg_case_size": _metric(row, label="件均保費 (Average Case Size)", unit="HKD", current="avg_case_size_current", target="avg_case_size_target", rate="avg_case_size_rate", peer_avg="avg_case_size_peer_avg"),
@@ -122,6 +122,13 @@ def _performance_metrics(row: AgentPerformanceMetrics) -> dict[str, dict[str, An
         "ai_practice_rate": _metric(row, label="AI陪練完成度 (AI Practice Rate)", unit="%", current="ai_practice_rate"),
         "online_university": _metric(row, label="線上大學堂狀態", unit="", current="online_university"),
     }
+
+    definitions = (row.metric_metadata or {}).get("metrics", {})
+    for key, value in metrics.items():
+        for field in ("label", "unit", "description"):
+            if field in definitions.get(key, {}):
+                value[field] = definitions[key][field]
+    return metrics
 
 
 def _days_remaining(deadline: str) -> int | None:
@@ -229,9 +236,11 @@ async def performance(agent_id: str, current_user: CurrentUser, db: DB) -> dict:
         "agent_id": agent_id,
         "period": f"{row.period_start} to {row.period_end}",
         "metrics": _performance_metrics(row),
+        "data_origin": (row.metric_metadata or {}).get("data_origin", {}),
         "assessments": [
             {
                 "subject": item.subject,
+                "unit": item.unit,
                 "target_value": item.target_value,
                 "current_value": item.current_value,
                 "status": item.status,
@@ -259,7 +268,7 @@ async def targets(agent_id: str, current_user: CurrentUser, db: DB) -> dict:
                 PerformanceTarget.tenant_id == target_user.tenant_id,
                 PerformanceTarget.agent_id == agent_id,
             )
-            .order_by(PerformanceTarget.metric_key.asc(), PerformanceTarget.period_start.asc())
+            .order_by(PerformanceTarget.metric_key.asc(), PerformanceTarget.period_end.desc(), PerformanceTarget.period_start.desc())
         )
     ).scalars().all()
     return {"ok": True, "data": [

@@ -1,0 +1,8 @@
+{
+  "purpose": "Synthetic coursework rules, not verified MDRT eligibility standards",
+  "mdrt_fyc_demo_threshold": 800000,
+  "cot_fyc_demo_threshold": 2400000,
+  "synthetic_commission_rate": 0.30,
+  "deadline": "2026-12-31",
+  "reference": "Existing repository knowledge fixtures mdrt_rules.md and cot_rules.md; professional eligibility requires independent verification."
+}
