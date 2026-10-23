@@ -1,45 +1,45 @@
-理賠與保單常見問題 FAQ（2026 年版）
-適用產品：中國人壽（海外）全線個人保險產品
-版本：2026 年 1 月　|　理賠熱線：(852) 2287-0000
+Claims and Policy FAQ (2026 Edition)
+Applicable products: all personal insurance products of China Life (Overseas)
+Version: January 2026 | Claims Hotline: (852) 2287-0000
 
-Q1：提出索償後，保險公司一般多久完成賠償？
-A1：資料齊全的個案，住院及手術索償一般 7 至 14 個工作天完成審批，危疾及身故索償一般 30 個工作天內完成。若需要補充醫療報告，時間會相應延長。客戶可透過代理人或客戶 App 隨時查閱審批進度。
+Q1: How long does it generally take for the insurance company to settle a claim?
+A1: For cases with complete documentation, inpatient and surgical claims are generally approved within 7 to 14 working days, and critical illness and death claims within 30 working days. If additional medical reports are required, the time will be extended accordingly. Clients can check the approval progress at any time through their agent or the Client App.
 
-Q2：危疾索償需要提交哪些文件？
-A2：需要提交：（1）已填妥的索償申請表；（2）主診醫生簽發的診斷證明書；（3）相關病理化驗報告，例如癌症需提交活組織檢查報告；（4）受保人身份證明文件副本；（5）保單持有人收款銀行帳戶資料。身故索償另需死亡證及遺產承辦文件。
+Q2: What documents are required for a critical illness claim?
+A2: The following must be submitted: (1) a completed claim form; (2) a medical certificate issued by the attending doctor; (3) relevant pathological and laboratory reports, e.g. a biopsy report for cancer; (4) a copy of the insured's identity document; (5) the policyholder's bank account details for claim payment. Death claims additionally require the death certificate and estate administration documents.
 
-Q3：在香港以外地方就醫，醫療保險是否賠償？
-A3：標準計劃覆蓋香港及澳門；升級計劃覆蓋亞洲指定地區；環球尊尚計劃覆蓋全球（受制裁地區除外）。海外就醫需保留住院帳單明細、醫生報告及收據正本，回港後 90 天內遞交。緊急情況下的醫療運送費用，環球計劃設有專項保障。
+Q3: Is medical treatment received outside Hong Kong covered by the medical insurance?
+A3: The Standard plan covers Hong Kong and Macau; the Upgrade plan covers designated regions in Asia; the Global Premier plan covers worldwide (excluding sanctioned regions). For overseas treatment, keep the original itemised hospital bills, doctor's reports and receipts, and submit them within 90 days of returning to Hong Kong. The Global plan provides dedicated cover for emergency medical evacuation expenses.
 
-Q4：等候期內確診疾病怎麼辦？
-A4：危疾保險的等候期為保單生效日起 90 天。等候期內首次確診受保危疾，保險公司有權拒絕賠償並退還已繳保費，保單終止；但因意外直接導致的疾病不受等候期限制。因此投保後應盡早完成保單，切勿拖延生效時間。
+Q4: What if a condition is diagnosed during the waiting period?
+A4: The waiting period for critical illness insurance is 90 days from the policy effective date. If a covered critical illness is first diagnosed within the waiting period, the insurance company has the right to decline the claim, refund the premiums paid and terminate the policy; however, conditions directly caused by accidents are not subject to the waiting period. The policy should therefore be incepted as early as possible after application - do not delay the effective date.
 
-Q5：客戶投保時忘記申報舊症，後果是甚麼？
-A5：香港保險實行最高誠信原則。若證實客戶在投保時故意隱瞞重要事實（例如確診癌症、糖尿病史），保險公司有權在爭議期（一般為兩年）內撤銷保單並拒絕賠償。代理人有責任引導客戶如實填寫健康問卷，不得教唆或暗示隱瞞。
+Q5: What happens if a client forgets to declare pre-existing conditions at application?
+A5: Hong Kong insurance operates on the principle of utmost good faith. If it is proven that the client deliberately concealed material facts at application (e.g. diagnosed cancer or a history of diabetes), the insurance company has the right to rescind the policy and decline claims within the contestability period (generally two years). Agents are obliged to guide clients to answer the health questionnaire truthfully and must not instigate or imply concealment.
 
-Q6：住院現金津貼怎樣計算天數？
-A6：由住院首日 0 時起計，按連續住院日數計算，出院當日不計。同一病況在出院後 90 天內再度入院，視作同一次住院；因不同病況或相隔超過 90 天再入院，則作新一次住院，每年最高賠償 365 天。
+Q6: How are the days of hospital cash allowance calculated?
+A6: Counting starts from 00:00 on the first day of hospitalisation and is based on consecutive days in hospital; the day of discharge is not counted. Re-admission for the same condition within 90 days of discharge is treated as the same hospitalisation; re-admission for a different condition or after more than 90 days counts as a new hospitalisation, with a maximum of 365 compensated days per year.
 
-Q7：保單失效後還可以復效嗎？
-A7：保費寬限期為到期日後 31 天，寬限期內保障仍然有效。寬限期屆滿後保單失效，客戶可在失效日起 24 個月內申請復效，須補繳所有欠繳保費及利息，並重新提交健康聲明，通過核保後保單才恢復效力。復效後的等候期重新計算。
+Q7: Can a policy be reinstated after it has lapsed?
+A7: The grace period for premium payment is 31 days after the due date, during which cover remains in force. After the grace period expires the policy lapses; the client may apply for reinstatement within 24 months from the lapse date. All overdue premiums and interest must be paid, and a new health declaration submitted; the policy is restored only after underwriting approval. The waiting period is recalculated after reinstatement.
 
-Q8：年金計劃的非保證紅利沒有達到預期，可以索償嗎？
-A8：不可以。非保證紅利由保險公司按投資表現宣派，並非保證金額，計劃建議書上的預測只屬參考。只有保證現金價值及保證年金屬合約責任。代理人銷售時必須同時講解保證與非保證部分，並保留銷售紀錄。
+Q8: Can a client claim compensation if the non-guaranteed dividends of an annuity plan fall short of expectations?
+A8: No. Non-guaranteed dividends are declared by the insurance company based on investment performance and are not guaranteed amounts; the projections in the plan illustration are for reference only. Only the guaranteed cash value and guaranteed annuity are contractual obligations. Agents must explain both the guaranteed and non-guaranteed components when selling and retain the sales records.
 
-Q9：醫療保險與公司團體保險會否衝突？
-A9：不會衝突。實報實銷醫療險遵循賠償原則，同一筆醫療費用不能重複索償；客戶可先向團體保險索償，餘額再向個人醫療保險申請，並以「賠償結算單」（Settlement Statement）作為收據證明。住院現金津貼則屬定額給付，不受實報實銷原則限制。
+Q9: Does the medical insurance conflict with the client's company group insurance?
+A9: No. Medical reimbursement insurance follows the principle of indemnity - the same medical expense cannot be claimed twice. The client may first claim from the group insurance and then apply to the personal medical insurance for the balance, using the "Settlement Statement" as proof of receipt. Hospital cash allowance is a fixed daily benefit and is not subject to the indemnity principle.
 
-Q10：更改受益人需要甚麼手續？
-A10：保單持有人可隨時以書面申請更改受益人，填妥「更改受益人表格」並交回保險公司，受益人本人無須簽名。若保單屬於信託安排或已作抵押，更改前須先取得相關方同意。建議客戶在結婚、離婚、子女出生後及時檢視受益人安排。
+Q10: What procedures are required to change the beneficiary?
+A10: The policyholder may apply in writing at any time to change the beneficiary by completing the "Beneficiary Change Form" and returning it to the insurance company; the beneficiary's signature is not required. If the policy is held under a trust arrangement or has been assigned as security, consent from the relevant parties must be obtained before any change. Clients are advised to review their beneficiary arrangements in a timely manner after marriage, divorce or the birth of a child.
 
-Q11：自願醫保（VHIS）產品申請扣稅有甚麼要求？
-A11：認可自願醫保產品的保費，每個課稅年度每名受保人最高可申請 HKD 8,000 保費扣除。納稅人可為自己及指明親屬投保，保單必須為認可產品並由認可保險公司發出。客戶報稅時保留保單及保費收據即可，無需另行提交證明，但須保存 6 年備查。
+Q11: What are the requirements for claiming a tax deduction on Voluntary Health Insurance Scheme (VHIS) products?
+A11: For recognised VHIS products, each insured person may claim a premium deduction of up to HKD 8,000 per tax assessment year. Taxpayers may take out policies for themselves and specified relatives; the policy must be a recognised product issued by a recognised insurer. When filing tax returns, clients only need to keep the policy and premium receipts - no separate proof needs to be submitted, but the records should be retained for 6 years for inspection.
 
-Q12：索償被拒絕後有甚麼上訴渠道？
-A12：客戶可先要求保險公司提供書面拒賠理由，並在 14 天內補充資料要求覆核；若仍不滿意，可向保險投訴局（ICB）投訴，合資格個案可獲免費獨立裁決，最高賠償額為 HKD 1,000,000（人身傷害及其他索償）。代理人應協助客戶準備資料，而非勸阻上訴。
+Q12: What appeal channels are available after a claim is rejected?
+A12: The client may first ask the insurance company for a written reason for the rejection and submit supplementary information within 14 days to request a review; if still dissatisfied, they may complain to the Insurance Complaints Bureau (ICB), where eligible cases may receive a free independent ruling, with a maximum compensation of HKD 1,000,000 (for personal injury and other claims). Agents should help clients prepare the materials rather than discourage appeals.
 
-Q13：保單冷靜期如何計算？
-A13：客戶在收到保單並簽收冷靜期通知書後 21 個曆日內，可無條件申請取消保單，保險公司全數退還已繳保費（若保單貨幣貶值，可能按市值扣減匯兌差額）。冷靜期為法定保障，銷售時必須口頭及書面提示客戶。
+Q13: How is the cooling-off period of a policy calculated?
+A13: Within 21 calendar days of receiving the policy and signing the cooling-off notice, the client may apply unconditionally to cancel the policy, and the insurance company will refund all premiums paid (if the policy currency has depreciated, an exchange difference may be deducted based on market value). The cooling-off period is a statutory protection and must be brought to the client's attention verbally and in writing at the time of sale.
 
-Q14：客戶身故後，家屬怎樣查詢其保單？
-A14：家屬可持死亡證、親屬關係證明及本人身份證，經代理人或理賠熱線查詢保單資料。若不知道保單編號，保險公司可憑受保人姓名及身份證號碼檢索。若涉及遺囑認證，賠償金或需先行發放給遺產承辦人。
+Q14: How can family members enquire about a client's policy after the client's death?
+A14: Family members may enquire about the policy through the agent or the claims hotline with the death certificate, proof of relationship and their own identity document. If the policy number is unknown, the insurance company can search using the insured's name and identity card number. Where probate is involved, the claim proceeds may need to be paid to the estate administrator first.
