@@ -376,6 +376,7 @@ async def chat(websocket: WebSocket) -> None:
         turn_kwargs: dict[str, Any] = {
             "content": message, "session_key": session_id,
             "channel": "websocket", "chat_id": agent_id,
+            "authenticated_agent_id": user.username,
         }
         if demo_scope is not None:
             turn_kwargs["demo_scope"] = demo_scope

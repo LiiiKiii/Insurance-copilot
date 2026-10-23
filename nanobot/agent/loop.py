@@ -19,6 +19,7 @@ from nanobot.agent.coursework_demo import (
     PreparedCoursework,
     recommendation_result,
 )
+from nanobot.agent.skills.insurance.registry import SkillRegistry
 from nanobot.agent.tools.registry import ToolRegistry
 from nanobot.bus.events import InboundMessage, OutboundMessage
 from nanobot.bus.queue import MessageBus
@@ -65,6 +66,7 @@ class AgentLoop:
         supplemental_tool_registry: ToolRegistry | None = None,
         max_tool_iterations: int = 4,
         coursework_source: CourseworkCandidateSource | None = None,
+        skill_registry: SkillRegistry | None = None,
     ):
         if max_tool_iterations < 0:
             raise ValueError("max_tool_iterations must not be negative.")
@@ -76,6 +78,7 @@ class AgentLoop:
         self.tool_registry = tool_registry or ToolRegistry()
         self.supplemental_tool_registry = supplemental_tool_registry
         self.coursework_source = coursework_source or CourseworkCandidateSource()
+        self.skill_registry = skill_registry or SkillRegistry()
         self.max_tool_iterations = max_tool_iterations
 
         self.context = ContextBuilder(workspace)
@@ -168,6 +171,7 @@ class AgentLoop:
         self,
         msg: InboundMessage,
         demo_scope: CourseworkDemoScope | None = None,
+        authenticated_agent_id: str | None = None,
     ) -> OutboundMessage:
         """Process a single text message using the LLM provider."""
 
@@ -177,13 +181,6 @@ class AgentLoop:
                 chat_id=msg.chat_id,
                 content="Media messages are not supported in A1.",
             )
-
-        messages = self.context.build_messages(
-            history=[],
-            current_message=msg.content,
-            channel=msg.channel,
-            chat_id=msg.chat_id,
-        )
 
         tool_definitions = self.tool_registry.get_definitions()
         if self.supplemental_tool_registry is not None:
@@ -208,6 +205,16 @@ class AgentLoop:
             if prepared is not None:
                 tool_definitions.append(_COURSEWORK_TOOL_SCHEMA)
         tool_definitions = tool_definitions or None
+        guidance = ""
+        if (msg.channel == "websocket" and authenticated_agent_id
+                and authenticated_agent_id == msg.chat_id):
+            guidance = self.skill_registry.get_prompt_injection(
+                msg.content, {"tool_definitions": tool_definitions},
+            )
+        messages = self.context.build_messages(
+            history=[], current_message=msg.content, channel=msg.channel,
+            chat_id=msg.chat_id, trusted_skill_guidance=guidance,
+        )
         tool_iterations = 0
         tool_events: list[dict[str, str]] = []
         metadata = dict(msg.metadata or {})
@@ -373,6 +380,7 @@ class AgentLoop:
         on_stream_end: Callable[..., Awaitable[None]] | None = None,
         retrieval_mode: str = "keyword",
         demo_scope: CourseworkDemoScope | None = None,
+        authenticated_agent_id: str | None = None,
     ) -> OutboundMessage:
         """Process a text message directly without using the message bus."""
 
@@ -395,4 +403,6 @@ class AgentLoop:
             metadata={"retrieval_mode": retrieval_mode},
         )
 
-        return await self._process_message(msg, demo_scope=demo_scope)
+        return await self._process_message(
+            msg, demo_scope=demo_scope, authenticated_agent_id=authenticated_agent_id,
+        )

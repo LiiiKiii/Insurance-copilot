@@ -167,6 +167,7 @@ class WebSocketChatTests(unittest.IsolatedAsyncioTestCase):
                     "session_key": event["session_id"],
                     "channel": "websocket",
                     "chat_id": "AGT001",
+                    "authenticated_agent_id": "AGT001",
                 }
             ],
         )

@@ -154,6 +154,16 @@ The completed project's unrelated upload-cleanup job remains outside the A3 M3 s
   production candidate retrieval service, and live autonomous LLM E2E has not
   been verified.
 
+## Insurance workflow Skills (M1)
+
+The five Python Skills in `nanobot/agent/skills/insurance/` select answer workflows for single-target gaps, performance diagnosis, feasibility, weekly planning, and underperformance analysis. A Skill matches the raw question and supplies instructions; a Tool supplies data or runs a calculation. Skills do not execute business logic. `SkillRegistry` matches Chinese phrases and scoped English phrases deterministically, orders matches by priority `5, 10, 20, 30, 40`, and selects at most two. No match leaves the normal chat flow intact.
+
+On an authenticated `/ws/chat` turn, the server verifies the JWT and that the requested `agent_id` equals the signed-in username. `AgentLoop` checks the Tool definitions and required parameter schemas before it adds server-owned workflow guidance to the system message. The user's original text stays in the user message and chat history; a client-written `[SKILL GUIDANCE]` tag cannot become trusted guidance. The existing ToolRegistry, agent binding, tenant checks, four-iteration limit, audit, and optional structured response remain in effect. There is no separate HTTP chat Skill path.
+
+Examples: “我离 MDRT 还差多少？”, “请做业绩诊断”, “目标还来得及吗？”, “请拆解我的目标做每周计划”, “业绩为什么没达标？”; “What's my MDRT gap?”, “Analyze my performance gap.”, “Can I still achieve my target?”, “Create a weekly target plan.”, “Why am I underperforming?”. Skills refer only to currently registered Tools. The old `calc_gap_analysis`, `calc_run_rate`, `calc_feasibility`, `calc_attribution_gap`, `get_period_comparison`, and `get_ranking` Tool names are unavailable; prompts either use compatible New Repo Tools or omit those claims. Pending-adjusted chase-plan gaps are planning estimates, not verified open gaps. Feasibility guidance uses the current USD premium baseline only; it does not assess HKD or policy-count goals with that baseline.
+
+Offline scripted-provider tests cover selection, integration, authorization, audit, and fallback. Real LLM Tool selection and answer quality still require an approved isolated end-to-end run. Generic Markdown `SKILL.md` loading and proactive alerts are **DEFERRED**.
+
 ## Knowledge Corpus
 
 The version-controlled corpus contains:
