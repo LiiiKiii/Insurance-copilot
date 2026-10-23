@@ -34,6 +34,7 @@ web/out/
 *.log
 REVIEW_TASK.md
 data/db/
+data/demo/
 sessions/
 admin/data/kb/
 

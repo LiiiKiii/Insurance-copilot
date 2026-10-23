@@ -147,9 +147,12 @@ The completed project's unrelated upload-cleanup job remains outside the A3 M3 s
   expected-contribution-only baseline using a tracked synthetic fixture;
 - the synthetic evaluation validates the implementation pipeline only and is
   not evidence of production effectiveness or improved sales outcomes; and
-- the default Agent runtime tool registry remains unchanged, so enabling
-  automatic LLM access to `prioritize_followups` remains an explicit integration
-  decision.
+- `prioritize_followups` is registered. For an authenticated, configured
+  coursework demo agent, the model sees a no-argument facade; M1 prepares and
+  validates M2 v3 candidates server-side before invoking the unchanged M4
+  ranker. Other scopes remain fail closed. This synthetic adapter is not a
+  production candidate retrieval service, and live autonomous LLM E2E has not
+  been verified.
 
 ## Knowledge Corpus
 
@@ -221,6 +224,39 @@ Apply the tracked migrations to a new development database, then create the init
 .\.venv\Scripts\python.exe -m alembic upgrade head
 .\.venv\Scripts\python.exe -m admin.seeds
 ```
+
+### Isolated M1 coursework demo
+
+Use a **separate** SQLite database for this synthetic demo. The setup command
+refuses the default/shared database, creates or validates only the
+`coursework-demo` tenant, and creates one account matching an M2 v3 scenario.
+It never resets an existing password. Do not run `admin.seeds` against this
+demo database, since that command creates the unrelated default tenant.
+
+```powershell
+New-Item -ItemType Directory -Force data/demo | Out-Null
+$demoDb = (Join-Path (Get-Location) 'data/demo/m1_coursework.db').Replace('\', '/')
+$env:ADMIN_DATABASE_URL = 'sqlite+aiosqlite:///' + $demoDb
+.\.venv\Scripts\python.exe -m alembic upgrade head
+if ($LASTEXITCODE -ne 0) { throw 'Demo database migration failed' }
+$secure = Read-Host 'New demo agent password' -AsSecureString
+$pointer = [Runtime.InteropServices.Marshal]::SecureStringToBSTR($secure)
+try { $env:M1_COURSEWORK_DEMO_PASSWORD = [Runtime.InteropServices.Marshal]::PtrToStringBSTR($pointer) }
+finally { [Runtime.InteropServices.Marshal]::ZeroFreeBSTR($pointer) }
+try {
+    .\.venv\Scripts\python.exe -m scripts.setup_m1_coursework_demo --agent-id AGT00690
+    if ($LASTEXITCODE -ne 0) { throw 'Demo account setup failed' }
+} finally { Remove-Item Env:M1_COURSEWORK_DEMO_PASSWORD -ErrorAction SilentlyContinue }
+```
+
+Set `M1_COURSEWORK_DEMO_TENANT_ID` in the backend environment to the ID printed
+by the setup command, and use the same isolated `ADMIN_DATABASE_URL` when
+starting the backend. Keep `ADMIN_SECRET_KEY` configured as described above.
+Log in as `AGT00690` with the chosen password. A repeat setup accepts the
+existing account without the password variable and leaves its hash unchanged.
+The dataset is a dated `2026-05-31` coursework snapshot, not live customer
+data. The WebSocket result card is supported by the current M5 hook; a browser
+or live-provider E2E has not been established by the offline tests.
 
 Start the backend from the repository root, then start the frontend in a second terminal:
 

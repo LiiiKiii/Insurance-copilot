@@ -1,5 +1,7 @@
 """Deterministic competition-gap analysis for the A2 reasoning layer."""
 
+import math
+
 
 PARTIAL_COVERAGE_THRESHOLD = 0.5
 MONETARY_UNITS = frozenset({"HKD", "USD"})
@@ -8,18 +10,31 @@ MONETARY_UNITS = frozenset({"HKD", "USD"})
 def compute_gap_analysis(
     competitions: list[dict],
     pending_premium: float,
+    pending_unit: str = "USD",
 ) -> list[dict]:
     """Allocate one shared pending-premium pool across competition gaps.
 
-    Pending premium is allocated to positive monetary gaps in ascending
-    ``days_remaining`` order. Results retain the caller's original order.
+    Pending premium is allocated only to gaps in the same currency, in
+    ascending ``days_remaining`` order. The stored performance premium is
+    USD; callers supplying HKD pending premium must say so explicitly.
+    Results retain the caller's original order.
     """
+    if pending_unit not in MONETARY_UNITS:
+        raise ValueError("pending_unit must be USD or HKD")
     remaining_pool = float(pending_premium or 0)
+    if not math.isfinite(remaining_pool) or remaining_pool < 0:
+        raise ValueError("pending_premium must be finite and nonnegative")
     results: list[dict] = []
 
     for competition in competitions:
         gap = competition.get("gap")
-        unit = competition.get("unit", "HKD")
+        unit = competition.get("unit")
+        if not isinstance(unit, str) or not unit.strip():
+            raise ValueError("competition unit is required")
+        normalized_unit = unit.strip().upper()
+        if ((len(normalized_unit) == 3 and normalized_unit.isalpha())
+                and unit not in MONETARY_UNITS):
+            raise ValueError("unsupported competition currency")
         result = {
             "competition_id": competition.get("id"),
             "competition_name": competition.get("name"),
@@ -41,7 +56,7 @@ def compute_gap_analysis(
                 pending_coverage_pct=100.0,
                 status="achieved",
             )
-        elif unit not in MONETARY_UNITS:
+        elif unit != pending_unit:
             result.update(
                 actual_gap=gap,
                 pending_deduction=0,
@@ -62,9 +77,9 @@ def compute_gap_analysis(
     for index in priority_indexes:
         competition = competitions[index]
         gap = competition.get("gap")
-        unit = competition.get("unit", "HKD")
+        unit = competition["unit"]
 
-        if gap is None or gap <= 0 or unit not in MONETARY_UNITS:
+        if gap is None or gap <= 0 or unit != pending_unit:
             continue
 
         deduction = min(gap, remaining_pool) if remaining_pool > 0 else 0

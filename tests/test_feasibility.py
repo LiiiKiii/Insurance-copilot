@@ -8,6 +8,20 @@ from nanobot.agent.tools.insurance.reasoning_layer.feasibility import (
 
 
 class ComputeFeasibilityTests(unittest.TestCase):
+    def test_omitted_unit_uses_usd_and_explicit_hkd_remains_supported(self) -> None:
+        inputs = {"actual_gap": 10_000, "days_remaining": 60, "monthly_avg": 50_000}
+        default = compute_feasibility(**inputs)
+        hkd = compute_feasibility(**inputs, unit="HKD")
+        self.assertIn("USD", default["narrative"])
+        self.assertIn("HKD", hkd["narrative"])
+        self.assertEqual(default["required_ratio"], hkd["required_ratio"])
+
+    def test_missing_or_unsupported_explicit_unit_is_rejected(self) -> None:
+        inputs = {"actual_gap": 10_000, "days_remaining": 60, "monthly_avg": 50_000}
+        for unit in (None, "", "EUR", "usd"):
+            with self.subTest(unit=unit), self.assertRaisesRegex(ValueError, "unit must be"):
+                compute_feasibility(**inputs, unit=unit)
+
     def test_achieved_gap_returns_achieved_contract(self) -> None:
         result = compute_feasibility(
             actual_gap=0,

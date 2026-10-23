@@ -17,7 +17,7 @@ def competition(
         "id": competition_id,
         "name": competition_id,
         "gap": gap,
-        "unit": "HKD",
+        "unit": "USD",
         "days_remaining": 10,
         "tags": [],
     }
@@ -43,7 +43,7 @@ class ComputeGapAnalysisTests(unittest.TestCase):
         self.assertEqual(result["status"], "achieved")
 
     def test_zero_pending_keeps_hkd_gap_open(self) -> None:
-        result = compute_gap_analysis([competition("open", 50000)], 0)[0]
+        result = compute_gap_analysis([competition("open", 50000, unit="HKD")], 0)[0]
 
         self.assertEqual(result["actual_gap"], 50000)
         self.assertEqual(result["pending_deduction"], 0)
@@ -99,15 +99,37 @@ class ComputeGapAnalysisTests(unittest.TestCase):
         self.assertEqual(result["pending_deduction"], 20_000)
         self.assertEqual(result["unit"], "USD")
 
-    def test_missing_unit_defaults_to_hkd(self) -> None:
+    def test_missing_unit_is_rejected(self) -> None:
         item = competition("default-unit", 50000)
         del item["unit"]
 
-        result = compute_gap_analysis([item], 20000)[0]
+        with self.assertRaisesRegex(ValueError, "competition unit is required"):
+            compute_gap_analysis([item], 20000)
 
+    def test_explicit_hkd_pending_only_offsets_hkd_gap(self) -> None:
+        result = compute_gap_analysis(
+            [competition("hkd", 50_000, unit="HKD")], 20_000,
+            pending_unit="HKD",
+        )[0]
         self.assertEqual(result["unit"], "HKD")
-        self.assertEqual(result["pending_deduction"], 20000)
-        self.assertEqual(result["actual_gap"], 30000)
+        self.assertEqual(result["pending_deduction"], 20_000)
+        self.assertEqual(result["actual_gap"], 30_000)
+
+    def test_usd_pending_does_not_offset_hkd_or_policy_count(self) -> None:
+        results = compute_gap_analysis([
+            competition("hkd", 50_000, unit="HKD"),
+            competition("usd", 50_000, unit="USD"),
+            competition("count", 5, unit="policies"),
+        ], 20_000)
+        self.assertEqual([row["pending_deduction"] for row in results], [0, 20_000, 0])
+        self.assertEqual([row["actual_gap"] for row in results], [50_000, 30_000, 5])
+
+    def test_unsupported_currency_and_pending_unit_are_rejected(self) -> None:
+        for unit in ("EUR", "usd", "USD "):
+            with self.subTest(unit=unit), self.assertRaisesRegex(ValueError, "unsupported competition currency"):
+                compute_gap_analysis([competition("bad", 50_000, unit=unit)], 0)
+        with self.assertRaisesRegex(ValueError, "pending_unit must be"):
+            compute_gap_analysis([competition("usd", 50_000)], 20_000, pending_unit="EUR")
 
     def test_missing_tags_defaults_to_empty_list(self) -> None:
         item = competition("default-tags", 50000)
