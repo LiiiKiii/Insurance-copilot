@@ -161,11 +161,11 @@ The version-controlled corpus contains:
 | Category | Documents |
 | -------- | --------- |
 | Competition rules | `competition_starlight.md`, `competition_elite_challenge.md`, `competition_quarterly_sprint.md`, `competition_rookie_king.md` |
-| Performance standards | `mdrt_rules.md` (written premium excellence), `cot_rules.md` (portfolio quality excellence); legacy filenames are retained for compatibility |
+| Performance standards | `mdrt_rules.md` (MDRT/COT/TOT qualification and FYC/FYP milestones), `cot_rules.md` (COT qualification, benefits, and achievement paths) |
 | Sales guidance | `sales_scripts.md`, `best_practices.md`, `action_guidelines.md` |
 | Historical competition circulars | Markdown documents under `data/knowledge/competitions/` |
 
-Files in `data/knowledge/` remain version-controlled source assets. They are not automatically inserted into the database. Use `admin_kb_import` for supported text sources, or upload a PDF through the administration page.
+Files in `data/knowledge/` remain version-controlled source assets. With `BUILTIN_KNOWLEDGE_AUTO_SYNC=1` (the default), the API startup synchronizes the three built-in knowledge groups into the database; other supported text sources can be imported with `admin_kb_import`, and PDFs can be uploaded through the administration page.
 
 ## Administration API
 

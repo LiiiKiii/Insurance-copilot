@@ -29,19 +29,19 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 async def test_competition_search_returns_a_source_reference():
     result = json.loads(
         await SearchCompetitionRulesTool(PROJECT_ROOT).execute(
-            query="written premium excellence requirements"
+            query="MDRT資格條件"
         )
     )
 
     assert result["results"]
-    assert result["results"][0]["source"] == "mdrt_rules.md"
+    assert result["results"][0]["source"] == "AG25035.md"
 
 
 @pytest.mark.asyncio
 async def test_best_practice_search_returns_matching_guidance():
     result = json.loads(
         await SearchBestPracticeTool(PROJECT_ROOT).execute(
-            topic="improve a low lead conversion rate"
+            topic="件均保費偏低"
         )
     )
 
@@ -53,7 +53,7 @@ async def test_best_practice_search_returns_matching_guidance():
 async def test_sales_script_search_returns_customer_facing_guidance():
     result = json.loads(
         await SearchSalesScriptsTool(PROJECT_ROOT).execute(
-            scenario="handle an expensive product objection"
+            scenario="客戶說太貴，需要處理異議"
         )
     )
 

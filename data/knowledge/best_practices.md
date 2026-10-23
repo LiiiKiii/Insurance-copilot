@@ -1,39 +1,99 @@
-# General Insurance Sales and Portfolio Best Practices
+# 保險銷售最佳實踐庫
 
-## Improve Average Premium with Risk-Based Scoping
+## 件均保費偏低的改善策略
 
-When average case size is below the peer benchmark, confirm that quotations cover the customer's actual assets, liabilities, operations, and risk exposures. Compare appropriate limits and deductibles instead of adding unnecessary cover.
+當代理人件均保費低於公司均值（HKD 42,000）時，常見原因是過度聚焦儲蓄型小額保單。
 
-1. Confirm insured assets, annual revenue, vehicle use, locations, and prior losses.
-2. Explain material exclusions and deductible trade-offs.
-3. Offer relevant multi-line options such as motor plus property, or commercial property plus liability.
-4. Record why the recommended option is suitable.
+**核心策略：**
+1. **需求重演法**：面談時先問「如果明天你不能工作6個月，家庭財務會怎樣？」再引導至保障缺口
+2. **保額升級話術**：報價時從客戶實際保障需求出發，建議保額 = 年收入 × 10 + 負債
+3. **附加險搭配**：每份主險搭配至少1份附加險（危疾+醫療），件均自然提升 30-40%
+4. **高淨值客戶識別**：轉介紹時篩選收入 HKD 100K+ 的潛在客戶，優先跟進
 
-## Improve a Low Lead Conversion Rate
+**成功案例**：陳志明 2026年Q1通過需求重演法，件均從 HKD 28,000 提升至 HKD 35,000，季度增長 25%。
 
-Conversion should be improved through service quality rather than pressure.
+**行動計劃**：
+- 本週起每次面談必問保障缺口問題（2分鐘）
+- 報價時預設保障型主險 + 1份附加險組合
+- 目標：3個月內件均提升至 HKD 35,000+
 
-1. Respond to a qualified lead within four business hours.
-2. Record the customer's decision criteria before preparing a quotation.
-3. Follow up at least three times using different useful touchpoints.
-4. Compare coverage, limits, deductibles, service, and price clearly.
-5. Record lost-business reasons for coaching and product feedback.
+---
 
-## Written Premium Target Sprint
+## 線索跟進率偏低的改善方法
 
-When a written premium target is approaching, separate the nominal gap from pending premium. Review underwriting requirements first, then prioritise valid quotations with clear next actions. Do not count pending cases as bound production.
+當線索轉化率低於同級均值（61%）時，通常是跟進節奏問題，而非產品問題。
 
-## Retention and Renewal Management
+**核心策略：**
+1. **72小時法則**：新線索72小時內必須首次電話聯繫，逾期轉化率下降 60%
+2. **三次接觸法**：
+   - 第1次：電話了解需求（目標：預約面談）
+   - 第2次：發送定制方案 PDF（目標：確認面談）
+   - 第3次：面談+報價（目標：簽單或獲取轉介紹）
+3. **情感賬戶積累**：每週至少1次非銷售聯繫（節日祝福/有用文章/行業資訊）
+4. **跟進管理工具**：每天09:00花15分鐘回顧線索狀態，今日必跟進清單不超過5條
 
-Begin renewal review 60–90 days before expiry. Confirm changes in assets, drivers, operations, payroll, locations, claims experience, and coverage needs. Explain premium changes and alternatives early.
+**行動計劃**：
+- 建立線索跟進表格，每條線索記錄最後聯繫時間
+- 設定每天16:00為固定跟進時間（30分鐘）
+- 本週目標：所有 >72小時未跟進的線索全部清零
 
-## Product Mix and Cross-Line Opportunities
+---
 
-Use the source product categories: Motor, Property, Commercial, and Specialty. Cross-line recommendations must arise from an identified exposure and should never be made solely to increase premium or commission.
+## 競賽最後30天衝刺戰術
 
-## Data Quality Discipline
+當競賽截止日剩餘30天以內時，需要切換到「衝刺模式」。
 
-- Keep missing values as unavailable rather than zero.
-- Reconcile product detail with agent totals.
-- Exclude duplicates, reversals, declined cases, and test records.
-- Clearly label derived and synthetic fields.
+**衝刺三板斧：**
+1. **優先高概率案件**：已報價未成交的案件轉化率最高，先追這批
+   - 列出所有30天內的未成交報價
+   - 每天電話跟進1-2個，詢問「還有什麼顧慮我可以幫你解決？」
+2. **老客加保/轉介紹**：成本最低、成交率最高（老客成交率約 40-60%）
+   - 聯繫最近2年的客戶，以「保障更新評估」為由預約面談
+   - 每位老客請求轉介紹1個朋友
+3. **聯合開單**：與同事合作互相介紹客戶
+   - 找團隊中互補的同事（你擅長保障型，對方擅長儲蓄型）
+   - 互相介紹各自的潛在客戶
+
+**行動計劃**：
+- 每週一晨會前更新衝刺進度表
+- 每天下班前確認「今日簽了幾單/接觸了幾個客戶」
+
+---
+
+## MDRT衝刺期時間管理
+
+當 MDRT 缺口在 HKD 50,000 以內時，這是職業生涯的重要里程碑，需要特別對待。
+
+**核心策略：**
+1. **聚焦高淨值客戶**：1-2個大單（HKD 30,000+）即可解決問題
+   - 從現有客戶中篩選有加保空間的（子女出生/房屋按揭/收入增加）
+   - 優先預約面談，不要等轉介紹
+2. **借力 MDRT 情感訴求**：向老客戶坦誠說明正在衝 MDRT 里程碑
+   - 「我快到 MDRT 了，你們一直是我最重要的客戶，有沒有認識的朋友需要保障規劃？」
+   - 客戶往往很樂意幫忙，轉介紹成功率提升 2-3 倍
+3. **舊案復活**：查看過去6個月所有未成交的報價
+   - 尤其是那些說「考慮一下」的客戶，主動跟進詢問
+4. **待批保單跟進**：加速核保流程
+   - 主動聯繫核保部門，確認所需補充材料
+   - 催促客戶盡快提交所需文件
+
+**注意**：MDRT 是你職業里程碑，心態上要平靜，不要讓急迫感影響面談質量。
+
+---
+
+## 老客戶加保切入時機
+
+老客戶加保是成本最低、成交率最高的業務來源（約 40-60% 成交率）。
+
+**最佳切入時機：**
+1. **保單周年日前2-3個月**：以「年度保障評估」為由聯繫
+2. **重大生活變化**：
+   - 結婚/生育 → 提升人壽保額、增加子女保障
+   - 買房/按揭 → 定期壽險覆蓋按揭金額
+   - 升職/加薪 → 保障跟上收入增長
+   - 父母年邁 → 長者醫療保障
+3. **醫療費用上漲時**：切入醫療險升級（每年都有很好的時機）
+4. **市場波動期**：儲蓄型客戶對保障型產品興趣上升
+
+**開場白示範**：
+「[客戶姓名]，距離你投保已經[X]年了，這期間你的家庭和收入都有些變化。我想為你做一個免費的保障更新評估，看看有沒有保障缺口，大概10分鐘，你這週什麼時候方便？」

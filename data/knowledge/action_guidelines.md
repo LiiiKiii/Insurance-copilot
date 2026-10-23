@@ -1,54 +1,129 @@
-# Action Recommendation Logic
+# 行動建議生成邏輯
 
-## Purpose
+## 概述
 
-Use performance gaps, pending premium, product mix, retention, conversion, and training data to create practical general-insurance coaching actions.
+本文檔定義了 Insurance Copilot 為代理人生成個性化行動建議的決策邏輯。系統根據業績缺口、競賽進度、歸因分析等多維數據，自動產出優先排序的行動方案。
 
-## Decision Sequence
+## 核心決策樹
 
-### 1. Validate the Data
+### 第一步：待批保費判斷
 
-- Keep missing conversion values unavailable.
-- Confirm written premium and product detail reconcile.
-- Exclude duplicate, reversed, cancelled, and declined records.
-- Identify synthetic and derived values before giving advice.
+```
+待批保費 (Pending Premium) > 0？
+├── 是 → 優先行動：跟進待批保單
+│   ├── 待批金額 > 缺口的 50%
+│   │   └── 建議：「集中跟進待批保單，核保通過後可大幅縮小缺口」
+│   ├── 待批金額 > 缺口的 20%
+│   │   └── 建議：「加速待批保單核保流程，同時開發新單」
+│   └── 待批金額 < 缺口的 20%
+│       └── 建議：「待批保費佔比較低，需重點開拓新業務」
+└── 否 → 跳至第二步
+```
 
-### 2. Assess Pending Premium
+### 第二步：缺口大小評估
 
-- More than 50% of the monetary gap: prioritise underwriting and outstanding documents.
-- Between 20% and 50%: work pending cases while maintaining new-business activity.
-- Below 20%: treat pending cases as secondary and strengthen the active quotation pipeline.
+```
+缺口達成率 (current / target)
+├── ≥ 80% → 狀態：衝刺階段
+│   └── 建議：「距離目標僅差一步，集中精力衝刺」
+│   └── 行動：聚焦現有客戶加保、加速在談個案
+├── 50% - 79% → 狀態：穩步推進
+│   └── 建議：「進度正常，需保持節奏持續推進」
+│   └── 行動：平衡新客開發與現有客戶維護
+├── 30% - 49% → 狀態：需要加速
+│   └── 建議：「進度落後，需要顯著提升活動量」
+│   └── 行動：增加每週面談數、擴大線索來源
+└── < 30% → 狀態：預警
+    └── 建議：「進度嚴重落後，建議與主管制定追趕計劃」
+    └── 行動：全面檢視銷售漏斗、尋求團隊支援
+```
 
-Pending premium is a scenario offset, not achieved written premium.
+### 第三步：時間緊迫度評估
 
-### 3. Assess Progress
+```
+剩餘天數計算：deadline - 今日日期
+├── ≤ 30天 → 標記：🔴 緊急
+│   └── 優先級提升，建議每日追蹤進度
+├── 31-60天 → 標記：🟡 留意
+│   └── 制定每週目標，定期回顧
+├── 61-90天 → 標記：🟢 正常
+│   └── 按計劃推進
+└── > 90天 → 標記：⚪ 充裕
+    └── 可作為中長期目標規劃
+```
 
-- At least 80%: completion sprint; focus on active quotations and pending requirements.
-- 50%–79%: maintain a weekly production and renewal cadence.
-- 30%–49%: increase qualified lead and client-review activity.
-- Below 30%: create a recovery plan with the supervisor.
+### 第四步：歸因分析驅動建議
 
-### 4. Select the Action
+根據歸因數據中的弱項指標，生成針對性建議：
 
-- Low conversion: improve response time, discovery, quotation clarity, and follow-up.
-- Low retention: start renewal reviews 60–90 days before expiry and document loss reasons.
-- Unbalanced mix: review legitimate Motor, Property, Commercial, and Specialty exposures.
-- Low practice use: complete two focused AI practice sessions per week.
+#### 線索跟進不足
+```
+條件：lead_conversion_rate < peer_avg 或 response_hours > peer_avg
+建議：
+- 「線索響應時間慢於同級平均，建議設定4小時內首次回覆的目標」
+- 「跟進次數偏低，建議每條線索至少跟進3次」
+- 「可善用AI陪練提升需求分析和異議處理能力」
+```
 
-## Output Example
+#### 活動參與不足
+```
+條件：活動數據 < peer_avg
+建議：
+- 「客戶活動出席率偏低，建議本月參加至少2場客戶活動」
+- 「尚未舉辦研討會，建議與資深同事合辦一場」
+- 「線上營銷活動不足，建議每週發布1-2篇專業內容」
+```
 
-1. Urgent — Written Premium Excellence Challenge
-   Gap: USD 120,000
-   Pending scenario offset: USD 35,000
-   Action: resolve outstanding underwriting items and review qualified quotations.
+#### 產品結構失衡
+```
+條件：保障型佔比 < 40%
+建議：
+- 「保障型產品佔比偏低，影響FYC和競賽達標」
+- 「建議將儲蓄型客戶轉化為保障+儲蓄組合」
+- 「保障型產品佣金率更高，有助提升件均FYC」
+```
 
-2. Improvement — Conversion Quality
-   Current: 22%; target: 35%
-   Action: respond within four business hours and use a documented three-touch follow-up plan.
+#### AI陪練使用不足
+```
+條件：training_sessions < peer_avg
+建議：
+- 「AI陪練使用頻率低於同級平均」
+- 「建議每週至少完成2次AI模擬銷售練習」
+- 「重點練習模塊：異議處理、需求分析、產品介紹」
+```
 
-## Compliance
+## 建議優先級排序規則
 
-- Advice is internal decision support, not a guarantee of results.
-- Never recommend unsuitable cover solely to raise premium or commission.
-- Clearly explain limits, deductibles, exclusions, and material changes.
-- Escalate uncertain data or compliance issues to a supervisor.
+生成所有適用建議後，按以下優先級排序：
+
+1. **最高優先**：deadline ≤ 30天 且 gap > 0 的競賽/榮譽
+2. **高優先**：待批保費跟進（直接可轉化的業績）
+3. **中優先**：歸因分析中顯著低於同級的維度
+4. **常規**：中長期目標規劃和能力提升
+
+## 輸出格式建議
+
+### 行動建議卡片結構
+
+```
+📋 行動建議（按優先級排序）
+
+1. 🔴 [緊急] 季度衝刺賽 — 距截止還剩 X 天
+   缺口：Y 件
+   建議行動：...
+
+2. 🟡 [重要] 跟進待批保單
+   待批金額：HKD XXX,XXX
+   建議行動：...
+
+3. 🟢 [提升] 加強線索跟進效率
+   當前 vs 同級：...
+   建議行動：...
+```
+
+## 合規提醒
+
+- 行動建議僅供參考，不構成任何投資建議
+- 建議內容不涉及特定產品推薦
+- 所有數據基於內部系統記錄，如有疑問請聯繫主管
+- 系統不對業績結果作出任何承諾或保證

@@ -17,14 +17,12 @@ from nanobot.retrieval_citations import (
 
 
 TOPIC_KEYWORDS = {
-    "case_size": ["case size", "average premium", "low premium", "coverage amount"],
-    "conversion": ["conversion", "closing rate", "follow-up", "lead"],
-    "written_premium": ["written premium", "premium target", "milestone"],
-    "sprint": ["sprint", "deadline", "last 30 days", "final month"],
-    "existing_client": ["existing client", "cross-line", "renewal", "referral"],
-    "retention": ["retention", "renewal", "churn"],
-    "product_mix": ["product mix", "motor", "property", "commercial", "specialty"],
-    "lead": ["lead", "follow-up", "prospect", "pipeline"],
+    "件均": ["件均", "case size", "保費偏低", "avg_case", "保額"],
+    "轉化": ["轉化", "conversion", "成交", "跟進", "线索", "線索"],
+    "mdrt": ["mdrt", "百萬圓桌", "里程碑"],
+    "衝刺": ["衝刺", "最後", "截止", "冲刺", "30天"],
+    "老客": ["老客", "加保", "續保", "轉介紹", "介绍", "转介绍"],
+    "線索": ["線索", "跟進", "lead", "客源"],
 }
 
 
@@ -42,9 +40,9 @@ class SearchBestPracticeTool(Tool):
     @property
     def description(self) -> str:
         return (
-            "Search proven insurance sales practices and success strategies. "
-            "Covers average premium improvement, lead conversion, competition sprints, "
-            "written-premium progress, retention, and cross-line reviews for existing clients."
+            "【知識層】以關鍵詞或語義向量搜索保險銷售最佳實踐和成功策略。"
+            "覆蓋：提升件均保費、提升線索轉化率、競賽衝刺戰術、MDRT衝刺策略、老客加保。"
+            "返回相關策略和行動建議。"
         )
 
     @property
@@ -54,16 +52,16 @@ class SearchBestPracticeTool(Tool):
             "properties": {
                 "topic": {
                     "type": "string",
-                    "description": "Topic such as 'low average premium', 'written premium sprint', 'low lead conversion', or 'renewal retention'",
+                    "description": "主題，如 '件均保費偏低'、'MDRT衝刺'、'線索轉化率低'、'競賽最後30天'",
                 },
                 "context": {
                     "type": "string",
-                    "description": "Optional context such as the agent's role or a specific business issue",
+                    "description": "額外上下文（可選），如代理人職級、具體問題",
                 },
                 "search_mode": {
                     "type": "string",
                     "enum": ["keyword", "vector"],
-                    "description": "Use keyword or semantic vector retrieval",
+                    "description": "keyword 使用關鍵詞匹配；vector 使用語義向量匹配",
                     "default": "keyword",
                 },
             },
@@ -78,7 +76,7 @@ class SearchBestPracticeTool(Tool):
         bp_path = self._workspace / "data" / "knowledge" / "best_practices.md"
 
         if not bp_path.exists():
-            return json.dumps({"error": "The best-practice knowledge document is unavailable"})
+            return json.dumps({"error": "最佳實踐知識庫不存在"}, ensure_ascii=False)
 
         content = bp_path.read_text(encoding="utf-8")
         sections = content.split("\n## ")
@@ -96,7 +94,10 @@ class SearchBestPracticeTool(Tool):
                     candidate_limit=12,
                 )
             except Exception as exc:
-                return json.dumps({"error": f"Vector best-practice search failed: {str(exc)[:200]}"})
+                return json.dumps(
+                    {"error": f"最佳實踐向量查詢失敗: {str(exc)[:200]}"},
+                    ensure_ascii=False,
+                )
             section_map = {
                 section.strip().splitlines()[0].strip(): section.strip()
                 for section in sections[1:]
