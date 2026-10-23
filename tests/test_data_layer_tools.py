@@ -206,6 +206,16 @@ class DataLayerToolTests(unittest.TestCase):
         self.assertEqual(result["metrics"]["protection_premium"]["unit"], "USD")
         self.assertEqual(result["metrics"]["avg_fyc_per_policy"]["current"], 5_000)
 
+    def test_performance_tool_accepts_written_premium_alias(self) -> None:
+        result = self._run(
+            GetPerformanceSnapshotTool(self.workspace),
+            agent_id="AGT001",
+            metrics=["written_premium"],
+        )
+
+        self.assertEqual(set(result["metrics"]), {"protection_premium"})
+        self.assertEqual(result["metrics"]["protection_premium"]["current"], 75_000)
+
     def test_performance_tool_reports_missing_agent(self) -> None:
         result = self._run(
             GetPerformanceSnapshotTool(self.workspace),

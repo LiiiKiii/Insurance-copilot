@@ -52,6 +52,10 @@ class ContextBuilder:
                 f"Channel: {channel}",
                 f"Chat ID: {chat_id}",
             ])
+            if channel == "websocket":
+                lines.append(
+                    f"Signed-in agent_id: {chat_id} (always pass this as agent_id to insurance tools)"
+                )
 
         return (
             ContextBuilder._RUNTIME_CONTEXT_TAG

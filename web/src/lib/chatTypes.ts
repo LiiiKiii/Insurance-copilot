@@ -64,6 +64,13 @@ export interface ResultMetric {
 export interface ResultAction {
   priority: 'P0' | 'P1' | 'P2'
   action: string
+  /** Recommendation fields sent with the coursework follow-up ranking. */
+  rank?: number
+  candidate_id?: string
+  timing?: string
+  priority_score?: number
+  score_components?: Record<string, unknown>
+  evidence?: Record<string, unknown>
 }
 
 export type ChatResult =
@@ -78,6 +85,11 @@ export type ChatResult =
       title: string
       actions: ResultAction[]
       summary?: string
+      /** Provenance of a backend recommendation; shown so the snapshot date is visible. */
+      source?: string
+      scenario_id?: string
+      as_of_date?: string
+      tool_call_id?: string
     }
 
 /**
