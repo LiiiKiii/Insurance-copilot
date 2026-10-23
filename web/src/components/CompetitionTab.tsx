@@ -243,27 +243,36 @@ export function CompetitionTab({ agentId }: CompetitionTabProps) {
                       'rounded-xl border-l-[3px] bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/50 p-3',
                       getUrgencyColor(comp.urgency_level)
                     )}>
-                      <div className="flex items-start justify-between gap-2">
+                      {/* Name wraps in full; the day counter keeps its own column */}
+                      <div className="flex items-start justify-between gap-3">
                         <div className="min-w-0 flex-1">
-                          <div className="flex items-center gap-2">
-                            <span className="text-sm font-medium text-slate-800 dark:text-white truncate">
-                              {comp.name}
-                            </span>
-                            <FeasibilityBadge hint={comp.feasibility_hint} />
+                          <div className="text-sm font-medium leading-snug text-slate-800 dark:text-white break-words">
+                            {comp.name}
                           </div>
-                          <div className="mt-1.5 text-xs text-slate-500 dark:text-slate-400 space-y-0.5">
-                            <div>{t('metric.gap')} <span className="font-mono font-bold text-slate-700 dark:text-slate-200">{formatGap(comp.gap!, comp.unit)}</span></div>
-                            <div className="flex items-center gap-3">
-                              <span>{t('metric.target')} <span className="font-mono font-bold text-slate-700 dark:text-slate-200">{formatGap(comp.target_value, comp.unit)}</span></span>
-                              <span>{t('metric.current')} <span className="font-mono font-bold text-slate-700 dark:text-slate-200">{formatGap(comp.current_value, comp.unit)}</span></span>
+                          {comp.feasibility_hint && (
+                            <div className="mt-1">
+                              <FeasibilityBadge hint={comp.feasibility_hint} />
                             </div>
-                          </div>
+                          )}
                         </div>
                         <div className="text-right shrink-0">
-                          <div className={cn('text-xl font-bold font-mono tabular-nums', getDaysColor(comp.urgency_level))}>
+                          <div className={cn('text-xl font-bold font-mono tabular-nums leading-none', getDaysColor(comp.urgency_level))}>
                             {days ?? '--'}
                           </div>
-                          <div className="text-[10px] text-slate-400">{t('metric.days')}</div>
+                          <div className="mt-0.5 text-[10px] text-slate-400">{t('metric.days')}</div>
+                        </div>
+                      </div>
+                      <div className="mt-2 text-xs text-slate-500 dark:text-slate-400 space-y-0.5">
+                        <div>{t('metric.gap')} <span className="font-mono font-bold text-slate-700 dark:text-slate-200">{formatGap(comp.gap!, comp.unit)}</span></div>
+                        <div className="grid grid-cols-2 gap-x-3">
+                          <div className="min-w-0">
+                            <div>{t('metric.target')}</div>
+                            <div className="font-mono font-bold text-slate-700 dark:text-slate-200 whitespace-nowrap">{formatGap(comp.target_value, comp.unit)}</div>
+                          </div>
+                          <div className="min-w-0">
+                            <div>{t('metric.current')}</div>
+                            <div className="font-mono font-bold text-slate-700 dark:text-slate-200 whitespace-nowrap">{formatGap(comp.current_value, comp.unit)}</div>
+                          </div>
                         </div>
                       </div>
 
@@ -298,11 +307,11 @@ export function CompetitionTab({ agentId }: CompetitionTabProps) {
           </div>
           <div className="space-y-1.5">
             {completedComps.map(comp => (
-              <div key={comp.id} className="flex items-center gap-2 px-3 py-2 rounded-lg bg-emerald-50/50 dark:bg-emerald-500/5 border border-emerald-200/50 dark:border-emerald-500/10">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-emerald-500 shrink-0">
+              <div key={comp.id} className="flex items-start gap-2 px-3 py-2 rounded-lg bg-emerald-50/50 dark:bg-emerald-500/5 border border-emerald-200/50 dark:border-emerald-500/10">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-emerald-500 shrink-0 mt-px">
                   <polyline points="20 6 9 17 4 12" />
                 </svg>
-                <span className="text-xs text-emerald-700 dark:text-emerald-400 font-medium truncate">{comp.name}</span>
+                <span className="min-w-0 text-xs leading-snug text-emerald-700 dark:text-emerald-400 font-medium break-words">{comp.name}</span>
               </div>
             ))}
           </div>
@@ -317,15 +326,15 @@ export function CompetitionTab({ agentId }: CompetitionTabProps) {
           </div>
           <div className="space-y-1.5">
             {outdatedComps.map(comp => (
-              <div key={comp.id} className="flex items-center justify-between gap-2 px-3 py-2 rounded-lg bg-slate-50 dark:bg-slate-800/40 border border-slate-200/60 dark:border-slate-700/50 opacity-75">
-                <div className="flex items-center gap-2 min-w-0 flex-1">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-slate-400 shrink-0">
+              <div key={comp.id} className="flex items-start justify-between gap-2 px-3 py-2 rounded-lg bg-slate-50 dark:bg-slate-800/40 border border-slate-200/60 dark:border-slate-700/50 opacity-75">
+                <div className="flex items-start gap-2 min-w-0 flex-1">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-slate-400 shrink-0 mt-px">
                     <circle cx="12" cy="12" r="10" />
                     <polyline points="12 6 12 12 16 14" />
                   </svg>
-                  <span className="text-xs text-slate-500 dark:text-slate-400 font-medium truncate line-through">{comp.name}</span>
+                  <span className="min-w-0 text-xs leading-snug text-slate-500 dark:text-slate-400 font-medium break-words line-through">{comp.name}</span>
                 </div>
-                <span className="text-[10px] text-slate-400 shrink-0">
+                <span className="text-[10px] text-slate-400 shrink-0 whitespace-nowrap">
                   {t('metric.gap')} <span className="font-mono">{formatGap(comp.gap!, comp.unit)}</span>
                 </span>
               </div>
