@@ -17,11 +17,46 @@ from nanobot.retrieval_citations import (
 
 
 SCENARIO_KEYWORDS = {
-    "objection": ["考慮", "objection", "異議", "拒絕", "太貴"],
-    "needs_analysis": ["需求", "fabe", "挖掘", "分析", "保障缺口"],
-    "referral": ["轉介紹", "referral", "介紹", "朋友"],
-    "upsell": ["加保", "老客", "upsell", "升級"],
-    "closing": ["促成", "closing", "成交", "簽單"],
+    "objection": {
+        "query_aliases": [
+            "考慮", "考虑", "異議", "异议", "拒絕", "拒绝", "太貴", "太贵",
+            "objection", "too expensive", "think about it", "handling objections",
+        ],
+        "document_terms": [
+            "objection handling", "think about it", "too expensive", "clarify concerns",
+        ],
+    },
+    "needs_analysis": {
+        "query_aliases": [
+            "需求", "挖掘", "分析", "保障缺口", "fabe", "needs analysis",
+            "needs discovery", "coverage gap",
+        ],
+        "document_terms": [
+            "demand mining", "fabe framework", "core questions for demand mining",
+        ],
+    },
+    "referral": {
+        "query_aliases": [
+            "轉介紹", "转介绍", "介紹", "介绍", "朋友", "referral", "refer a friend",
+        ],
+        "document_terms": ["referral", "old customers", "friends"],
+    },
+    "upsell": {
+        "query_aliases": [
+            "加保", "老客", "升級", "升级", "upsell", "existing client",
+            "additional coverage",
+        ],
+        "document_terms": ["old customers", "additional coverage", "protection needs"],
+    },
+    "closing": {
+        "query_aliases": [
+            "促成", "成交", "簽單", "签单", "closing", "close the sale", "sign policy",
+        ],
+        "document_terms": [
+            "facilitating conversational skills", "direct facilitation method",
+            "small steps closing method",
+        ],
+    },
 }
 
 
@@ -39,9 +74,10 @@ class SearchSalesScriptsTool(Tool):
     @property
     def description(self) -> str:
         return (
-            "【知識層】以關鍵詞或語義向量搜索特定銷售場景的話術模板。"
-            "場景包括：異議處理（客戶說考慮一下）、需求挖掘（FABE法）、"
-            "轉介紹、老客加保、促成成交。返回可直接使用的話術和使用說明。"
+            "[Knowledge layer / 知識層] Search bilingual sales scenarios and return English "
+            "conversation scripts. Supports objection handling (異議處理), FABE needs analysis "
+            "(需求挖掘), referrals (轉介紹), existing-client upsell (老客加保), and closing "
+            "(促成成交)."
         )
 
     @property
@@ -51,16 +87,16 @@ class SearchSalesScriptsTool(Tool):
             "properties": {
                 "scenario": {
                     "type": "string",
-                    "description": "場景描述，如 'objection_handling'、'needs_analysis'、'referral'、'upsell'、'closing'，或中文描述",
+                    "description": "Scenario / 場景, e.g. 'objection handling' or '異議處理', 'needs analysis' or '需求挖掘', 'referral', 'upsell', or 'closing'",
                 },
                 "product_type": {
                     "type": "string",
-                    "description": "產品類型（可選），如 '保障型'、'儲蓄型'、'危疾'",
+                    "description": "Optional product type / 可選產品類型, e.g. 'protection/保障型', 'savings/儲蓄型', or 'critical illness/危疾'",
                 },
                 "search_mode": {
                     "type": "string",
                     "enum": ["keyword", "vector"],
-                    "description": "keyword 使用關鍵詞匹配；vector 使用語義向量匹配",
+                    "description": "keyword for term matching / 關鍵詞匹配; vector for semantic search / 語義向量匹配",
                     "default": "keyword",
                 },
             },
@@ -75,7 +111,7 @@ class SearchSalesScriptsTool(Tool):
         scripts_path = self._workspace / "data" / "knowledge" / "sales_scripts.md"
 
         if not scripts_path.exists():
-            return json.dumps({"error": "話術知識庫不存在"}, ensure_ascii=False)
+            return json.dumps({"error": "Sales-script knowledge base not found / 話術知識庫不存在"}, ensure_ascii=False)
 
         content = scripts_path.read_text(encoding="utf-8")
         sections = content.split("\n## ")
@@ -111,21 +147,28 @@ class SearchSalesScriptsTool(Tool):
                 if len(matched) >= 2:
                     break
         else:
-            for section in sections[1:]:
-                section_lower = section.lower()
-                for key, keywords in SCENARIO_KEYWORDS.items():
-                    if key in scenario or any(kw in scenario for kw in keywords):
-                        if any(kw in section_lower for kw in keywords):
-                            matched.append(section.strip())
-                            break
+            matched_rules = [
+                rule
+                for rule in SCENARIO_KEYWORDS.values()
+                if any(alias in scenario for alias in rule["query_aliases"])
+            ]
+            for rule in matched_rules:
+                for section in sections[1:]:
+                    section_lower = section.lower()
+                    normalized = section.strip()
+                    if (
+                        normalized not in matched
+                        and any(term in section_lower for term in rule["document_terms"])
+                    ):
+                        matched.append(normalized)
 
         if not matched and search_mode == "keyword":
             matched = [sections[1].strip()] if len(sections) > 1 else []
 
         terms = [*scenario.split()]
-        for key, keywords in SCENARIO_KEYWORDS.items():
-            if key in scenario or any(term in scenario for term in keywords):
-                terms.extend([key, *keywords])
+        for key, rule in SCENARIO_KEYWORDS.items():
+            if any(alias in scenario for alias in rule["query_aliases"]):
+                terms.extend([key, *rule["query_aliases"], *rule["document_terms"]])
         terms = unique_terms(terms)
         citations = []
         for rank, section in enumerate(matched[:2], start=1):

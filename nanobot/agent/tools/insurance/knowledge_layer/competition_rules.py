@@ -22,34 +22,52 @@ COMP_FILE_MAP: dict[str, list[str]] = {
     # 榮譽獎項
     "ida": ["competitions/AG25035.md"],
     "mdrt": ["competitions/AG25035.md", "mdrt_rules.md"],
+    "million dollar round table": ["competitions/AG25035.md", "mdrt_rules.md"],
     "百萬圓桌": ["competitions/AG25035.md", "mdrt_rules.md"],
     "cot": ["cot_rules.md"],
+    "court of the table": ["cot_rules.md"],
     "超級會員": ["cot_rules.md"],
     # 精英海外
     "精英海外": ["competitions/AG24050.md", "competition_elite_challenge.md"],
     "精英挑戰": ["competitions/AG24050.md", "competition_elite_challenge.md"],
+    "elite overseas": ["competitions/AG24050.md", "competition_elite_challenge.md"],
+    "elite challenge": ["competitions/AG24050.md", "competition_elite_challenge.md"],
     # 三月快閃
     "三月快閃": ["competitions/AG25030.md", "competition_starlight.md"],
     "快閃三重賞": ["competitions/AG25030.md", "competition_starlight.md"],
     "星光大道": ["competition_starlight.md"],
+    "march flash": ["competitions/AG25030.md", "competition_starlight.md"],
+    "triple flash reward": ["competitions/AG25030.md", "competition_starlight.md"],
+    "starlight avenue": ["competition_starlight.md"],
     # 業務推動
     "q1推動": ["competitions/AG25011.md", "competition_quarterly_sprint.md"],
     "業務推動": ["competitions/AG25011.md", "competition_quarterly_sprint.md"],
     "業務衝刺": ["competitions/AG25011.md", "competition_quarterly_sprint.md"],
     "季度衝刺": ["competition_quarterly_sprint.md"],
+    "q1 campaign": ["competitions/AG25011.md", "competition_quarterly_sprint.md"],
+    "business campaign": ["competitions/AG25011.md", "competition_quarterly_sprint.md"],
+    "business sprint": ["competitions/AG25011.md", "competition_quarterly_sprint.md"],
+    "quarterly sprint": ["competition_quarterly_sprint.md"],
     # 4月有禮
     "4月有禮": ["competitions/AG25044.md"],
     "接粽而來": ["competitions/AG25044.md"],
+    "april gift": ["competitions/AG25044.md"],
+    "dragon boat festival": ["competitions/AG25044.md"],
     # 月戰越勇
     "月戰越勇": ["competitions/AG25099.md"],
+    "monthly flash reward": ["competitions/AG25099.md"],
     # 遊樂團
     "遊樂團": ["competitions/AG25129.md"],
     "賞您出行": ["competitions/AG25129.md"],
+    "travel reward": ["competitions/AG25129.md"],
     # 十月推動
     "糕賞精英": ["competitions/AG25138.md"],
     "鈔有驚喜": ["competitions/AG25138.md"],
+    "october campaign": ["competitions/AG25138.md"],
+    "elite reward": ["competitions/AG25138.md"],
     # 新人王
     "新人王": ["competition_rookie_king.md"],
+    "rookie king": ["competition_rookie_king.md"],
 }
 
 
@@ -67,9 +85,10 @@ class SearchCompetitionRulesTool(Tool):
     @property
     def description(self) -> str:
         return (
-            "【知識層】以關鍵詞或語義向量查詢競賽規則和榮譽標準文件。"
-            "可搜索：三月快閃三重賞、Q1業務推動、精英海外會議、新人王、MDRT、COT、IDA、"
-            "4月有禮接粽而來、月戰越勇快閃賞、遊樂團賞您出行、糕賞精英等。"
+            "[Knowledge layer / 知識層] Search competition rules and honor standards by keyword "
+            "or semantic vector. Supports Chinese and English names for MDRT, COT, IDA, "
+            "elite overseas challenges (精英海外), quarterly sprints (季度衝刺), Rookie King "
+            "(新人王), and other campaign circulars. Returns English source content."
         )
 
     @property
@@ -79,16 +98,16 @@ class SearchCompetitionRulesTool(Tool):
             "properties": {
                 "query": {
                     "type": "string",
-                    "description": "搜索關鍵詞，如 'MDRT資格條件'、'星光大道規則'、'季度衝刺達標條件'",
+                    "description": "Query / 搜索關鍵詞, e.g. 'MDRT qualification' or 'MDRT資格條件', 'quarterly sprint rules' or '季度衝刺達標條件'",
                 },
                 "competition_name": {
                     "type": "string",
-                    "description": "競賽名稱（可選），用於改善文件匹配",
+                    "description": "Optional competition name / 可選競賽名稱, in English or Chinese",
                 },
                 "search_mode": {
                     "type": "string",
                     "enum": ["keyword", "vector"],
-                    "description": "keyword 使用關鍵詞匹配；vector 使用語義向量匹配",
+                    "description": "keyword for term matching / 關鍵詞匹配; vector for semantic search / 語義向量匹配",
                     "default": "keyword",
                 },
             },
