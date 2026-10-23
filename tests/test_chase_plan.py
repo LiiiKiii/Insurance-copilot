@@ -51,7 +51,7 @@ class GenerateChasePlanToolTests(unittest.IsolatedAsyncioTestCase):
         self.addCleanup(self.temp_dir.cleanup)
         self.tool = GenerateChasePlanTool(Path(self.temp_dir.name))
 
-    async def test_generates_equal_weekly_targets_from_netted_hkd_gap(self) -> None:
+    async def test_usd_pending_does_not_reduce_hkd_gap(self) -> None:
         competitions = [_competition("C1")]
         performance = SimpleNamespace(
             protection_premium_current=120_000,
@@ -81,15 +81,15 @@ class GenerateChasePlanToolTests(unittest.IsolatedAsyncioTestCase):
                 await self.tool.execute(agent_id="A1", competition_id="C1")
             )
 
-        self.assertEqual(result["actual_gap"], 56_000)
-        self.assertEqual(result["pending_deduction"], 14_000)
+        self.assertEqual(result["actual_gap"], 70_000)
+        self.assertEqual(result["pending_deduction"], 0)
         self.assertEqual(result["weeks_remaining"], 4)
-        self.assertEqual(result["weekly_target"], 14_000)
+        self.assertEqual(result["weekly_target"], 17_500)
         self.assertEqual(len(result["weekly_plans"]), 4)
-        self.assertEqual(result["weekly_plans"][0]["target"], "HKD 14,000")
+        self.assertEqual(result["weekly_plans"][0]["target"], "HKD 17,500")
         self.assertEqual(
             result["daily_actions"],
-            [{"priority": "P0", "action": "Produce HKD 2,000 per day"}],
+            [{"priority": "P0", "action": "Produce HKD 2,500 per day"}],
         )
 
     async def test_usd_gap_uses_monetary_plan_and_pending_offset(self) -> None:
@@ -137,7 +137,7 @@ class GenerateChasePlanToolTests(unittest.IsolatedAsyncioTestCase):
             [{"priority": "P0", "action": "Produce USD 2,000 per day"}],
         )
 
-    async def test_missing_competition_unit_defaults_to_usd(self) -> None:
+    async def test_missing_competition_unit_fails_closed(self) -> None:
         competition = _competition("DEFAULT-UNIT", gap=28_000)
         competition.pop("unit")
         templates = {
@@ -166,19 +166,8 @@ class GenerateChasePlanToolTests(unittest.IsolatedAsyncioTestCase):
                 return_value=templates,
             ),
         ):
-            result = json.loads(
-                await self.tool.execute(
-                    agent_id="A1",
-                    competition_id="DEFAULT-UNIT",
-                )
-            )
-
-        self.assertEqual(result["unit"], "USD")
-        self.assertEqual(result["weekly_plans"][0]["target"], "USD 7,000")
-        self.assertEqual(
-            result["daily_actions"],
-            [{"priority": "P0", "action": "Produce USD 1,000 per day"}],
-        )
+            with self.assertRaisesRegex(ValueError, "competition unit is required"):
+                await self.tool.execute(agent_id="A1", competition_id="DEFAULT-UNIT")
 
     async def test_omitted_id_selects_most_urgent_open_competition(self) -> None:
         competitions = [
@@ -219,7 +208,7 @@ class GenerateChasePlanToolTests(unittest.IsolatedAsyncioTestCase):
         with (
             patch(
                 "nanobot.agent.tools.insurance.planning_layer.chase_plan.load_competitions_from_db",
-                return_value=[_competition("C1")],
+                return_value=[_competition("C1", unit="USD")],
             ),
             patch(
                 "nanobot.agent.tools.insurance.planning_layer.chase_plan.load_performance_row",

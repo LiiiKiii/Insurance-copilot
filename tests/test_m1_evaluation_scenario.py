@@ -59,6 +59,7 @@ class M1EvaluationScenarioTests(unittest.TestCase):
                     performance = _db.load_performance_row("AGT001")
                 gap = compute_gap_analysis(
                     [competition], performance.pending_premium_current,
+                    pending_unit="HKD",
                 )[0]
 
                 self.assertEqual(competition["target_value"], 170_000)

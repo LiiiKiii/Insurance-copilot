@@ -47,9 +47,11 @@ def compute_feasibility(
     actual_gap: float,
     days_remaining: int,
     monthly_avg: float,
-    unit: str = "HKD",
+    unit: str = "USD",
 ) -> dict:
     """Assess whether an already netted gap is achievable within its deadline."""
+    if unit not in MONETARY_UNITS and unit != "policies":
+        raise ValueError("unit must be USD, HKD, or policies")
     if actual_gap <= 0:
         return {
             "level": "achieved",
