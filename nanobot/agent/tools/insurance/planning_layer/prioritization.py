@@ -323,7 +323,20 @@ class PrioritizeFollowupsTool(Tool):
                         ],
                     },
                 },
-                "constraints": {"type": "object"},
+                "constraints": {
+                    "type": "object",
+                    "properties": {
+                        "top_k": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 50,
+                            "description": (
+                                "Maximum number of ranked recommendations to "
+                                "return; defaults to 5 when omitted."
+                            ),
+                        },
+                    },
+                },
                 "weights": {"type": "object"},
             },
             "required": ["agent_id", "objective", "candidates"],
