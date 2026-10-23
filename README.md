@@ -143,10 +143,12 @@ The completed project's unrelated upload-cleanup job remains outside the A3 M3 s
   timing, evidence, and ranking reasons;
 - `POST /api/planning/prioritization` exposes the ranking contract through the
   authenticated planning API without querying or changing M2-owned data;
-- Precision@K and NDCG@K utilities compare the weighted ranking with an
-  expected-contribution-only baseline using a tracked synthetic fixture;
-- the synthetic evaluation validates the implementation pipeline only and is
-  not evidence of production effectiveness or improved sales outcomes; and
+- the current offline evaluation compares the weighted ranking with an
+  expected-contribution-only baseline at K=1, 3, and 5 across 10 tracked M2
+  scenarios, and includes fixed weight-sensitivity profiles;
+- the evaluation uses synthetic case-level data and AI-assisted adjudication
+  of two independent human rankings, so it is not evidence of production
+  effectiveness or improved sales outcomes; and
 - `prioritize_followups` is registered. For an authenticated, configured
   coursework demo agent, the model sees a no-argument facade; M1 prepares and
   validates M2 v3 candidates server-side before invoking the unchanged M4
@@ -336,11 +338,13 @@ Run the current M4 prioritisation and attribution regression scope with:
 Run the reproducible ranking experiment with:
 
 ```powershell
-.\.venv\Scripts\python.exe scripts/evaluate_prioritization.py
+.\.venv\Scripts\python.exe scripts/evaluate_prioritization.py --output data/evaluation/m4_prioritization_results.json
 ```
 
-The implementation details, current ownership boundary, synthetic-data notice,
-and baseline comparison are recorded in
+The command evaluates 10 scenarios at `K = 1, 3, 5`, compares the weighted
+ranker with the expected-contribution baseline, and runs fixed sensitivity
+profiles. The implementation details, results, provenance, limitations, and
+ownership boundary are recorded in
 `docs/coursework/m4_prioritization_experiment.md`.
 
 ## A6 Baseline Freeze
@@ -357,7 +361,6 @@ candidate filtering, weighted ranking, Top-K recommendation, and offline
 ranking metrics. It must not be represented as a trained
 conversion-probability model or as proof of production business impact.
 
-Vector or embedding retrieval, a production labelled ranking dataset,
-production OCR benchmarking, automatic M2 candidate-data ingestion, M5
-recommendation rendering, and broader production hardening remain outside the
-currently integrated baseline.
+Production-labelled ranking data, online outcome validation, production OCR
+benchmarking, and broader production hardening remain outside the currently
+integrated baseline.
