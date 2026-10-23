@@ -174,7 +174,7 @@ class ReasoningToolCallingTests(unittest.IsolatedAsyncioTestCase):
         provider = self._tool_then_answer_provider()
         runtime = SimpleNamespace(is_running=True, agent_loop=self._loop(provider))
         socket = WebSocketHarness(create_app(runtime=runtime))
-        with patch("api.ws._verified_user", new=AsyncMock(return_value=SimpleNamespace(id="user", tenant_id="tenant", username="AGT001"))), patch("api.ws.log_flow_step", new=AsyncMock()), patch("api.ws.log_ai_audit", new=AsyncMock()):
+        with patch("api.ws._verified_user", new=AsyncMock(return_value=SimpleNamespace(id="user", tenant_id="tenant", username="AGT001"))), patch("api.ws.log_flow_step", new=AsyncMock()), patch("api.ws.log_ai_audit", new=AsyncMock()), patch("api.ws._persist_chat_turn", new=AsyncMock()):
             await socket.connect()
             try:
                 event = await socket.request(

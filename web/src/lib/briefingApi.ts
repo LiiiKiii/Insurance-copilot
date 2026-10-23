@@ -3,7 +3,7 @@
  */
 
 import { API_CONFIG } from '@/config'
-import { authenticatedFetch as fetch, getToken } from './auth'
+import { authFetch } from './auth'
 
 export interface ComplianceWarning {
   type: string
@@ -90,17 +90,10 @@ export interface BriefingSettings {
   last_run_summary: { generated: number; skipped: number; failed: number; agents_total: number } | null
 }
 
-function buildHeaders(): HeadersInit {
-  const h: Record<string, string> = { 'Content-Type': 'application/json' }
-  const tok = getToken()
-  if (tok) h['Authorization'] = `Bearer ${tok}`
-  return h
-}
-
 async function api<T>(path: string, init?: RequestInit): Promise<T> {
-  const res = await fetch(`${API_CONFIG.BASE_URL}${path}`, {
+  const res = await authFetch(`${API_CONFIG.BASE_URL}${path}`, {
     ...init,
-    headers: { ...buildHeaders(), ...(init?.headers || {}) },
+    headers: { 'Content-Type': 'application/json', ...(init?.headers || {}) },
   })
   if (!res.ok) {
     const text = await res.text().catch(() => '')

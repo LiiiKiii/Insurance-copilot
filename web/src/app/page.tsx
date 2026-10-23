@@ -5,7 +5,14 @@ import { useRouter } from 'next/navigation'
 import { useInsuranceChat } from '@/lib/useWebSocket'
 import { Sidebar, SidebarContent } from '@/components/Sidebar'
 import { ConfirmModal } from '@/components/ConfirmModal'
-import { authenticatedFetch as fetch, authHeaders, clearAuth, getChatUser } from '@/lib/auth'
+import {
+  authenticatedFetch as fetch,
+  authHeaders,
+  clearAuth,
+  getChatUser,
+  getRefreshToken,
+  getToken,
+} from '@/lib/auth'
 import { ChatInterface } from '@/components/ChatInterface'
 import { AlertBanner } from '@/components/AlertBanner'
 import { TargetsTab } from '@/components/TargetsTab'
@@ -38,7 +45,8 @@ export default function Home() {
   // Auth guard: redirect to /login if not logged in
   useEffect(() => {
     const user = getChatUser()
-    if (!user) {
+    if (!user || (!getToken() && !getRefreshToken())) {
+      clearAuth()
       router.replace('/login')
       return
     }

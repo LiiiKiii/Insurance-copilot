@@ -173,6 +173,17 @@ function redirectToLogin(): void {
   window.location.href = `/admin/login?next=${next}`
 }
 
+function networkFailure<T>(): ApiResponse<T> {
+  return {
+    ok: false,
+    data: null as T,
+    error: {
+      code: 'NETWORK_ERROR',
+      message: 'Could not reach the backend service. Please try again.',
+    },
+  }
+}
+
 async function apiFetch<T>(path: string, init: RequestInit = {}, base = getAdminBase()): Promise<ApiResponse<T>> {
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
@@ -181,14 +192,23 @@ async function apiFetch<T>(path: string, init: RequestInit = {}, base = getAdmin
   const token = getToken()
   if (token) headers.Authorization = `Bearer ${token}`
 
-  let response = await fetch(`${base}${path}`, { ...init, headers })
+  let response: Response
+  try {
+    response = await fetch(`${base}${path}`, { ...init, headers })
+  } catch {
+    return networkFailure<T>()
+  }
   if (response.status === 401) {
     if (!refreshing) refreshing = refreshAccessToken()
     const refreshed = await refreshing
     refreshing = null
     if (refreshed) {
       headers.Authorization = `Bearer ${getToken()}`
-      response = await fetch(`${base}${path}`, { ...init, headers })
+      try {
+        response = await fetch(`${base}${path}`, { ...init, headers })
+      } catch {
+        return networkFailure<T>()
+      }
     } else {
       redirectToLogin()
     }
@@ -220,11 +240,16 @@ async function uploadDocument(kbId: string, file: File): Promise<ApiResponse<KBD
   const headers: Record<string, string> = {}
   const token = getToken()
   if (token) headers.Authorization = `Bearer ${token}`
-  const response = await fetch(`${getAdminBase()}/knowledge-bases/${kbId}/documents/upload`, {
-    method: 'POST',
-    headers,
-    body: form,
-  })
+  let response: Response
+  try {
+    response = await fetch(`${getAdminBase()}/knowledge-bases/${kbId}/documents/upload`, {
+      method: 'POST',
+      headers,
+      body: form,
+    })
+  } catch {
+    return networkFailure<KBDocument>()
+  }
   if (response.status === 401) redirectToLogin()
   const body = await response.json().catch(() => null)
   if (!response.ok) {

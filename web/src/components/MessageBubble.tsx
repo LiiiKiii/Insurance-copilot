@@ -3,6 +3,7 @@
 import { formatDate } from '@/lib/utils'
 import { MarkdownRenderer } from './MarkdownRenderer'
 import { ResultCard } from './ResultCards'
+import { RetrievalReferences } from './chat/RetrievalReferences'
 import type { ChatMessage } from '@/lib/chatTypes'
 import { useTranslation, type MessageKey } from '@/lib/i18n'
 
@@ -151,6 +152,9 @@ export function MessageBubble({ message }: MessageBubbleProps) {
                 <ResultCard result={message.result} />
               </div>
             )}
+            {message.citations?.length ? (
+              <RetrievalReferences citations={message.citations} />
+            ) : null}
           </div>
           <p className="text-[10px] text-slate-400 dark:text-slate-500 mt-1 ml-1">{formatDate(timestamp, locale)}</p>
       </div>

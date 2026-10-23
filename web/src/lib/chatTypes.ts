@@ -14,7 +14,46 @@ export interface ChatMessage {
   attachmentLabels?: string[]
   /** Optional structured A2 analysis or recommendation result. */
   result?: ChatResult
+  /** Structured retrieval evidence rendered independently of model prose. */
+  citations?: RetrievalCitation[]
 }
+
+interface RetrievalCitationBase {
+  citation_id: string
+  tool: string
+  file_name: string
+  content_excerpt: string
+  knowledge_base?: string
+  chunk_id?: string
+  chunk_index?: number
+  section_title?: string
+  source_path?: string
+  page_range?: number[]
+  heading_path?: string[]
+  line_range?: number[]
+  token_count?: number
+}
+
+export type RetrievalCitation =
+  | (RetrievalCitationBase & {
+      mode: 'keyword'
+      keyword: {
+        query_terms: string[]
+        matched_terms: string[]
+        match_locations: Array<{ term: string; start: number; end: number }>
+      }
+    })
+  | (RetrievalCitationBase & {
+      mode: 'vector'
+      vector: {
+        rank: number
+        distance: number
+        similarity: number
+        embedding_model?: string
+      }
+    })
+
+export type RetrievalMode = 'keyword' | 'vector'
 
 export interface ResultMetric {
   label: string

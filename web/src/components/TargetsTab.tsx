@@ -330,7 +330,7 @@ function MemberDetail({ memberId }: { memberId: string }) {
 			fetch(`/api/targets?agent_id=${memberId}`, { headers: authHeaders() })
 				.then((r) => r.json())
 				.catch(() => ({ data: [] })),
-			fetch(`/api/competitions?agent_id=${memberId}`, { headers: authHeaders() })
+			fetch(`/api/competitions?agent_id=${encodeURIComponent(memberId)}`, { headers: authHeaders() })
 				.then((r) => r.json())
 				.catch(() => ({ competitions: [] })),
 		]).then(([perfData, targetsData, compData]) => {
@@ -787,7 +787,7 @@ function MyGoalsTab({ agentId }: { agentId: string }) {
 			fetch(`/api/targets?agent_id=${agentId}`, { headers: authHeaders() })
 				.then((r) => r.json())
 				.catch(() => ({ data: [] })),
-			fetch(`/api/competitions?agent_id=${agentId}`, { headers: authHeaders() })
+			fetch(`/api/competitions?agent_id=${encodeURIComponent(agentId)}`, { headers: authHeaders() })
 				.then((r) => r.json())
 				.catch(() => ({ competitions: [] })),
 		]).then(([perfData, targetsData, compData]) => {

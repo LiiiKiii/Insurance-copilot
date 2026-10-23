@@ -167,6 +167,7 @@ class BusinessSeedModelTests(unittest.IsolatedAsyncioTestCase):
                         "type": "competition",
                         "target_metric": "protection_premium",
                         "target_value": 100_000,
+                        "unit": "USD",
                         "deadline": "2026-12-31",
                         "current_value": 60_000,
                         "gap": 40_000,
@@ -178,12 +179,14 @@ class BusinessSeedModelTests(unittest.IsolatedAsyncioTestCase):
         async with self.sessions() as session:
             for _ in range(2):
                 await _seed_tenant(session)
-                await _seed_performance(session, performance)
+                tenant = await session.scalar(select(Tenant).where(Tenant.slug == "default"))
+                self.assertIsNotNone(tenant)
+                await _seed_performance(session, performance, tenant.id)
                 await _seed_policies(session, policies)
                 await _seed_clients(session, clients)
-                await _seed_assessments(session, assessments)
+                await _seed_assessments(session, assessments, tenant.id)
                 await _seed_attribution(session, attribution)
-                await _seed_competitions(session, competitions)
+                await _seed_competitions(session, competitions, tenant.id)
                 await session.commit()
 
             table_counts = {
@@ -213,8 +216,71 @@ class BusinessSeedModelTests(unittest.IsolatedAsyncioTestCase):
                     select(func.count()).select_from(CompetitionEntry)
                 ),
             }
+            competition = await session.get(Competition, "COMP001")
 
         self.assertEqual(set(table_counts.values()), {1})
+        self.assertIsNotNone(competition)
+        self.assertEqual(competition.unit, "USD")
+
+    async def test_competition_seed_retires_only_known_legacy_records(self) -> None:
+        competition_data = {
+            "AGT001": {
+                "competitions": [
+                    {
+                        "id": "COMP001",
+                        "name": "Annual Sales Sprint",
+                        "name_en": "Annual Sales Sprint",
+                        "type": "competition",
+                        "target_metric": "protection_premium",
+                        "target_value": 100_000,
+                        "unit": "USD",
+                        "deadline": "2026-12-31",
+                        "current_value": 60_000,
+                        "gap": 40_000,
+                    }
+                ]
+            }
+        }
+
+        async with self.sessions() as session:
+            await _seed_tenant(session)
+            tenant = await session.scalar(select(Tenant).where(Tenant.slug == "default"))
+            self.assertIsNotNone(tenant)
+            session.add_all(
+                [
+                    Competition(
+                        id="COMP_STARLIGHT_2026",
+                        name="Legacy seeded competition",
+                        type="competition",
+                        target_metric="protection_premium",
+                        unit="HKD",
+                        deadline="2026-12-31",
+                        is_active=True,
+                    ),
+                    Competition(
+                        id="CUSTOM_COMPETITION",
+                        name="Administrator competition",
+                        type="competition",
+                        target_metric="protection_premium",
+                        unit="USD",
+                        deadline="2026-12-31",
+                        is_active=True,
+                    ),
+                ]
+            )
+            await session.commit()
+
+            await _seed_competitions(session, competition_data, tenant.id)
+            await session.commit()
+
+            legacy = await session.get(Competition, "COMP_STARLIGHT_2026")
+            custom = await session.get(Competition, "CUSTOM_COMPETITION")
+            current = await session.get(Competition, "COMP001")
+
+        self.assertFalse(legacy.is_active)
+        self.assertTrue(custom.is_active)
+        self.assertTrue(current.is_active)
+        self.assertEqual(current.unit, "USD")
 
     async def test_models_reject_duplicate_period_and_competition_entry(self) -> None:
         async with self.sessions() as session:

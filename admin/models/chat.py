@@ -4,7 +4,7 @@ from __future__ import annotations
 import uuid
 from datetime import datetime
 
-from sqlalchemy import JSON, DateTime, ForeignKey, Index, String, Text
+from sqlalchemy import JSON, DateTime, ForeignKey, Index, Integer, String, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from admin.db import Base
@@ -30,6 +30,10 @@ class ChatSession(Base):
     updated_at: Mapped[datetime] = mapped_column(
         DateTime, default=now_beijing, onupdate=now_beijing, index=True
     )
+    last_message_at: Mapped[datetime] = mapped_column(
+        DateTime, default=now_beijing, index=True
+    )
+    message_count: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
 
     messages: Mapped[list[ChatMessage]] = relationship(
         back_populates="session",

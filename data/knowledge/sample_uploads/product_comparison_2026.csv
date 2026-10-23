@@ -1,0 +1,11 @@
+product_id,product_name,product_name_en,category,coverage_term,min_sum_assured_hkd,premium_term,fyc_rate_pct,waiting_period_days,target_segment,key_selling_point
+LT-001,傳世寶終身壽險,Legacy Treasure,whole_life,終身,200000,5/10/15/20年,45,0,高淨值客戶與遺產規劃,身故賠償即時提供流動資金配合財富傳承
+CI-002,安心守護危疾保,Health Guardian CI,critical_illness,終身,400000,18/25年,35,90,30至50歲家庭支柱,128種疾病最多5次賠償確診即賠
+MH-003,摯守醫療實報實銷計劃,MediCare Plus,medical,每年續保至100歲,0,年繳,28,30,關注公立排期的客戶,每年2000萬限額終身不設上限
+SA-004,智富年金計劃,Smart Annuity Plan,annuity,15/20年/終身領取,100000,5/10年,30,0,50歲以上退休規劃,預期IRR 3.5至4.2%保證每月現金流
+TM-005,穩守定期壽險,Guardian Term,term_life,10/20年/至65歲,500000,年繳,25,90,年輕家庭與樓宇按揭,低保費高槓桿每日約十餘元起
+AC-006,加倍守護癌症附加險,Cancer Care Rider,rider,跟隨主險,0,跟隨主險,20,90,有癌症家族史客戶,癌症額外賠償100%保額
+AR-007,意外周全保障附加險,Personal Accident Rider,rider,1年續保,100000,年繳,15,0,外勤及經常出差客戶,意外身故及傷殘雙重賠償
+HR-008,住院現金附加險,Hospital Cash Rider,rider,1年續保,0,年繳,18,30,自僱人士及家庭主婦,住院每日現金津貼最高1200元
+SV-009,雋裕儲蓄保險5年繳,Premier Savings 5,endowment,10年滿期,50000,5年,32,0,追求中期儲蓄目標客戶,滿期保證現金價值加紅益
+ED-010,雋童教育儲蓄計劃,Future Scholar Plan,education,至受保人25歲,80000,5/10年,33,0,初生至10歲子女家長,分階段提取教育金配合升學時間表

@@ -22,6 +22,11 @@ export function getToken(): string | null {
   return localStorage.getItem(TOKEN_KEY)
 }
 
+export function getRefreshToken(): string | null {
+  if (typeof window === 'undefined') return null
+  return localStorage.getItem(REFRESH_KEY)
+}
+
 /** Bearer header for protected backend routes; empty when signed out. */
 export function authHeaders(): Record<string, string> {
   const token = getToken()
@@ -43,8 +48,9 @@ export function getAccessTokenExpiration(token: string): number | null {
   }
 }
 
-async function refreshAccessToken(): Promise<string | null> {
-  const refreshToken = localStorage.getItem(REFRESH_KEY)
+async function requestAccessTokenRefresh(): Promise<string | null> {
+  if (typeof window === 'undefined') return null
+  const refreshToken = getRefreshToken()
   if (!refreshToken) return null
   try {
     const response = await window.fetch(`${API_CONFIG.BASE_URL}/api/admin/auth/refresh`, {
@@ -69,7 +75,7 @@ export async function getValidAccessToken(forceRefresh = false): Promise<string 
     return token
   }
   if (!tokenRefreshPromise) {
-    const pending = refreshAccessToken()
+    const pending = requestAccessTokenRefresh()
     tokenRefreshPromise = pending
     pending.finally(() => {
       if (tokenRefreshPromise === pending) tokenRefreshPromise = null
@@ -78,9 +84,14 @@ export async function getValidAccessToken(forceRefresh = false): Promise<string 
   return tokenRefreshPromise
 }
 
-function redirectToLogin(): void {
+/** Refresh the access token for callers that only need success/failure. */
+export async function refreshAccessToken(): Promise<boolean> {
+  return (await getValidAccessToken(true)) !== null
+}
+
+export function redirectToLogin(): void {
   clearAuth()
-  if (window.location.pathname === '/login') return
+  if (typeof window === 'undefined' || window.location.pathname === '/login') return
   const next = encodeURIComponent(window.location.pathname + window.location.search)
   window.location.href = `/login?next=${next}`
 }
@@ -107,6 +118,9 @@ export async function authenticatedFetch(
   if (response.status === 401) redirectToLogin()
   return response
 }
+
+/** Backwards-compatible name used by existing API clients. */
+export const authFetch = authenticatedFetch
 
 export function getChatUser(): ChatUser | null {
   if (typeof window === 'undefined') return null

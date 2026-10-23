@@ -3,15 +3,31 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 import { API_CONFIG, RECONNECT } from '@/config'
-import type { ChatMessage, ChatSession } from './chatTypes'
-import { authenticatedFetch as fetch, getAccessTokenExpiration, getValidAccessToken } from './auth'
+import {
+  authFetch,
+  getAccessTokenExpiration,
+  getToken as getAuthToken,
+  getValidAccessToken,
+  redirectToLogin,
+} from './auth'
+import type {
+  ChatMessage,
+  ChatSession,
+  RetrievalCitation,
+  RetrievalMode,
+} from './chatTypes'
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Types
 // ─────────────────────────────────────────────────────────────────────────────
 
 // Re-exported so existing `@/lib/useWebSocket` imports keep working.
-export type { ChatMessage, ChatSession }
+export type {
+  ChatMessage,
+  ChatSession,
+  RetrievalCitation,
+  RetrievalMode,
+} from './chatTypes'
 
 /**
  * Server-side wire format for a session — what `/api/chat-sessions` returns.
@@ -45,6 +61,7 @@ interface InboundWsEvent {
   turn_id?: string
   /** Server may echo back per-event metadata used for tool/thinking dedup. */
   metadata?: Record<string, unknown> | null
+  citations?: RetrievalCitation[]
 }
 
 type ConnectionStatus = 'connecting' | 'connected' | 'disconnected'
@@ -78,15 +95,6 @@ function getApiBase(): string {
   // Same convention as @/config: empty string in browser → same-origin relative
   // URLs that Next.js proxies to the backend.
   return API_CONFIG.BASE_URL || ''
-}
-
-function getAuthToken(): string | null {
-  if (typeof window === 'undefined') return null
-  try {
-    return localStorage.getItem('admin_access_token')
-  } catch {
-    return null
-  }
 }
 
 function authHeaders(token: string | null): Record<string, string> {
@@ -143,6 +151,8 @@ function dtoToChatMessage(dto: PersistedMessageDTO): ChatMessage {
     ts instanceof Date ? ts
       : typeof ts === 'string' || typeof ts === 'number' ? new Date(ts)
         : new Date()
+  const metadataCitations =
+    (dto.metadata as { citations?: unknown } | null | undefined)?.citations
 
   return {
     id: dto.id || uuidv4(),
@@ -155,6 +165,9 @@ function dtoToChatMessage(dto: PersistedMessageDTO): ChatMessage {
       (Array.isArray((dto.metadata as { attachment_labels?: string[] } | null | undefined)?.attachment_labels)
         ? (dto.metadata as { attachment_labels?: string[] }).attachment_labels
         : undefined),
+    citations: Array.isArray(metadataCitations)
+      ? metadataCitations as RetrievalCitation[]
+      : undefined,
   }
 }
 
@@ -242,7 +255,7 @@ export function useInsuranceChat() {
       return
     }
     try {
-      const res = await fetch(`${getApiBase()}/api/chat-sessions`, {
+      const res = await authFetch(`${getApiBase()}/api/chat-sessions`, {
         headers: authHeaders(token),
       })
       if (!res.ok) return
@@ -292,6 +305,7 @@ export function useInsuranceChat() {
               role: 'thinking',
               content: data.content ?? '',
               timestamp: new Date(),
+              citations: Array.isArray(data.citations) ? data.citations : undefined,
               isStreaming: true,
             },
           ]
@@ -344,6 +358,7 @@ export function useInsuranceChat() {
               role: 'assistant',
               content: data.content ?? '',
               timestamp: new Date(),
+              citations: Array.isArray(data.citations) ? data.citations : undefined,
             },
           ]
         })
@@ -352,18 +367,26 @@ export function useInsuranceChat() {
         // so the sidebar entry, subsequent turns, and persisted history all use
         // the same identifier.
         if (data.session_id && data.session_id !== sid) {
-          const persistedSessionId = data.session_id
+          const serverSessionId = data.session_id
           setMessagesBySession((all) => {
-            const next = { ...all }
-            next[persistedSessionId] = next[sid] ?? []
+            const localMessages = all[sid]
+            if (!localMessages) return all
+            const next = { ...all, [serverSessionId]: localMessages }
             delete next[sid]
             return next
           })
+          setTypingSessions((current) => {
+            if (!current.has(sid)) return current
+            const next = new Set(current)
+            next.delete(sid)
+            next.add(serverSessionId)
+            return next
+          })
           hydratedSessionsRef.current.delete(sid)
-          hydratedSessionsRef.current.add(persistedSessionId)
+          hydratedSessionsRef.current.add(serverSessionId)
           if (sessionIdRef.current === sid) {
-            sessionIdRef.current = persistedSessionId
-            setActiveSessionId(persistedSessionId)
+            sessionIdRef.current = serverSessionId
+            setActiveSessionId(serverSessionId)
           }
         }
         if (turnId) turnSessionRef.current.delete(turnId)
@@ -426,10 +449,21 @@ export function useInsuranceChat() {
       ws.send(JSON.stringify({ type: 'auth', token }))
     }
 
-    ws.onclose = () => {
+    ws.onclose = (event) => {
       if (authRefreshTimeoutRef.current) clearTimeout(authRefreshTimeoutRef.current)
       authRefreshTimeoutRef.current = null
       setStatus('disconnected')
+      if (event.code === 1008) {
+        void getValidAccessToken(true).then((refreshed) => {
+          if (refreshed) {
+            reconnectAttemptsRef.current = 0
+            reconnectTimeoutRef.current = setTimeout(() => connectRef.current(), 0)
+          } else {
+            redirectToLogin()
+          }
+        })
+        return
+      }
       if (reconnectAttemptsRef.current < MAX_RECONNECT_ATTEMPTS) {
         const delay = Math.min(
           1000 * Math.pow(2, reconnectAttemptsRef.current),
@@ -480,7 +514,14 @@ export function useInsuranceChat() {
 
   // ── Public actions ──────────────────────────────────────────────────────────
   const sendMessage = useCallback(
-    (content: string, opts?: { uploadIds?: string[]; attachmentLabels?: string[] }) => {
+    (
+      content: string,
+      opts?: {
+        uploadIds?: string[]
+        attachmentLabels?: string[]
+        retrievalMode?: RetrievalMode
+      },
+    ) => {
       if (!wsRef.current || wsRef.current.readyState !== WebSocket.OPEN) return
 
       const sid = sessionIdRef.current
@@ -506,6 +547,8 @@ export function useInsuranceChat() {
           session_id: sid,
           turn_id: turnId,
           upload_ids: opts?.uploadIds ?? [],
+          attachment_labels: opts?.attachmentLabels ?? [],
+          retrieval_mode: opts?.retrievalMode ?? 'keyword',
         }),
       )
     },
@@ -554,7 +597,7 @@ export function useInsuranceChat() {
     const token = getAuthToken()
     if (!token) return
     try {
-      const res = await fetch(`${getApiBase()}/api/chat-sessions/${encodeURIComponent(sessionId)}`, {
+      const res = await authFetch(`${getApiBase()}/api/chat-sessions/${encodeURIComponent(sessionId)}`, {
         headers: authHeaders(token),
       })
       if (!res.ok) return
@@ -587,7 +630,7 @@ export function useInsuranceChat() {
     const token = getAuthToken()
     if (token) {
       try {
-        await fetch(`${getApiBase()}/api/chat-sessions/${encodeURIComponent(sessionId)}`, {
+        await authFetch(`${getApiBase()}/api/chat-sessions/${encodeURIComponent(sessionId)}`, {
           method: 'DELETE',
           headers: authHeaders(token),
         })

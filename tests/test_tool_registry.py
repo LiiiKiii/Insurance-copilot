@@ -50,6 +50,15 @@ class SlowTool(ExampleTool):
         return "late"
 
 
+class OversizedTool(ExampleTool):
+    @property
+    def name(self) -> str:
+        return "oversized"
+
+    async def execute(self, **kwargs: Any) -> Any:
+        return {"private_value": "x" * 100}
+
+
 class NestedSchemaTool(Tool):
     def __init__(self) -> None:
         self.received: list[dict[str, Any]] = []
@@ -159,6 +168,32 @@ class ToolRegistryTests(unittest.IsolatedAsyncioTestCase):
             await registry.execute("slow", {"count": 1}),
             "Tool execution timed out.",
         )
+
+    async def test_audit_status_matches_execution_boundary(self) -> None:
+        registry = ToolRegistry(timeout_seconds=0.01)
+        for tool in (ExampleTool(), FailingTool(), SlowTool()):
+            registry.register(tool)
+
+        for name, params, expected in (
+            ("example", {"count": 1}, "completed"),
+            ("example", {"count": "bad"}, "invalid_parameters"),
+            ("missing", {}, "unknown_tool"),
+            ("failing", {"count": 1}, "execution_failed"),
+            ("slow", {"count": 1}, "timed_out"),
+        ):
+            with self.subTest(name=name, expected=expected):
+                _content, status = await registry.execute_with_status(name, params)
+                self.assertEqual(status, expected)
+
+    async def test_oversized_result_is_not_truncated_into_invalid_json(self) -> None:
+        registry = ToolRegistry(max_result_chars=50)
+        registry.register(OversizedTool())
+
+        content, status = await registry.execute_with_status("oversized", {"count": 1})
+
+        self.assertEqual(status, "result_too_large")
+        self.assertEqual(content, "Tool result exceeded size limit.")
+        self.assertNotIn("private_value", content)
 
     async def test_nested_casting_and_unknown_fields_preserve_valid_input(self) -> None:
         tool = NestedSchemaTool()

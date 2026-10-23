@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import copy
+import json
 import tempfile
 import unittest
 from pathlib import Path
@@ -11,6 +12,8 @@ from typing import Any
 from nanobot.agent.loop import AgentLoop
 from nanobot.agent.tools.base import Tool
 from nanobot.agent.tools.registry import ToolRegistry
+from nanobot.agent.tools.insurance.planning_layer.prioritization import PrioritizeFollowupsTool
+from nanobot.agent.tools.insurance.data_layer.pending import GetPendingPoliciesTool
 from nanobot.bus.queue import MessageBus
 from nanobot.providers.base import LLMProvider, LLMResponse, ToolCallRequest
 
@@ -129,6 +132,9 @@ class AgentToolCallingTests(unittest.IsolatedAsyncioTestCase):
         result = await loop.process_direct("Add 2 and 3")
 
         self.assertEqual(result.content, "The sum is 5.")
+        self.assertEqual(result.metadata["tool_events"], [{
+            "name": "add", "status": "completed", "tool_call_id": "call-exact-id",
+        }])
         self.assertEqual(len(provider.calls), 2)
         self.assertEqual(provider.calls[0]["tools"], registry.get_definitions())
         assistant, tool_result = provider.calls[1]["messages"][-2:]
@@ -192,6 +198,77 @@ class AgentToolCallingTests(unittest.IsolatedAsyncioTestCase):
             [message["tool_call_id"] for message in history if message["role"] == "tool"],
             ["one", "two"],
         )
+
+    async def test_websocket_rejects_model_selected_foreign_agent(self) -> None:
+        registry = ToolRegistry()
+        registry.register(GetPendingPoliciesTool(self.workspace))
+        loop, provider = self._loop([
+            LLMResponse(None, [ToolCallRequest(
+                "foreign-call", "get_pending_policies", {"agent_id": "other-agent"},
+            )]),
+            LLMResponse(content="I cannot access another agent's candidates."),
+        ], registry=registry)
+
+        result = await loop.process_direct(
+            "Rank another agent's follow-ups", channel="websocket", chat_id="AGT001",
+        )
+
+        self.assertEqual(result.metadata["tool_events"], [{
+            "name": "get_pending_policies", "status": "agent_access_denied",
+            "tool_call_id": "foreign-call",
+        }])
+        tool_result = next(row for row in provider.calls[1]["messages"] if row["role"] == "tool")
+        self.assertEqual(json.loads(tool_result["content"]),
+                         {"error": "agent_id is not authorized"})
+
+    async def test_websocket_does_not_offer_or_execute_untrusted_prioritization(self) -> None:
+        registry = ToolRegistry()
+        tool = PrioritizeFollowupsTool()
+        registry.register(tool)
+        loop, provider = self._loop([
+            LLMResponse(None, [ToolCallRequest(
+                "blocked-call", "prioritize_followups", {
+                    "agent_id": "AGT001", "objective": {"open_gap": 100},
+                    "candidates": [{"candidate_id": "foreign-policy"}],
+                },
+            )]),
+        ], registry=registry)
+
+        result = await loop.process_direct(
+            "Prioritize follow-ups", channel="websocket", chat_id="AGT001",
+        )
+
+        self.assertEqual(result.content, "Verified follow-up candidates are unavailable.")
+        self.assertEqual(result.metadata["tool_events"], [{
+            "name": "prioritize_followups", "status": "candidate_source_unavailable",
+            "tool_call_id": "blocked-call",
+        }])
+        self.assertEqual(provider.calls[0]["tools"], None)
+        self.assertEqual(len(provider.calls), 1)
+        self.assertNotIn("foreign-policy", result.content)
+
+    async def test_non_websocket_model_cannot_supply_candidate_authorization(self) -> None:
+        registry = ToolRegistry()
+        registry.register(PrioritizeFollowupsTool())
+        loop, provider = self._loop([
+            LLMResponse(None, [ToolCallRequest(
+                "offline-call", "prioritize_followups", {
+                    "agent_id": "AGT001", "objective": {"open_gap": 100},
+                    "candidates": [{
+                        "candidate_id": "P1", "expected_contribution": 50,
+                        "urgency": 0.8, "actionability": 0.7,
+                    }],
+                },
+            )]),
+        ], registry=registry)
+
+        result = await loop.process_direct("Prioritize follow-ups")
+
+        self.assertEqual(result.content, "Verified follow-up candidates are unavailable.")
+        self.assertEqual(result.metadata["tool_events"][0]["status"],
+                         "candidate_source_unavailable")
+        self.assertEqual(provider.calls[0]["tools"], None)
+        self.assertEqual(len(provider.calls), 1)
 
 
 if __name__ == "__main__":

@@ -90,6 +90,7 @@ async def _delete_fts_rows(db, document_ids: list[str]) -> None:
         )
 
 
+@router.get("", include_in_schema=False)
 @router.get("/")
 async def list_kbs(
     current_user: RoleAny, db: DB,
@@ -104,6 +105,7 @@ async def list_kbs(
             "meta": {"page": page, "page_size": page_size, "total": total}}
 
 
+@router.post("", include_in_schema=False)
 @router.post("/")
 async def create_kb(body: KBRequest, current_user: RoleManager, db: DB):
     # Quota check

@@ -5,29 +5,51 @@ from __future__ import annotations
 import asyncio
 import json
 import logging
+import math
 import os
+import re
 from typing import Any
 from urllib.parse import urlsplit
 from uuid import uuid4
 
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect
+from sqlalchemy import select
 
 from admin.db import AsyncSessionFactory
 from admin.dependencies import authenticate_access_token
 from admin.hooks import log_ai_audit, log_flow_step
+from admin.models.chat import ChatSession
+from admin.models.tenant import Tenant
+from admin.services.retrieval_capabilities import get_retrieval_capabilities
 from api.chat_history import persist_turn
 from api.compliance import apply_compliance
+from nanobot.agent.coursework_demo import CourseworkDemoScope
+from nanobot.bus.events import OutboundMessage
 
 router = APIRouter()
 logger = logging.getLogger(__name__)
 _AUTH_TIMEOUT_SECONDS = 5
 _MAX_AUTH_FRAME_BYTES = 8192
 _MAX_SESSION_ALIASES = 64
+_TOOL_NAME = re.compile(r"[a-z][a-z0-9_]{0,99}\Z")
+_TOOL_CALL_ID = re.compile(r"[A-Za-z0-9._:-]{1,100}\Z")
+_TOOL_STATUSES = frozenset({
+    "completed", "unknown_tool", "invalid_parameters", "timed_out",
+    "execution_failed", "agent_access_denied",
+    "candidate_source_unavailable", "result_too_large",
+})
 
 
 def _new_session_id() -> str:
     """Return a session identifier in the WebSocket namespace."""
     return f"ws:{uuid4().hex}"
+
+
+def _is_server_session_id(value: str) -> bool:
+    suffix = value.removeprefix("ws:")
+    return value.startswith("ws:") and len(suffix) == 32 and all(
+        character in "0123456789abcdef" for character in suffix.casefold()
+    )
 
 
 def _new_turn_id() -> str:
@@ -108,11 +130,43 @@ async def _verified_user(token: str):
         return await authenticate_access_token(token, db)
 
 
+async def _coursework_demo_scope(user: Any) -> CourseworkDemoScope | None:
+    """Map a live JWT principal to the explicitly configured demo tenant."""
+    configured = os.getenv("M1_COURSEWORK_DEMO_TENANT_ID", "").strip()
+    if not configured or user.tenant_id != configured:
+        return None
+    try:
+        async with AsyncSessionFactory() as db:
+            tenant = await db.get(Tenant, user.tenant_id)
+        if tenant is None or not tenant.enabled or tenant.slug != "coursework-demo":
+            return None
+    except Exception:
+        logger.warning("Coursework demo tenant validation failed")
+        return None
+    return CourseworkDemoScope(tenant_id=user.tenant_id, agent_id=user.username)
+
+
 async def _audit_write(operation, **kwargs) -> None:
     try:
         await operation(**kwargs)
     except Exception:
         logger.warning("WebSocket audit persistence failed")
+
+
+async def _owned_session_exists(session_id: str, user_id: str) -> bool:
+    """Return whether a server-issued session belongs to the authenticated user."""
+    async with AsyncSessionFactory() as db:
+        owner_id = await db.scalar(
+            select(ChatSession.user_id).where(ChatSession.id == session_id)
+        )
+    return owner_id == user_id
+
+
+def _safe_string_list(payload: dict[str, Any], field: str) -> list[str]:
+    value = payload.get(field)
+    if not isinstance(value, list):
+        return []
+    return [item[:300] for item in value[:20] if isinstance(item, str) and item]
 
 
 async def _persist_chat_turn(**kwargs) -> None:
@@ -121,6 +175,62 @@ async def _persist_chat_turn(**kwargs) -> None:
             await persist_turn(db, **kwargs)
     except Exception:
         logger.warning("Chat-history persistence failed", exc_info=True)
+
+
+def _auditable_tool_events(result: Any) -> list[dict[str, str]]:
+    """Keep only bounded, non-sensitive tool trace fields from an Agent result."""
+    metadata = getattr(result, "metadata", None)
+    raw = metadata.get("tool_events") if isinstance(metadata, dict) else None
+    if not isinstance(raw, list):
+        return []
+    events: list[dict[str, str]] = []
+    for item in raw:
+        if not isinstance(item, dict):
+            continue
+        name, status = item.get("name"), item.get("status")
+        if (not isinstance(name, str) or not _TOOL_NAME.fullmatch(name)
+                or not isinstance(status, str) or status not in _TOOL_STATUSES):
+            continue
+        event = {"name": name, "status": status}
+        call_id = item.get("tool_call_id")
+        if isinstance(call_id, str) and _TOOL_CALL_ID.fullmatch(call_id):
+            event["tool_call_id"] = call_id
+        events.append(event)
+    return events
+
+
+def _structured_recommendation(result: Any, events: list[dict[str, str]]) -> dict[str, Any] | None:
+    """Expose only a completed, correlated internal coursework tool result."""
+    if not isinstance(result, OutboundMessage):
+        return None
+    value = result.metadata.get("structured_result")
+    if not isinstance(value, dict) or value.get("kind") != "action_plan":
+        return None
+    call_id = value.get("tool_call_id")
+    if (not isinstance(call_id, str) or not _TOOL_CALL_ID.fullmatch(call_id)
+            or not any(event.get("name") == "prioritize_followups"
+                       and event.get("status") == "completed"
+                       and event.get("tool_call_id") == call_id for event in events)
+            or value.get("source") != "m2-coursework-candidates-v3"):
+        return None
+    actions = value.get("actions")
+    if not isinstance(actions, list) or not 1 <= len(actions) <= 50:
+        return None
+    for rank, action in enumerate(actions, start=1):
+        if not isinstance(action, dict) or action.get("rank") != rank:
+            return None
+        if action.get("priority") not in {"P0", "P1", "P2"}:
+            return None
+        if not all(isinstance(action.get(key), str) and action[key].strip()
+                   for key in ("candidate_id", "action", "timing")):
+            return None
+        score = action.get("priority_score")
+        if (isinstance(score, bool) or not isinstance(score, (int, float))
+                or not 0 <= score <= 100 or not math.isfinite(score)
+                or not isinstance(action.get("evidence"), dict)
+                or not isinstance(action.get("score_components"), dict)):
+            return None
+    return value
 
 
 def _model_id(agent_loop: Any) -> str | None:
@@ -163,8 +273,10 @@ async def chat(websocket: WebSocket) -> None:
         await websocket.send_json({"type": "auth_ok"})
     except WebSocketDisconnect:
         return
-    session_aliases: dict[str, str] = {}
     connection_session_id = _new_session_id()
+    session_aliases: dict[str, str] = {
+        connection_session_id: connection_session_id
+    }
 
     while True:
         try:
@@ -207,6 +319,26 @@ async def chat(websocket: WebSocket) -> None:
             await websocket.send_json(_error("agent_id is not authorized.", turn_id))
             continue
 
+        retrieval_mode = payload.get("retrieval_mode", "keyword")
+        if retrieval_mode not in {"keyword", "vector"}:
+            await websocket.send_json(
+                _error("retrieval_mode must be 'keyword' or 'vector'.", turn_id)
+            )
+            continue
+        if retrieval_mode == "vector":
+            capabilities = await get_retrieval_capabilities()
+            if not capabilities.vector.available:
+                await websocket.send_json(
+                    _error(
+                        capabilities.vector.reason or "Vector retrieval is unavailable.",
+                        turn_id,
+                    )
+                )
+                continue
+        upload_ids = _safe_string_list(payload, "upload_ids")
+        attachment_labels = _safe_string_list(payload, "attachment_labels")
+        demo_scope = await _coursework_demo_scope(user)
+
         try:
             requested_session = _optional_identifier(
                 payload,
@@ -222,6 +354,11 @@ async def chat(websocket: WebSocket) -> None:
             session_id = requested_session
         elif requested_session in session_aliases:
             session_id = session_aliases[requested_session]
+        elif _is_server_session_id(requested_session) and await _owned_session_exists(
+            requested_session, user.id
+        ):
+            session_id = requested_session
+            session_aliases[requested_session] = requested_session
         elif len(session_aliases) >= _MAX_SESSION_ALIASES:
             await websocket.send_json(_error("Too many sessions on this connection.", turn_id))
             continue
@@ -229,6 +366,14 @@ async def chat(websocket: WebSocket) -> None:
             session_id = _new_session_id()
             session_aliases[requested_session] = session_id
         connection_session_id = session_id
+        turn_kwargs: dict[str, Any] = {
+            "content": message, "session_key": session_id,
+            "channel": "websocket", "chat_id": agent_id,
+        }
+        if demo_scope is not None:
+            turn_kwargs["demo_scope"] = demo_scope
+        if "retrieval_mode" in payload:
+            turn_kwargs["retrieval_mode"] = retrieval_mode
         await _audit_write(log_flow_step, session_id=session_id, agent_id=user.username,
                            step_index=0, step_type="user_input", content=message)
         try:
@@ -241,7 +386,7 @@ async def chat(websocket: WebSocket) -> None:
                 model_id = _model_id(agent_loop)
                 await _audit_write(log_flow_step, session_id=session_id, agent_id=user.username,
                                    step_index=1, step_type="llm_call", content=model_id or "")
-                result = await agent_loop.process_direct(content=message, session_key=session_id, channel="websocket", chat_id=agent_id)
+                result = await agent_loop.process_direct(**turn_kwargs)
             else:
                 async with coordinator.turn():
                     agent_loop = _get_agent_loop(websocket)
@@ -251,7 +396,7 @@ async def chat(websocket: WebSocket) -> None:
                     model_id = _model_id(agent_loop)
                     await _audit_write(log_flow_step, session_id=session_id, agent_id=user.username,
                                        step_index=1, step_type="llm_call", content=model_id or "")
-                    result = await agent_loop.process_direct(content=message, session_key=session_id, channel="websocket", chat_id=agent_id)
+                    result = await agent_loop.process_direct(**turn_kwargs)
         except WebSocketDisconnect:
             return
         except Exception as exc:
@@ -272,6 +417,14 @@ async def chat(websocket: WebSocket) -> None:
             continue
 
         processed_content, has_compliance_issue, matched_keywords = apply_compliance(content)
+        result_metadata = getattr(result, "metadata", None)
+        citations = (
+            result_metadata.get("citations", [])
+            if isinstance(result_metadata, dict)
+            else []
+        )
+        tool_events = _auditable_tool_events(result)
+        structured_result = _structured_recommendation(result, tool_events)
 
         await _persist_chat_turn(
             session_id=session_id,
@@ -279,26 +432,42 @@ async def chat(websocket: WebSocket) -> None:
             agent_id=agent_id,
             user_message=message,
             assistant_message=processed_content,
-            assistant_metadata=dict(getattr(result, "metadata", None) or {}),
+            user_metadata={
+                "upload_ids": upload_ids,
+                "attachment_labels": attachment_labels,
+                "retrieval_mode": retrieval_mode,
+            },
+            assistant_metadata=dict(result_metadata or {}),
         )
 
+        for index, event in enumerate(tool_events, start=2):
+            await _audit_write(
+                log_flow_step, session_id=session_id, agent_id=user.username,
+                step_index=index, step_type="tool_call", content=event["name"],
+                metadata_json=json.dumps({
+                    "tool_call_id": event.get("tool_call_id"),
+                    "status": event["status"],
+                    "turn_id": turn_id,
+                }),
+            )
         await _audit_write(log_flow_step, session_id=session_id, agent_id=user.username,
-                           step_index=2, step_type="response", content=processed_content)
+                           step_index=2 + len(tool_events), step_type="response", content=processed_content)
         await _audit_write(
             log_ai_audit, session_id=session_id, agent_id=user.username,
-            user_query=message, ai_response=processed_content, tools_called="[]",
+            user_query=message, ai_response=processed_content,
+            tools_called=json.dumps([event["name"] for event in tool_events]),
             model_id=model_id, has_compliance_issue=has_compliance_issue,
             compliance_notes=("Matched: " + ", ".join(matched_keywords)) if matched_keywords else None,
             tenant_id=user.tenant_id, user_id=user.id,
         )
         try:
-            await websocket.send_json(
-                {
-                    "type": "response",
-                    "content": processed_content,
-                    "session_id": session_id,
-                    "turn_id": turn_id,
-                }
-            )
+            response_event: dict[str, Any] = {
+                "type": "response", "content": processed_content,
+                "session_id": session_id, "turn_id": turn_id,
+                "citations": citations,
+            }
+            if structured_result is not None:
+                response_event["result"] = structured_result
+            await websocket.send_json(response_event)
         except WebSocketDisconnect:
             return
