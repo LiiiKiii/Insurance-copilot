@@ -17,9 +17,9 @@ from admin.services.pdf.indexer import KnowledgeIndexer
 from admin.services.structured_markdown import StructuredMarkdownChunker
 from admin.utils import now_beijing
 
-BUILTIN_SALES_KB_NAME = "系统内置知识库 - 销售话术"
-BUILTIN_BEST_PRACTICE_KB_NAME = "系统内置知识库 - 最佳实践"
-BUILTIN_COMPETITION_KB_NAME = "系统内置知识库 - 竞赛规则"
+BUILTIN_SALES_KB_NAME = "Built-in Sales Scripts"
+BUILTIN_BEST_PRACTICE_KB_NAME = "Built-in Best Practices"
+BUILTIN_COMPETITION_KB_NAME = "Built-in Competition Rules"
 
 
 @dataclass(frozen=True)
@@ -48,21 +48,21 @@ def get_builtin_knowledge_groups(workspace: Path) -> tuple[BuiltinKnowledgeGroup
         BuiltinKnowledgeGroup(
             "sales_scripts",
             BUILTIN_SALES_KB_NAME,
-            "内置销售场景话术；由 data/knowledge/sales_scripts.md 同步。",
+            "Built-in insurance sales scenario scripts; synced from data/knowledge/sales_scripts.md.",
             "sales_script",
             ("data/knowledge/sales_scripts.md",),
         ),
         BuiltinKnowledgeGroup(
             "best_practices",
             BUILTIN_BEST_PRACTICE_KB_NAME,
-            "内置保险销售最佳实践；由 data/knowledge/best_practices.md 同步。",
+            "Built-in insurance sales best practices; synced from data/knowledge/best_practices.md.",
             "best_practice",
             ("data/knowledge/best_practices.md",),
         ),
         BuiltinKnowledgeGroup(
             "competition_rules",
             BUILTIN_COMPETITION_KB_NAME,
-            "内置竞赛、MDRT、COT 与历史竞赛通告。",
+            "Built-in competition, MDRT, COT and historical competition announcements.",
             "competition_rule",
             tuple(sorted(competition_paths)),
         ),

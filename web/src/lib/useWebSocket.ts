@@ -6,6 +6,7 @@ import { API_CONFIG, RECONNECT } from '@/config'
 import {
   authFetch,
   getAccessTokenExpiration,
+  getChatUser,
   getToken as getAuthToken,
   getValidAccessToken,
   redirectToLogin,
@@ -569,7 +570,9 @@ export function useInsuranceChat() {
       wsRef.current.send(
         JSON.stringify({
           message: content,
-          agent_id: agentIdRef.current,
+          // The authenticated username is authoritative; a stale local agentId
+          // must never be sent, otherwise the WS guard rejects the turn.
+          agent_id: getChatUser()?.username || agentIdRef.current,
           session_id: sid,
           turn_id: turnId,
           upload_ids: opts?.uploadIds ?? [],

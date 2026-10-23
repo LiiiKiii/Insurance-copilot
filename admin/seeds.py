@@ -34,7 +34,7 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_MOCK_DIR = PROJECT_ROOT / "data" / "mock"
 DEFAULT_TENANT_ID = "00000000-0000-0000-0000-000000000001"
 ACTION_TEMPLATES_CONFIG_KEY = "planning.action_templates"
-LEGACY_COMPETITION_IDS = frozenset(
+MANAGED_COMPETITION_IDS = frozenset(
     {
         "COMP_STARLIGHT_2026",
         "COMP_SPRINT_2026Q1",
@@ -42,6 +42,10 @@ LEGACY_COMPETITION_IDS = frozenset(
         "COMP_ROOKIE_2026",
         "HONOR_MDRT_2026",
         "HONOR_COT_2026",
+        "COMP_WRITTEN_PREMIUM_2026",
+        "COMP_CONVERSION_2026H1",
+        "COMP_AI_PRACTICE_2026H1",
+        "HONOR_NEW_BUSINESS_COMMISSION_2026",
     }
 )
 
@@ -86,10 +90,11 @@ async def _upsert(
 
 
 def _period_bounds(period: str) -> tuple[str, str]:
-    start, separator, end = period.partition(" to ")
-    if not separator or not start or not end:
-        raise ValueError(f"Unsupported reporting period: {period!r}")
-    return start, end
+    for delimiter in (" to ", " 至 "):
+        start, separator, end = period.partition(delimiter)
+        if separator and start and end:
+            return start, end
+    raise ValueError(f"Unsupported reporting period: {period!r}")
 
 
 def _metric(payload: dict[str, Any], key: str) -> dict[str, Any]:
@@ -573,10 +578,9 @@ async def _seed_competitions(
             definitions.setdefault(competition["id"], competition)
             entries.append((agent_id, competition))
 
-    # These identifiers belong to the retired HKD-era seed.  Deactivate only
-    # known seed records so that reruns do not hide administrator-created
-    # competitions that are not present in the current mock dataset.
-    retired_ids = LEGACY_COMPETITION_IDS.difference(definitions)
+    # Deactivate only known seed records from the version that is not selected;
+    # administrator-created competitions are deliberately left untouched.
+    retired_ids = MANAGED_COMPETITION_IDS.difference(definitions)
     if retired_ids:
         retired_competitions = await session.scalars(
             select(Competition).where(Competition.id.in_(retired_ids))

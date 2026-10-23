@@ -79,6 +79,10 @@ class BusinessSeedModelTests(unittest.IsolatedAsyncioTestCase):
             _period_bounds("2026-01-01 to 2026-12-31"),
             ("2026-01-01", "2026-12-31"),
         )
+        self.assertEqual(
+            _period_bounds("2026-01-01 至 2026-03-18"),
+            ("2026-01-01", "2026-03-18"),
+        )
         with self.assertRaises(ValueError):
             _period_bounds("2026")
 
@@ -222,7 +226,7 @@ class BusinessSeedModelTests(unittest.IsolatedAsyncioTestCase):
         self.assertIsNotNone(competition)
         self.assertEqual(competition.unit, "USD")
 
-    async def test_competition_seed_retires_only_known_legacy_records(self) -> None:
+    async def test_competition_seed_retires_only_known_versioned_records(self) -> None:
         competition_data = {
             "AGT001": {
                 "competitions": [
@@ -258,6 +262,15 @@ class BusinessSeedModelTests(unittest.IsolatedAsyncioTestCase):
                         is_active=True,
                     ),
                     Competition(
+                        id="COMP_WRITTEN_PREMIUM_2026",
+                        name="New-business seeded competition",
+                        type="competition",
+                        target_metric="protection_premium",
+                        unit="USD",
+                        deadline="2026-12-31",
+                        is_active=True,
+                    ),
+                    Competition(
                         id="CUSTOM_COMPETITION",
                         name="Administrator competition",
                         type="competition",
@@ -274,10 +287,14 @@ class BusinessSeedModelTests(unittest.IsolatedAsyncioTestCase):
             await session.commit()
 
             legacy = await session.get(Competition, "COMP_STARLIGHT_2026")
+            new_business = await session.get(
+                Competition, "COMP_WRITTEN_PREMIUM_2026"
+            )
             custom = await session.get(Competition, "CUSTOM_COMPETITION")
             current = await session.get(Competition, "COMP001")
 
         self.assertFalse(legacy.is_active)
+        self.assertFalse(new_business.is_active)
         self.assertTrue(custom.is_active)
         self.assertTrue(current.is_active)
         self.assertEqual(current.unit, "USD")
