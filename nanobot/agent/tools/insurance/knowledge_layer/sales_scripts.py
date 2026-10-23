@@ -17,11 +17,11 @@ from nanobot.retrieval_citations import (
 
 
 SCENARIO_KEYWORDS = {
-    "objection": ["think about it", "objection", "refuse", "expensive", "too costly"],
-    "needs_analysis": ["needs", "risk review", "analysis", "exposure", "coverage gap"],
-    "referral": ["referral", "introduction", "friend", "recommendation"],
-    "upsell": ["cross-line", "existing client", "additional exposure", "upgrade"],
-    "closing": ["close", "closing", "commit", "sign", "purchase"],
+    "objection": ["考慮", "objection", "異議", "拒絕", "太貴"],
+    "needs_analysis": ["需求", "fabe", "挖掘", "分析", "保障缺口"],
+    "referral": ["轉介紹", "referral", "介紹", "朋友"],
+    "upsell": ["加保", "老客", "upsell", "升級"],
+    "closing": ["促成", "closing", "成交", "簽單"],
 }
 
 
@@ -39,9 +39,9 @@ class SearchSalesScriptsTool(Tool):
     @property
     def description(self) -> str:
         return (
-            "Search sales scripts for a specific customer conversation. "
-            "Supported scenarios include price objection handling, risk analysis, "
-            "referrals, cross-line reviews, renewals, and closing."
+            "【知識層】以關鍵詞或語義向量搜索特定銷售場景的話術模板。"
+            "場景包括：異議處理（客戶說考慮一下）、需求挖掘（FABE法）、"
+            "轉介紹、老客加保、促成成交。返回可直接使用的話術和使用說明。"
         )
 
     @property
@@ -51,16 +51,16 @@ class SearchSalesScriptsTool(Tool):
             "properties": {
                 "scenario": {
                     "type": "string",
-                    "description": "Scenario such as 'objection_handling', 'needs_analysis', 'referral', 'upsell', or 'closing'",
+                    "description": "場景描述，如 'objection_handling'、'needs_analysis'、'referral'、'upsell'、'closing'，或中文描述",
                 },
                 "product_type": {
                     "type": "string",
-                    "description": "Optional product type such as motor, property, commercial, liability, or specialty",
+                    "description": "產品類型（可選），如 '保障型'、'儲蓄型'、'危疾'",
                 },
                 "search_mode": {
                     "type": "string",
                     "enum": ["keyword", "vector"],
-                    "description": "Use keyword or semantic vector retrieval",
+                    "description": "keyword 使用關鍵詞匹配；vector 使用語義向量匹配",
                     "default": "keyword",
                 },
             },
@@ -75,7 +75,7 @@ class SearchSalesScriptsTool(Tool):
         scripts_path = self._workspace / "data" / "knowledge" / "sales_scripts.md"
 
         if not scripts_path.exists():
-            return json.dumps({"error": "The sales-script knowledge document is unavailable"})
+            return json.dumps({"error": "話術知識庫不存在"}, ensure_ascii=False)
 
         content = scripts_path.read_text(encoding="utf-8")
         sections = content.split("\n## ")
@@ -94,7 +94,10 @@ class SearchSalesScriptsTool(Tool):
                     candidate_limit=10,
                 )
             except Exception as exc:
-                return json.dumps({"error": f"Vector script search failed: {str(exc)[:200]}"})
+                return json.dumps(
+                    {"error": f"話術向量查詢失敗: {str(exc)[:200]}"},
+                    ensure_ascii=False,
+                )
             section_map = {
                 section.strip().splitlines()[0].strip(): section.strip()
                 for section in sections[1:]

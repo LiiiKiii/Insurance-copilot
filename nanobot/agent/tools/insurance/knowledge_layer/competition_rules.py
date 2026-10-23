@@ -16,28 +16,40 @@ from nanobot.retrieval_citations import (
 )
 
 
-# Keyword-to-file mapping. One keyword may map to multiple source documents.
-# English summaries are listed before original circulars when both are available.
+# Keyword → file mapping. A keyword can map to multiple files (list).
+# Search order: data/knowledge/{file} first, then data/knowledge/competitions/{file}.
 COMP_FILE_MAP: dict[str, list[str]] = {
-    "written premium": ["mdrt_rules.md", "competition_elite_challenge.md", "competitions/AG25035.md"],
-    "premium excellence": ["mdrt_rules.md", "competition_elite_challenge.md", "competitions/AG25035.md"],
-    "portfolio quality": ["cot_rules.md"],
-    "conversion quality": ["competition_starlight.md", "competitions/AG25011.md"],
-    "quote-to-bind": ["competition_starlight.md", "competitions/AG25011.md"],
-    "ai practice": ["competition_rookie_king.md", "competitions/AG25138.md"],
-    "new business commission": ["competition_quarterly_sprint.md"],
-    "commercial lines": ["competitions/AG24050.md"],
-    "renewal": ["competitions/AG25030.md", "competitions/AG25129.md"],
-    "pending case": ["competitions/AG25044.md"],
-    "cross-line": ["competitions/AG25099.md"],
-    "ag24050": ["competitions/AG24050.md"],
-    "ag25011": ["competitions/AG25011.md"],
-    "ag25030": ["competitions/AG25030.md"],
-    "ag25035": ["competitions/AG25035.md"],
-    "ag25044": ["competitions/AG25044.md"],
-    "ag25099": ["competitions/AG25099.md"],
-    "ag25129": ["competitions/AG25129.md"],
-    "ag25138": ["competitions/AG25138.md"],
+    # 榮譽獎項
+    "ida": ["competitions/AG25035.md"],
+    "mdrt": ["competitions/AG25035.md", "mdrt_rules.md"],
+    "百萬圓桌": ["competitions/AG25035.md", "mdrt_rules.md"],
+    "cot": ["cot_rules.md"],
+    "超級會員": ["cot_rules.md"],
+    # 精英海外
+    "精英海外": ["competitions/AG24050.md", "competition_elite_challenge.md"],
+    "精英挑戰": ["competitions/AG24050.md", "competition_elite_challenge.md"],
+    # 三月快閃
+    "三月快閃": ["competitions/AG25030.md", "competition_starlight.md"],
+    "快閃三重賞": ["competitions/AG25030.md", "competition_starlight.md"],
+    "星光大道": ["competition_starlight.md"],
+    # 業務推動
+    "q1推動": ["competitions/AG25011.md", "competition_quarterly_sprint.md"],
+    "業務推動": ["competitions/AG25011.md", "competition_quarterly_sprint.md"],
+    "業務衝刺": ["competitions/AG25011.md", "competition_quarterly_sprint.md"],
+    "季度衝刺": ["competition_quarterly_sprint.md"],
+    # 4月有禮
+    "4月有禮": ["competitions/AG25044.md"],
+    "接粽而來": ["competitions/AG25044.md"],
+    # 月戰越勇
+    "月戰越勇": ["competitions/AG25099.md"],
+    # 遊樂團
+    "遊樂團": ["competitions/AG25129.md"],
+    "賞您出行": ["competitions/AG25129.md"],
+    # 十月推動
+    "糕賞精英": ["competitions/AG25138.md"],
+    "鈔有驚喜": ["competitions/AG25138.md"],
+    # 新人王
+    "新人王": ["competition_rookie_king.md"],
 }
 
 
@@ -55,9 +67,9 @@ class SearchCompetitionRulesTool(Tool):
     @property
     def description(self) -> str:
         return (
-            "Search competition rules, campaign circulars, and professional honour standards. "
-            "Use this tool for written-premium, conversion-quality, AI-practice, "
-            "new-business-commission, retention, and portfolio-quality programmes."
+            "【知識層】以關鍵詞或語義向量查詢競賽規則和榮譽標準文件。"
+            "可搜索：三月快閃三重賞、Q1業務推動、精英海外會議、新人王、MDRT、COT、IDA、"
+            "4月有禮接粽而來、月戰越勇快閃賞、遊樂團賞您出行、糕賞精英等。"
         )
 
     @property
@@ -67,16 +79,16 @@ class SearchCompetitionRulesTool(Tool):
             "properties": {
                 "query": {
                     "type": "string",
-                    "description": "Search terms such as 'written premium target', 'conversion quality rules', or 'AI practice sprint'",
+                    "description": "搜索關鍵詞，如 'MDRT資格條件'、'星光大道規則'、'季度衝刺達標條件'",
                 },
                 "competition_name": {
                     "type": "string",
-                    "description": "Optional competition name used to improve document matching",
+                    "description": "競賽名稱（可選），用於改善文件匹配",
                 },
                 "search_mode": {
                     "type": "string",
                     "enum": ["keyword", "vector"],
-                    "description": "Use keyword or semantic vector retrieval",
+                    "description": "keyword 使用關鍵詞匹配；vector 使用語義向量匹配",
                     "default": "keyword",
                 },
             },
@@ -107,7 +119,10 @@ class SearchCompetitionRulesTool(Tool):
                     candidate_limit=16,
                 )
             except Exception as exc:
-                return json.dumps({"error": f"Vector competition search failed: {str(exc)[:200]}"})
+                return json.dumps(
+                    {"error": f"競賽規則向量查詢失敗: {str(exc)[:200]}"},
+                    ensure_ascii=False,
+                )
             for hit in hits:
                 source_path = str(hit.metadata.get("source_path", ""))
                 fpath = self._workspace / source_path if source_path else None
@@ -183,7 +198,7 @@ class SearchCompetitionRulesTool(Tool):
                 ))
 
         if not results:
-            return json.dumps({"error": "No relevant competition rule documents were found"})
+            return json.dumps({"error": "找不到相關競賽規則文件"}, ensure_ascii=False)
 
         return json.dumps({
             "query": kwargs["query"],
