@@ -1,7 +1,7 @@
 {
   "dataset_id": "m2-coursework-candidates-v3",
   "annotation_version": "human-v3",
-  "annotation_status": "pending",
+  "annotation_status": "complete",
   "recommended_method": "Two non-M4 annotators rank independently; one annotator is acceptable only if reported as a limitation.",
   "grading_rule": {
     "positions_1_2": 3,
@@ -44,7 +44,66 @@
           ]
         }
       ],
-      "consensus_relevance": {}
+      "consensus_relevance": {
+        "CLI-00690-005": 3,
+        "POL-00690-001": 3,
+        "POL-00690-002": 2,
+        "CLI-00690-007": 2,
+        "CLI-00690-009": 1,
+        "CLI-00690-011": 0
+      },
+      "consensus_ranking": [
+        "CLI-00690-005",
+        "POL-00690-001",
+        "POL-00690-002",
+        "CLI-00690-007",
+        "CLI-00690-009",
+        "CLI-00690-011"
+      ],
+      "adjudication_comparison": [
+        {
+          "candidate_id": "CLI-00690-005",
+          "annotator_1_rank": 2,
+          "annotator_2_rank": 1,
+          "final_rank": 1,
+          "reason": "Explicit action: The client requested a callback today. Deadline 2026-05-31; placed by the earlier actionable deadline, rather than premium alone."
+        },
+        {
+          "candidate_id": "POL-00690-001",
+          "annotator_1_rank": 6,
+          "annotator_2_rank": 3,
+          "final_rank": 2,
+          "reason": "Explicit action: Customer documents are incomplete; the agent can request them now. Deadline 2026-06-01; placed by the earlier actionable deadline, rather than premium alone."
+        },
+        {
+          "candidate_id": "POL-00690-002",
+          "annotator_1_rank": 5,
+          "annotator_2_rank": 4,
+          "final_rank": 3,
+          "reason": "Explicit action: The underwriter has an unanswered question for the agent. Deadline 2026-06-02; placed by the earlier actionable deadline, rather than premium alone."
+        },
+        {
+          "candidate_id": "CLI-00690-007",
+          "annotator_1_rank": 1,
+          "annotator_2_rank": 2,
+          "final_rank": 4,
+          "reason": "Explicit action: Renewal decision is due within three days. Deadline 2026-06-03; placed by the earlier actionable deadline, rather than premium alone."
+        },
+        {
+          "candidate_id": "CLI-00690-009",
+          "annotator_1_rank": 4,
+          "annotator_2_rank": 5,
+          "final_rank": 5,
+          "reason": "Explicit action: The client requested a quotation within five days. Deadline 2026-06-05; placed by the earlier actionable deadline, rather than premium alone."
+        },
+        {
+          "candidate_id": "CLI-00690-011",
+          "annotator_1_rank": 3,
+          "annotator_2_rank": 6,
+          "final_rank": 6,
+          "reason": "Explicit action: A coverage review is scheduled within fourteen days. Deadline 2026-06-14; placed by the earlier actionable deadline, rather than premium alone."
+        }
+      ]
     },
     {
       "scenario_id": "SCN-AGT00770",
@@ -80,7 +139,66 @@
           ]
         }
       ],
-      "consensus_relevance": {}
+      "consensus_relevance": {
+        "CLI-00770-010": 3,
+        "POL-00770-001": 3,
+        "CLI-00770-008": 2,
+        "POL-00770-002": 2,
+        "CLI-00770-012": 1,
+        "POL-00770-003": 0
+      },
+      "consensus_ranking": [
+        "CLI-00770-010",
+        "POL-00770-001",
+        "CLI-00770-008",
+        "POL-00770-002",
+        "CLI-00770-012",
+        "POL-00770-003"
+      ],
+      "adjudication_comparison": [
+        {
+          "candidate_id": "CLI-00770-010",
+          "annotator_1_rank": 2,
+          "annotator_2_rank": 1,
+          "final_rank": 1,
+          "reason": "Explicit action: The client requested a callback today. Deadline 2026-05-31; placed by the earlier actionable deadline, rather than premium alone."
+        },
+        {
+          "candidate_id": "POL-00770-001",
+          "annotator_1_rank": 5,
+          "annotator_2_rank": 2,
+          "final_rank": 2,
+          "reason": "Explicit action: Customer documents are incomplete; the agent can request them now. Deadline 2026-06-01; placed by the earlier actionable deadline, rather than premium alone."
+        },
+        {
+          "candidate_id": "CLI-00770-008",
+          "annotator_1_rank": 3,
+          "annotator_2_rank": 3,
+          "final_rank": 3,
+          "reason": "Explicit action: Renewal decision is due within three days. Deadline 2026-06-03; placed by the earlier actionable deadline, rather than premium alone."
+        },
+        {
+          "candidate_id": "POL-00770-002",
+          "annotator_1_rank": 6,
+          "annotator_2_rank": 4,
+          "final_rank": 4,
+          "reason": "Explicit action: Quoted terms are ready and the client must confirm acceptance. Deadline 2026-06-04; placed by the earlier actionable deadline, rather than premium alone."
+        },
+        {
+          "candidate_id": "CLI-00770-012",
+          "annotator_1_rank": 1,
+          "annotator_2_rank": 5,
+          "final_rank": 5,
+          "reason": "Explicit action: A coverage review is scheduled within fourteen days. Deadline 2026-06-14; placed by the earlier actionable deadline, rather than premium alone."
+        },
+        {
+          "candidate_id": "POL-00770-003",
+          "annotator_1_rank": 4,
+          "annotator_2_rank": 6,
+          "final_rank": 6,
+          "reason": "Passive review with no outstanding request is placed after candidates with an explicit action, despite its premium or nominal deadline."
+        }
+      ]
     },
     {
       "scenario_id": "SCN-AGT00817",
@@ -116,7 +234,66 @@
           ]
         }
       ],
-      "consensus_relevance": {}
+      "consensus_relevance": {
+        "CLI-00817-011": 3,
+        "POL-00817-004": 3,
+        "POL-00817-001": 2,
+        "POL-00817-002": 2,
+        "CLI-00817-013": 1,
+        "POL-00817-003": 0
+      },
+      "consensus_ranking": [
+        "CLI-00817-011",
+        "POL-00817-004",
+        "POL-00817-001",
+        "POL-00817-002",
+        "CLI-00817-013",
+        "POL-00817-003"
+      ],
+      "adjudication_comparison": [
+        {
+          "candidate_id": "CLI-00817-011",
+          "annotator_1_rank": 2,
+          "annotator_2_rank": 1,
+          "final_rank": 1,
+          "reason": "Explicit action: The client requested a callback today. Deadline 2026-05-31; placed by the earlier actionable deadline, rather than premium alone."
+        },
+        {
+          "candidate_id": "POL-00817-004",
+          "annotator_1_rank": 4,
+          "annotator_2_rank": 2,
+          "final_rank": 2,
+          "reason": "Explicit action: Customer documents are incomplete; the agent can request them now. Deadline 2026-06-01; placed by the earlier actionable deadline, rather than premium alone."
+        },
+        {
+          "candidate_id": "POL-00817-001",
+          "annotator_1_rank": 5,
+          "annotator_2_rank": 3,
+          "final_rank": 3,
+          "reason": "Explicit action: The underwriter has an unanswered question for the agent. Deadline 2026-06-02; placed by the earlier actionable deadline, rather than premium alone."
+        },
+        {
+          "candidate_id": "POL-00817-002",
+          "annotator_1_rank": 6,
+          "annotator_2_rank": 4,
+          "final_rank": 4,
+          "reason": "Explicit action: Quoted terms are ready and the client must confirm acceptance. Deadline 2026-06-04; placed by the earlier actionable deadline, rather than premium alone."
+        },
+        {
+          "candidate_id": "CLI-00817-013",
+          "annotator_1_rank": 1,
+          "annotator_2_rank": 5,
+          "final_rank": 5,
+          "reason": "Explicit action: The client requested a quotation within five days. Deadline 2026-06-05; placed by the earlier actionable deadline, rather than premium alone."
+        },
+        {
+          "candidate_id": "POL-00817-003",
+          "annotator_1_rank": 3,
+          "annotator_2_rank": 6,
+          "final_rank": 6,
+          "reason": "Passive review with no outstanding request is placed after candidates with an explicit action, despite its premium or nominal deadline."
+        }
+      ]
     },
     {
       "scenario_id": "SCN-AGT00949",
@@ -152,7 +329,66 @@
           ]
         }
       ],
-      "consensus_relevance": {}
+      "consensus_relevance": {
+        "CLI-00949-016": 3,
+        "CLI-00949-006": 3,
+        "POL-00949-001": 2,
+        "CLI-00949-014": 2,
+        "CLI-00949-018": 1,
+        "POL-00949-002": 0
+      },
+      "consensus_ranking": [
+        "CLI-00949-016",
+        "CLI-00949-006",
+        "POL-00949-001",
+        "CLI-00949-014",
+        "CLI-00949-018",
+        "POL-00949-002"
+      ],
+      "adjudication_comparison": [
+        {
+          "candidate_id": "CLI-00949-016",
+          "annotator_1_rank": 4,
+          "annotator_2_rank": 1,
+          "final_rank": 1,
+          "reason": "Explicit action: The client requested a callback today. Deadline 2026-05-31; placed by the earlier actionable deadline, rather than premium alone."
+        },
+        {
+          "candidate_id": "CLI-00949-006",
+          "annotator_1_rank": 2,
+          "annotator_2_rank": 2,
+          "final_rank": 2,
+          "reason": "Explicit action: Renewal decision is due within three days. Deadline 2026-06-03; placed by the earlier actionable deadline, rather than premium alone."
+        },
+        {
+          "candidate_id": "POL-00949-001",
+          "annotator_1_rank": 6,
+          "annotator_2_rank": 3,
+          "final_rank": 3,
+          "reason": "Explicit action: Quoted terms are ready and the client must confirm acceptance. Deadline 2026-06-04; placed by the earlier actionable deadline, rather than premium alone."
+        },
+        {
+          "candidate_id": "CLI-00949-014",
+          "annotator_1_rank": 1,
+          "annotator_2_rank": 4,
+          "final_rank": 4,
+          "reason": "Explicit action: The client requested a quotation within five days. Deadline 2026-06-05; placed by the earlier actionable deadline, rather than premium alone."
+        },
+        {
+          "candidate_id": "CLI-00949-018",
+          "annotator_1_rank": 3,
+          "annotator_2_rank": 5,
+          "final_rank": 5,
+          "reason": "Explicit action: A coverage review is scheduled within fourteen days. Deadline 2026-06-14; placed by the earlier actionable deadline, rather than premium alone."
+        },
+        {
+          "candidate_id": "POL-00949-002",
+          "annotator_1_rank": 5,
+          "annotator_2_rank": 6,
+          "final_rank": 6,
+          "reason": "Passive review with no outstanding request is placed after candidates with an explicit action, despite its premium or nominal deadline."
+        }
+      ]
     },
     {
       "scenario_id": "SCN-AGT01191",
@@ -188,7 +424,66 @@
           ]
         }
       ],
-      "consensus_relevance": {}
+      "consensus_relevance": {
+        "CLI-01191-017": 3,
+        "POL-01191-001": 3,
+        "POL-01191-002": 2,
+        "CLI-01191-007": 2,
+        "CLI-01191-005": 1,
+        "POL-01191-003": 0
+      },
+      "consensus_ranking": [
+        "CLI-01191-017",
+        "POL-01191-001",
+        "POL-01191-002",
+        "CLI-01191-007",
+        "CLI-01191-005",
+        "POL-01191-003"
+      ],
+      "adjudication_comparison": [
+        {
+          "candidate_id": "CLI-01191-017",
+          "annotator_1_rank": 3,
+          "annotator_2_rank": 1,
+          "final_rank": 1,
+          "reason": "Explicit action: The client requested a callback today. Deadline 2026-05-31; placed by the earlier actionable deadline, rather than premium alone."
+        },
+        {
+          "candidate_id": "POL-01191-001",
+          "annotator_1_rank": 6,
+          "annotator_2_rank": 3,
+          "final_rank": 2,
+          "reason": "Explicit action: Customer documents are incomplete; the agent can request them now. Deadline 2026-06-01; placed by the earlier actionable deadline, rather than premium alone."
+        },
+        {
+          "candidate_id": "POL-01191-002",
+          "annotator_1_rank": 5,
+          "annotator_2_rank": 4,
+          "final_rank": 3,
+          "reason": "Explicit action: The underwriter has an unanswered question for the agent. Deadline 2026-06-02; placed by the earlier actionable deadline, rather than premium alone."
+        },
+        {
+          "candidate_id": "CLI-01191-007",
+          "annotator_1_rank": 1,
+          "annotator_2_rank": 2,
+          "final_rank": 4,
+          "reason": "Explicit action: Renewal decision is due within three days. Deadline 2026-06-03; placed by the earlier actionable deadline, rather than premium alone."
+        },
+        {
+          "candidate_id": "CLI-01191-005",
+          "annotator_1_rank": 2,
+          "annotator_2_rank": 5,
+          "final_rank": 5,
+          "reason": "Explicit action: The client requested a quotation within five days. Deadline 2026-06-05; placed by the earlier actionable deadline, rather than premium alone."
+        },
+        {
+          "candidate_id": "POL-01191-003",
+          "annotator_1_rank": 4,
+          "annotator_2_rank": 6,
+          "final_rank": 6,
+          "reason": "Passive review with no outstanding request is placed after candidates with an explicit action, despite its premium or nominal deadline."
+        }
+      ]
     },
     {
       "scenario_id": "SCN-AGT01448",
@@ -224,7 +519,66 @@
           ]
         }
       ],
-      "consensus_relevance": {}
+      "consensus_relevance": {
+        "POL-01448-004": 3,
+        "POL-01448-001": 3,
+        "CLI-01448-006": 2,
+        "POL-01448-002": 2,
+        "CLI-01448-008": 1,
+        "POL-01448-003": 0
+      },
+      "consensus_ranking": [
+        "POL-01448-004",
+        "POL-01448-001",
+        "CLI-01448-006",
+        "POL-01448-002",
+        "CLI-01448-008",
+        "POL-01448-003"
+      ],
+      "adjudication_comparison": [
+        {
+          "candidate_id": "POL-01448-004",
+          "annotator_1_rank": 3,
+          "annotator_2_rank": 2,
+          "final_rank": 1,
+          "reason": "Explicit action: Customer documents are incomplete; the agent can request them now. Deadline 2026-06-01; placed by the earlier actionable deadline, rather than premium alone."
+        },
+        {
+          "candidate_id": "POL-01448-001",
+          "annotator_1_rank": 6,
+          "annotator_2_rank": 3,
+          "final_rank": 2,
+          "reason": "Explicit action: The underwriter has an unanswered question for the agent. Deadline 2026-06-02; placed by the earlier actionable deadline, rather than premium alone."
+        },
+        {
+          "candidate_id": "CLI-01448-006",
+          "annotator_1_rank": 1,
+          "annotator_2_rank": 1,
+          "final_rank": 3,
+          "reason": "Explicit action: Renewal decision is due within three days. Deadline 2026-06-03; placed by the earlier actionable deadline, rather than premium alone."
+        },
+        {
+          "candidate_id": "POL-01448-002",
+          "annotator_1_rank": 5,
+          "annotator_2_rank": 4,
+          "final_rank": 4,
+          "reason": "Explicit action: Quoted terms are ready and the client must confirm acceptance. Deadline 2026-06-04; placed by the earlier actionable deadline, rather than premium alone."
+        },
+        {
+          "candidate_id": "CLI-01448-008",
+          "annotator_1_rank": 2,
+          "annotator_2_rank": 5,
+          "final_rank": 5,
+          "reason": "Explicit action: A coverage review is scheduled within fourteen days. Deadline 2026-06-14; placed by the earlier actionable deadline, rather than premium alone."
+        },
+        {
+          "candidate_id": "POL-01448-003",
+          "annotator_1_rank": 4,
+          "annotator_2_rank": 6,
+          "final_rank": 6,
+          "reason": "Passive review with no outstanding request is placed after candidates with an explicit action, despite its premium or nominal deadline."
+        }
+      ]
     },
     {
       "scenario_id": "SCN-AGT01525",
@@ -260,7 +614,66 @@
           ]
         }
       ],
-      "consensus_relevance": {}
+      "consensus_relevance": {
+        "CLI-01525-013": 3,
+        "POL-01525-001": 3,
+        "CLI-01525-015": 2,
+        "CLI-01525-011": 2,
+        "CLI-01525-009": 1,
+        "POL-01525-002": 0
+      },
+      "consensus_ranking": [
+        "CLI-01525-013",
+        "POL-01525-001",
+        "CLI-01525-015",
+        "CLI-01525-011",
+        "CLI-01525-009",
+        "POL-01525-002"
+      ],
+      "adjudication_comparison": [
+        {
+          "candidate_id": "CLI-01525-013",
+          "annotator_1_rank": 1,
+          "annotator_2_rank": 1,
+          "final_rank": 1,
+          "reason": "Explicit action: The client requested a callback today. Deadline 2026-05-31; placed by the earlier actionable deadline, rather than premium alone."
+        },
+        {
+          "candidate_id": "POL-01525-001",
+          "annotator_1_rank": 6,
+          "annotator_2_rank": 2,
+          "final_rank": 2,
+          "reason": "Explicit action: Customer documents are incomplete; the agent can request them now. Deadline 2026-06-01; placed by the earlier actionable deadline, rather than premium alone."
+        },
+        {
+          "candidate_id": "CLI-01525-015",
+          "annotator_1_rank": 4,
+          "annotator_2_rank": 3,
+          "final_rank": 3,
+          "reason": "Explicit action: Renewal decision is due within three days. Deadline 2026-06-03; placed by the earlier actionable deadline, rather than premium alone."
+        },
+        {
+          "candidate_id": "CLI-01525-011",
+          "annotator_1_rank": 2,
+          "annotator_2_rank": 4,
+          "final_rank": 4,
+          "reason": "Explicit action: The client requested a quotation within five days. Deadline 2026-06-05; placed by the earlier actionable deadline, rather than premium alone."
+        },
+        {
+          "candidate_id": "CLI-01525-009",
+          "annotator_1_rank": 3,
+          "annotator_2_rank": 5,
+          "final_rank": 5,
+          "reason": "Explicit action: A coverage review is scheduled within fourteen days. Deadline 2026-06-14; placed by the earlier actionable deadline, rather than premium alone."
+        },
+        {
+          "candidate_id": "POL-01525-002",
+          "annotator_1_rank": 5,
+          "annotator_2_rank": 6,
+          "final_rank": 6,
+          "reason": "Passive review with no outstanding request is placed after candidates with an explicit action, despite its premium or nominal deadline."
+        }
+      ]
     },
     {
       "scenario_id": "SCN-AGT01569",
@@ -296,7 +709,66 @@
           ]
         }
       ],
-      "consensus_relevance": {}
+      "consensus_relevance": {
+        "POL-01569-001": 3,
+        "CLI-01569-014": 3,
+        "POL-01569-002": 2,
+        "CLI-01569-012": 2,
+        "CLI-01569-016": 1,
+        "POL-01569-003": 0
+      },
+      "consensus_ranking": [
+        "POL-01569-001",
+        "CLI-01569-014",
+        "POL-01569-002",
+        "CLI-01569-012",
+        "CLI-01569-016",
+        "POL-01569-003"
+      ],
+      "adjudication_comparison": [
+        {
+          "candidate_id": "POL-01569-001",
+          "annotator_1_rank": 5,
+          "annotator_2_rank": 3,
+          "final_rank": 1,
+          "reason": "Explicit action: The underwriter has an unanswered question for the agent. Deadline 2026-06-02; placed by the earlier actionable deadline, rather than premium alone."
+        },
+        {
+          "candidate_id": "CLI-01569-014",
+          "annotator_1_rank": 1,
+          "annotator_2_rank": 1,
+          "final_rank": 2,
+          "reason": "Explicit action: Renewal decision is due within three days. Deadline 2026-06-03; placed by the earlier actionable deadline, rather than premium alone."
+        },
+        {
+          "candidate_id": "POL-01569-002",
+          "annotator_1_rank": 6,
+          "annotator_2_rank": 4,
+          "final_rank": 3,
+          "reason": "Explicit action: Quoted terms are ready and the client must confirm acceptance. Deadline 2026-06-04; placed by the earlier actionable deadline, rather than premium alone."
+        },
+        {
+          "candidate_id": "CLI-01569-012",
+          "annotator_1_rank": 2,
+          "annotator_2_rank": 2,
+          "final_rank": 4,
+          "reason": "Explicit action: The client requested a quotation within five days. Deadline 2026-06-05; placed by the earlier actionable deadline, rather than premium alone."
+        },
+        {
+          "candidate_id": "CLI-01569-016",
+          "annotator_1_rank": 3,
+          "annotator_2_rank": 5,
+          "final_rank": 5,
+          "reason": "Explicit action: A coverage review is scheduled within fourteen days. Deadline 2026-06-14; placed by the earlier actionable deadline, rather than premium alone."
+        },
+        {
+          "candidate_id": "POL-01569-003",
+          "annotator_1_rank": 4,
+          "annotator_2_rank": 6,
+          "final_rank": 6,
+          "reason": "Passive review with no outstanding request is placed after candidates with an explicit action, despite its premium or nominal deadline."
+        }
+      ]
     },
     {
       "scenario_id": "SCN-AGT01662",
@@ -332,7 +804,66 @@
           ]
         }
       ],
-      "consensus_relevance": {}
+      "consensus_relevance": {
+        "CLI-01662-015": 3,
+        "POL-01662-001": 3,
+        "POL-01662-002": 2,
+        "POL-01662-003": 2,
+        "CLI-01662-017": 1,
+        "POL-01662-004": 0
+      },
+      "consensus_ranking": [
+        "CLI-01662-015",
+        "POL-01662-001",
+        "POL-01662-002",
+        "POL-01662-003",
+        "CLI-01662-017",
+        "POL-01662-004"
+      ],
+      "adjudication_comparison": [
+        {
+          "candidate_id": "CLI-01662-015",
+          "annotator_1_rank": 2,
+          "annotator_2_rank": 1,
+          "final_rank": 1,
+          "reason": "Explicit action: The client requested a callback today. Deadline 2026-05-31; placed by the earlier actionable deadline, rather than premium alone."
+        },
+        {
+          "candidate_id": "POL-01662-001",
+          "annotator_1_rank": 6,
+          "annotator_2_rank": 2,
+          "final_rank": 2,
+          "reason": "Explicit action: Customer documents are incomplete; the agent can request them now. Deadline 2026-06-01; placed by the earlier actionable deadline, rather than premium alone."
+        },
+        {
+          "candidate_id": "POL-01662-002",
+          "annotator_1_rank": 4,
+          "annotator_2_rank": 3,
+          "final_rank": 3,
+          "reason": "Explicit action: The underwriter has an unanswered question for the agent. Deadline 2026-06-02; placed by the earlier actionable deadline, rather than premium alone."
+        },
+        {
+          "candidate_id": "POL-01662-003",
+          "annotator_1_rank": 3,
+          "annotator_2_rank": 4,
+          "final_rank": 4,
+          "reason": "Explicit action: Quoted terms are ready and the client must confirm acceptance. Deadline 2026-06-04; placed by the earlier actionable deadline, rather than premium alone."
+        },
+        {
+          "candidate_id": "CLI-01662-017",
+          "annotator_1_rank": 1,
+          "annotator_2_rank": 5,
+          "final_rank": 5,
+          "reason": "Explicit action: A coverage review is scheduled within fourteen days. Deadline 2026-06-14; placed by the earlier actionable deadline, rather than premium alone."
+        },
+        {
+          "candidate_id": "POL-01662-004",
+          "annotator_1_rank": 5,
+          "annotator_2_rank": 6,
+          "final_rank": 6,
+          "reason": "Passive review with no outstanding request is placed after candidates with an explicit action, despite its premium or nominal deadline."
+        }
+      ]
     },
     {
       "scenario_id": "SCN-AGT01876",
@@ -368,7 +899,75 @@
           ]
         }
       ],
-      "consensus_relevance": {}
+      "consensus_relevance": {
+        "CLI-01876-006": 3,
+        "POL-01876-001": 3,
+        "CLI-01876-018": 2,
+        "POL-01876-002": 2,
+        "CLI-01876-008": 1,
+        "POL-01876-003": 0
+      },
+      "consensus_ranking": [
+        "CLI-01876-006",
+        "POL-01876-001",
+        "CLI-01876-018",
+        "POL-01876-002",
+        "CLI-01876-008",
+        "POL-01876-003"
+      ],
+      "adjudication_comparison": [
+        {
+          "candidate_id": "CLI-01876-006",
+          "annotator_1_rank": 1,
+          "annotator_2_rank": 1,
+          "final_rank": 1,
+          "reason": "Explicit action: The client requested a callback today. Deadline 2026-05-31; placed by the earlier actionable deadline, rather than premium alone."
+        },
+        {
+          "candidate_id": "POL-01876-001",
+          "annotator_1_rank": 4,
+          "annotator_2_rank": 2,
+          "final_rank": 2,
+          "reason": "Explicit action: Customer documents are incomplete; the agent can request them now. Deadline 2026-06-01; placed by the earlier actionable deadline, rather than premium alone."
+        },
+        {
+          "candidate_id": "CLI-01876-018",
+          "annotator_1_rank": 2,
+          "annotator_2_rank": 3,
+          "final_rank": 3,
+          "reason": "Explicit action: Renewal decision is due within three days. Deadline 2026-06-03; placed by the earlier actionable deadline, rather than premium alone."
+        },
+        {
+          "candidate_id": "POL-01876-002",
+          "annotator_1_rank": 5,
+          "annotator_2_rank": 4,
+          "final_rank": 4,
+          "reason": "Explicit action: Quoted terms are ready and the client must confirm acceptance. Deadline 2026-06-04; placed by the earlier actionable deadline, rather than premium alone."
+        },
+        {
+          "candidate_id": "CLI-01876-008",
+          "annotator_1_rank": 3,
+          "annotator_2_rank": 5,
+          "final_rank": 5,
+          "reason": "Explicit action: The client requested a quotation within five days. Deadline 2026-06-05; placed by the earlier actionable deadline, rather than premium alone."
+        },
+        {
+          "candidate_id": "POL-01876-003",
+          "annotator_1_rank": 6,
+          "annotator_2_rank": 6,
+          "final_rank": 6,
+          "reason": "Passive review with no outstanding request is placed after candidates with an explicit action, despite its premium or nominal deadline."
+        }
+      ]
     }
-  ]
+  ],
+  "adjudication": {
+    "method": "AI-assisted evidence adjudication of two independent human rankings",
+    "adjudicator": "Codex",
+    "date": "2026-10-23",
+    "evidence_as_of_date": "2026-05-31",
+    "basis": "Compare both human orders with blinded action evidence. Prioritize explicit actions over passive review; among explicit actions prioritize earlier action deadlines. Use premium and product fit only when action and timing are comparable. Preserve original human rankings.",
+    "limitation": "Disagreements were resolved by an AI assistant at the user request, not by a third human or a joint agreement of the two annotators. The consensus_relevance field holds adjudicated labels; report this provenance when evaluating.",
+    "independence": "No M4 scores, derived scoring features, baseline rankings or evaluation metrics were used to select the final order."
+  }
 }
