@@ -17,6 +17,7 @@ from sqlalchemy import select
 
 from admin.db import AsyncSessionFactory
 from admin.dependencies import authenticate_access_token
+from admin.seeds import DEFAULT_TENANT_ID
 from admin.hooks import log_ai_audit, log_flow_step
 from admin.models.chat import ChatSession
 from admin.models.tenant import Tenant
@@ -131,14 +132,20 @@ async def _verified_user(token: str):
 
 
 async def _coursework_demo_scope(user: Any) -> CourseworkDemoScope | None:
-    """Map a live JWT principal to the explicitly configured demo tenant."""
-    configured = os.getenv("M1_COURSEWORK_DEMO_TENANT_ID", "").strip()
-    if not configured or user.tenant_id != configured:
+    """Opt one seeded agent into the enabled default tenant demo."""
+    configured_tenant = os.getenv("M1_COURSEWORK_DEMO_TENANT_ID", "").strip()
+    configured_agent = os.getenv("M1_COURSEWORK_DEMO_AGENT_ID", "").strip()
+    if (configured_tenant != DEFAULT_TENANT_ID or not configured_agent
+            or user.tenant_id != configured_tenant or user.username != configured_agent
+            or not user.is_active or user.is_superadmin
+            or len(user.roles) != 1
+            or user.roles[0].tenant_id != configured_tenant
+            or user.roles[0].name != "agent_manager"):
         return None
     try:
         async with AsyncSessionFactory() as db:
             tenant = await db.get(Tenant, user.tenant_id)
-        if tenant is None or not tenant.enabled or tenant.slug != "coursework-demo":
+        if tenant is None or not tenant.enabled or tenant.slug != "default":
             return None
     except Exception:
         logger.warning("Coursework demo tenant validation failed")

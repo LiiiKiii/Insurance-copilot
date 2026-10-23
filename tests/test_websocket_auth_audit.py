@@ -12,7 +12,7 @@ from types import SimpleNamespace
 from unittest.mock import AsyncMock, patch
 
 from jose import jwt
-from sqlalchemy import select
+from sqlalchemy import insert, select
 from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
 
 from admin.db import Base
@@ -21,7 +21,8 @@ from admin.models.chat import ChatMessage, ChatSession
 from admin.models.flow_log import FlowLog
 from admin.models.tenant import Tenant
 from admin.models.usage import TokenUsageLog
-from admin.models.user import User
+from admin.models.user import Role, User, user_roles
+from admin.seeds import DEFAULT_TENANT_ID
 from admin.services.auth_service import create_access_token, create_refresh_token
 from admin.services.auth_service import TokenValidationError
 from api.server import create_app
@@ -87,15 +88,23 @@ class WebSocketAuthAuditTests(unittest.IsolatedAsyncioTestCase):
             db.add_all([
                 Tenant(id="tenant-a", slug="tenant-a", name="Tenant A"),
                 Tenant(id="tenant-b", slug="tenant-b", name="Tenant B"),
-                Tenant(id="demo-tenant", slug="coursework-demo", name="Coursework Demo"),
+                Tenant(id=DEFAULT_TENANT_ID, slug="default", name="Default"),
                 User(id="user-a", tenant_id="tenant-a", username="alice", email="alice@example.test", password_hash="unused"),
                 User(id="user-b", tenant_id="tenant-b", username="bob", email="bob@example.test", password_hash="unused"),
-                User(id="demo-user", tenant_id="demo-tenant", username="AGT00690", email="demo@example.test", password_hash="unused"),
+                User(id="demo-user", tenant_id=DEFAULT_TENANT_ID, username="AGT00690", email="demo@example.test", password_hash="unused"),
+                User(id="other-demo-user", tenant_id=DEFAULT_TENANT_ID, username="AGT00770", email="other-demo@example.test", password_hash="unused"),
+                Role(id="demo-agent-role", tenant_id=DEFAULT_TENANT_ID, name="agent_manager"),
+            ])
+            await db.flush()
+            await db.execute(insert(user_roles), [
+                {"user_id": "demo-user", "role_id": "demo-agent-role"},
+                {"user_id": "other-demo-user", "role_id": "demo-agent-role"},
             ])
             await db.commit()
         self.token_a = create_access_token({"sub": "user-a"})
         self.token_b = create_access_token({"sub": "user-b"})
         self.token_demo = create_access_token({"sub": "demo-user"})
+        self.token_other_demo = create_access_token({"sub": "other-demo-user"})
         self.runtime = SimpleNamespace(is_running=True, agent_loop=SimpleNamespace(
             model="verified-model", process_direct=AsyncMock(return_value=SimpleNamespace(content="Answer Bearer response-secret")),
         ))
@@ -309,7 +318,7 @@ class WebSocketAuthAuditTests(unittest.IsolatedAsyncioTestCase):
             MessageBus(), provider, Path(self.folder.name),
             tool_registry=build_reasoning_registry(Path(self.folder.name)),
         )
-        with patch.dict(os.environ, {"M1_COURSEWORK_DEMO_TENANT_ID": "demo-tenant"}):
+        with patch.dict(os.environ, {"M1_COURSEWORK_DEMO_TENANT_ID": DEFAULT_TENANT_ID, "M1_COURSEWORK_DEMO_AGENT_ID": "AGT00690"}):
             socket, _ = await self.authenticate(self.token_b)
             await socket.send({"message": "Prioritize", "agent_id": "bob"})
             response = await socket.next()
@@ -323,7 +332,7 @@ class WebSocketAuthAuditTests(unittest.IsolatedAsyncioTestCase):
         self.assertNotIn("tenant-a-private-policy", audit.ai_response)
 
     async def test_demo_jwt_cannot_choose_another_scenario_agent(self):
-        with patch.dict(os.environ, {"M1_COURSEWORK_DEMO_TENANT_ID": "demo-tenant"}):
+        with patch.dict(os.environ, {"M1_COURSEWORK_DEMO_TENANT_ID": DEFAULT_TENANT_ID, "M1_COURSEWORK_DEMO_AGENT_ID": "AGT00690"}):
             socket, _ = await self.authenticate(self.token_demo)
             await socket.send({
                 "message": "Prioritize", "agent_id": "AGT00770",
@@ -333,6 +342,63 @@ class WebSocketAuthAuditTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(response["type"], "error")
         self.assertEqual(response["content"], "agent_id is not authorized.")
         self.runtime.agent_loop.process_direct.assert_not_awaited()
+
+    async def test_only_explicit_default_tenant_agent_receives_demo_scope(self):
+        with patch.dict(os.environ, {"M1_COURSEWORK_DEMO_TENANT_ID": DEFAULT_TENANT_ID,
+                                     "M1_COURSEWORK_DEMO_AGENT_ID": "AGT00690"}):
+            other, _ = await self.authenticate(self.token_other_demo)
+            await other.send({"message": "Prioritize", "agent_id": "AGT00770"})
+            self.assertEqual((await other.next())["type"], "response")
+            self.assertNotIn("demo_scope", self.runtime.agent_loop.process_direct.await_args.kwargs)
+            selected, _ = await self.authenticate(self.token_demo)
+            await selected.send({"message": "Prioritize", "agent_id": "AGT00690"})
+            self.assertEqual((await selected.next())["type"], "response")
+            self.assertEqual(self.runtime.agent_loop.process_direct.await_args.kwargs["demo_scope"].agent_id,
+                             "AGT00690")
+        with patch.dict(os.environ, {"M1_COURSEWORK_DEMO_TENANT_ID": DEFAULT_TENANT_ID,
+                                     "M1_COURSEWORK_DEMO_AGENT_ID": ""}):
+            unconfigured, _ = await self.authenticate(self.token_demo)
+            await unconfigured.send({"message": "Prioritize", "agent_id": "AGT00690"})
+            self.assertEqual((await unconfigured.next())["type"], "response")
+            self.assertNotIn("demo_scope", self.runtime.agent_loop.process_direct.await_args.kwargs)
+
+    async def test_disabled_default_tenant_cannot_authenticate(self):
+        async with self.sessions() as db:
+            tenant = await db.get(Tenant, DEFAULT_TENANT_ID)
+            tenant.enabled = False
+            await db.commit()
+        with patch.dict(os.environ, {"M1_COURSEWORK_DEMO_TENANT_ID": DEFAULT_TENANT_ID,
+                                     "M1_COURSEWORK_DEMO_AGENT_ID": "AGT00690"}):
+            socket, event = await self.authenticate(self.token_demo)
+            self.assertEqual(event["type"], "websocket.close")
+        self.runtime.agent_loop.process_direct.assert_not_awaited()
+
+    async def test_default_tenant_id_with_wrong_slug_has_no_demo_scope(self):
+        async with self.sessions() as db:
+            tenant = await db.get(Tenant, DEFAULT_TENANT_ID)
+            tenant.slug = "renamed-default"
+            await db.commit()
+        with patch.dict(os.environ, {"M1_COURSEWORK_DEMO_TENANT_ID": DEFAULT_TENANT_ID,
+                                     "M1_COURSEWORK_DEMO_AGENT_ID": "AGT00690"}):
+            socket, _ = await self.authenticate(self.token_demo)
+            await socket.send({"message": "Prioritize", "agent_id": "AGT00690"})
+            self.assertEqual((await socket.next())["type"], "response")
+        self.assertNotIn("demo_scope", self.runtime.agent_loop.process_direct.await_args.kwargs)
+
+    async def test_extra_privileged_role_does_not_receive_demo_scope(self):
+        async with self.sessions() as db:
+            db.add(Role(id="extra-admin-role", tenant_id=DEFAULT_TENANT_ID, name="admin"))
+            await db.flush()
+            await db.execute(insert(user_roles).values(
+                user_id="demo-user", role_id="extra-admin-role",
+            ))
+            await db.commit()
+        with patch.dict(os.environ, {"M1_COURSEWORK_DEMO_TENANT_ID": DEFAULT_TENANT_ID,
+                                     "M1_COURSEWORK_DEMO_AGENT_ID": "AGT00690"}):
+            socket, _ = await self.authenticate(self.token_demo)
+            await socket.send({"message": "Prioritize", "agent_id": "AGT00690"})
+            self.assertEqual((await socket.next())["type"], "response")
+        self.assertNotIn("demo_scope", self.runtime.agent_loop.process_direct.await_args.kwargs)
 
     async def test_configured_non_demo_tenant_slug_stays_fail_closed(self):
         provider = SimpleNamespace(
@@ -370,7 +436,7 @@ class WebSocketAuthAuditTests(unittest.IsolatedAsyncioTestCase):
             MessageBus(), provider, Path(self.folder.name),
             tool_registry=build_reasoning_registry(Path(self.folder.name)),
         )
-        with patch.dict(os.environ, {"M1_COURSEWORK_DEMO_TENANT_ID": "demo-tenant"}):
+        with patch.dict(os.environ, {"M1_COURSEWORK_DEMO_TENANT_ID": DEFAULT_TENANT_ID, "M1_COURSEWORK_DEMO_AGENT_ID": "AGT00690"}):
             socket, auth = await self.authenticate(self.token_demo)
             self.assertEqual(auth, {"type": "auth_ok"})
             await socket.send({
@@ -411,7 +477,7 @@ class WebSocketAuthAuditTests(unittest.IsolatedAsyncioTestCase):
             audit = (await db.scalars(select(AiAuditLog))).one()
             flows = (await db.scalars(select(FlowLog).order_by(FlowLog.step_index))).all()
             assistant_message = (await db.scalars(select(ChatMessage).where(ChatMessage.role == "assistant"))).one()
-        self.assertEqual((audit.user_id, audit.tenant_id), ("demo-user", "demo-tenant"))
+        self.assertEqual((audit.user_id, audit.tenant_id), ("demo-user", DEFAULT_TENANT_ID))
         self.assertEqual(json.loads(audit.tools_called), ["prioritize_followups"])
         self.assertEqual([row.step_type for row in flows],
                          ["user_input", "llm_call", "tool_call", "response"])
@@ -434,7 +500,7 @@ class WebSocketAuthAuditTests(unittest.IsolatedAsyncioTestCase):
             MessageBus(), provider, Path(self.folder.name),
             tool_registry=build_reasoning_registry(Path(self.folder.name)),
         )
-        with patch.dict(os.environ, {"M1_COURSEWORK_DEMO_TENANT_ID": "demo-tenant"}):
+        with patch.dict(os.environ, {"M1_COURSEWORK_DEMO_TENANT_ID": DEFAULT_TENANT_ID, "M1_COURSEWORK_DEMO_AGENT_ID": "AGT00690"}):
             socket, _ = await self.authenticate(self.token_demo)
             await socket.send({"message": "Prioritize", "agent_id": "AGT00690"})
             response = await socket.next()
@@ -458,7 +524,7 @@ class WebSocketAuthAuditTests(unittest.IsolatedAsyncioTestCase):
             MessageBus(), provider, Path(self.folder.name),
             tool_registry=build_reasoning_registry(Path(self.folder.name)),
         )
-        with patch.dict(os.environ, {"M1_COURSEWORK_DEMO_TENANT_ID": "demo-tenant"}):
+        with patch.dict(os.environ, {"M1_COURSEWORK_DEMO_TENANT_ID": DEFAULT_TENANT_ID, "M1_COURSEWORK_DEMO_AGENT_ID": "AGT00690"}):
             socket, _ = await self.authenticate(self.token_demo)
             await socket.send({"message": "Hello", "agent_id": "AGT00690"})
             response = await socket.next()
@@ -487,7 +553,7 @@ class WebSocketAuthAuditTests(unittest.IsolatedAsyncioTestCase):
             tool_registry=build_reasoning_registry(Path(self.folder.name)),
             coursework_source=CourseworkCandidateSource(malformed, source_file.parents[1] / "mock"),
         )
-        with patch.dict(os.environ, {"M1_COURSEWORK_DEMO_TENANT_ID": "demo-tenant"}):
+        with patch.dict(os.environ, {"M1_COURSEWORK_DEMO_TENANT_ID": DEFAULT_TENANT_ID, "M1_COURSEWORK_DEMO_AGENT_ID": "AGT00690"}):
             socket, _ = await self.authenticate(self.token_demo)
             await socket.send({"message": "Prioritize", "agent_id": "AGT00690"})
             response = await socket.next()
