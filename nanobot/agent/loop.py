@@ -18,6 +18,7 @@ from nanobot.agent.coursework_demo import (
     CourseworkDemoScope,
     PreparedCoursework,
     recommendation_result,
+    requested_coursework_top_k,
     with_requested_coursework_top_k,
 )
 from nanobot.agent.feasibility_gate import assess_authenticated_feasibility
@@ -50,10 +51,20 @@ _COURSEWORK_TOOL_SCHEMA = {
     "type": "function",
     "function": {
         "name": _TRUSTED_CANDIDATE_TOOL,
-        "description": "Rank my authorized coursework demo follow-ups. Supply no arguments; candidate records and scores are prepared by the server.",
+        "description": (
+            "Rank my authorized coursework demo follow-ups: which clients or policies to "
+            "follow up first, including requests to recommend the top N (e.g. 'top 3', "
+            "'推荐前3名'). Supply no arguments; candidate records and scores are prepared "
+            "by the server."
+        ),
         "parameters": {"type": "object", "properties": {}, "additionalProperties": False},
     },
 }
+_COURSEWORK_TOP_K_GUIDANCE = (
+    "The user is asking for a ranked Top-N recommendation of who to follow up. "
+    f"Call `{_TRUSTED_CANDIDATE_TOOL}` with no arguments to answer it; do not use "
+    "improvement-advice tools for this request."
+)
 
 
 class AgentLoop:
@@ -215,6 +226,10 @@ class AgentLoop:
             guidance = self.skill_registry.get_prompt_injection(
                 msg.content, {"tool_definitions": tool_definitions},
             )
+        if prepared is not None and requested_coursework_top_k(msg.content) is not None:
+            # A bare "推荐前3名" otherwise reads as a request for improvement
+            # advice; route explicit Top-K requests to the follow-up ranking.
+            guidance = "\n\n".join(filter(None, (guidance, _COURSEWORK_TOP_K_GUIDANCE)))
         messages = self.context.build_messages(
             history=[], current_message=msg.content, channel=msg.channel,
             chat_id=msg.chat_id, trusted_skill_guidance=guidance,
@@ -397,6 +412,9 @@ class AgentLoop:
             if structured_result is not None:
                 count = len(structured_result["actions"])
                 final_content = (
+                    "Here is 1 authorized follow-up recommendation. "
+                    "Review the ranked action plan for its action and evidence."
+                    if count == 1 else
                     f"Here are {count} authorized follow-up recommendations. "
                     "Review the ranked action plan for their actions and evidence."
                 )

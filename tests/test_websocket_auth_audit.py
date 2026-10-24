@@ -576,6 +576,43 @@ class WebSocketAuthAuditTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(json.loads(audit.tools_called), ["prioritize_followups"])
         self.assertIn("3 authorized", audit.ai_response)
 
+    async def test_bare_chinese_top_k_request_is_routed_to_follow_up_ranking(self):
+        async def run(message: str, call_id: str):
+            provider = SimpleNamespace(
+                get_default_model=lambda: "scripted-model",
+                chat_with_retry=AsyncMock(side_effect=[
+                    LLMResponse(content=None, tool_calls=[ToolCallRequest(
+                        id=call_id, name="prioritize_followups", arguments={},
+                    )], finish_reason="tool_calls"),
+                    LLMResponse(content="done"),
+                ]),
+            )
+            self.runtime.agent_loop = AgentLoop(
+                MessageBus(), provider, Path(self.folder.name),
+                tool_registry=build_reasoning_registry(Path(self.folder.name)),
+            )
+            with patch.dict(os.environ, {
+                "M1_COURSEWORK_DEMO_TENANT_ID": DEFAULT_TENANT_ID,
+                "M1_COURSEWORK_DEMO_AGENT_ID": "AGT00690",
+            }):
+                socket, _ = await self.authenticate(self.token_demo)
+                await socket.send({"message": message, "agent_id": "AGT00690"})
+                response = await socket.next()
+            first = provider.chat_with_retry.await_args_list[0].kwargs
+            return response, first["messages"][0]["content"], first["tools"]
+
+        response, system, tools = await run("推荐前1名", "bare-top-one")
+        self.assertIn("Call `prioritize_followups` with no arguments", system)
+        facade = next(row for row in tools if row["function"]["name"] == "prioritize_followups")
+        self.assertIn("推荐前3名", facade["function"]["description"])
+        self.assertEqual(len(response["result"]["actions"]), 1)
+        self.assertEqual(response["content"],
+                         "Here is 1 authorized follow-up recommendation. "
+                         "Review the ranked action plan for its action and evidence.")
+
+        _, system, _ = await run("What should I follow up first?", "no-top-k")
+        self.assertNotIn("Call `prioritize_followups` with no arguments", system)
+
     async def test_server_feasibility_decision_overrides_model_and_is_audited(self):
         registry = build_reasoning_registry(Path(self.folder.name))
         due = (date.today() + timedelta(days=69)).isoformat()
