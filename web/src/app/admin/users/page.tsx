@@ -37,6 +37,20 @@ export default function UsersPage() {
 
   useEffect(() => { load() }, [load])
 
+  // Supervisor and team columns need every user, not just the current page.
+  const [directory, setDirectory] = useState<AdminUser[]>([])
+  const loadDirectory = useCallback(async () => {
+    const all: AdminUser[] = []
+    for (let p = 1; ; p++) {
+      const r = await adminApi.users.list(p, 100, '')
+      if (!r.ok) break
+      all.push(...r.data)
+      if (r.data.length < 100 || all.length >= ((r.meta?.total as number) ?? 0)) break
+    }
+    setDirectory(all)
+  }, [])
+  useEffect(() => { loadDirectory() }, [loadDirectory])
+
   const openCreate = () => { setForm(empty); setErr(null); setModal('create') }
   const openEdit = (u: AdminUser) => {
     setSelected(u)
@@ -62,7 +76,7 @@ export default function UsersPage() {
       ? await adminApi.users.create({ ...common, username: form.username })
       : await adminApi.users.update(selected!.id, { ...common, is_active: form.is_active })
     setSaving(false)
-    if (r.ok) { setModal(null); load(); toast('success', modal === 'create' ? t('admin.users.toast.created') : t('admin.users.toast.updated')) }
+    if (r.ok) { setModal(null); load(); loadDirectory(); toast('success', modal === 'create' ? t('admin.users.toast.created') : t('admin.users.toast.updated')) }
     else setErr(r.error?.message ?? t('admin.users.toast.opFailed'))
   }
 
@@ -70,7 +84,7 @@ export default function UsersPage() {
     if (!selected) return
     setSaving(true)
     const r = await adminApi.users.delete(selected.id)
-    setSaving(false); setModal(null); load()
+    setSaving(false); setModal(null); load(); loadDirectory()
     if (r.ok) toast('success', t('admin.users.toast.deleted', { username: selected.username }))
     else toast('error', r.error?.message ?? t('admin.users.toast.deleteFailed'))
   }
@@ -93,13 +107,13 @@ export default function UsersPage() {
     { key: 'roles', header: t('admin.users.col.roles'), render: u => <span className="text-xs text-slate-500">{u.roles.map(r => { const name = typeof r === 'string' ? r : r.name; return ROLE_LABEL_KEY[name as RoleName] ? t(ROLE_LABEL_KEY[name as RoleName]) : name }).join(', ')}</span> },
     { key: 'supervisor_id', header: t('admin.users.col.supervisor'), render: u => {
       if (!u.supervisor_id) return <span className="text-xs text-slate-300">—</span>
-      const sup = users.find(s => s.id === u.supervisor_id)
+      const sup = directory.find(s => s.id === u.supervisor_id)
       return sup
         ? <span className="text-xs text-slate-500">{sup.display_name || sup.username}</span>
         : <span className="text-xs text-slate-300">—</span>
     }},
     { key: 'team', header: t('admin.users.col.team'), render: u => {
-      const subs = users.filter(s => s.supervisor_id === u.id)
+      const subs = directory.filter(s => s.supervisor_id === u.id)
       if (subs.length === 0) return <span className="text-xs text-slate-300">—</span>
       return (
         <span className="text-xs text-slate-500" title={subs.map(s => s.display_name || s.username).join(', ')}>
