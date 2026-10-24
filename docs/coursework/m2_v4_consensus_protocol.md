@@ -29,7 +29,7 @@ Store per-pair ten-scene macro means and overall 30-record macro means. Do not i
 
 ## Output and provenance
 
-Stage two writes only `data/evaluation/m2_candidate_annotations_v4.json`, with complete status, identities and original ballots, consensus order, rank sums, majority tie audit, grades, aggregation/tie/grading methods, dataset/version/fingerprint, all agreement records/summary, protocol version, source filenames and SHA-256 hashes, and limitations. Source files remain byte-for-byte unchanged. No timestamps or absolute machine-specific paths are inserted; identical source bytes produce identical output bytes regardless of input path order. Write atomically only after all validation, aggregation and statistics succeed; failure leaves the previous master unchanged.
+Stage two writes only `data/evaluation/m2_candidate_annotations_v4.json`, with complete status, identities and original ballots, consensus order, rank sums, majority tie audit, grades, aggregation/tie/grading methods, dataset/version/fingerprint, all agreement records/summary, protocol version, source filenames and `canonical_json_sha256` hashes, and limitations. Source files remain byte-for-byte unchanged. No timestamps or absolute machine-specific paths are inserted; semantically identical parsed source JSON produces identical output bytes regardless of input path order. Write atomically only after all validation, aggregation and statistics succeed; failure leaves the previous master unchanged.
 
 Required provenance wording, qualified by the access disclosure below:
 
@@ -48,3 +48,14 @@ python -m scripts.aggregate_m2_annotations_v4 --generate
 ```
 
 Omitting `--generate` exits before reading any inputs. After validating the generated master and committing it through M2 into main, hand off to M4 to rerun final Precision@1/3, NDCG@1/3, baseline and sensitivity evaluation. Do not adjust labels or this protocol using those results. No new annotation is required for this protocol alone.
+
+## Cross-platform source hashes (provenance correction)
+
+Source provenance uses `canonical_json_sha256`, computed from parsed JSON as:
+
+```python
+hashlib.sha256(json.dumps(data, ensure_ascii=False, sort_keys=True,
+                         separators=(",", ":"), allow_nan=False).encode("utf-8")).hexdigest()
+```
+
+This replaces the original raw-file `sha256`, which changed when Git normalized Windows CRLF to LF. Indentation, line endings, object key order and escaped versus literal Unicode do not affect the canonical hash. Array order and all parsed values remain significant. Nonfinite JSON numbers are rejected. This is the specified Python JSON normalization, not a claim of RFC 8785 numeric canonicalization. Source files remain untouched. This correction changes only the three source hash field names/values in the generated master; consensus, ranks, tie resolution, relevance and agreement statistics must stay identical.

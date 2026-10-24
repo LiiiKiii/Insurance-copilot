@@ -282,6 +282,14 @@ def aggregate(inputs, sources):
     }
 
 
+def canonical_json_sha256(data):
+    """Hash JSON meaning independently of line endings, indentation and key order."""
+    canonical = json.dumps(
+        data, ensure_ascii=False, sort_keys=True, separators=(",", ":"), allow_nan=False
+    ).encode("utf-8")
+    return hashlib.sha256(canonical).hexdigest()
+
+
 def write_consensus(paths, output):
     require(len(paths) == 3, "Exactly three source paths required")
     require(len({p.resolve() for p in paths}) == 3, "Independent source paths required")
@@ -298,7 +306,7 @@ def write_consensus(paths, output):
         aid = data["scenarios"][0]["annotations"][0]["annotator_id"]
         sources[aid] = {
             "filename": path.name,
-            "sha256": hashlib.sha256(raw).hexdigest(),
+            "canonical_json_sha256": canonical_json_sha256(data),
         }
     result = aggregate(inputs, sources)
     require(
