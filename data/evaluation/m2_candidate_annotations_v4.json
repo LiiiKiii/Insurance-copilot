@@ -89,16 +89,16 @@
     "protocol_document": "docs/coursework/m2_v4_consensus_protocol.md",
     "source_files": {
       "non_m4_annotator_1": {
-        "filename": "m2_candidate_annotations_v4_non_m4_annotator_1.json",
-        "sha256": "7c4c8cc933c7ee9c1c611663c5dc7862beff13b6b16b17cb0d9b2f18a07f7448"
+        "canonical_json_sha256": "60f5a29d933f6a032c56fd42ebac674db84c700cf8cddf72cad4ad7781ae010d",
+        "filename": "m2_candidate_annotations_v4_non_m4_annotator_1.json"
       },
       "non_m4_annotator_2": {
-        "filename": "m2_candidate_annotations_v4_non_m4_annotator_2.json",
-        "sha256": "e03d46612ff20f9e20cfb23487c38e00186e4aa563c4609728adfc3b88d11925"
+        "canonical_json_sha256": "a35edd6b1841301debdde126aea944f38289a3af39a9ee74f6e760a3faa7a3e6",
+        "filename": "m2_candidate_annotations_v4_non_m4_annotator_2.json"
       },
       "non_m4_annotator_3": {
-        "filename": "m2_candidate_annotations_v4_non_m4_annotator_3.json",
-        "sha256": "1ccf40c5f84c24fdab2a71d99a78cd86ca8483bb5f0e47ce574e3e573c7410c8"
+        "canonical_json_sha256": "2f54b53cd97a32bd5c9ded9a6ccff1f9ac825cc4a81eaf5b517bf9dbac283e67",
+        "filename": "m2_candidate_annotations_v4_non_m4_annotator_3.json"
       }
     }
   },

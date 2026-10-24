@@ -53,7 +53,10 @@ def fixtures():
 
 
 def sources():
-    return {aid: {"filename": f"{aid}.json", "sha256": "b" * 64} for aid in ANNOTATORS}
+    return {
+        aid: {"filename": f"{aid}.json", "canonical_json_sha256": "b" * 64}
+        for aid in ANNOTATORS
+    }
 
 
 def test_synthetic_aggregation_grades_and_thirty_comparisons():
@@ -172,8 +175,15 @@ def test_reproducible_output_and_provenance(tmp_path):
     assert [p.read_bytes() for p in paths] == before
     for aid, raw in zip(ANNOTATORS, before, strict=True):
         assert (
-            result["provenance"]["source_files"][aid]["sha256"]
-            == hashlib.sha256(raw).hexdigest()
+            result["provenance"]["source_files"][aid]["canonical_json_sha256"]
+            == hashlib.sha256(
+                json.dumps(
+                    json.loads(raw),
+                    ensure_ascii=False,
+                    sort_keys=True,
+                    separators=(",", ":"),
+                ).encode("utf-8")
+            ).hexdigest()
         )
     with pytest.raises(ValueError, match="overwrite"):
         write_consensus(paths, paths[0])
@@ -220,3 +230,43 @@ def test_majority_cannot_override_different_rank_sums():
     order, sums, _ = consensus(rankings)
     assert sums["b"] < sums["a"]
     assert order.index("b") < order.index("a")
+
+
+def test_canonical_source_hash_cross_platform(tmp_path):
+    from scripts.aggregate_m2_annotations_v4 import canonical_json_sha256
+
+    data = fixtures()
+    for item in data:
+        item["scenarios"][0]["annotations"][0]["notes"] = "独立标注"
+    paths = [tmp_path / f"{aid}.json" for aid in ANNOTATORS]
+    for path, item in zip(paths, data, strict=True):
+        path.write_bytes(
+            json.dumps(item, ensure_ascii=False, indent=2)
+            .replace("\n", "\r\n")
+            .encode("utf-8")
+        )
+    output = tmp_path / "master.json"
+    first = write_consensus(paths, output)
+    before = output.read_bytes()
+    for path, item in zip(paths, data, strict=True):
+        reordered = dict(reversed(list(item.items())))
+        path.write_bytes(
+            json.dumps(
+                reordered, ensure_ascii=True, sort_keys=True, separators=(",", ":")
+            ).encode("utf-8")
+        )
+    second = write_consensus(paths, output)
+    assert output.read_bytes() == before
+    assert first == second
+    for aid, item in zip(ANNOTATORS, data, strict=True):
+        assert first["provenance"]["source_files"][aid][
+            "canonical_json_sha256"
+        ] == canonical_json_sha256(item)
+    changed = copy.deepcopy(data[0])
+    changed["scenarios"][0]["annotations"][0]["ranking"].reverse()
+    assert canonical_json_sha256(changed) != canonical_json_sha256(data[0])
+    changed = copy.deepcopy(data[0])
+    changed["scenarios"][0]["annotations"][0]["notes"] += "changed"
+    assert canonical_json_sha256(changed) != canonical_json_sha256(data[0])
+    with pytest.raises(ValueError):
+        canonical_json_sha256({"invalid": float("nan")})
