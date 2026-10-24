@@ -37,6 +37,7 @@ data/db/
 data/demo/
 sessions/
 admin/data/kb/
+output/
 
 # Lint / type-check caches
 .mypy_cache/

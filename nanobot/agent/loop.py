@@ -78,7 +78,7 @@ class AgentLoop:
         model: str | None = None,
         tool_registry: ToolRegistry | None = None,
         supplemental_tool_registry: ToolRegistry | None = None,
-        max_tool_iterations: int = 4,
+        max_tool_iterations: int = 10,
         coursework_source: CourseworkCandidateSource | None = None,
         skill_registry: SkillRegistry | None = None,
     ):
