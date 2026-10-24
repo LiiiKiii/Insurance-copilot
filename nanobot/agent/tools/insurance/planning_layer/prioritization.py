@@ -17,12 +17,18 @@ from nanobot.agent.tools.base import Tool
 
 
 RANKING_VERSION = "m4-weighted-v1"
-HORIZON_RANKING_VERSION = "m4-horizon-weighted-v2"
+HORIZON_RANKING_VERSION = "m4-horizon-weighted-v4"
 DEFAULT_WEIGHTS = {
     "expected_contribution": 0.40,
     "urgency": 0.25,
     "actionability": 0.20,
     "business_fit": 0.15,
+}
+HORIZON_DEFAULT_WEIGHTS = {
+    "expected_contribution": 0.20,
+    "urgency": 0.40,
+    "actionability": 0.35,
+    "business_fit": 0.05,
 }
 _OPTIONAL_DEFAULTS = {"business_fit": 0.5}
 _REQUIRED_SCORE_FIELDS = ("expected_contribution", "urgency", "actionability")
@@ -39,8 +45,11 @@ def _finite_number(value: Any) -> float | None:
     return number if math.isfinite(number) else None
 
 
-def _normalise_weights(overrides: dict[str, Any] | None) -> dict[str, float]:
-    raw: dict[str, Any] = dict(DEFAULT_WEIGHTS)
+def _normalise_weights(
+    overrides: dict[str, Any] | None,
+    defaults: dict[str, float] = DEFAULT_WEIGHTS,
+) -> dict[str, float]:
+    raw: dict[str, Any] = dict(defaults)
     if overrides:
         unknown = set(overrides) - set(DEFAULT_WEIGHTS)
         if unknown:
@@ -217,7 +226,10 @@ def prioritize_followups(payload: dict[str, Any]) -> dict[str, Any]:
     if isinstance(top_k, bool) or not isinstance(top_k, int) or not 1 <= top_k <= 50:
         raise PrioritizationInputError("constraints.top_k must be an integer from 1 to 50.")
 
-    weights = _normalise_weights(payload.get("weights"))
+    weights = _normalise_weights(
+        payload.get("weights"),
+        HORIZON_DEFAULT_WEIGHTS if horizon_mode else DEFAULT_WEIGHTS,
+    )
     excluded: list[dict[str, str]] = []
     eligible: list[dict[str, Any]] = []
     seen_ids: set[str] = set()

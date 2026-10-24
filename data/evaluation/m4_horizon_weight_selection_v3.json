@@ -1,0 +1,504 @@
+{
+  "selection_id": "m4-horizon-weight-selection-v3",
+  "dataset_id": "m2-coursework-candidates-v4",
+  "annotation_version": "human-v4",
+  "method": "Leave-one-scenario-out constrained grid selection",
+  "scenario_count": 10,
+  "grid": {
+    "step": 0.05,
+    "candidate_weight_count": 969,
+    "sum_constraint": 1.0,
+    "minimum_weight": 0.05,
+    "all_factors_positive": true
+  },
+  "selection_rule": "Require every factor to carry at least 0.05 weight and require model Precision@1 on training scenarios to be no lower than the expected-contribution baseline; then maximise NDCG@3, followed by NDCG@1, Precision@1, Precision@3, higher contribution weight and deterministic remaining-weight order.",
+  "folds": [
+    {
+      "test_scenario_id": "SCN-AGT00690",
+      "training_scenario_ids": [
+        "SCN-AGT00770",
+        "SCN-AGT00817",
+        "SCN-AGT00949",
+        "SCN-AGT01191",
+        "SCN-AGT01448",
+        "SCN-AGT01525",
+        "SCN-AGT01569",
+        "SCN-AGT01662",
+        "SCN-AGT01876"
+      ],
+      "selected_weights": {
+        "expected_contribution": 0.2,
+        "urgency": 0.4,
+        "actionability": 0.35,
+        "business_fit": 0.05
+      },
+      "training_model_metrics": {
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 1.0,
+        "precision_at_3": 0.666667,
+        "ndcg_at_3": 0.920449
+      },
+      "training_baseline_metrics": {
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 0.693122,
+        "precision_at_3": 0.814815,
+        "ndcg_at_3": 0.879762
+      },
+      "test_model_metrics": {
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 0.428571,
+        "precision_at_3": 0.666667,
+        "ndcg_at_3": 0.789596
+      },
+      "test_baseline_metrics": {
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 0.428571,
+        "precision_at_3": 1.0,
+        "ndcg_at_3": 0.842828
+      }
+    },
+    {
+      "test_scenario_id": "SCN-AGT00770",
+      "training_scenario_ids": [
+        "SCN-AGT00690",
+        "SCN-AGT00817",
+        "SCN-AGT00949",
+        "SCN-AGT01191",
+        "SCN-AGT01448",
+        "SCN-AGT01525",
+        "SCN-AGT01569",
+        "SCN-AGT01662",
+        "SCN-AGT01876"
+      ],
+      "selected_weights": {
+        "expected_contribution": 0.2,
+        "urgency": 0.4,
+        "actionability": 0.35,
+        "business_fit": 0.05
+      },
+      "training_model_metrics": {
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 0.936508,
+        "precision_at_3": 0.666667,
+        "ndcg_at_3": 0.919462
+      },
+      "training_baseline_metrics": {
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 0.724868,
+        "precision_at_3": 0.814815,
+        "ndcg_at_3": 0.891592
+      },
+      "test_model_metrics": {
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 1.0,
+        "precision_at_3": 0.666667,
+        "ndcg_at_3": 0.798485
+      },
+      "test_baseline_metrics": {
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 0.142857,
+        "precision_at_3": 1.0,
+        "ndcg_at_3": 0.736364
+      }
+    },
+    {
+      "test_scenario_id": "SCN-AGT00817",
+      "training_scenario_ids": [
+        "SCN-AGT00690",
+        "SCN-AGT00770",
+        "SCN-AGT00949",
+        "SCN-AGT01191",
+        "SCN-AGT01448",
+        "SCN-AGT01525",
+        "SCN-AGT01569",
+        "SCN-AGT01662",
+        "SCN-AGT01876"
+      ],
+      "selected_weights": {
+        "expected_contribution": 0.2,
+        "urgency": 0.4,
+        "actionability": 0.35,
+        "business_fit": 0.05
+      },
+      "training_model_metrics": {
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 0.936508,
+        "precision_at_3": 0.666667,
+        "ndcg_at_3": 0.902986
+      },
+      "training_baseline_metrics": {
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 0.62963,
+        "precision_at_3": 0.851852,
+        "ndcg_at_3": 0.884689
+      },
+      "test_model_metrics": {
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 1.0,
+        "precision_at_3": 0.666667,
+        "ndcg_at_3": 0.946768
+      },
+      "test_baseline_metrics": {
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 1.0,
+        "precision_at_3": 0.666667,
+        "ndcg_at_3": 0.798485
+      }
+    },
+    {
+      "test_scenario_id": "SCN-AGT00949",
+      "training_scenario_ids": [
+        "SCN-AGT00690",
+        "SCN-AGT00770",
+        "SCN-AGT00817",
+        "SCN-AGT01191",
+        "SCN-AGT01448",
+        "SCN-AGT01525",
+        "SCN-AGT01569",
+        "SCN-AGT01662",
+        "SCN-AGT01876"
+      ],
+      "selected_weights": {
+        "expected_contribution": 0.45,
+        "urgency": 0.35,
+        "actionability": 0.15,
+        "business_fit": 0.05
+      },
+      "training_model_metrics": {
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 0.936508,
+        "precision_at_3": 0.666667,
+        "ndcg_at_3": 0.907273
+      },
+      "training_baseline_metrics": {
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 0.703704,
+        "precision_at_3": 0.851852,
+        "ndcg_at_3": 0.884887
+      },
+      "test_model_metrics": {
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 0.333333,
+        "precision_at_3": 0.666667,
+        "ndcg_at_3": 0.796708
+      },
+      "test_baseline_metrics": {
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 0.333333,
+        "precision_at_3": 0.666667,
+        "ndcg_at_3": 0.796708
+      }
+    },
+    {
+      "test_scenario_id": "SCN-AGT01191",
+      "training_scenario_ids": [
+        "SCN-AGT00690",
+        "SCN-AGT00770",
+        "SCN-AGT00817",
+        "SCN-AGT00949",
+        "SCN-AGT01448",
+        "SCN-AGT01525",
+        "SCN-AGT01569",
+        "SCN-AGT01662",
+        "SCN-AGT01876"
+      ],
+      "selected_weights": {
+        "expected_contribution": 0.1,
+        "urgency": 0.55,
+        "actionability": 0.3,
+        "business_fit": 0.05
+      },
+      "training_model_metrics": {
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 1.0,
+        "precision_at_3": 0.666667,
+        "ndcg_at_3": 0.920449
+      },
+      "training_baseline_metrics": {
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 0.62963,
+        "precision_at_3": 0.814815,
+        "ndcg_at_3": 0.862299
+      },
+      "test_model_metrics": {
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 0.428571,
+        "precision_at_3": 0.666667,
+        "ndcg_at_3": 0.69202
+      },
+      "test_baseline_metrics": {
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 1.0,
+        "precision_at_3": 1.0,
+        "ndcg_at_3": 1.0
+      }
+    },
+    {
+      "test_scenario_id": "SCN-AGT01448",
+      "training_scenario_ids": [
+        "SCN-AGT00690",
+        "SCN-AGT00770",
+        "SCN-AGT00817",
+        "SCN-AGT00949",
+        "SCN-AGT01191",
+        "SCN-AGT01525",
+        "SCN-AGT01569",
+        "SCN-AGT01662",
+        "SCN-AGT01876"
+      ],
+      "selected_weights": {
+        "expected_contribution": 0.2,
+        "urgency": 0.4,
+        "actionability": 0.35,
+        "business_fit": 0.05
+      },
+      "training_model_metrics": {
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 0.936508,
+        "precision_at_3": 0.666667,
+        "ndcg_at_3": 0.902986
+      },
+      "training_baseline_metrics": {
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 0.62963,
+        "precision_at_3": 0.814815,
+        "ndcg_at_3": 0.862299
+      },
+      "test_model_metrics": {
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 1.0,
+        "precision_at_3": 0.666667,
+        "ndcg_at_3": 0.946768
+      },
+      "test_baseline_metrics": {
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 1.0,
+        "precision_at_3": 1.0,
+        "ndcg_at_3": 1.0
+      }
+    },
+    {
+      "test_scenario_id": "SCN-AGT01525",
+      "training_scenario_ids": [
+        "SCN-AGT00690",
+        "SCN-AGT00770",
+        "SCN-AGT00817",
+        "SCN-AGT00949",
+        "SCN-AGT01191",
+        "SCN-AGT01448",
+        "SCN-AGT01569",
+        "SCN-AGT01662",
+        "SCN-AGT01876"
+      ],
+      "selected_weights": {
+        "expected_contribution": 0.2,
+        "urgency": 0.4,
+        "actionability": 0.35,
+        "business_fit": 0.05
+      },
+      "training_model_metrics": {
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 0.936508,
+        "precision_at_3": 0.666667,
+        "ndcg_at_3": 0.901078
+      },
+      "training_baseline_metrics": {
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 0.703704,
+        "precision_at_3": 0.851852,
+        "ndcg_at_3": 0.884887
+      },
+      "test_model_metrics": {
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 1.0,
+        "precision_at_3": 0.666667,
+        "ndcg_at_3": 0.96394
+      },
+      "test_baseline_metrics": {
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 0.333333,
+        "precision_at_3": 0.666667,
+        "ndcg_at_3": 0.796708
+      }
+    },
+    {
+      "test_scenario_id": "SCN-AGT01569",
+      "training_scenario_ids": [
+        "SCN-AGT00690",
+        "SCN-AGT00770",
+        "SCN-AGT00817",
+        "SCN-AGT00949",
+        "SCN-AGT01191",
+        "SCN-AGT01448",
+        "SCN-AGT01525",
+        "SCN-AGT01662",
+        "SCN-AGT01876"
+      ],
+      "selected_weights": {
+        "expected_contribution": 0.2,
+        "urgency": 0.4,
+        "actionability": 0.35,
+        "business_fit": 0.05
+      },
+      "training_model_metrics": {
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 0.936508,
+        "precision_at_3": 0.666667,
+        "ndcg_at_3": 0.901078
+      },
+      "training_baseline_metrics": {
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 0.62963,
+        "precision_at_3": 0.851852,
+        "ndcg_at_3": 0.862299
+      },
+      "test_model_metrics": {
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 1.0,
+        "precision_at_3": 0.666667,
+        "ndcg_at_3": 0.96394
+      },
+      "test_baseline_metrics": {
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 1.0,
+        "precision_at_3": 0.666667,
+        "ndcg_at_3": 1.0
+      }
+    },
+    {
+      "test_scenario_id": "SCN-AGT01662",
+      "training_scenario_ids": [
+        "SCN-AGT00690",
+        "SCN-AGT00770",
+        "SCN-AGT00817",
+        "SCN-AGT00949",
+        "SCN-AGT01191",
+        "SCN-AGT01448",
+        "SCN-AGT01525",
+        "SCN-AGT01569",
+        "SCN-AGT01876"
+      ],
+      "selected_weights": {
+        "expected_contribution": 0.2,
+        "urgency": 0.35,
+        "actionability": 0.4,
+        "business_fit": 0.05
+      },
+      "training_model_metrics": {
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 0.936508,
+        "precision_at_3": 0.666667,
+        "ndcg_at_3": 0.917913
+      },
+      "training_baseline_metrics": {
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 0.62963,
+        "precision_at_3": 0.851852,
+        "ndcg_at_3": 0.868213
+      },
+      "test_model_metrics": {
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 0.142857,
+        "precision_at_3": 0.666667,
+        "ndcg_at_3": 0.576667
+      },
+      "test_baseline_metrics": {
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 1.0,
+        "precision_at_3": 0.666667,
+        "ndcg_at_3": 0.946768
+      }
+    },
+    {
+      "test_scenario_id": "SCN-AGT01876",
+      "training_scenario_ids": [
+        "SCN-AGT00690",
+        "SCN-AGT00770",
+        "SCN-AGT00817",
+        "SCN-AGT00949",
+        "SCN-AGT01191",
+        "SCN-AGT01448",
+        "SCN-AGT01525",
+        "SCN-AGT01569",
+        "SCN-AGT01662"
+      ],
+      "selected_weights": {
+        "expected_contribution": 0.2,
+        "urgency": 0.4,
+        "actionability": 0.35,
+        "business_fit": 0.05
+      },
+      "training_model_metrics": {
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 0.936508,
+        "precision_at_3": 0.666667,
+        "ndcg_at_3": 0.907632
+      },
+      "training_baseline_metrics": {
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 0.693122,
+        "precision_at_3": 0.814815,
+        "ndcg_at_3": 0.879762
+      },
+      "test_model_metrics": {
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 1.0,
+        "precision_at_3": 0.666667,
+        "ndcg_at_3": 0.90495
+      },
+      "test_baseline_metrics": {
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 0.428571,
+        "precision_at_3": 1.0,
+        "ndcg_at_3": 0.842828
+      }
+    }
+  ],
+  "out_of_fold": {
+    "model": {
+      "precision_at_1": 1.0,
+      "ndcg_at_1": 0.733333,
+      "precision_at_3": 0.666667,
+      "ndcg_at_3": 0.837984
+    },
+    "baseline": {
+      "precision_at_1": 1.0,
+      "ndcg_at_1": 0.666667,
+      "precision_at_3": 0.833333,
+      "ndcg_at_3": 0.876069
+    },
+    "delta": {
+      "precision_at_1": 0.0,
+      "ndcg_at_1": 0.066667,
+      "precision_at_3": -0.166667,
+      "ndcg_at_3": -0.038085
+    }
+  },
+  "selected_final_weights": {
+    "expected_contribution": 0.2,
+    "urgency": 0.4,
+    "actionability": 0.35,
+    "business_fit": 0.05
+  },
+  "all_scenario_metrics": {
+    "model": {
+      "precision_at_1": 1.0,
+      "ndcg_at_1": 0.942857,
+      "precision_at_3": 0.666667,
+      "ndcg_at_3": 0.907364
+    },
+    "baseline": {
+      "precision_at_1": 1.0,
+      "ndcg_at_1": 0.666667,
+      "precision_at_3": 0.833333,
+      "ndcg_at_3": 0.876069
+    },
+    "delta": {
+      "precision_at_1": 0.0,
+      "ndcg_at_1": 0.27619,
+      "precision_at_3": -0.166667,
+      "ndcg_at_3": 0.031295
+    }
+  },
+  "limitation": "All ten available synthetic scenarios participate in model selection or held-out fold evaluation; no external holdout or production claim is made."
+}
