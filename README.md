@@ -151,7 +151,7 @@ The completed project's unrelated upload-cleanup job remains outside the A3 M3 s
   effectiveness or improved sales outcomes; and
 - `prioritize_followups` is registered. For an authenticated, configured
   coursework demo agent, the model sees a no-argument facade; M1 prepares and
-  validates M2 v3 candidates server-side before invoking the unchanged M4
+  validates M2 v4 horizon candidates server-side before invoking the unchanged M4
   ranker. Other scopes remain fail closed. This synthetic adapter is not a
   production candidate retrieval service, and live autonomous LLM E2E has not
   been verified.

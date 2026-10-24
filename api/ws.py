@@ -218,7 +218,13 @@ def _structured_recommendation(result: Any, events: list[dict[str, str]]) -> dic
             or not any(event.get("name") == "prioritize_followups"
                        and event.get("status") == "completed"
                        and event.get("tool_call_id") == call_id for event in events)
-            or value.get("source") != "m2-coursework-candidates-v3"):
+            or value.get("source") != "m2-coursework-candidates-v4"
+            or value.get("ranking_version") != "m4-horizon-weighted-v4"):
+        return None
+    denominator = value.get("normalization_denominator")
+    if (not isinstance(denominator, dict)
+            or denominator.get("field") != "horizon_open_gap"
+            or denominator.get("annual_gap_fallback") is not False):
         return None
     actions = value.get("actions")
     if not isinstance(actions, list) or not 1 <= len(actions) <= 50:
