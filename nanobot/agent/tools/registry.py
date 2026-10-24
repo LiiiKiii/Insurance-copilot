@@ -33,7 +33,7 @@ class ToolRegistry:
         self,
         *,
         timeout_seconds: float = 10.0,
-        max_result_chars: int = 20000,
+        max_result_chars: int = 100000,
     ) -> None:
         if timeout_seconds <= 0:
             raise ValueError("timeout_seconds must be positive.")
