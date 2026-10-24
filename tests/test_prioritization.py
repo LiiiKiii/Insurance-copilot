@@ -160,7 +160,16 @@ class PrioritizationTests(unittest.IsolatedAsyncioTestCase):
 
         result = prioritize_followups(payload)
 
-        self.assertEqual(result["ranking_version"], "m4-horizon-weighted-v2")
+        self.assertEqual(result["ranking_version"], "m4-horizon-weighted-v4")
+        self.assertEqual(
+            result["weights"],
+            {
+                "expected_contribution": 0.2,
+                "urgency": 0.4,
+                "actionability": 0.35,
+                "business_fit": 0.05,
+            },
+        )
         self.assertEqual(
             result["normalization_denominator"],
             {

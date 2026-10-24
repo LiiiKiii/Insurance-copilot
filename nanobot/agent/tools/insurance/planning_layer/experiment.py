@@ -14,6 +14,7 @@ from nanobot.agent.tools.insurance.planning_layer.evaluation import (
 )
 from nanobot.agent.tools.insurance.planning_layer.prioritization import (
     DEFAULT_WEIGHTS,
+    HORIZON_DEFAULT_WEIGHTS,
     prioritize_followups,
 )
 
@@ -416,8 +417,12 @@ def evaluate_coursework_dataset(
         raise ExperimentInputError(
             "No requested K is supported by every scenario's formal candidate set."
         )
+    horizon_mode = "horizon_open_gap" in next(
+        iter(candidates_by_id.values())
+    ).get("objective", {})
+    default_weights = HORIZON_DEFAULT_WEIGHTS if horizon_mode else DEFAULT_WEIGHTS
     default_rows = _evaluate_scenarios(
-        candidates_by_id, annotations_by_id, ks, DEFAULT_WEIGHTS
+        candidates_by_id, annotations_by_id, ks, default_weights
     )
     default_aggregate = _aggregate(default_rows, ks)
 
@@ -451,21 +456,31 @@ def evaluate_coursework_dataset(
             }
         )
 
-    adjudication = annotations.get("adjudication")
-    provenance = (
-        {
-            key: adjudication.get(key)
-            for key in ("method", "adjudicator", "limitation", "independence")
-            if adjudication.get(key) is not None
+    annotation_provenance = annotations.get("provenance")
+    if isinstance(annotation_provenance, Mapping):
+        provenance = {
+            "consensus_protocol": annotations.get("consensus_protocol"),
+            "annotators": annotations.get("annotators"),
+            "aggregation_method": annotations.get("aggregation_method"),
+            "tie_breaking_method": annotations.get("tie_breaking_method"),
+            "grading_policy": annotations.get("grading_policy"),
+            **dict(annotation_provenance),
         }
-        if isinstance(adjudication, Mapping)
-        else {}
-    )
+    else:
+        adjudication = annotations.get("adjudication")
+        provenance = (
+            {
+                key: adjudication.get(key)
+                for key in ("method", "adjudicator", "limitation", "independence")
+                if adjudication.get(key) is not None
+            }
+            if isinstance(adjudication, Mapping)
+            else {}
+        )
     return {
         "evaluation_id": (
-            "m4-coursework-evaluation-v2"
-            if "horizon_open_gap"
-            in next(iter(candidates_by_id.values())).get("objective", {})
+            "m4-coursework-evaluation-v4"
+            if horizon_mode
             else "m4-coursework-evaluation-v1"
         ),
         "dataset_id": dataset.get("dataset_id"),
@@ -485,13 +500,18 @@ def evaluate_coursework_dataset(
         "eligible_candidate_count": sum(
             row["eligible_candidate_count"] for row in default_rows
         ),
-        "default_weights": DEFAULT_WEIGHTS,
+        "default_weights": default_weights,
         "aggregate": default_aggregate,
         "scenarios": default_rows,
         "sensitivity": {
             "design": (
                 "Fixed one-factor stress profiles plus an equal-weight profile; "
-                "the default weights are not selected from evaluation labels."
+                + (
+                    "the horizon default was selected by the separately tracked "
+                    "leave-one-scenario-out procedure."
+                    if horizon_mode
+                    else "the legacy default weights were not selected from labels."
+                )
             ),
             "profiles": sensitivity,
         },

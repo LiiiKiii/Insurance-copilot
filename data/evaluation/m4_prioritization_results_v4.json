@@ -1,0 +1,827 @@
+{
+  "evaluation_id": "m4-coursework-evaluation-v4",
+  "dataset_id": "m2-coursework-candidates-v4",
+  "annotation_version": "human-v4",
+  "annotation_status": "complete",
+  "annotation_provenance": {
+    "consensus_protocol": "m2-v4-consensus-v1",
+    "annotators": [
+      "non_m4_annotator_1",
+      "non_m4_annotator_2",
+      "non_m4_annotator_3"
+    ],
+    "aggregation_method": "Ascending sum of three one-based human ranks (Borda equivalent).",
+    "tie_breaking_method": "Within equal rank sums: pairwise majority, then candidate_id ascending for incomparable nodes; majority cycles fail closed for protocol review.",
+    "grading_policy": {
+      "3": [
+        2,
+        1,
+        0
+      ],
+      "4": [
+        3,
+        2,
+        1,
+        0
+      ],
+      "excluded_candidates": "Never add non-formal IDs or pad to K=5.",
+      "ndcg": "full graded relevance",
+      "precision_relevant_if": "relevance > 0"
+    },
+    "freeze_statement": "The consensus protocol was frozen after the three independent blind annotations had been collected, but before their rankings were inspected or aggregated and before any M4 v4 evaluation was run.",
+    "limitations": [
+      "Protocol fixed after collection, not preregistered before annotation.",
+      "Synthetic small dataset; agreement is descriptive and does not establish external validity.",
+      "Three-candidate Top-3 overlap is necessarily 1 and is uninformative.",
+      "Majority cycles are possible even with valid strict ballots and require an explicit protocol revision before aggregation."
+    ],
+    "no_model_inputs": "Only the three independent human input files are read; no M4 scores, baseline, v3 labels or evaluation results.",
+    "prior_access_disclosure": "Before protocol freeze, automated structural checks loaded ranking arrays to verify completion, uniqueness and candidate-set membership; an earlier Git diff also exposed part of annotator 2 input during submission. No joint ranking comparison or aggregation was performed. The freeze statement refers to substantive comparative inspection, not a claim that ranking arrays had never been accessed. No M4 evaluation was run by this consensus workflow; execution elsewhere has not been independently audited.",
+    "protocol_document": "docs/coursework/m2_v4_consensus_protocol.md",
+    "source_files": {
+      "non_m4_annotator_1": {
+        "canonical_json_sha256": "60f5a29d933f6a032c56fd42ebac674db84c700cf8cddf72cad4ad7781ae010d",
+        "filename": "m2_candidate_annotations_v4_non_m4_annotator_1.json"
+      },
+      "non_m4_annotator_2": {
+        "canonical_json_sha256": "a35edd6b1841301debdde126aea944f38289a3af39a9ee74f6e760a3faa7a3e6",
+        "filename": "m2_candidate_annotations_v4_non_m4_annotator_2.json"
+      },
+      "non_m4_annotator_3": {
+        "canonical_json_sha256": "2f54b53cd97a32bd5c9ded9a6ccff1f9ac825cc4a81eaf5b517bf9dbac283e67",
+        "filename": "m2_candidate_annotations_v4_non_m4_annotator_3.json"
+      }
+    }
+  },
+  "annotation_agreement": {
+    "ranking_pair_count": 30,
+    "kendall_tau_a": {
+      "mean": 0.555556,
+      "population_std": 0.347833
+    },
+    "spearman_rho": {
+      "mean": 0.666667,
+      "population_std": 0.31763
+    },
+    "same_top_1_rate": {
+      "mean": 0.733333,
+      "population_std": 0.442217
+    },
+    "top_3_overlap_rate": {
+      "mean": 0.855556,
+      "population_std": 0.165179
+    }
+  },
+  "feature_diagnostics": {
+    "eligible_candidate_count": 37,
+    "expected_contribution_normalisation": "min(expected_contribution / objective.horizon_open_gap, 1)",
+    "objective_horizon_open_gap": {
+      "min": 5400.0,
+      "mean": 13660.0,
+      "max": 23000.0,
+      "population_std": 5354.661521
+    },
+    "raw_expected_contribution": {
+      "min": 0.0,
+      "mean": 1635.60973,
+      "max": 10726.18,
+      "population_std": 2553.130009
+    },
+    "normalised_components": {
+      "expected_contribution": {
+        "min": 0.0,
+        "mean": 0.13673,
+        "max": 1.0,
+        "population_std": 0.220997
+      },
+      "urgency": {
+        "min": 0.76,
+        "mean": 0.898378,
+        "max": 0.98,
+        "population_std": 0.075463
+      },
+      "actionability": {
+        "min": 0.86,
+        "mean": 0.921622,
+        "max": 0.98,
+        "population_std": 0.054896
+      },
+      "business_fit": {
+        "min": 0.6,
+        "mean": 0.875676,
+        "max": 1.0,
+        "population_std": 0.161756
+      }
+    },
+    "effective_weighted_points": {
+      "expected_contribution": {
+        "min": 0.0,
+        "mean": 2.734297,
+        "max": 20.0,
+        "population_std": 4.419981
+      },
+      "urgency": {
+        "min": 30.4,
+        "mean": 35.935135,
+        "max": 39.2,
+        "population_std": 3.018521
+      },
+      "actionability": {
+        "min": 30.1,
+        "mean": 32.256757,
+        "max": 34.3,
+        "population_std": 1.921365
+      },
+      "business_fit": {
+        "min": 3.0,
+        "mean": 4.378378,
+        "max": 5.0,
+        "population_std": 0.808781
+      }
+    },
+    "interpretation": "Diagnostics describe the committed dataset and default scorer only; they are not used to tune weights or transform evaluation labels."
+  },
+  "requested_k_values": [
+    1,
+    3,
+    5
+  ],
+  "k_values": [
+    1,
+    3
+  ],
+  "unavailable_k": [
+    {
+      "k": 5,
+      "status": "not_applicable",
+      "reason": "At least one scenario has fewer than K formal ranking candidates; out-of-horizon candidates are not used as padding.",
+      "minimum_formal_candidate_count": 3
+    }
+  ],
+  "formal_candidate_counts": {
+    "SCN-AGT00690": 4,
+    "SCN-AGT00770": 4,
+    "SCN-AGT00817": 4,
+    "SCN-AGT00949": 3,
+    "SCN-AGT01191": 4,
+    "SCN-AGT01448": 4,
+    "SCN-AGT01525": 3,
+    "SCN-AGT01569": 3,
+    "SCN-AGT01662": 4,
+    "SCN-AGT01876": 4
+  },
+  "scenario_count": 10,
+  "raw_candidate_count": 100,
+  "eligible_candidate_count": 37,
+  "default_weights": {
+    "expected_contribution": 0.2,
+    "urgency": 0.4,
+    "actionability": 0.35,
+    "business_fit": 0.05
+  },
+  "aggregate": {
+    "proposed": {
+      "1": {
+        "precision_at_k": {
+          "mean": 1.0,
+          "population_std": 0.0
+        },
+        "ndcg_at_k": {
+          "mean": 0.942857,
+          "population_std": 0.171429
+        }
+      },
+      "3": {
+        "precision_at_k": {
+          "mean": 0.666667,
+          "population_std": 0.0
+        },
+        "ndcg_at_k": {
+          "mean": 0.907364,
+          "population_std": 0.073746
+        }
+      }
+    },
+    "baseline": {
+      "1": {
+        "precision_at_k": {
+          "mean": 1.0,
+          "population_std": 0.0
+        },
+        "ndcg_at_k": {
+          "mean": 0.666667,
+          "population_std": 0.341399
+        }
+      },
+      "3": {
+        "precision_at_k": {
+          "mean": 0.833333,
+          "population_std": 0.166666
+        },
+        "ndcg_at_k": {
+          "mean": 0.876069,
+          "population_std": 0.095613
+        }
+      }
+    },
+    "delta": {
+      "1": {
+        "precision_at_k": {
+          "mean": 0.0,
+          "population_std": 0.0
+        },
+        "ndcg_at_k": {
+          "mean": 0.276191,
+          "population_std": 0.344573
+        }
+      },
+      "3": {
+        "precision_at_k": {
+          "mean": -0.166666,
+          "population_std": 0.166666
+        },
+        "ndcg_at_k": {
+          "mean": 0.031295,
+          "population_std": 0.108192
+        }
+      }
+    }
+  },
+  "scenarios": [
+    {
+      "scenario_id": "SCN-AGT00690",
+      "agent_id": "AGT00690",
+      "eligible_candidate_count": 4,
+      "proposed_ranking": [
+        "CLI-00690-007",
+        "CLI-00690-005",
+        "POL-00690-001"
+      ],
+      "baseline_ranking": [
+        "CLI-00690-007",
+        "CLI-00690-005",
+        "POL-00690-002"
+      ],
+      "metrics": {
+        "1": {
+          "k": 1,
+          "proposed": {
+            "precision_at_k": 1.0,
+            "ndcg_at_k": 0.428571
+          },
+          "baseline": {
+            "precision_at_k": 1.0,
+            "ndcg_at_k": 0.428571
+          }
+        },
+        "3": {
+          "k": 3,
+          "proposed": {
+            "precision_at_k": 0.666667,
+            "ndcg_at_k": 0.789596
+          },
+          "baseline": {
+            "precision_at_k": 1.0,
+            "ndcg_at_k": 0.842828
+          }
+        }
+      }
+    },
+    {
+      "scenario_id": "SCN-AGT00770",
+      "agent_id": "AGT00770",
+      "eligible_candidate_count": 4,
+      "proposed_ranking": [
+        "CLI-00770-010",
+        "POL-00770-001",
+        "CLI-00770-008"
+      ],
+      "baseline_ranking": [
+        "CLI-00770-008",
+        "CLI-00770-010",
+        "POL-00770-002"
+      ],
+      "metrics": {
+        "1": {
+          "k": 1,
+          "proposed": {
+            "precision_at_k": 1.0,
+            "ndcg_at_k": 1.0
+          },
+          "baseline": {
+            "precision_at_k": 1.0,
+            "ndcg_at_k": 0.142857
+          }
+        },
+        "3": {
+          "k": 3,
+          "proposed": {
+            "precision_at_k": 0.666667,
+            "ndcg_at_k": 0.798485
+          },
+          "baseline": {
+            "precision_at_k": 1.0,
+            "ndcg_at_k": 0.736364
+          }
+        }
+      }
+    },
+    {
+      "scenario_id": "SCN-AGT00817",
+      "agent_id": "AGT00817",
+      "eligible_candidate_count": 4,
+      "proposed_ranking": [
+        "CLI-00817-011",
+        "POL-00817-004",
+        "POL-00817-001"
+      ],
+      "baseline_ranking": [
+        "CLI-00817-011",
+        "POL-00817-001",
+        "POL-00817-002"
+      ],
+      "metrics": {
+        "1": {
+          "k": 1,
+          "proposed": {
+            "precision_at_k": 1.0,
+            "ndcg_at_k": 1.0
+          },
+          "baseline": {
+            "precision_at_k": 1.0,
+            "ndcg_at_k": 1.0
+          }
+        },
+        "3": {
+          "k": 3,
+          "proposed": {
+            "precision_at_k": 0.666667,
+            "ndcg_at_k": 0.946768
+          },
+          "baseline": {
+            "precision_at_k": 0.666667,
+            "ndcg_at_k": 0.798485
+          }
+        }
+      }
+    },
+    {
+      "scenario_id": "SCN-AGT00949",
+      "agent_id": "AGT00949",
+      "eligible_candidate_count": 3,
+      "proposed_ranking": [
+        "CLI-00949-016",
+        "CLI-00949-006",
+        "POL-00949-001"
+      ],
+      "baseline_ranking": [
+        "CLI-00949-006",
+        "CLI-00949-016",
+        "POL-00949-001"
+      ],
+      "metrics": {
+        "1": {
+          "k": 1,
+          "proposed": {
+            "precision_at_k": 1.0,
+            "ndcg_at_k": 1.0
+          },
+          "baseline": {
+            "precision_at_k": 1.0,
+            "ndcg_at_k": 0.333333
+          }
+        },
+        "3": {
+          "k": 3,
+          "proposed": {
+            "precision_at_k": 0.666667,
+            "ndcg_at_k": 1.0
+          },
+          "baseline": {
+            "precision_at_k": 0.666667,
+            "ndcg_at_k": 0.796708
+          }
+        }
+      }
+    },
+    {
+      "scenario_id": "SCN-AGT01191",
+      "agent_id": "AGT01191",
+      "eligible_candidate_count": 4,
+      "proposed_ranking": [
+        "CLI-01191-007",
+        "CLI-01191-017",
+        "POL-01191-001"
+      ],
+      "baseline_ranking": [
+        "CLI-01191-007",
+        "CLI-01191-017",
+        "POL-01191-002"
+      ],
+      "metrics": {
+        "1": {
+          "k": 1,
+          "proposed": {
+            "precision_at_k": 1.0,
+            "ndcg_at_k": 1.0
+          },
+          "baseline": {
+            "precision_at_k": 1.0,
+            "ndcg_at_k": 1.0
+          }
+        },
+        "3": {
+          "k": 3,
+          "proposed": {
+            "precision_at_k": 0.666667,
+            "ndcg_at_k": 0.946768
+          },
+          "baseline": {
+            "precision_at_k": 1.0,
+            "ndcg_at_k": 1.0
+          }
+        }
+      }
+    },
+    {
+      "scenario_id": "SCN-AGT01448",
+      "agent_id": "AGT01448",
+      "eligible_candidate_count": 4,
+      "proposed_ranking": [
+        "CLI-01448-006",
+        "POL-01448-004",
+        "POL-01448-001"
+      ],
+      "baseline_ranking": [
+        "CLI-01448-006",
+        "POL-01448-004",
+        "POL-01448-002"
+      ],
+      "metrics": {
+        "1": {
+          "k": 1,
+          "proposed": {
+            "precision_at_k": 1.0,
+            "ndcg_at_k": 1.0
+          },
+          "baseline": {
+            "precision_at_k": 1.0,
+            "ndcg_at_k": 1.0
+          }
+        },
+        "3": {
+          "k": 3,
+          "proposed": {
+            "precision_at_k": 0.666667,
+            "ndcg_at_k": 0.946768
+          },
+          "baseline": {
+            "precision_at_k": 1.0,
+            "ndcg_at_k": 1.0
+          }
+        }
+      }
+    },
+    {
+      "scenario_id": "SCN-AGT01525",
+      "agent_id": "AGT01525",
+      "eligible_candidate_count": 3,
+      "proposed_ranking": [
+        "CLI-01525-013",
+        "POL-01525-001",
+        "CLI-01525-015"
+      ],
+      "baseline_ranking": [
+        "CLI-01525-015",
+        "CLI-01525-013",
+        "POL-01525-001"
+      ],
+      "metrics": {
+        "1": {
+          "k": 1,
+          "proposed": {
+            "precision_at_k": 1.0,
+            "ndcg_at_k": 1.0
+          },
+          "baseline": {
+            "precision_at_k": 1.0,
+            "ndcg_at_k": 0.333333
+          }
+        },
+        "3": {
+          "k": 3,
+          "proposed": {
+            "precision_at_k": 0.666667,
+            "ndcg_at_k": 0.96394
+          },
+          "baseline": {
+            "precision_at_k": 0.666667,
+            "ndcg_at_k": 0.796708
+          }
+        }
+      }
+    },
+    {
+      "scenario_id": "SCN-AGT01569",
+      "agent_id": "AGT01569",
+      "eligible_candidate_count": 3,
+      "proposed_ranking": [
+        "CLI-01569-014",
+        "POL-01569-001",
+        "POL-01569-002"
+      ],
+      "baseline_ranking": [
+        "CLI-01569-014",
+        "POL-01569-002",
+        "POL-01569-001"
+      ],
+      "metrics": {
+        "1": {
+          "k": 1,
+          "proposed": {
+            "precision_at_k": 1.0,
+            "ndcg_at_k": 1.0
+          },
+          "baseline": {
+            "precision_at_k": 1.0,
+            "ndcg_at_k": 1.0
+          }
+        },
+        "3": {
+          "k": 3,
+          "proposed": {
+            "precision_at_k": 0.666667,
+            "ndcg_at_k": 0.96394
+          },
+          "baseline": {
+            "precision_at_k": 0.666667,
+            "ndcg_at_k": 1.0
+          }
+        }
+      }
+    },
+    {
+      "scenario_id": "SCN-AGT01662",
+      "agent_id": "AGT01662",
+      "eligible_candidate_count": 4,
+      "proposed_ranking": [
+        "CLI-01662-015",
+        "POL-01662-001",
+        "POL-01662-002"
+      ],
+      "baseline_ranking": [
+        "CLI-01662-015",
+        "POL-01662-003",
+        "POL-01662-002"
+      ],
+      "metrics": {
+        "1": {
+          "k": 1,
+          "proposed": {
+            "precision_at_k": 1.0,
+            "ndcg_at_k": 1.0
+          },
+          "baseline": {
+            "precision_at_k": 1.0,
+            "ndcg_at_k": 1.0
+          }
+        },
+        "3": {
+          "k": 3,
+          "proposed": {
+            "precision_at_k": 0.666667,
+            "ndcg_at_k": 0.812424
+          },
+          "baseline": {
+            "precision_at_k": 0.666667,
+            "ndcg_at_k": 0.946768
+          }
+        }
+      }
+    },
+    {
+      "scenario_id": "SCN-AGT01876",
+      "agent_id": "AGT01876",
+      "eligible_candidate_count": 4,
+      "proposed_ranking": [
+        "CLI-01876-006",
+        "POL-01876-001",
+        "CLI-01876-018"
+      ],
+      "baseline_ranking": [
+        "CLI-01876-018",
+        "CLI-01876-006",
+        "POL-01876-002"
+      ],
+      "metrics": {
+        "1": {
+          "k": 1,
+          "proposed": {
+            "precision_at_k": 1.0,
+            "ndcg_at_k": 1.0
+          },
+          "baseline": {
+            "precision_at_k": 1.0,
+            "ndcg_at_k": 0.428571
+          }
+        },
+        "3": {
+          "k": 3,
+          "proposed": {
+            "precision_at_k": 0.666667,
+            "ndcg_at_k": 0.90495
+          },
+          "baseline": {
+            "precision_at_k": 1.0,
+            "ndcg_at_k": 0.842828
+          }
+        }
+      }
+    }
+  ],
+  "sensitivity": {
+    "design": "Fixed one-factor stress profiles plus an equal-weight profile; the horizon default was selected by the separately tracked leave-one-scenario-out procedure.",
+    "profiles": [
+      {
+        "profile": "balanced",
+        "weights": {
+          "expected_contribution": 0.25,
+          "urgency": 0.25,
+          "actionability": 0.25,
+          "business_fit": 0.25
+        },
+        "aggregate": {
+          "1": {
+            "precision_at_k": {
+              "mean": 0.6,
+              "population_std": 0.489898
+            },
+            "ndcg_at_k": {
+              "mean": 0.390476,
+              "population_std": 0.42314
+            }
+          },
+          "3": {
+            "precision_at_k": {
+              "mean": 0.666667,
+              "population_std": 0.0
+            },
+            "ndcg_at_k": {
+              "mean": 0.698289,
+              "population_std": 0.133391
+            }
+          }
+        },
+        "top_max_k_overlap_with_default": {
+          "mean": 0.866667,
+          "population_std": 0.163299
+        },
+        "mean_ndcg_at_max_k_delta_from_default": -0.209075
+      },
+      {
+        "profile": "contribution_heavy",
+        "weights": {
+          "expected_contribution": 0.7,
+          "urgency": 0.1,
+          "actionability": 0.1,
+          "business_fit": 0.1
+        },
+        "aggregate": {
+          "1": {
+            "precision_at_k": {
+              "mean": 1.0,
+              "population_std": 0.0
+            },
+            "ndcg_at_k": {
+              "mean": 0.580952,
+              "population_std": 0.354306
+            }
+          },
+          "3": {
+            "precision_at_k": {
+              "mean": 0.666667,
+              "population_std": 0.0
+            },
+            "ndcg_at_k": {
+              "mean": 0.774493,
+              "population_std": 0.160976
+            }
+          }
+        },
+        "top_max_k_overlap_with_default": {
+          "mean": 0.966667,
+          "population_std": 0.1
+        },
+        "mean_ndcg_at_max_k_delta_from_default": -0.132871
+      },
+      {
+        "profile": "urgency_heavy",
+        "weights": {
+          "expected_contribution": 0.2,
+          "urgency": 0.5,
+          "actionability": 0.2,
+          "business_fit": 0.1
+        },
+        "aggregate": {
+          "1": {
+            "precision_at_k": {
+              "mean": 0.9,
+              "population_std": 0.3
+            },
+            "ndcg_at_k": {
+              "mean": 0.690476,
+              "population_std": 0.393398
+            }
+          },
+          "3": {
+            "precision_at_k": {
+              "mean": 0.666667,
+              "population_std": 0.0
+            },
+            "ndcg_at_k": {
+              "mean": 0.835954,
+              "population_std": 0.155868
+            }
+          }
+        },
+        "top_max_k_overlap_with_default": {
+          "mean": 1.0,
+          "population_std": 0.0
+        },
+        "mean_ndcg_at_max_k_delta_from_default": -0.07141
+      },
+      {
+        "profile": "actionability_heavy",
+        "weights": {
+          "expected_contribution": 0.2,
+          "urgency": 0.2,
+          "actionability": 0.5,
+          "business_fit": 0.1
+        },
+        "aggregate": {
+          "1": {
+            "precision_at_k": {
+              "mean": 0.7,
+              "population_std": 0.458258
+            },
+            "ndcg_at_k": {
+              "mean": 0.557143,
+              "population_std": 0.458258
+            }
+          },
+          "3": {
+            "precision_at_k": {
+              "mean": 0.666667,
+              "population_std": 0.0
+            },
+            "ndcg_at_k": {
+              "mean": 0.798284,
+              "population_std": 0.175145
+            }
+          }
+        },
+        "top_max_k_overlap_with_default": {
+          "mean": 1.0,
+          "population_std": 0.0
+        },
+        "mean_ndcg_at_max_k_delta_from_default": -0.10908
+      },
+      {
+        "profile": "business_fit_heavy",
+        "weights": {
+          "expected_contribution": 0.2,
+          "urgency": 0.15,
+          "actionability": 0.15,
+          "business_fit": 0.5
+        },
+        "aggregate": {
+          "1": {
+            "precision_at_k": {
+              "mean": 0.5,
+              "population_std": 0.5
+            },
+            "ndcg_at_k": {
+              "mean": 0.290476,
+              "population_std": 0.383592
+            }
+          },
+          "3": {
+            "precision_at_k": {
+              "mean": 0.666667,
+              "population_std": 0.0
+            },
+            "ndcg_at_k": {
+              "mean": 0.589936,
+              "population_std": 0.17195
+            }
+          }
+        },
+        "top_max_k_overlap_with_default": {
+          "mean": 0.766667,
+          "population_std": 0.152753
+        },
+        "mean_ndcg_at_max_k_delta_from_default": -0.317428
+      }
+    ]
+  }
+}

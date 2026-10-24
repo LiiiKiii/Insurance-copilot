@@ -338,14 +338,27 @@ Run the current M4 prioritisation and attribution regression scope with:
 Run the reproducible ranking experiment with:
 
 ```powershell
-.\.venv\Scripts\python.exe scripts/evaluate_prioritization.py --output data/evaluation/m4_prioritization_results.json
+.\.venv\Scripts\python.exe scripts/select_m4_horizon_weights.py `
+  --output data/evaluation/m4_horizon_weight_selection_v3.json
+
+.\.venv\Scripts\python.exe scripts/evaluate_prioritization.py `
+  --scenarios data/evaluation/m2_candidate_scenarios_v4.json `
+  --annotations data/evaluation/m2_candidate_annotations_v4.json `
+  --output data/evaluation/m4_prioritization_results_v4.json
 ```
 
-The command evaluates 10 scenarios at `K = 1, 3, 5`, compares the weighted
-ranker with the expected-contribution baseline, and runs fixed sensitivity
-profiles. The implementation details, results, provenance, limitations, and
-ownership boundary are recorded in
-`docs/coursework/m4_prioritization_experiment.md`.
+The first command performs deterministic leave-one-scenario-out weight
+selection over the 10 horizon-aligned v4 scenarios, requiring every one of the
+four score factors to retain at least 0.05 weight. The second evaluates the
+selected horizon-weighted ranker at `K = 1, 3`, compares it with the raw
+expected-contribution baseline, and runs fixed sensitivity profiles. `K = 5`
+is recorded as not applicable because the formal candidate sets contain only
+three or four items; out-of-horizon candidates are never used as padding. The
+final results, fold allocation, provenance, limitations, and baseline
+comparison are recorded in
+`docs/coursework/m4_horizon_prioritization_v4_results.md`. The earlier v3
+experiment remains in `docs/coursework/m4_prioritization_experiment.md` for
+reproducibility and is not the final coursework result.
 
 ## A6 Baseline Freeze
 

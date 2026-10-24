@@ -159,7 +159,7 @@ class PrioritizationEvaluationTests(unittest.TestCase):
 
         result = evaluate_coursework_dataset(dataset, annotations)
 
-        self.assertEqual(result["evaluation_id"], "m4-coursework-evaluation-v2")
+        self.assertEqual(result["evaluation_id"], "m4-coursework-evaluation-v4")
         self.assertEqual(result["requested_k_values"], [1, 3, 5])
         self.assertEqual(result["k_values"], [1, 3])
         self.assertEqual(result["unavailable_k"][0]["k"], 5)
@@ -168,6 +168,18 @@ class PrioritizationEvaluationTests(unittest.TestCase):
         )
         self.assertEqual(result["eligible_candidate_count"], 37)
         self.assertEqual(
+            result["annotation_provenance"]["consensus_protocol"],
+            "m2-v4-consensus-v1",
+        )
+        self.assertEqual(
+            result["annotation_provenance"]["annotators"],
+            [
+                "non_m4_annotator_1",
+                "non_m4_annotator_2",
+                "non_m4_annotator_3",
+            ],
+        )
+        self.assertEqual(
             result["feature_diagnostics"]["expected_contribution_normalisation"],
             "min(expected_contribution / objective.horizon_open_gap, 1)",
         )
@@ -175,6 +187,39 @@ class PrioritizationEvaluationTests(unittest.TestCase):
         self.assertTrue(all(
             len(row["proposed_ranking"]) <= 4 for row in result["scenarios"]
         ))
+
+    def test_completed_horizon_consensus_produces_frozen_final_metrics(self) -> None:
+        dataset = json.loads(HORIZON_SCENARIOS.read_text(encoding="utf-8"))
+        annotations = json.loads(HORIZON_ANNOTATIONS.read_text(encoding="utf-8"))
+
+        result = evaluate_coursework_dataset(dataset, annotations)
+
+        self.assertEqual(result["annotation_status"], "complete")
+        self.assertEqual(result["annotation_agreement"]["ranking_pair_count"], 30)
+        self.assertEqual(
+            result["annotation_agreement"]["kendall_tau_a"]["mean"], 0.555556
+        )
+        self.assertEqual(
+            result["annotation_agreement"]["spearman_rho"]["mean"], 0.666667
+        )
+        self.assertEqual(
+            result["aggregate"]["proposed"]["1"]["precision_at_k"]["mean"],
+            1.0,
+        )
+        self.assertEqual(
+            result["aggregate"]["proposed"]["3"]["ndcg_at_k"]["mean"],
+            0.907364,
+        )
+        self.assertEqual(
+            result["aggregate"]["baseline"]["3"]["ndcg_at_k"]["mean"],
+            0.876069,
+        )
+        self.assertGreater(
+            result["aggregate"]["delta"]["3"]["ndcg_at_k"]["mean"], 0
+        )
+        self.assertLess(
+            result["aggregate"]["delta"]["3"]["precision_at_k"]["mean"], 0
+        )
 
 
 if __name__ == "__main__":
