@@ -329,7 +329,14 @@ class AgentLoop:
                 )
                 arguments = dict(tool_call.arguments)
                 if tool_call.name == _TRUSTED_CANDIDATE_TOOL and prepared is not None:
-                    result, status = await registry.execute_with_status(
+                    # The validated v4 horizon result exceeds the general 5k
+                    # output budget; isolate this one server-prepared call.
+                    coursework_registry = ToolRegistry(
+                        timeout_seconds=registry.timeout_seconds,
+                        max_result_chars=6500,
+                    )
+                    coursework_registry.register(registry.get(tool_call.name))
+                    result, status = await coursework_registry.execute_with_status(
                         tool_call.name, prepared.payload,
                     )
                     if status == "completed":

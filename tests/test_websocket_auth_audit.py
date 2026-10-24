@@ -488,15 +488,20 @@ class WebSocketAuthAuditTests(unittest.IsolatedAsyncioTestCase):
 
         self.assertEqual(response["type"], "response")
         self.assertEqual(response["content"],
-                         "Here are 5 authorized follow-up recommendations. "
+                         "Here are 4 authorized follow-up recommendations. "
                          "Review the ranked action plan for their actions and evidence.")
         self.assertEqual(response["turn_id"], "turn:demo")
         card = response["result"]
         self.assertEqual((card["kind"], card["source"], card["scenario_id"], card["tool_call_id"]),
-                         ("action_plan", "m2-coursework-candidates-v3", "SCN-AGT00690", "demo-call-1"))
+                         ("action_plan", "m2-coursework-candidates-v4", "SCN-AGT00690", "demo-call-1"))
         self.assertEqual(card["as_of_date"], "2026-05-31")
-        self.assertEqual([row["rank"] for row in card["actions"]], [1, 2, 3, 4, 5])
-        self.assertEqual(card["actions"][0]["candidate_id"], "POL-00690-001")
+        self.assertEqual(card["planning_horizon_start"], "2026-06-01")
+        self.assertEqual(card["planning_horizon_end"], "2026-06-30")
+        self.assertEqual(card["normalization_denominator"], {
+            "field": "horizon_open_gap", "value": 5400, "annual_gap_fallback": False,
+        })
+        self.assertEqual([row["rank"] for row in card["actions"]], [1, 2, 3, 4])
+        self.assertEqual(card["actions"][0]["candidate_id"], "CLI-00690-007")
         self.assertIn("action_signal", card["actions"][0]["evidence"])
         self.assertIn("expected_contribution", card["actions"][0]["score_components"])
         offered = provider.chat_with_retry.await_args_list[0].kwargs["tools"]
@@ -509,12 +514,16 @@ class WebSocketAuthAuditTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(assistant["tool_calls"][0]["function"]["arguments"], "{}")
         self.assertEqual(tool_result["tool_call_id"], "demo-call-1")
         ranked = json.loads(tool_result["content"])
-        self.assertEqual(ranked["source"], "m2-coursework-candidates-v3")
+        self.assertEqual(ranked["source"], "m2-coursework-candidates-v4")
+        self.assertEqual(ranked["ranking_version"], "m4-horizon-weighted-v4")
+        self.assertEqual(ranked["normalization_denominator"]["field"], "horizon_open_gap")
         self.assertEqual(ranked["excluded_candidates"], [])
-        self.assertEqual(ranked["candidate_count"], 6)
-        for excluded in ("POL-00690-003", "POL-00690-004", "CLI-00690-013", "CLI-00690-015"):
+        self.assertEqual(ranked["candidate_count"], 4)
+        for excluded in ("POL-00690-003", "POL-00690-004", "CLI-00690-009",
+                         "CLI-00690-011", "CLI-00690-013", "CLI-00690-015"):
             self.assertNotIn(excluded, tool_result["content"])
             self.assertNotIn(excluded, json.dumps(card))
+            self.assertNotIn(excluded, response["content"])
 
         async with self.sessions() as db:
             audit = (await db.scalars(select(AiAuditLog))).one()
@@ -700,7 +709,7 @@ class WebSocketAuthAuditTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(audit.tools_called, "[]")
 
     async def test_malformed_demo_candidate_is_never_offered_or_ranked(self):
-        source_file = Path(__file__).resolve().parents[1] / "data/evaluation/m2_candidate_scenarios.json"
+        source_file = Path(__file__).resolve().parents[1] / "data/evaluation/m2_candidate_scenarios_v4.json"
         dataset = json.loads(source_file.read_text(encoding="utf-8"))
         dataset["scenarios"][0]["candidates"][0]["owner_agent_id"] = "foreign-agent"
         malformed = Path(self.folder.name) / "malformed-candidates.json"

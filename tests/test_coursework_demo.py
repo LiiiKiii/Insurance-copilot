@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import copy
+import hashlib
 import json
 import os
 import tempfile
@@ -24,7 +25,7 @@ from admin.seeds import DEFAULT_TENANT_ID
 
 
 _ROOT = Path(__file__).resolve().parents[1]
-_DATASET = _ROOT / "data/evaluation/m2_candidate_scenarios.json"
+_DATASET = _ROOT / "data/evaluation/m2_candidate_scenarios_v4.json"
 _SCOPE = CourseworkDemoScope(DEFAULT_TENANT_ID, "AGT00690")
 
 
@@ -44,22 +45,23 @@ class CourseworkDemoTests(unittest.TestCase):
             path.write_text(json.dumps(dataset), encoding="utf-8")
             return CourseworkCandidateSource(path, _ROOT / "data/mock").prepare(_SCOPE)
 
-    def test_all_v3_scenarios_are_source_linked_and_only_allowed_rows_reach_m4(self) -> None:
+    def test_all_v4_scenarios_are_source_linked_and_only_in_horizon_rows_reach_m4(self) -> None:
         source = CourseworkCandidateSource()
         for scenario in self.dataset["scenarios"]:
             with self.subTest(agent=scenario["agent_id"]):
                 with patch.dict(os.environ, {"M1_COURSEWORK_DEMO_AGENT_ID": scenario["agent_id"]}):
                     prepared = source.prepare(CourseworkDemoScope(DEFAULT_TENANT_ID, scenario["agent_id"]))
-                self.assertEqual(len(prepared.payload["candidates"]), 6)
-                excluded_ids = {
-                    row["candidate_id"] for row in scenario["candidates"]
-                    if not all(row[key] for key in (
-                        "eligible", "permission_allowed", "compliance_allowed",
-                    ))
-                }
+                expected_ids = set(scenario["candidate_partitions"]["in_horizon"])
+                self.assertEqual(prepared.candidate_ids, expected_ids)
+                excluded_ids = {row["candidate_id"] for row in scenario["candidates"]} - expected_ids
                 self.assertTrue(excluded_ids.isdisjoint(prepared.candidate_ids))
                 ranking = prioritize_followups(prepared.payload)
                 self.assertEqual(ranking["excluded_candidates"], [])
+                self.assertEqual(ranking["ranking_version"], "m4-horizon-weighted-v4")
+                self.assertEqual(ranking["normalization_denominator"], {
+                    "field": "horizon_open_gap", "value": scenario["objective"]["horizon_open_gap"],
+                    "annual_gap_fallback": False,
+                })
                 card = recommendation_result(prepared, ranking, "trusted-call")
                 self.assertTrue({row["candidate_id"] for row in card["actions"]} <= prepared.candidate_ids)
 
@@ -104,7 +106,7 @@ class CourseworkDemoTests(unittest.TestCase):
 
     def test_objective_and_ranked_output_must_match_authorized_scenario(self) -> None:
         dataset = copy.deepcopy(self.dataset)
-        dataset["scenarios"][0]["objective"]["open_gap"] = 1
+        dataset["scenarios"][0]["objective"]["horizon_open_gap"] = 1
         with self.assertRaises(CourseworkCandidateError):
             self._prepared_from(dataset)
         prepared = CourseworkCandidateSource().prepare(_SCOPE)
@@ -112,6 +114,70 @@ class CourseworkDemoTests(unittest.TestCase):
         ranking["recommendations"][0]["candidate_id"] = "foreign-policy"
         with self.assertRaises(CourseworkCandidateError):
             recommendation_result(prepared, ranking, "trusted-call")
+
+    def test_v4_objective_fields_and_source_rules_fail_closed(self) -> None:
+        for field, value in (
+            ("metric", "policy_count"), ("unit", "HKD"),
+            ("horizon_target", None), ("horizon_current", 1),
+            ("horizon_open_gap", 228250), ("annual_open_gap", None),
+            ("planning_horizon_start", "2026-05-31"),
+            ("planning_horizon_end", "2026-07-01"),
+            ("horizon_target_source", {}), ("horizon_current_source", {}),
+            ("is_synthetic", False),
+        ):
+            with self.subTest(field=field):
+                data = copy.deepcopy(self.dataset)
+                data["scenarios"][0]["objective"][field] = value
+                with self.assertRaises(CourseworkCandidateError):
+                    self._prepared_from(data)
+        data = copy.deepcopy(self.dataset)
+        data["dataset_id"] = "m2-coursework-candidates-v3"
+        with self.assertRaises(CourseworkCandidateError):
+            self._prepared_from(data)
+
+    def test_v4_partition_timeline_and_contribution_tampering_fails_closed(self) -> None:
+        changes = (
+            ("metric", "policy_count"), ("within_planning_horizon", False),
+            ("horizon_ranking_eligible", False),
+            ("expected_realization_date", "2026-07-01"),
+            ("realization_group", "future_follow_up"),
+            ("expected_realization_source", {}), ("contribution_basis", {}),
+            ("expected_contribution", 100000),
+        )
+        for field, value in changes:
+            with self.subTest(field=field):
+                data = copy.deepcopy(self.dataset)
+                data["scenarios"][0]["candidates"][0][field] = value
+                with self.assertRaises(CourseworkCandidateError):
+                    self._prepared_from(data)
+        data = copy.deepcopy(self.dataset)
+        row = data["scenarios"][0]["candidates"][0]
+        row["contribution_basis"]["probability"] = 0.99
+        row["expected_contribution"] = round(row["premium"] * 0.99, 2)
+        with self.assertRaises(CourseworkCandidateError):
+            self._prepared_from(data)
+        data = copy.deepcopy(self.dataset)
+        row = data["scenarios"][0]["candidates"][0]
+        data["scenarios"][0]["candidate_partitions"]["in_horizon"].remove(row["candidate_id"])
+        data["scenarios"][0]["candidate_partitions"]["future_follow_up"].append(row["candidate_id"])
+        with self.assertRaises(CourseworkCandidateError):
+            self._prepared_from(data)
+        data = copy.deepcopy(self.dataset)
+        data["scenarios"][0]["candidates"][4]["horizon_ranking_eligible"] = True
+        with self.assertRaises(CourseworkCandidateError):
+            self._prepared_from(data)
+
+    def test_source_and_annotation_files_are_unchanged(self) -> None:
+        paths = [
+            _ROOT / "data/evaluation/m2_candidate_scenarios.json",
+            _DATASET,
+            _ROOT / "data/config/m2_horizon_v4_rules.json",
+            _ROOT / "data/evaluation/m2_candidate_annotations_v4.json",
+        ]
+        before = [hashlib.sha256(path.read_bytes()).hexdigest() for path in paths]
+        CourseworkCandidateSource().prepare(_SCOPE)
+        self.assertEqual(before, [hashlib.sha256(path.read_bytes()).hexdigest()
+                                  for path in paths])
 
     def test_explicit_top_k_is_server_selected_without_changing_candidates(self) -> None:
         prepared = CourseworkCandidateSource().prepare(_SCOPE)
@@ -129,7 +195,7 @@ class CourseworkDemoTests(unittest.TestCase):
                 self.assertEqual(selected.candidate_ids, prepared.candidate_ids)
                 ranking = prioritize_followups(selected.payload)
                 card = recommendation_result(selected, ranking, "trusted-call")
-                self.assertEqual(len(ranking["recommendations"]), expected)
+                self.assertEqual(len(ranking["recommendations"]), min(expected, len(prepared.candidate_ids)))
                 self.assertEqual([row["candidate_id"] for row in card["actions"]],
                                  [row["candidate_id"] for row in ranking["recommendations"]])
         self.assertEqual(prepared.payload["constraints"], {"top_k": 5})

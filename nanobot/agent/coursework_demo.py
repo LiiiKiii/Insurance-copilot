@@ -1,4 +1,4 @@
-"""Read-only, fail-closed M2 v3 candidate source for the coursework demo."""
+"""Read-only, fail-closed M2 v4 candidate source for the coursework demo."""
 
 from __future__ import annotations
 
@@ -7,13 +7,16 @@ import math
 import os
 import re
 from dataclasses import dataclass, replace
-from datetime import date
+from datetime import date, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
 _ROOT = Path(__file__).resolve().parents[2]
 _DATASET_TENANT = "coursework-demo"  # Source provenance, not the database tenant.
-_DATASET_ID = "m2-coursework-candidates-v3"
+_DATASET_ID = "m2-coursework-candidates-v4"
+_RULES_PATH = "data/config/m2_horizon_v4_rules.json"
+_PARTITIONS = frozenset({"in_horizon", "future_follow_up", "before_horizon",
+                         "realization_unavailable", "gate_excluded"})
 
 
 class CourseworkCandidateError(ValueError):
@@ -94,18 +97,51 @@ def _number(value: Any, *, minimum: float = 0, maximum: float | None = None) -> 
     return result
 
 
+def _supported_realization(row: dict[str, Any]) -> tuple[date | None, str]:
+    """Check the recorded v4 timeline against its source dates and rule."""
+    try:
+        action = date.fromisoformat(row["action_deadline"]) if row.get("action_deadline") else None
+        approval = row.get("estimated_approval_days")
+        if approval is not None and not isinstance(approval, dict):
+            raise ValueError("Invalid approval evidence")
+        maximum = approval.get("max") if approval else None
+        if maximum is not None and (isinstance(maximum, bool)
+                                    or not isinstance(maximum, int) or maximum < 0):
+            raise ValueError("Invalid approval interval")
+        if row["candidate_type"] == "policy":
+            status = row.get("policy_status")
+            if status == "Awaiting Documents" and action and maximum is not None:
+                return action + timedelta(days=maximum), "documents"
+            if status == "Underwriter Query" and action and maximum is not None:
+                return action + timedelta(days=maximum + 2), "query"
+            if status == "Client Confirmation Pending" and action:
+                return action + timedelta(days=2), "confirmation"
+            if status == "Underwriting" and maximum is not None:
+                return date.fromisoformat(row["submit_date"]) + timedelta(days=maximum), "passive_underwriting"
+            return None, "unsupported_policy_evidence"
+        signal = row["action_signal"].lower()
+        for term, days, assumption in (("callback", 10, "callback"),
+                                        ("renewal", 5, "renewal"),
+                                        ("quotation", 35, "quotation")):
+            if action and term in signal:
+                return action + timedelta(days=days), assumption
+        return None, "review" if "review" in signal else "unsupported_client_evidence"
+    except (KeyError, TypeError, ValueError, OverflowError, AttributeError) as exc:
+        raise CourseworkCandidateError("Invalid demo realization evidence") from exc
+
+
 class CourseworkCandidateSource:
     """Validate source-linked M2 data without deriving or changing M2 scores."""
 
     def __init__(self, dataset_path: Path | None = None, mock_dir: Path | None = None) -> None:
-        self.dataset_path = dataset_path or _ROOT / "data/evaluation/m2_candidate_scenarios.json"
+        self.dataset_path = dataset_path or _ROOT / "data/evaluation/m2_candidate_scenarios_v4.json"
         self.mock_dir = mock_dir or _ROOT / "data/mock"
         self._use_frozen_source = mock_dir is None
 
     def _load_json(self, path: Path) -> Any:
         try:
             if self._use_frozen_source and path.parent == self.mock_dir:
-                # v3 source_path names refer to the frozen ea8fce6 snapshot.
+                # M2 v4 retains source_path lineage from the frozen v3 snapshot.
                 from scripts.build_life_demo_dataset import load_source
                 return load_source(path.stem)
             return json.loads(path.read_text(encoding="utf-8"))
@@ -121,10 +157,25 @@ class CourseworkCandidateSource:
         dataset = self._load_json(self.dataset_path)
         if not isinstance(dataset, dict) or dataset.get("dataset_id") != _DATASET_ID:
             raise CourseworkCandidateError("Unexpected demo dataset")
+        rules_path = _ROOT / _RULES_PATH
+        try:
+            rules = json.loads(rules_path.read_text(encoding="utf-8"))
+        except (OSError, ValueError) as exc:
+            raise CourseworkCandidateError("Demo horizon rules unavailable") from exc
+        if (not isinstance(rules, dict) or dataset.get("rules_reference") != _RULES_PATH
+                or dataset.get("contract") != "M1 Horizon-Aligned Gap v1, commit 2a50a94"
+                or not isinstance(dataset.get("rules_sha256"), str)
+                or re.fullmatch(r"[0-9a-f]{64}", dataset["rules_sha256"]) is None
+                or dataset.get("formal_normalization_denominator") != "objective.horizon_open_gap"
+                or rules.get("horizon_calendar_days") != 30
+                or rules.get("metric") != "written_premium" or rules.get("currency") != "USD"):
+            raise CourseworkCandidateError("Invalid demo horizon contract")
         currency = dataset.get("currency")
         as_of_date = dataset.get("as_of_date")
         scenarios = dataset.get("scenarios")
-        if currency != "USD" or not isinstance(scenarios, list):
+        if (currency != "USD" or not isinstance(scenarios, list) or len(scenarios) != 10
+                or dataset.get("business_timezone") != rules.get("timezone")
+                or as_of_date != rules.get("as_of_date")):
             raise CourseworkCandidateError("Invalid demo dataset")
         try:
             date.fromisoformat(as_of_date)
@@ -137,28 +188,88 @@ class CourseworkCandidateSource:
         scenario_id = scenario.get("scenario_id")
         objective = scenario.get("objective")
         candidates = scenario.get("candidates")
-        if scenario_id != f"SCN-{scope.agent_id}" or not isinstance(objective, dict) or not isinstance(candidates, list):
+        if (scenario_id != f"SCN-{scope.agent_id}" or not isinstance(objective, dict)
+                or not isinstance(candidates, list) or len(candidates) != 10):
             raise CourseworkCandidateError("Invalid agent scenario")
-        if objective.get("unit") != currency:
+        if (objective.get("metric") != "written_premium" or objective.get("unit") != currency
+                or objective.get("as_of_date") != as_of_date
+                or objective.get("business_timezone") != rules["timezone"]
+                or objective.get("status") != "available"
+                or objective.get("is_synthetic") is not True
+                or "open_gap" in objective):
             raise CourseworkCandidateError("Objective currency mismatch")
         try:
-            date.fromisoformat(objective["deadline"])
+            snapshot = date.fromisoformat(as_of_date)
+            annual_deadline = date.fromisoformat(objective["annual_deadline"])
+            start = date.fromisoformat(objective["planning_horizon_start"])
+            end = date.fromisoformat(objective["planning_horizon_end"])
+            cutoff = datetime.fromisoformat(objective["data_cutoff"])
         except (KeyError, TypeError, ValueError) as exc:
-            raise CourseworkCandidateError("Invalid demo deadline") from exc
-        current = _number(objective.get("current"))
-        target = _number(objective.get("target"))
-        gap = _number(objective.get("open_gap"))
-        if abs(gap - max(target - current, 0)) > 0.01:
-            raise CourseworkCandidateError("Objective gap mismatch")
+            raise CourseworkCandidateError("Invalid demo horizon date") from exc
+        if (start != snapshot + timedelta(days=1) or end != start + timedelta(days=29)
+                or annual_deadline < end or cutoff.date() != snapshot
+                or cutoff.tzinfo is None):
+            raise CourseworkCandidateError("Invalid demo horizon boundaries")
+        _number(objective.get("annual_open_gap"))
+        target = _number(objective.get("horizon_target"))
+        current = _number(objective.get("horizon_current"))
+        gap = _number(objective.get("horizon_open_gap"))
+        if gap <= 0 or abs(gap - max(target - current, 0)) > 0.005:
+            raise CourseworkCandidateError("Objective horizon gap mismatch")
+        target_source = objective.get("horizon_target_source")
+        current_source = objective.get("horizon_current_source")
+        index = scenarios.index(scenario)
+        if (not isinstance(rules.get("planned_bound_cases"), list)
+                or not isinstance(rules.get("planned_average_written_premium_usd"), list)
+                or index >= len(rules["planned_bound_cases"])
+                or index >= len(rules["planned_average_written_premium_usd"])):
+            raise CourseworkCandidateError("Invalid demo horizon rules")
+        inputs = target_source.get("inputs") if isinstance(target_source, dict) else None
+        if (not isinstance(inputs, dict)
+                or target_source.get("type") != "synthetic_planning_rule"
+                or target_source.get("rule_id") != rules.get("rule_id")
+                or target_source.get("version") != rules.get("version")
+                or target_source.get("reference") != _RULES_PATH
+                or target_source.get("scenario_index") != index
+                or target_source.get("rationale") != rules.get("target_rationale")
+                or isinstance(inputs.get("planned_bound_cases"), bool)
+                or not isinstance(inputs.get("planned_bound_cases"), int)
+                or inputs["planned_bound_cases"] <= 0
+                or inputs["planned_bound_cases"] != rules["planned_bound_cases"][index]
+                or _number(inputs.get("planned_average_written_premium_usd"))
+                != _number(rules["planned_average_written_premium_usd"][index])
+                or abs(target - inputs["planned_bound_cases"]
+                       * inputs["planned_average_written_premium_usd"]) > 0.005):
+            raise CourseworkCandidateError("Invalid horizon target provenance")
+        if (not isinstance(current_source, dict)
+                or current_source.get("type") != "synthetic_credit_ledger"
+                or current_source.get("reference") != _RULES_PATH + "#known_horizon_credit_ledger"
+                or current_source.get("entries") != rules.get("known_horizon_credit_ledger")
+                or current_source.get("entries") != []
+                or current_source.get("verified_in_window_credit_count") != 0
+                or current_source.get("crediting_rule") != rules.get("crediting_rule")
+                or current_source.get("known_at_cutoff") != objective.get("data_cutoff")
+                or current != 0):
+            raise CourseworkCandidateError("Invalid horizon current provenance")
         constraints = scenario.get("constraints")
         if not isinstance(constraints, dict):
             raise CourseworkCandidateError("Invalid demo constraints")
         top_k = constraints.get("top_k")
-        if isinstance(top_k, bool) or not isinstance(top_k, int) or not 1 <= top_k <= 50:
+        if isinstance(top_k, bool) or not isinstance(top_k, int) or not 1 <= top_k <= 5:
             raise CourseworkCandidateError("Invalid demo top_k")
+        partitions = scenario.get("candidate_partitions")
+        if (not isinstance(partitions, dict) or set(partitions) != _PARTITIONS
+                or any(not isinstance(ids, list) or any(not isinstance(cid, str) for cid in ids)
+                       for ids in partitions.values())):
+            raise CourseworkCandidateError("Invalid demo partitions")
 
         policies = self._load_json(self.mock_dir / "policies.json")
         clients = self._load_json(self.mock_dir / "clients.json")
+        try:
+            from scripts.build_life_demo_dataset import load_source
+            performance = load_source("performance")
+        except (OSError, ValueError, KeyError) as exc:
+            raise CourseworkCandidateError("Demo performance source unavailable") from exc
         if not isinstance(policies, dict) or not isinstance(clients, dict):
             raise CourseworkCandidateError("Invalid demo source records")
         source_groups = {
@@ -167,6 +278,7 @@ class CourseworkCandidateSource:
         }
         prepared: list[dict[str, Any]] = []
         seen: set[str] = set()
+        actual_partitions = {name: set() for name in _PARTITIONS}
         for row in candidates:
             if not isinstance(row, dict):
                 raise CourseworkCandidateError("Invalid demo candidate")
@@ -208,9 +320,73 @@ class CourseworkCandidateSource:
             urgency = _number(row.get("urgency"), maximum=1)
             actionability = _number(row.get("actionability"), maximum=1)
             business_fit = _number(row.get("business_fit"), maximum=1)
+            if row.get("metric") != objective["metric"]:
+                raise CourseworkCandidateError("Demo candidate metric mismatch")
+            realization_source = row.get("expected_realization_source")
+            basis = row.get("contribution_basis")
+            approval_days = row.get("estimated_approval_days")
+            if approval_days is not None and not isinstance(approval_days, dict):
+                raise CourseworkCandidateError("Invalid demo approval evidence")
+            if (not isinstance(realization_source, dict) or not isinstance(basis, dict)
+                    or realization_source.get("type") != "synthetic_timeline_assumption"
+                    or realization_source.get("rule_id") != rules.get("realization_rule_id")
+                    or realization_source.get("reference") != _RULES_PATH
+                    or realization_source.get("source_record_id") != candidate_id
+                    or realization_source.get("action_deadline") != row.get("action_deadline")
+                    or realization_source.get("source_submit_date") != row.get("submit_date")
+                    or realization_source.get("source_max_approval_days") != (
+                        (approval_days or {}).get("max"))
+                    or realization_source.get("is_synthetic") is not True
+                    or basis.get("type") != "synthetic_rule_based_estimate"
+                    or basis.get("rule_id") != rules.get("contribution_rule_id")
+                    or basis.get("reference") != _RULES_PATH
+                    or basis.get("source_record_id") != candidate_id
+                    or basis.get("source_snapshot") != "data/source/agencyperformance-50-v1.zip"
+                    or _number(basis.get("premium_usd")) != _number(row.get("premium"))
+                    or basis.get("metric") != objective["metric"]
+                    or basis.get("currency") != currency
+                    or basis.get("is_synthetic") is not True):
+                raise CourseworkCandidateError("Demo horizon provenance mismatch")
+            probability = _number(basis.get("probability"), maximum=1)
+            probability_key = (
+                    "client_retention" if realization_source.get("assumption") == "renewal"
+                    else "conversion_rate")
+            try:
+                source_probability = performance[scope.agent_id]["metrics"][probability_key]["current"]
+            except (KeyError, TypeError) as exc:
+                raise CourseworkCandidateError("Demo conversion source unavailable") from exc
+            if (basis.get("probability_metric") != probability_key
+                    or probability != _number(source_probability, maximum=1)):
+                raise CourseworkCandidateError("Demo contribution probability mismatch")
+            raw_realization = row.get("expected_realization_date")
+            try:
+                realization = date.fromisoformat(raw_realization) if raw_realization is not None else None
+            except (TypeError, ValueError) as exc:
+                raise CourseworkCandidateError("Invalid demo realization date") from exc
+            expected_realization, assumption = _supported_realization(row)
+            if (realization != expected_realization
+                    or realization_source.get("assumption") != assumption
+                    or (realization is not None
+                        and assumption not in rules.get("realization_assumptions", {}))):
+                raise CourseworkCandidateError("Demo realization lineage mismatch")
+            within = realization is not None and start <= realization <= end
+            group = ("realization_unavailable" if realization is None else
+                     "before_horizon" if realization < start else
+                     "future_follow_up" if realization > end else "in_horizon")
             gates = (row.get("eligible"), row.get("permission_allowed"), row.get("compliance_allowed"))
             if any(type(gate) is not bool for gate in gates):
                 raise CourseworkCandidateError("Invalid demo decision")
+            partition = group if all(gates) else "gate_excluded"
+            actual_partitions[partition].add(candidate_id)
+            if (row.get("realization_group") != group
+                    or row.get("within_planning_horizon") is not within
+                    or row.get("horizon_ranking_eligible") is not (all(gates) and within)
+                    or (within and row.get("out_of_horizon_reason") is not None)
+                    or (not within and (not isinstance(row.get("out_of_horizon_reason"), str)
+                                        or not row["out_of_horizon_reason"].strip()))
+                    or abs(contribution - (round(_number(row.get("premium")) * probability, 2)
+                                           if within else 0)) > 0.005):
+                raise CourseworkCandidateError("Invalid demo horizon partition or contribution")
             for name, decision in zip(("eligibility", "permission", "compliance"), gates):
                 information = row.get(f"{name}_information")
                 if (not isinstance(information, dict)
@@ -218,7 +394,7 @@ class CourseworkCandidateSource:
                         or not isinstance(information.get("basis"), str)
                         or not information["basis"].strip()):
                     raise CourseworkCandidateError("Inconsistent demo decision")
-            if gates != (True, True, True):
+            if partition != "in_horizon":
                 continue
             action = row.get("recommended_action")
             signal = row.get("action_signal")
@@ -234,13 +410,23 @@ class CourseworkCandidateSource:
                 "eligible": True,
                 "permission_allowed": True,
                 "compliance_allowed": True,
+                "metric": row["metric"],
+                "currency": row["currency"],
+                "horizon_ranking_eligible": True,
+                "within_planning_horizon": True,
+                "expected_realization_date": raw_realization,
                 "recommended_action": action,
                 "evidence": {
                     "candidate_type": kind,
                     "action_signal": signal,
                     "action_deadline": deadline,
+                    "expected_realization_date": raw_realization,
                 },
             })
+        if (any(len(ids) != len(set(ids)) for ids in partitions.values())
+                or any(set(partitions[name]) != actual_partitions[name] for name in _PARTITIONS)
+                or sum(len(ids) for ids in partitions.values()) != len(candidates)):
+            raise CourseworkCandidateError("Demo partition membership mismatch")
         if not prepared:
             raise CourseworkCandidateError("No authorized demo candidates")
         return PreparedCoursework(
@@ -261,6 +447,12 @@ def recommendation_result(prepared: PreparedCoursework, ranking: Any, call_id: s
     if not isinstance(ranking, dict) or ranking.get("agent_id") != prepared.payload["agent_id"]:
         raise CourseworkCandidateError("Invalid ranking identity")
     if (ranking.get("objective") != prepared.payload["objective"]
+            or ranking.get("ranking_version") != "m4-horizon-weighted-v4"
+            or ranking.get("normalization_denominator") != {
+                "field": "horizon_open_gap",
+                "value": prepared.payload["objective"]["horizon_open_gap"],
+                "annual_gap_fallback": False,
+            }
             or ranking.get("eligible_count") != len(prepared.candidate_ids)
             or ranking.get("candidate_count") != len(prepared.candidate_ids)
             or ranking.get("excluded_candidates") != []):
@@ -305,6 +497,10 @@ def recommendation_result(prepared: PreparedCoursework, ranking: Any, call_id: s
         "source": _DATASET_ID,
         "scenario_id": prepared.scenario_id,
         "as_of_date": prepared.as_of_date,
+        "ranking_version": ranking["ranking_version"],
+        "normalization_denominator": ranking["normalization_denominator"],
+        "planning_horizon_start": prepared.payload["objective"]["planning_horizon_start"],
+        "planning_horizon_end": prepared.payload["objective"]["planning_horizon_end"],
         "tool_call_id": call_id,
         "actions": actions,
     }
