@@ -1,11 +1,194 @@
 {
-  "dataset_id": "m2-coursework-candidates-v4",
+  "aggregation_method": "Ascending sum of three one-based human ranks (Borda equivalent).",
+  "agreement_summary": {
+    "overall_macro_mean": {
+      "kendall_tau_a": 0.5555555555555556,
+      "spearman_rho": 0.6666666666666666,
+      "top1_agreement": 0.7333333333333333,
+      "top3_overlap": 0.8555555555555556
+    },
+    "per_annotator_pair": [
+      {
+        "annotators": [
+          "non_m4_annotator_1",
+          "non_m4_annotator_2"
+        ],
+        "macro_mean": {
+          "kendall_tau_a": 0.5,
+          "spearman_rho": 0.63,
+          "top1_agreement": 0.9,
+          "top3_overlap": 0.8
+        },
+        "scenario_count": 10
+      },
+      {
+        "annotators": [
+          "non_m4_annotator_1",
+          "non_m4_annotator_3"
+        ],
+        "macro_mean": {
+          "kendall_tau_a": 0.6,
+          "spearman_rho": 0.6900000000000001,
+          "top1_agreement": 0.7,
+          "top3_overlap": 0.8666666666666666
+        },
+        "scenario_count": 10
+      },
+      {
+        "annotators": [
+          "non_m4_annotator_2",
+          "non_m4_annotator_3"
+        ],
+        "macro_mean": {
+          "kendall_tau_a": 0.5666666666666667,
+          "spearman_rho": 0.6799999999999999,
+          "top1_agreement": 0.6,
+          "top3_overlap": 0.9
+        },
+        "scenario_count": 10
+      }
+    ],
+    "scenario_pair_count": 30
+  },
+  "annotation_status": "complete",
   "annotation_version": "human-v4",
-  "annotation_status": "pending",
-  "grading_policy": "Fresh independent horizon-only rankings; v4 consensus and graded relevance require later adjudication. No v3 ranking or label is transferred.",
+  "annotators": [
+    "non_m4_annotator_1",
+    "non_m4_annotator_2",
+    "non_m4_annotator_3"
+  ],
+  "consensus_protocol": "m2-v4-consensus-v1",
+  "data_fingerprint": "546b20e84448394f0964135ccdea7a8dbe14c411bcfca54f14d577e229603ec2",
+  "dataset_id": "m2-coursework-candidates-v4",
+  "grading_policy": {
+    "3": [
+      2,
+      1,
+      0
+    ],
+    "4": [
+      3,
+      2,
+      1,
+      0
+    ],
+    "excluded_candidates": "Never add non-formal IDs or pad to K=5.",
+    "ndcg": "full graded relevance",
+    "precision_relevant_if": "relevance > 0"
+  },
+  "provenance": {
+    "freeze_statement": "The consensus protocol was frozen after the three independent blind annotations had been collected, but before their rankings were inspected or aggregated and before any M4 v4 evaluation was run.",
+    "limitations": [
+      "Protocol fixed after collection, not preregistered before annotation.",
+      "Synthetic small dataset; agreement is descriptive and does not establish external validity.",
+      "Three-candidate Top-3 overlap is necessarily 1 and is uninformative.",
+      "Majority cycles are possible even with valid strict ballots and require an explicit protocol revision before aggregation."
+    ],
+    "no_model_inputs": "Only the three independent human input files are read; no M4 scores, baseline, v3 labels or evaluation results.",
+    "prior_access_disclosure": "Before protocol freeze, automated structural checks loaded ranking arrays to verify completion, uniqueness and candidate-set membership; an earlier Git diff also exposed part of annotator 2 input during submission. No joint ranking comparison or aggregation was performed. The freeze statement refers to substantive comparative inspection, not a claim that ranking arrays had never been accessed. No M4 evaluation was run by this consensus workflow; execution elsewhere has not been independently audited.",
+    "protocol_document": "docs/coursework/m2_v4_consensus_protocol.md",
+    "source_files": {
+      "non_m4_annotator_1": {
+        "filename": "m2_candidate_annotations_v4_non_m4_annotator_1.json",
+        "sha256": "7c4c8cc933c7ee9c1c611663c5dc7862beff13b6b16b17cb0d9b2f18a07f7448"
+      },
+      "non_m4_annotator_2": {
+        "filename": "m2_candidate_annotations_v4_non_m4_annotator_2.json",
+        "sha256": "e03d46612ff20f9e20cfb23487c38e00186e4aa563c4609728adfc3b88d11925"
+      },
+      "non_m4_annotator_3": {
+        "filename": "m2_candidate_annotations_v4_non_m4_annotator_3.json",
+        "sha256": "1ccf40c5f84c24fdab2a71d99a78cd86ca8483bb5f0e47ce574e3e573c7410c8"
+      }
+    }
+  },
   "scenarios": [
     {
-      "scenario_id": "SCN-AGT00690",
+      "agreement": [
+        {
+          "annotators": [
+            "non_m4_annotator_1",
+            "non_m4_annotator_2"
+          ],
+          "kendall_tau_a": 0.6666666666666666,
+          "scenario_id": "SCN-AGT00690",
+          "spearman_rho": 0.8,
+          "top1_agreement": 1,
+          "top3_overlap": 0.6666666666666666,
+          "top3_overlap_count": 2
+        },
+        {
+          "annotators": [
+            "non_m4_annotator_1",
+            "non_m4_annotator_3"
+          ],
+          "kendall_tau_a": 0.3333333333333333,
+          "scenario_id": "SCN-AGT00690",
+          "spearman_rho": 0.6,
+          "top1_agreement": 0,
+          "top3_overlap": 0.6666666666666666,
+          "top3_overlap_count": 2
+        },
+        {
+          "annotators": [
+            "non_m4_annotator_2",
+            "non_m4_annotator_3"
+          ],
+          "kendall_tau_a": 0.6666666666666666,
+          "scenario_id": "SCN-AGT00690",
+          "spearman_rho": 0.8,
+          "top1_agreement": 0,
+          "top3_overlap": 1.0,
+          "top3_overlap_count": 3
+        }
+      ],
+      "annotations": [
+        {
+          "annotator_id": "non_m4_annotator_1",
+          "completed": true,
+          "notes": "",
+          "ranking": [
+            "CLI-00690-005",
+            "CLI-00690-007",
+            "POL-00690-001",
+            "POL-00690-002"
+          ]
+        },
+        {
+          "annotator_id": "non_m4_annotator_2",
+          "completed": true,
+          "notes": "",
+          "ranking": [
+            "CLI-00690-005",
+            "CLI-00690-007",
+            "POL-00690-002",
+            "POL-00690-001"
+          ]
+        },
+        {
+          "annotator_id": "non_m4_annotator_3",
+          "completed": true,
+          "notes": "Renewal (USD 8,360, Home Contents = specialty) is the largest and most likely in-window credit; callback (USD 6,590) is urgent today but a new non-specialty sale is less certain. The two pipeline items are small and agent-controlled; underwriter query ahead of documents on premium.",
+          "ranking": [
+            "CLI-00690-007",
+            "CLI-00690-005",
+            "POL-00690-002",
+            "POL-00690-001"
+          ]
+        }
+      ],
+      "consensus_ranking": [
+        "CLI-00690-005",
+        "CLI-00690-007",
+        "POL-00690-002",
+        "POL-00690-001"
+      ],
+      "consensus_relevance": {
+        "CLI-00690-005": 3,
+        "CLI-00690-007": 2,
+        "POL-00690-001": 0,
+        "POL-00690-002": 1
+      },
       "eligible_candidate_ids": [
         "POL-00690-001",
         "POL-00690-002",
@@ -14,33 +197,107 @@
         "CLI-00690-009",
         "CLI-00690-011"
       ],
+      "rank_sums": {
+        "CLI-00690-005": 4,
+        "CLI-00690-007": 5,
+        "POL-00690-001": 11,
+        "POL-00690-002": 10
+      },
       "ranking_candidate_ids": [
         "POL-00690-001",
         "POL-00690-002",
         "CLI-00690-005",
         "CLI-00690-007"
       ],
+      "scenario_id": "SCN-AGT00690",
+      "tie_resolution": []
+    },
+    {
+      "agreement": [
+        {
+          "annotators": [
+            "non_m4_annotator_1",
+            "non_m4_annotator_2"
+          ],
+          "kendall_tau_a": 0.0,
+          "scenario_id": "SCN-AGT00770",
+          "spearman_rho": 0.19999999999999996,
+          "top1_agreement": 1,
+          "top3_overlap": 0.6666666666666666,
+          "top3_overlap_count": 2
+        },
+        {
+          "annotators": [
+            "non_m4_annotator_1",
+            "non_m4_annotator_3"
+          ],
+          "kendall_tau_a": -0.3333333333333333,
+          "scenario_id": "SCN-AGT00770",
+          "spearman_rho": -0.3999999999999999,
+          "top1_agreement": 0,
+          "top3_overlap": 0.6666666666666666,
+          "top3_overlap_count": 2
+        },
+        {
+          "annotators": [
+            "non_m4_annotator_2",
+            "non_m4_annotator_3"
+          ],
+          "kendall_tau_a": 0.6666666666666666,
+          "scenario_id": "SCN-AGT00770",
+          "spearman_rho": 0.8,
+          "top1_agreement": 0,
+          "top3_overlap": 1.0,
+          "top3_overlap_count": 3
+        }
+      ],
       "annotations": [
         {
           "annotator_id": "non_m4_annotator_1",
-          "ranking": [],
-          "notes": ""
+          "completed": true,
+          "notes": "",
+          "ranking": [
+            "CLI-00770-010",
+            "POL-00770-001",
+            "CLI-00770-008",
+            "POL-00770-002"
+          ]
         },
         {
           "annotator_id": "non_m4_annotator_2",
-          "ranking": [],
-          "notes": ""
+          "completed": true,
+          "notes": "",
+          "ranking": [
+            "CLI-00770-010",
+            "POL-00770-002",
+            "CLI-00770-008",
+            "POL-00770-001"
+          ]
         },
         {
           "annotator_id": "non_m4_annotator_3",
-          "ranking": [],
-          "notes": ""
+          "completed": true,
+          "notes": "Client confirmation (USD 3,620, motor specialty) is the fastest and most certain close. The callback today has the largest premium but is a new non-specialty sale. The liability renewal comes next; the documents chase is last as the smallest.",
+          "ranking": [
+            "POL-00770-002",
+            "CLI-00770-010",
+            "CLI-00770-008",
+            "POL-00770-001"
+          ]
         }
       ],
-      "consensus_relevance": {}
-    },
-    {
-      "scenario_id": "SCN-AGT00770",
+      "consensus_ranking": [
+        "CLI-00770-010",
+        "POL-00770-002",
+        "CLI-00770-008",
+        "POL-00770-001"
+      ],
+      "consensus_relevance": {
+        "CLI-00770-008": 1,
+        "CLI-00770-010": 3,
+        "POL-00770-001": 0,
+        "POL-00770-002": 2
+      },
       "eligible_candidate_ids": [
         "POL-00770-001",
         "POL-00770-002",
@@ -49,33 +306,107 @@
         "CLI-00770-010",
         "CLI-00770-012"
       ],
+      "rank_sums": {
+        "CLI-00770-008": 9,
+        "CLI-00770-010": 4,
+        "POL-00770-001": 10,
+        "POL-00770-002": 7
+      },
       "ranking_candidate_ids": [
         "POL-00770-001",
         "POL-00770-002",
         "CLI-00770-008",
         "CLI-00770-010"
       ],
+      "scenario_id": "SCN-AGT00770",
+      "tie_resolution": []
+    },
+    {
+      "agreement": [
+        {
+          "annotators": [
+            "non_m4_annotator_1",
+            "non_m4_annotator_2"
+          ],
+          "kendall_tau_a": 0.0,
+          "scenario_id": "SCN-AGT00817",
+          "spearman_rho": 0.19999999999999996,
+          "top1_agreement": 1,
+          "top3_overlap": 0.6666666666666666,
+          "top3_overlap_count": 2
+        },
+        {
+          "annotators": [
+            "non_m4_annotator_1",
+            "non_m4_annotator_3"
+          ],
+          "kendall_tau_a": 0.6666666666666666,
+          "scenario_id": "SCN-AGT00817",
+          "spearman_rho": 0.8,
+          "top1_agreement": 1,
+          "top3_overlap": 1.0,
+          "top3_overlap_count": 3
+        },
+        {
+          "annotators": [
+            "non_m4_annotator_2",
+            "non_m4_annotator_3"
+          ],
+          "kendall_tau_a": 0.3333333333333333,
+          "scenario_id": "SCN-AGT00817",
+          "spearman_rho": 0.4,
+          "top1_agreement": 1,
+          "top3_overlap": 0.6666666666666666,
+          "top3_overlap_count": 2
+        }
+      ],
       "annotations": [
         {
           "annotator_id": "non_m4_annotator_1",
-          "ranking": [],
-          "notes": ""
+          "completed": true,
+          "notes": "",
+          "ranking": [
+            "CLI-00817-011",
+            "POL-00817-002",
+            "POL-00817-004",
+            "POL-00817-001"
+          ]
         },
         {
           "annotator_id": "non_m4_annotator_2",
-          "ranking": [],
-          "notes": ""
+          "completed": true,
+          "notes": "",
+          "ranking": [
+            "CLI-00817-011",
+            "POL-00817-001",
+            "POL-00817-004",
+            "POL-00817-002"
+          ]
         },
         {
           "annotator_id": "non_m4_annotator_3",
-          "ranking": [],
-          "notes": ""
+          "completed": true,
+          "notes": "The motor callback (USD 4,230, specialty, due today) dominates the gap impact. The remaining pipeline items are small: documents (USD 810) ahead of confirmation (USD 570) and the underwriter query (USD 450) on premium.",
+          "ranking": [
+            "CLI-00817-011",
+            "POL-00817-004",
+            "POL-00817-002",
+            "POL-00817-001"
+          ]
         }
       ],
-      "consensus_relevance": {}
-    },
-    {
-      "scenario_id": "SCN-AGT00817",
+      "consensus_ranking": [
+        "CLI-00817-011",
+        "POL-00817-004",
+        "POL-00817-002",
+        "POL-00817-001"
+      ],
+      "consensus_relevance": {
+        "CLI-00817-011": 3,
+        "POL-00817-001": 0,
+        "POL-00817-002": 1,
+        "POL-00817-004": 2
+      },
       "eligible_candidate_ids": [
         "POL-00817-001",
         "POL-00817-002",
@@ -84,33 +415,102 @@
         "CLI-00817-011",
         "CLI-00817-013"
       ],
+      "rank_sums": {
+        "CLI-00817-011": 3,
+        "POL-00817-001": 10,
+        "POL-00817-002": 9,
+        "POL-00817-004": 8
+      },
       "ranking_candidate_ids": [
         "POL-00817-001",
         "POL-00817-002",
         "POL-00817-004",
         "CLI-00817-011"
       ],
+      "scenario_id": "SCN-AGT00817",
+      "tie_resolution": []
+    },
+    {
+      "agreement": [
+        {
+          "annotators": [
+            "non_m4_annotator_1",
+            "non_m4_annotator_2"
+          ],
+          "kendall_tau_a": 1.0,
+          "scenario_id": "SCN-AGT00949",
+          "spearman_rho": 1.0,
+          "top1_agreement": 1,
+          "top3_overlap": 1.0,
+          "top3_overlap_count": 3
+        },
+        {
+          "annotators": [
+            "non_m4_annotator_1",
+            "non_m4_annotator_3"
+          ],
+          "kendall_tau_a": 0.3333333333333333,
+          "scenario_id": "SCN-AGT00949",
+          "spearman_rho": 0.5,
+          "top1_agreement": 0,
+          "top3_overlap": 1.0,
+          "top3_overlap_count": 3
+        },
+        {
+          "annotators": [
+            "non_m4_annotator_2",
+            "non_m4_annotator_3"
+          ],
+          "kendall_tau_a": 0.3333333333333333,
+          "scenario_id": "SCN-AGT00949",
+          "spearman_rho": 0.5,
+          "top1_agreement": 0,
+          "top3_overlap": 1.0,
+          "top3_overlap_count": 3
+        }
+      ],
       "annotations": [
         {
           "annotator_id": "non_m4_annotator_1",
-          "ranking": [],
-          "notes": ""
+          "completed": true,
+          "notes": "",
+          "ranking": [
+            "CLI-00949-016",
+            "CLI-00949-006",
+            "POL-00949-001"
+          ]
         },
         {
           "annotator_id": "non_m4_annotator_2",
-          "ranking": [],
-          "notes": ""
+          "completed": true,
+          "notes": "",
+          "ranking": [
+            "CLI-00949-016",
+            "CLI-00949-006",
+            "POL-00949-001"
+          ]
         },
         {
           "annotator_id": "non_m4_annotator_3",
-          "ranking": [],
-          "notes": ""
+          "completed": true,
+          "notes": "Motor renewal (USD 7,630) is the largest and most probable credit; the motor callback today (USD 4,010) is second; the confirmation is quick but small.",
+          "ranking": [
+            "CLI-00949-006",
+            "CLI-00949-016",
+            "POL-00949-001"
+          ]
         }
       ],
-      "consensus_relevance": {}
-    },
-    {
-      "scenario_id": "SCN-AGT00949",
+      "consensus_ranking": [
+        "CLI-00949-016",
+        "CLI-00949-006",
+        "POL-00949-001"
+      ],
+      "consensus_relevance": {
+        "CLI-00949-006": 1,
+        "CLI-00949-016": 2,
+        "POL-00949-001": 0
+      },
       "eligible_candidate_ids": [
         "POL-00949-001",
         "POL-00949-002",
@@ -119,32 +519,105 @@
         "CLI-00949-018",
         "CLI-00949-006"
       ],
+      "rank_sums": {
+        "CLI-00949-006": 5,
+        "CLI-00949-016": 4,
+        "POL-00949-001": 9
+      },
       "ranking_candidate_ids": [
         "POL-00949-001",
         "CLI-00949-016",
         "CLI-00949-006"
       ],
+      "scenario_id": "SCN-AGT00949",
+      "tie_resolution": []
+    },
+    {
+      "agreement": [
+        {
+          "annotators": [
+            "non_m4_annotator_1",
+            "non_m4_annotator_2"
+          ],
+          "kendall_tau_a": 0.3333333333333333,
+          "scenario_id": "SCN-AGT01191",
+          "spearman_rho": 0.6,
+          "top1_agreement": 0,
+          "top3_overlap": 0.6666666666666666,
+          "top3_overlap_count": 2
+        },
+        {
+          "annotators": [
+            "non_m4_annotator_1",
+            "non_m4_annotator_3"
+          ],
+          "kendall_tau_a": 0.6666666666666666,
+          "scenario_id": "SCN-AGT01191",
+          "spearman_rho": 0.8,
+          "top1_agreement": 1,
+          "top3_overlap": 0.6666666666666666,
+          "top3_overlap_count": 2
+        },
+        {
+          "annotators": [
+            "non_m4_annotator_2",
+            "non_m4_annotator_3"
+          ],
+          "kendall_tau_a": 0.6666666666666666,
+          "scenario_id": "SCN-AGT01191",
+          "spearman_rho": 0.8,
+          "top1_agreement": 0,
+          "top3_overlap": 1.0,
+          "top3_overlap_count": 3
+        }
+      ],
       "annotations": [
         {
           "annotator_id": "non_m4_annotator_1",
-          "ranking": [],
-          "notes": ""
+          "completed": true,
+          "notes": "",
+          "ranking": [
+            "CLI-01191-007",
+            "CLI-01191-017",
+            "POL-01191-001",
+            "POL-01191-002"
+          ]
         },
         {
           "annotator_id": "non_m4_annotator_2",
-          "ranking": [],
-          "notes": ""
+          "completed": true,
+          "notes": "",
+          "ranking": [
+            "CLI-01191-017",
+            "CLI-01191-007",
+            "POL-01191-002",
+            "POL-01191-001"
+          ]
         },
         {
           "annotator_id": "non_m4_annotator_3",
-          "ranking": [],
-          "notes": ""
+          "completed": true,
+          "notes": "Home renewal (USD 8,840) first, then the home callback today (USD 5,090), both specialty fits. The pipeline items are small, ordered by premium.",
+          "ranking": [
+            "CLI-01191-007",
+            "CLI-01191-017",
+            "POL-01191-002",
+            "POL-01191-001"
+          ]
         }
       ],
-      "consensus_relevance": {}
-    },
-    {
-      "scenario_id": "SCN-AGT01191",
+      "consensus_ranking": [
+        "CLI-01191-007",
+        "CLI-01191-017",
+        "POL-01191-002",
+        "POL-01191-001"
+      ],
+      "consensus_relevance": {
+        "CLI-01191-007": 3,
+        "CLI-01191-017": 2,
+        "POL-01191-001": 0,
+        "POL-01191-002": 1
+      },
       "eligible_candidate_ids": [
         "POL-01191-001",
         "POL-01191-002",
@@ -153,33 +626,107 @@
         "CLI-01191-005",
         "CLI-01191-007"
       ],
+      "rank_sums": {
+        "CLI-01191-007": 4,
+        "CLI-01191-017": 5,
+        "POL-01191-001": 11,
+        "POL-01191-002": 10
+      },
       "ranking_candidate_ids": [
         "POL-01191-001",
         "POL-01191-002",
         "CLI-01191-017",
         "CLI-01191-007"
       ],
+      "scenario_id": "SCN-AGT01191",
+      "tie_resolution": []
+    },
+    {
+      "agreement": [
+        {
+          "annotators": [
+            "non_m4_annotator_1",
+            "non_m4_annotator_2"
+          ],
+          "kendall_tau_a": 0.6666666666666666,
+          "scenario_id": "SCN-AGT01448",
+          "spearman_rho": 0.8,
+          "top1_agreement": 1,
+          "top3_overlap": 1.0,
+          "top3_overlap_count": 3
+        },
+        {
+          "annotators": [
+            "non_m4_annotator_1",
+            "non_m4_annotator_3"
+          ],
+          "kendall_tau_a": 0.6666666666666666,
+          "scenario_id": "SCN-AGT01448",
+          "spearman_rho": 0.8,
+          "top1_agreement": 1,
+          "top3_overlap": 1.0,
+          "top3_overlap_count": 3
+        },
+        {
+          "annotators": [
+            "non_m4_annotator_2",
+            "non_m4_annotator_3"
+          ],
+          "kendall_tau_a": 1.0,
+          "scenario_id": "SCN-AGT01448",
+          "spearman_rho": 1.0,
+          "top1_agreement": 1,
+          "top3_overlap": 1.0,
+          "top3_overlap_count": 3
+        }
+      ],
       "annotations": [
         {
           "annotator_id": "non_m4_annotator_1",
-          "ranking": [],
-          "notes": ""
+          "completed": true,
+          "notes": "",
+          "ranking": [
+            "CLI-01448-006",
+            "POL-01448-002",
+            "POL-01448-004",
+            "POL-01448-001"
+          ]
         },
         {
           "annotator_id": "non_m4_annotator_2",
-          "ranking": [],
-          "notes": ""
+          "completed": true,
+          "notes": "",
+          "ranking": [
+            "CLI-01448-006",
+            "POL-01448-004",
+            "POL-01448-002",
+            "POL-01448-001"
+          ]
         },
         {
           "annotator_id": "non_m4_annotator_3",
-          "ranking": [],
-          "notes": ""
+          "completed": true,
+          "notes": "Motor renewal (USD 12,920) almost closes the gap alone. Commercial motor documents (USD 3,460) next on premium, then the confirmation (USD 2,420, fast) and the underwriter query.",
+          "ranking": [
+            "CLI-01448-006",
+            "POL-01448-004",
+            "POL-01448-002",
+            "POL-01448-001"
+          ]
         }
       ],
-      "consensus_relevance": {}
-    },
-    {
-      "scenario_id": "SCN-AGT01448",
+      "consensus_ranking": [
+        "CLI-01448-006",
+        "POL-01448-004",
+        "POL-01448-002",
+        "POL-01448-001"
+      ],
+      "consensus_relevance": {
+        "CLI-01448-006": 3,
+        "POL-01448-001": 0,
+        "POL-01448-002": 1,
+        "POL-01448-004": 2
+      },
       "eligible_candidate_ids": [
         "POL-01448-001",
         "POL-01448-002",
@@ -188,33 +735,102 @@
         "CLI-01448-006",
         "CLI-01448-008"
       ],
+      "rank_sums": {
+        "CLI-01448-006": 3,
+        "POL-01448-001": 12,
+        "POL-01448-002": 8,
+        "POL-01448-004": 7
+      },
       "ranking_candidate_ids": [
         "POL-01448-001",
         "POL-01448-002",
         "POL-01448-004",
         "CLI-01448-006"
       ],
+      "scenario_id": "SCN-AGT01448",
+      "tie_resolution": []
+    },
+    {
+      "agreement": [
+        {
+          "annotators": [
+            "non_m4_annotator_1",
+            "non_m4_annotator_2"
+          ],
+          "kendall_tau_a": 1.0,
+          "scenario_id": "SCN-AGT01525",
+          "spearman_rho": 1.0,
+          "top1_agreement": 1,
+          "top3_overlap": 1.0,
+          "top3_overlap_count": 3
+        },
+        {
+          "annotators": [
+            "non_m4_annotator_1",
+            "non_m4_annotator_3"
+          ],
+          "kendall_tau_a": 1.0,
+          "scenario_id": "SCN-AGT01525",
+          "spearman_rho": 1.0,
+          "top1_agreement": 1,
+          "top3_overlap": 1.0,
+          "top3_overlap_count": 3
+        },
+        {
+          "annotators": [
+            "non_m4_annotator_2",
+            "non_m4_annotator_3"
+          ],
+          "kendall_tau_a": 1.0,
+          "scenario_id": "SCN-AGT01525",
+          "spearman_rho": 1.0,
+          "top1_agreement": 1,
+          "top3_overlap": 1.0,
+          "top3_overlap_count": 3
+        }
+      ],
       "annotations": [
         {
           "annotator_id": "non_m4_annotator_1",
-          "ranking": [],
-          "notes": ""
+          "completed": true,
+          "notes": "",
+          "ranking": [
+            "CLI-01525-013",
+            "CLI-01525-015",
+            "POL-01525-001"
+          ]
         },
         {
           "annotator_id": "non_m4_annotator_2",
-          "ranking": [],
-          "notes": ""
+          "completed": true,
+          "notes": "",
+          "ranking": [
+            "CLI-01525-013",
+            "CLI-01525-015",
+            "POL-01525-001"
+          ]
         },
         {
           "annotator_id": "non_m4_annotator_3",
-          "ranking": [],
-          "notes": ""
+          "completed": true,
+          "notes": "The public liability callback today (USD 6,090, specialty) has the largest impact; the personal liability renewal (USD 2,480) is likely but smaller; the motor documents chase is last.",
+          "ranking": [
+            "CLI-01525-013",
+            "CLI-01525-015",
+            "POL-01525-001"
+          ]
         }
       ],
-      "consensus_relevance": {}
-    },
-    {
-      "scenario_id": "SCN-AGT01525",
+      "consensus_ranking": [
+        "CLI-01525-013",
+        "CLI-01525-015",
+        "POL-01525-001"
+      ],
+      "consensus_relevance": {
+        "CLI-01525-013": 2,
+        "CLI-01525-015": 1,
+        "POL-01525-001": 0
+      },
       "eligible_candidate_ids": [
         "POL-01525-001",
         "POL-01525-002",
@@ -223,32 +839,100 @@
         "CLI-01525-013",
         "CLI-01525-015"
       ],
+      "rank_sums": {
+        "CLI-01525-013": 3,
+        "CLI-01525-015": 6,
+        "POL-01525-001": 9
+      },
       "ranking_candidate_ids": [
         "POL-01525-001",
         "CLI-01525-013",
         "CLI-01525-015"
       ],
+      "scenario_id": "SCN-AGT01525",
+      "tie_resolution": []
+    },
+    {
+      "agreement": [
+        {
+          "annotators": [
+            "non_m4_annotator_1",
+            "non_m4_annotator_2"
+          ],
+          "kendall_tau_a": 0.3333333333333333,
+          "scenario_id": "SCN-AGT01569",
+          "spearman_rho": 0.5,
+          "top1_agreement": 1,
+          "top3_overlap": 1.0,
+          "top3_overlap_count": 3
+        },
+        {
+          "annotators": [
+            "non_m4_annotator_1",
+            "non_m4_annotator_3"
+          ],
+          "kendall_tau_a": 1.0,
+          "scenario_id": "SCN-AGT01569",
+          "spearman_rho": 1.0,
+          "top1_agreement": 1,
+          "top3_overlap": 1.0,
+          "top3_overlap_count": 3
+        },
+        {
+          "annotators": [
+            "non_m4_annotator_2",
+            "non_m4_annotator_3"
+          ],
+          "kendall_tau_a": 0.3333333333333333,
+          "scenario_id": "SCN-AGT01569",
+          "spearman_rho": 0.5,
+          "top1_agreement": 1,
+          "top3_overlap": 1.0,
+          "top3_overlap_count": 3
+        }
+      ],
       "annotations": [
         {
           "annotator_id": "non_m4_annotator_1",
-          "ranking": [],
-          "notes": ""
+          "completed": true,
+          "notes": "",
+          "ranking": [
+            "CLI-01569-014",
+            "POL-01569-002",
+            "POL-01569-001"
+          ]
         },
         {
           "annotator_id": "non_m4_annotator_2",
-          "ranking": [],
-          "notes": ""
+          "completed": true,
+          "notes": "",
+          "ranking": [
+            "CLI-01569-014",
+            "POL-01569-001",
+            "POL-01569-002"
+          ]
         },
         {
           "annotator_id": "non_m4_annotator_3",
-          "ranking": [],
-          "notes": ""
+          "completed": true,
+          "notes": "The SME renewal (USD 8,270) is the only material contributor. The two pipeline items are very small: confirmation ahead of the underwriter query.",
+          "ranking": [
+            "CLI-01569-014",
+            "POL-01569-002",
+            "POL-01569-001"
+          ]
         }
       ],
-      "consensus_relevance": {}
-    },
-    {
-      "scenario_id": "SCN-AGT01569",
+      "consensus_ranking": [
+        "CLI-01569-014",
+        "POL-01569-002",
+        "POL-01569-001"
+      ],
+      "consensus_relevance": {
+        "CLI-01569-014": 2,
+        "POL-01569-001": 0,
+        "POL-01569-002": 1
+      },
       "eligible_candidate_ids": [
         "POL-01569-001",
         "POL-01569-002",
@@ -257,32 +941,105 @@
         "CLI-01569-014",
         "CLI-01569-016"
       ],
+      "rank_sums": {
+        "CLI-01569-014": 3,
+        "POL-01569-001": 8,
+        "POL-01569-002": 7
+      },
       "ranking_candidate_ids": [
         "POL-01569-001",
         "POL-01569-002",
         "CLI-01569-014"
       ],
+      "scenario_id": "SCN-AGT01569",
+      "tie_resolution": []
+    },
+    {
+      "agreement": [
+        {
+          "annotators": [
+            "non_m4_annotator_1",
+            "non_m4_annotator_2"
+          ],
+          "kendall_tau_a": 0.3333333333333333,
+          "scenario_id": "SCN-AGT01662",
+          "spearman_rho": 0.4,
+          "top1_agreement": 1,
+          "top3_overlap": 0.6666666666666666,
+          "top3_overlap_count": 2
+        },
+        {
+          "annotators": [
+            "non_m4_annotator_1",
+            "non_m4_annotator_3"
+          ],
+          "kendall_tau_a": 0.6666666666666666,
+          "scenario_id": "SCN-AGT01662",
+          "spearman_rho": 0.8,
+          "top1_agreement": 1,
+          "top3_overlap": 0.6666666666666666,
+          "top3_overlap_count": 2
+        },
+        {
+          "annotators": [
+            "non_m4_annotator_2",
+            "non_m4_annotator_3"
+          ],
+          "kendall_tau_a": 0.0,
+          "scenario_id": "SCN-AGT01662",
+          "spearman_rho": 0.19999999999999996,
+          "top1_agreement": 1,
+          "top3_overlap": 0.6666666666666666,
+          "top3_overlap_count": 2
+        }
+      ],
       "annotations": [
         {
           "annotator_id": "non_m4_annotator_1",
-          "ranking": [],
-          "notes": ""
+          "completed": true,
+          "notes": "",
+          "ranking": [
+            "CLI-01662-015",
+            "POL-01662-003",
+            "POL-01662-001",
+            "POL-01662-002"
+          ]
         },
         {
           "annotator_id": "non_m4_annotator_2",
-          "ranking": [],
-          "notes": ""
+          "completed": true,
+          "notes": "",
+          "ranking": [
+            "CLI-01662-015",
+            "POL-01662-001",
+            "POL-01662-002",
+            "POL-01662-003"
+          ]
         },
         {
           "annotator_id": "non_m4_annotator_3",
-          "ranking": [],
-          "notes": ""
+          "completed": true,
+          "notes": "The callback today (USD 4,820) is the largest, although it is outside the specialties. Confirmation (USD 2,660) is a fast, near-certain close, then the underwriter query and the documents by premium.",
+          "ranking": [
+            "CLI-01662-015",
+            "POL-01662-003",
+            "POL-01662-002",
+            "POL-01662-001"
+          ]
         }
       ],
-      "consensus_relevance": {}
-    },
-    {
-      "scenario_id": "SCN-AGT01662",
+      "consensus_ranking": [
+        "CLI-01662-015",
+        "POL-01662-003",
+        "POL-01662-001",
+        "POL-01662-002"
+      ],
+      "consensus_relevance": {
+        "CLI-01662-015": 3,
+        "POL-01662-001": 1,
+        "POL-01662-002": 0,
+        "POL-01662-003": 2
+      },
       "eligible_candidate_ids": [
         "POL-01662-001",
         "POL-01662-002",
@@ -291,33 +1048,107 @@
         "CLI-01662-015",
         "CLI-01662-017"
       ],
+      "rank_sums": {
+        "CLI-01662-015": 3,
+        "POL-01662-001": 9,
+        "POL-01662-002": 10,
+        "POL-01662-003": 8
+      },
       "ranking_candidate_ids": [
         "POL-01662-001",
         "POL-01662-002",
         "POL-01662-003",
         "CLI-01662-015"
       ],
+      "scenario_id": "SCN-AGT01662",
+      "tie_resolution": []
+    },
+    {
+      "agreement": [
+        {
+          "annotators": [
+            "non_m4_annotator_1",
+            "non_m4_annotator_2"
+          ],
+          "kendall_tau_a": 0.6666666666666666,
+          "scenario_id": "SCN-AGT01876",
+          "spearman_rho": 0.8,
+          "top1_agreement": 1,
+          "top3_overlap": 0.6666666666666666,
+          "top3_overlap_count": 2
+        },
+        {
+          "annotators": [
+            "non_m4_annotator_1",
+            "non_m4_annotator_3"
+          ],
+          "kendall_tau_a": 1.0,
+          "scenario_id": "SCN-AGT01876",
+          "spearman_rho": 1.0,
+          "top1_agreement": 1,
+          "top3_overlap": 1.0,
+          "top3_overlap_count": 3
+        },
+        {
+          "annotators": [
+            "non_m4_annotator_2",
+            "non_m4_annotator_3"
+          ],
+          "kendall_tau_a": 0.6666666666666666,
+          "scenario_id": "SCN-AGT01876",
+          "spearman_rho": 0.8,
+          "top1_agreement": 1,
+          "top3_overlap": 0.6666666666666666,
+          "top3_overlap_count": 2
+        }
+      ],
       "annotations": [
         {
           "annotator_id": "non_m4_annotator_1",
-          "ranking": [],
-          "notes": ""
+          "completed": true,
+          "notes": "",
+          "ranking": [
+            "CLI-01876-006",
+            "CLI-01876-018",
+            "POL-01876-002",
+            "POL-01876-001"
+          ]
         },
         {
           "annotator_id": "non_m4_annotator_2",
-          "ranking": [],
-          "notes": ""
+          "completed": true,
+          "notes": "",
+          "ranking": [
+            "CLI-01876-006",
+            "CLI-01876-018",
+            "POL-01876-001",
+            "POL-01876-002"
+          ]
         },
         {
           "annotator_id": "non_m4_annotator_3",
-          "ranking": [],
-          "notes": ""
+          "completed": true,
+          "notes": "The motor callback today (USD 5,730, specialty) comes first for urgency and size. The liability renewal (USD 4,370) is likely but outside the specialties. The pipeline items are small, ordered by premium.",
+          "ranking": [
+            "CLI-01876-006",
+            "CLI-01876-018",
+            "POL-01876-002",
+            "POL-01876-001"
+          ]
         }
       ],
-      "consensus_relevance": {}
-    },
-    {
-      "scenario_id": "SCN-AGT01876",
+      "consensus_ranking": [
+        "CLI-01876-006",
+        "CLI-01876-018",
+        "POL-01876-002",
+        "POL-01876-001"
+      ],
+      "consensus_relevance": {
+        "CLI-01876-006": 3,
+        "CLI-01876-018": 2,
+        "POL-01876-001": 0,
+        "POL-01876-002": 1
+      },
       "eligible_candidate_ids": [
         "POL-01876-001",
         "POL-01876-002",
@@ -326,31 +1157,21 @@
         "CLI-01876-006",
         "CLI-01876-008"
       ],
+      "rank_sums": {
+        "CLI-01876-006": 3,
+        "CLI-01876-018": 6,
+        "POL-01876-001": 11,
+        "POL-01876-002": 10
+      },
       "ranking_candidate_ids": [
         "POL-01876-001",
         "POL-01876-002",
         "CLI-01876-018",
         "CLI-01876-006"
       ],
-      "annotations": [
-        {
-          "annotator_id": "non_m4_annotator_1",
-          "ranking": [],
-          "notes": ""
-        },
-        {
-          "annotator_id": "non_m4_annotator_2",
-          "ranking": [],
-          "notes": ""
-        },
-        {
-          "annotator_id": "non_m4_annotator_3",
-          "ranking": [],
-          "notes": ""
-        }
-      ],
-      "consensus_relevance": {}
+      "scenario_id": "SCN-AGT01876",
+      "tie_resolution": []
     }
   ],
-  "data_fingerprint": "546b20e84448394f0964135ccdea7a8dbe14c411bcfca54f14d577e229603ec2"
+  "tie_breaking_method": "Within equal rank sums: pairwise majority, then candidate_id ascending for incomparable nodes; majority cycles fail closed for protocol review."
 }
