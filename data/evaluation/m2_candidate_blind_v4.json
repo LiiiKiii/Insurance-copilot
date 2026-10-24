@@ -1,0 +1,2555 @@
+{
+  "dataset_id": "m2-coursework-candidates-v4",
+  "data_fingerprint": "546b20e84448394f0964135ccdea7a8dbe14c411bcfca54f14d577e229603ec2",
+  "blind_version": "human-ranking-v4",
+  "scenarios": [
+    {
+      "scenario_id": "SCN-AGT00690",
+      "agent_id": "AGT00690",
+      "objective": {
+        "metric": "written_premium",
+        "unit": "USD",
+        "as_of_date": "2026-05-31",
+        "annual_open_gap": 228250.0,
+        "annual_deadline": "2026-12-31",
+        "planning_horizon_start": "2026-06-01",
+        "planning_horizon_end": "2026-06-30",
+        "business_timezone": "Asia/Hong_Kong",
+        "data_cutoff": "2026-05-31T23:59:59+08:00",
+        "horizon_target": 5400,
+        "horizon_current": 0,
+        "horizon_open_gap": 5400,
+        "status": "available",
+        "is_synthetic": true,
+        "horizon_target_source": {
+          "type": "synthetic_planning_rule",
+          "rule_id": "M2_HORIZON_PLAN_V4_1",
+          "version": 1,
+          "reference": "data/config/m2_horizon_v4_rules.json",
+          "scenario_index": 0,
+          "inputs": {
+            "planned_bound_cases": 3,
+            "planned_average_written_premium_usd": 1800
+          },
+          "rationale": "Predetermined synthetic 30-day capacity plan: planned bound cases times planned case premium. Neither annual gaps, model weights, rankings nor evaluation results are inputs. These are assumptions, not company-approved targets."
+        },
+        "horizon_current_source": {
+          "type": "synthetic_credit_ledger",
+          "reference": "data/config/m2_horizon_v4_rules.json#known_horizon_credit_ledger",
+          "entries": [],
+          "verified_in_window_credit_count": 0,
+          "crediting_rule": "Count only confirmed written-premium credits dated within the horizon and recorded at or before the snapshot cutoff. This synthetic future-window ledger has no such records.",
+          "known_at_cutoff": "2026-05-31T23:59:59+08:00",
+          "rationale": "The horizon is wholly after the cutoff; no confirmed in-window credit exists in this synthetic ledger. Annual YTD and forecasts are not current horizon production."
+        }
+      },
+      "agent_specialties": [
+        "Private Motor Insurance",
+        "Home Contents Insurance",
+        "SME Business Package"
+      ],
+      "candidates": [
+        {
+          "candidate_id": "POL-00690-001",
+          "candidate_type": "policy",
+          "premium": 740.0,
+          "currency": "USD",
+          "product_type": "Private Motor Insurance",
+          "policy_status": "Awaiting Documents",
+          "submit_date": "2026-05-26",
+          "estimated_approval_days": {
+            "min": 4,
+            "max": 7
+          },
+          "client_tags": [
+            "Young Professional",
+            "High Value",
+            "Motor"
+          ],
+          "action_signal": "Customer documents are incomplete; the agent can request them now.",
+          "action_deadline": "2026-06-01",
+          "expected_realization_date": "2026-06-08",
+          "expected_realization_source": {
+            "type": "synthetic_timeline_assumption",
+            "rule_id": "M2_REALIZATION_V4_1",
+            "reference": "data/config/m2_horizon_v4_rules.json",
+            "assumption": "documents",
+            "source_record_id": "POL-00690-001",
+            "action_deadline": "2026-06-01",
+            "source_submit_date": "2026-05-26",
+            "source_max_approval_days": 7,
+            "is_synthetic": true
+          },
+          "within_planning_horizon": true,
+          "out_of_horizon_reason": null,
+          "realization_group": "in_horizon"
+        },
+        {
+          "candidate_id": "POL-00690-002",
+          "candidate_type": "policy",
+          "premium": 940.0,
+          "currency": "USD",
+          "product_type": "Home Contents Insurance",
+          "policy_status": "Underwriter Query",
+          "submit_date": "2026-05-15",
+          "estimated_approval_days": {
+            "min": 5,
+            "max": 8
+          },
+          "client_tags": [
+            "Young Professional",
+            "High Value",
+            "Property"
+          ],
+          "action_signal": "The underwriter has an unanswered question for the agent.",
+          "action_deadline": "2026-06-02",
+          "expected_realization_date": "2026-06-12",
+          "expected_realization_source": {
+            "type": "synthetic_timeline_assumption",
+            "rule_id": "M2_REALIZATION_V4_1",
+            "reference": "data/config/m2_horizon_v4_rules.json",
+            "assumption": "query",
+            "source_record_id": "POL-00690-002",
+            "action_deadline": "2026-06-02",
+            "source_submit_date": "2026-05-15",
+            "source_max_approval_days": 8,
+            "is_synthetic": true
+          },
+          "within_planning_horizon": true,
+          "out_of_horizon_reason": null,
+          "realization_group": "in_horizon"
+        },
+        {
+          "candidate_id": "CLI-00690-005",
+          "candidate_type": "client",
+          "premium": 6590.0,
+          "currency": "USD",
+          "product_type": "Personal Liability Insurance",
+          "policy_status": null,
+          "submit_date": null,
+          "estimated_approval_days": null,
+          "client_tags": [
+            "Pre-retirement",
+            "Growth",
+            "Specialty"
+          ],
+          "action_signal": "The client requested a callback today.",
+          "action_deadline": "2026-05-31",
+          "expected_realization_date": "2026-06-10",
+          "expected_realization_source": {
+            "type": "synthetic_timeline_assumption",
+            "rule_id": "M2_REALIZATION_V4_1",
+            "reference": "data/config/m2_horizon_v4_rules.json",
+            "assumption": "callback",
+            "source_record_id": "CLI-00690-005",
+            "action_deadline": "2026-05-31",
+            "source_submit_date": null,
+            "source_max_approval_days": null,
+            "is_synthetic": true
+          },
+          "within_planning_horizon": true,
+          "out_of_horizon_reason": null,
+          "realization_group": "in_horizon"
+        },
+        {
+          "candidate_id": "CLI-00690-007",
+          "candidate_type": "client",
+          "premium": 8360.0,
+          "currency": "USD",
+          "product_type": "Home Contents Insurance",
+          "policy_status": null,
+          "submit_date": null,
+          "estimated_approval_days": null,
+          "client_tags": [
+            "Retiree",
+            "Growth",
+            "Property"
+          ],
+          "action_signal": "Renewal decision is due within three days.",
+          "action_deadline": "2026-06-03",
+          "expected_realization_date": "2026-06-08",
+          "expected_realization_source": {
+            "type": "synthetic_timeline_assumption",
+            "rule_id": "M2_REALIZATION_V4_1",
+            "reference": "data/config/m2_horizon_v4_rules.json",
+            "assumption": "renewal",
+            "source_record_id": "CLI-00690-007",
+            "action_deadline": "2026-06-03",
+            "source_submit_date": null,
+            "source_max_approval_days": null,
+            "is_synthetic": true
+          },
+          "within_planning_horizon": true,
+          "out_of_horizon_reason": null,
+          "realization_group": "in_horizon"
+        },
+        {
+          "candidate_id": "CLI-00690-009",
+          "candidate_type": "client",
+          "premium": 3930.0,
+          "currency": "USD",
+          "product_type": "SME Business Package",
+          "policy_status": null,
+          "submit_date": null,
+          "estimated_approval_days": null,
+          "client_tags": [
+            "Family Builder",
+            "Standard",
+            "Commercial"
+          ],
+          "action_signal": "The client requested a quotation within five days.",
+          "action_deadline": "2026-06-05",
+          "expected_realization_date": "2026-07-10",
+          "expected_realization_source": {
+            "type": "synthetic_timeline_assumption",
+            "rule_id": "M2_REALIZATION_V4_1",
+            "reference": "data/config/m2_horizon_v4_rules.json",
+            "assumption": "quotation",
+            "source_record_id": "CLI-00690-009",
+            "action_deadline": "2026-06-05",
+            "source_submit_date": null,
+            "source_max_approval_days": null,
+            "is_synthetic": true
+          },
+          "within_planning_horizon": false,
+          "out_of_horizon_reason": "Expected credit is after the horizon; retain as a separate future opportunity.",
+          "realization_group": "future_follow_up"
+        },
+        {
+          "candidate_id": "CLI-00690-011",
+          "candidate_type": "client",
+          "premium": 5710.0,
+          "currency": "USD",
+          "product_type": "Private Motor Insurance",
+          "policy_status": null,
+          "submit_date": null,
+          "estimated_approval_days": null,
+          "client_tags": [
+            "Pre-retirement",
+            "Standard",
+            "Motor"
+          ],
+          "action_signal": "A coverage review is scheduled within fourteen days.",
+          "action_deadline": "2026-06-14",
+          "expected_realization_date": null,
+          "expected_realization_source": {
+            "type": "synthetic_timeline_assumption",
+            "rule_id": "M2_REALIZATION_V4_1",
+            "reference": "data/config/m2_horizon_v4_rules.json",
+            "assumption": "review",
+            "source_record_id": "CLI-00690-011",
+            "action_deadline": "2026-06-14",
+            "source_submit_date": null,
+            "source_max_approval_days": null,
+            "is_synthetic": true
+          },
+          "within_planning_horizon": false,
+          "out_of_horizon_reason": "No supported realization date; follow-up evidence does not establish credited premium.",
+          "realization_group": "realization_unavailable"
+        }
+      ],
+      "formal_ranking_candidate_ids": [
+        "POL-00690-001",
+        "POL-00690-002",
+        "CLI-00690-005",
+        "CLI-00690-007"
+      ]
+    },
+    {
+      "scenario_id": "SCN-AGT00770",
+      "agent_id": "AGT00770",
+      "objective": {
+        "metric": "written_premium",
+        "unit": "USD",
+        "as_of_date": "2026-05-31",
+        "annual_open_gap": 211350.0,
+        "annual_deadline": "2026-12-31",
+        "planning_horizon_start": "2026-06-01",
+        "planning_horizon_end": "2026-06-30",
+        "business_timezone": "Asia/Hong_Kong",
+        "data_cutoff": "2026-05-31T23:59:59+08:00",
+        "horizon_target": 13000,
+        "horizon_current": 0,
+        "horizon_open_gap": 13000,
+        "status": "available",
+        "is_synthetic": true,
+        "horizon_target_source": {
+          "type": "synthetic_planning_rule",
+          "rule_id": "M2_HORIZON_PLAN_V4_1",
+          "version": 1,
+          "reference": "data/config/m2_horizon_v4_rules.json",
+          "scenario_index": 1,
+          "inputs": {
+            "planned_bound_cases": 5,
+            "planned_average_written_premium_usd": 2600
+          },
+          "rationale": "Predetermined synthetic 30-day capacity plan: planned bound cases times planned case premium. Neither annual gaps, model weights, rankings nor evaluation results are inputs. These are assumptions, not company-approved targets."
+        },
+        "horizon_current_source": {
+          "type": "synthetic_credit_ledger",
+          "reference": "data/config/m2_horizon_v4_rules.json#known_horizon_credit_ledger",
+          "entries": [],
+          "verified_in_window_credit_count": 0,
+          "crediting_rule": "Count only confirmed written-premium credits dated within the horizon and recorded at or before the snapshot cutoff. This synthetic future-window ledger has no such records.",
+          "known_at_cutoff": "2026-05-31T23:59:59+08:00",
+          "rationale": "The horizon is wholly after the cutoff; no confirmed in-window credit exists in this synthetic ledger. Annual YTD and forecasts are not current horizon production."
+        }
+      },
+      "agent_specialties": [
+        "Private Motor Insurance - Annual",
+        "Private Motor Insurance",
+        "Home Contents Insurance"
+      ],
+      "candidates": [
+        {
+          "candidate_id": "POL-00770-001",
+          "candidate_type": "policy",
+          "premium": 2840.0,
+          "currency": "USD",
+          "product_type": "Private Motor Insurance - Annual",
+          "policy_status": "Awaiting Documents",
+          "submit_date": "2026-05-17",
+          "estimated_approval_days": {
+            "min": 4,
+            "max": 7
+          },
+          "client_tags": [
+            "Family Builder",
+            "High Value",
+            "Motor"
+          ],
+          "action_signal": "Customer documents are incomplete; the agent can request them now.",
+          "action_deadline": "2026-06-01",
+          "expected_realization_date": "2026-06-08",
+          "expected_realization_source": {
+            "type": "synthetic_timeline_assumption",
+            "rule_id": "M2_REALIZATION_V4_1",
+            "reference": "data/config/m2_horizon_v4_rules.json",
+            "assumption": "documents",
+            "source_record_id": "POL-00770-001",
+            "action_deadline": "2026-06-01",
+            "source_submit_date": "2026-05-17",
+            "source_max_approval_days": 7,
+            "is_synthetic": true
+          },
+          "within_planning_horizon": true,
+          "out_of_horizon_reason": null,
+          "realization_group": "in_horizon"
+        },
+        {
+          "candidate_id": "POL-00770-002",
+          "candidate_type": "policy",
+          "premium": 3620.0,
+          "currency": "USD",
+          "product_type": "Private Motor Insurance",
+          "policy_status": "Client Confirmation Pending",
+          "submit_date": "2026-05-06",
+          "estimated_approval_days": {
+            "min": 5,
+            "max": 8
+          },
+          "client_tags": [
+            "Family Builder",
+            "High Value",
+            "Property"
+          ],
+          "action_signal": "Quoted terms are ready and the client must confirm acceptance.",
+          "action_deadline": "2026-06-04",
+          "expected_realization_date": "2026-06-06",
+          "expected_realization_source": {
+            "type": "synthetic_timeline_assumption",
+            "rule_id": "M2_REALIZATION_V4_1",
+            "reference": "data/config/m2_horizon_v4_rules.json",
+            "assumption": "confirmation",
+            "source_record_id": "POL-00770-002",
+            "action_deadline": "2026-06-04",
+            "source_submit_date": "2026-05-06",
+            "source_max_approval_days": 8,
+            "is_synthetic": true
+          },
+          "within_planning_horizon": true,
+          "out_of_horizon_reason": null,
+          "realization_group": "in_horizon"
+        },
+        {
+          "candidate_id": "POL-00770-003",
+          "candidate_type": "policy",
+          "premium": 4400.0,
+          "currency": "USD",
+          "product_type": "Home Contents Insurance",
+          "policy_status": "Underwriting",
+          "submit_date": "2026-04-25",
+          "estimated_approval_days": {
+            "min": 6,
+            "max": 9
+          },
+          "client_tags": [
+            "Pre-retirement",
+            "Growth",
+            "Liability"
+          ],
+          "action_signal": "The case is being reviewed and has no outstanding request.",
+          "action_deadline": "2026-06-08",
+          "expected_realization_date": "2026-05-04",
+          "expected_realization_source": {
+            "type": "synthetic_timeline_assumption",
+            "rule_id": "M2_REALIZATION_V4_1",
+            "reference": "data/config/m2_horizon_v4_rules.json",
+            "assumption": "passive_underwriting",
+            "source_record_id": "POL-00770-003",
+            "action_deadline": "2026-06-08",
+            "source_submit_date": "2026-04-25",
+            "source_max_approval_days": 9,
+            "is_synthetic": true
+          },
+          "within_planning_horizon": false,
+          "out_of_horizon_reason": "Estimated credit date precedes the prospective window; do not count again.",
+          "realization_group": "before_horizon"
+        },
+        {
+          "candidate_id": "CLI-00770-008",
+          "candidate_type": "client",
+          "premium": 3340.0,
+          "currency": "USD",
+          "product_type": "Public Liability Insurance",
+          "policy_status": null,
+          "submit_date": null,
+          "estimated_approval_days": null,
+          "client_tags": [
+            "Family Builder",
+            "Standard",
+            "Liability"
+          ],
+          "action_signal": "Renewal decision is due within three days.",
+          "action_deadline": "2026-06-03",
+          "expected_realization_date": "2026-06-08",
+          "expected_realization_source": {
+            "type": "synthetic_timeline_assumption",
+            "rule_id": "M2_REALIZATION_V4_1",
+            "reference": "data/config/m2_horizon_v4_rules.json",
+            "assumption": "renewal",
+            "source_record_id": "CLI-00770-008",
+            "action_deadline": "2026-06-03",
+            "source_submit_date": null,
+            "source_max_approval_days": null,
+            "is_synthetic": true
+          },
+          "within_planning_horizon": true,
+          "out_of_horizon_reason": null,
+          "realization_group": "in_horizon"
+        },
+        {
+          "candidate_id": "CLI-00770-010",
+          "candidate_type": "client",
+          "premium": 5290.0,
+          "currency": "USD",
+          "product_type": "Personal Liability Insurance",
+          "policy_status": null,
+          "submit_date": null,
+          "estimated_approval_days": null,
+          "client_tags": [
+            "Pre-retirement",
+            "Standard",
+            "Specialty"
+          ],
+          "action_signal": "The client requested a callback today.",
+          "action_deadline": "2026-05-31",
+          "expected_realization_date": "2026-06-10",
+          "expected_realization_source": {
+            "type": "synthetic_timeline_assumption",
+            "rule_id": "M2_REALIZATION_V4_1",
+            "reference": "data/config/m2_horizon_v4_rules.json",
+            "assumption": "callback",
+            "source_record_id": "CLI-00770-010",
+            "action_deadline": "2026-05-31",
+            "source_submit_date": null,
+            "source_max_approval_days": null,
+            "is_synthetic": true
+          },
+          "within_planning_horizon": true,
+          "out_of_horizon_reason": null,
+          "realization_group": "in_horizon"
+        },
+        {
+          "candidate_id": "CLI-00770-012",
+          "candidate_type": "client",
+          "premium": 7240.0,
+          "currency": "USD",
+          "product_type": "Home Contents Insurance",
+          "policy_status": null,
+          "submit_date": null,
+          "estimated_approval_days": null,
+          "client_tags": [
+            "Retiree",
+            "Standard",
+            "Property"
+          ],
+          "action_signal": "A coverage review is scheduled within fourteen days.",
+          "action_deadline": "2026-06-14",
+          "expected_realization_date": null,
+          "expected_realization_source": {
+            "type": "synthetic_timeline_assumption",
+            "rule_id": "M2_REALIZATION_V4_1",
+            "reference": "data/config/m2_horizon_v4_rules.json",
+            "assumption": "review",
+            "source_record_id": "CLI-00770-012",
+            "action_deadline": "2026-06-14",
+            "source_submit_date": null,
+            "source_max_approval_days": null,
+            "is_synthetic": true
+          },
+          "within_planning_horizon": false,
+          "out_of_horizon_reason": "No supported realization date; follow-up evidence does not establish credited premium.",
+          "realization_group": "realization_unavailable"
+        }
+      ],
+      "formal_ranking_candidate_ids": [
+        "POL-00770-001",
+        "POL-00770-002",
+        "CLI-00770-008",
+        "CLI-00770-010"
+      ]
+    },
+    {
+      "scenario_id": "SCN-AGT00817",
+      "agent_id": "AGT00817",
+      "objective": {
+        "metric": "written_premium",
+        "unit": "USD",
+        "as_of_date": "2026-05-31",
+        "annual_open_gap": 139270.0,
+        "annual_deadline": "2026-12-31",
+        "planning_horizon_start": "2026-06-01",
+        "planning_horizon_end": "2026-06-30",
+        "business_timezone": "Asia/Hong_Kong",
+        "data_cutoff": "2026-05-31T23:59:59+08:00",
+        "horizon_target": 13600,
+        "horizon_current": 0,
+        "horizon_open_gap": 13600,
+        "status": "available",
+        "is_synthetic": true,
+        "horizon_target_source": {
+          "type": "synthetic_planning_rule",
+          "rule_id": "M2_HORIZON_PLAN_V4_1",
+          "version": 1,
+          "reference": "data/config/m2_horizon_v4_rules.json",
+          "scenario_index": 2,
+          "inputs": {
+            "planned_bound_cases": 4,
+            "planned_average_written_premium_usd": 3400
+          },
+          "rationale": "Predetermined synthetic 30-day capacity plan: planned bound cases times planned case premium. Neither annual gaps, model weights, rankings nor evaluation results are inputs. These are assumptions, not company-approved targets."
+        },
+        "horizon_current_source": {
+          "type": "synthetic_credit_ledger",
+          "reference": "data/config/m2_horizon_v4_rules.json#known_horizon_credit_ledger",
+          "entries": [],
+          "verified_in_window_credit_count": 0,
+          "crediting_rule": "Count only confirmed written-premium credits dated within the horizon and recorded at or before the snapshot cutoff. This synthetic future-window ledger has no such records.",
+          "known_at_cutoff": "2026-05-31T23:59:59+08:00",
+          "rationale": "The horizon is wholly after the cutoff; no confirmed in-window credit exists in this synthetic ledger. Annual YTD and forecasts are not current horizon production."
+        }
+      },
+      "agent_specialties": [
+        "Private Motor Insurance",
+        "Home Contents Insurance",
+        "Commercial Motor Insurance"
+      ],
+      "candidates": [
+        {
+          "candidate_id": "POL-00817-001",
+          "candidate_type": "policy",
+          "premium": 450.0,
+          "currency": "USD",
+          "product_type": "Private Motor Insurance",
+          "policy_status": "Underwriter Query",
+          "submit_date": "2026-05-08",
+          "estimated_approval_days": {
+            "min": 4,
+            "max": 7
+          },
+          "client_tags": [
+            "Family Builder",
+            "High Value",
+            "Motor"
+          ],
+          "action_signal": "The underwriter has an unanswered question for the agent.",
+          "action_deadline": "2026-06-02",
+          "expected_realization_date": "2026-06-11",
+          "expected_realization_source": {
+            "type": "synthetic_timeline_assumption",
+            "rule_id": "M2_REALIZATION_V4_1",
+            "reference": "data/config/m2_horizon_v4_rules.json",
+            "assumption": "query",
+            "source_record_id": "POL-00817-001",
+            "action_deadline": "2026-06-02",
+            "source_submit_date": "2026-05-08",
+            "source_max_approval_days": 7,
+            "is_synthetic": true
+          },
+          "within_planning_horizon": true,
+          "out_of_horizon_reason": null,
+          "realization_group": "in_horizon"
+        },
+        {
+          "candidate_id": "POL-00817-002",
+          "candidate_type": "policy",
+          "premium": 570.0,
+          "currency": "USD",
+          "product_type": "Home Contents Insurance",
+          "policy_status": "Client Confirmation Pending",
+          "submit_date": "2026-04-27",
+          "estimated_approval_days": {
+            "min": 5,
+            "max": 8
+          },
+          "client_tags": [
+            "Pre-retirement",
+            "High Value",
+            "Property"
+          ],
+          "action_signal": "Quoted terms are ready and the client must confirm acceptance.",
+          "action_deadline": "2026-06-04",
+          "expected_realization_date": "2026-06-06",
+          "expected_realization_source": {
+            "type": "synthetic_timeline_assumption",
+            "rule_id": "M2_REALIZATION_V4_1",
+            "reference": "data/config/m2_horizon_v4_rules.json",
+            "assumption": "confirmation",
+            "source_record_id": "POL-00817-002",
+            "action_deadline": "2026-06-04",
+            "source_submit_date": "2026-04-27",
+            "source_max_approval_days": 8,
+            "is_synthetic": true
+          },
+          "within_planning_horizon": true,
+          "out_of_horizon_reason": null,
+          "realization_group": "in_horizon"
+        },
+        {
+          "candidate_id": "POL-00817-003",
+          "candidate_type": "policy",
+          "premium": 690.0,
+          "currency": "USD",
+          "product_type": "Commercial Motor Insurance",
+          "policy_status": "Underwriting",
+          "submit_date": "2026-04-16",
+          "estimated_approval_days": {
+            "min": 6,
+            "max": 9
+          },
+          "client_tags": [
+            "Retiree",
+            "Growth",
+            "Liability"
+          ],
+          "action_signal": "The case is being reviewed and has no outstanding request.",
+          "action_deadline": "2026-06-08",
+          "expected_realization_date": "2026-04-25",
+          "expected_realization_source": {
+            "type": "synthetic_timeline_assumption",
+            "rule_id": "M2_REALIZATION_V4_1",
+            "reference": "data/config/m2_horizon_v4_rules.json",
+            "assumption": "passive_underwriting",
+            "source_record_id": "POL-00817-003",
+            "action_deadline": "2026-06-08",
+            "source_submit_date": "2026-04-16",
+            "source_max_approval_days": 9,
+            "is_synthetic": true
+          },
+          "within_planning_horizon": false,
+          "out_of_horizon_reason": "Estimated credit date precedes the prospective window; do not count again.",
+          "realization_group": "before_horizon"
+        },
+        {
+          "candidate_id": "POL-00817-004",
+          "candidate_type": "policy",
+          "premium": 810.0,
+          "currency": "USD",
+          "product_type": "Goods in Transit Insurance",
+          "policy_status": "Awaiting Documents",
+          "submit_date": "2026-04-05",
+          "estimated_approval_days": {
+            "min": 7,
+            "max": 12
+          },
+          "client_tags": [
+            "Retiree",
+            "Growth",
+            "Commercial"
+          ],
+          "action_signal": "Customer documents are incomplete; the agent can request them now.",
+          "action_deadline": "2026-06-01",
+          "expected_realization_date": "2026-06-13",
+          "expected_realization_source": {
+            "type": "synthetic_timeline_assumption",
+            "rule_id": "M2_REALIZATION_V4_1",
+            "reference": "data/config/m2_horizon_v4_rules.json",
+            "assumption": "documents",
+            "source_record_id": "POL-00817-004",
+            "action_deadline": "2026-06-01",
+            "source_submit_date": "2026-04-05",
+            "source_max_approval_days": 12,
+            "is_synthetic": true
+          },
+          "within_planning_horizon": true,
+          "out_of_horizon_reason": null,
+          "realization_group": "in_horizon"
+        },
+        {
+          "candidate_id": "CLI-00817-011",
+          "candidate_type": "client",
+          "premium": 4230.0,
+          "currency": "USD",
+          "product_type": "Private Motor Insurance",
+          "policy_status": null,
+          "submit_date": null,
+          "estimated_approval_days": null,
+          "client_tags": [
+            "Young Professional",
+            "Standard",
+            "Motor"
+          ],
+          "action_signal": "The client requested a callback today.",
+          "action_deadline": "2026-05-31",
+          "expected_realization_date": "2026-06-10",
+          "expected_realization_source": {
+            "type": "synthetic_timeline_assumption",
+            "rule_id": "M2_REALIZATION_V4_1",
+            "reference": "data/config/m2_horizon_v4_rules.json",
+            "assumption": "callback",
+            "source_record_id": "CLI-00817-011",
+            "action_deadline": "2026-05-31",
+            "source_submit_date": null,
+            "source_max_approval_days": null,
+            "is_synthetic": true
+          },
+          "within_planning_horizon": true,
+          "out_of_horizon_reason": null,
+          "realization_group": "in_horizon"
+        },
+        {
+          "candidate_id": "CLI-00817-013",
+          "candidate_type": "client",
+          "premium": 5550.0,
+          "currency": "USD",
+          "product_type": "Public Liability Insurance",
+          "policy_status": null,
+          "submit_date": null,
+          "estimated_approval_days": null,
+          "client_tags": [
+            "Family Builder",
+            "Standard",
+            "Liability"
+          ],
+          "action_signal": "The client requested a quotation within five days.",
+          "action_deadline": "2026-06-05",
+          "expected_realization_date": "2026-07-10",
+          "expected_realization_source": {
+            "type": "synthetic_timeline_assumption",
+            "rule_id": "M2_REALIZATION_V4_1",
+            "reference": "data/config/m2_horizon_v4_rules.json",
+            "assumption": "quotation",
+            "source_record_id": "CLI-00817-013",
+            "action_deadline": "2026-06-05",
+            "source_submit_date": null,
+            "source_max_approval_days": null,
+            "is_synthetic": true
+          },
+          "within_planning_horizon": false,
+          "out_of_horizon_reason": "Expected credit is after the horizon; retain as a separate future opportunity.",
+          "realization_group": "future_follow_up"
+        }
+      ],
+      "formal_ranking_candidate_ids": [
+        "POL-00817-001",
+        "POL-00817-002",
+        "POL-00817-004",
+        "CLI-00817-011"
+      ]
+    },
+    {
+      "scenario_id": "SCN-AGT00949",
+      "agent_id": "AGT00949",
+      "objective": {
+        "metric": "written_premium",
+        "unit": "USD",
+        "as_of_date": "2026-05-31",
+        "annual_open_gap": 273280.0,
+        "annual_deadline": "2026-12-31",
+        "planning_horizon_start": "2026-06-01",
+        "planning_horizon_end": "2026-06-30",
+        "business_timezone": "Asia/Hong_Kong",
+        "data_cutoff": "2026-05-31T23:59:59+08:00",
+        "horizon_target": 13200,
+        "horizon_current": 0,
+        "horizon_open_gap": 13200,
+        "status": "available",
+        "is_synthetic": true,
+        "horizon_target_source": {
+          "type": "synthetic_planning_rule",
+          "rule_id": "M2_HORIZON_PLAN_V4_1",
+          "version": 1,
+          "reference": "data/config/m2_horizon_v4_rules.json",
+          "scenario_index": 3,
+          "inputs": {
+            "planned_bound_cases": 6,
+            "planned_average_written_premium_usd": 2200
+          },
+          "rationale": "Predetermined synthetic 30-day capacity plan: planned bound cases times planned case premium. Neither annual gaps, model weights, rankings nor evaluation results are inputs. These are assumptions, not company-approved targets."
+        },
+        "horizon_current_source": {
+          "type": "synthetic_credit_ledger",
+          "reference": "data/config/m2_horizon_v4_rules.json#known_horizon_credit_ledger",
+          "entries": [],
+          "verified_in_window_credit_count": 0,
+          "crediting_rule": "Count only confirmed written-premium credits dated within the horizon and recorded at or before the snapshot cutoff. This synthetic future-window ledger has no such records.",
+          "known_at_cutoff": "2026-05-31T23:59:59+08:00",
+          "rationale": "The horizon is wholly after the cutoff; no confirmed in-window credit exists in this synthetic ledger. Annual YTD and forecasts are not current horizon production."
+        }
+      },
+      "agent_specialties": [
+        "Private Motor Insurance",
+        "Home Contents Insurance",
+        "Private Motor Insurance - Annual"
+      ],
+      "candidates": [
+        {
+          "candidate_id": "POL-00949-001",
+          "candidate_type": "policy",
+          "premium": 1040.0,
+          "currency": "USD",
+          "product_type": "Private Motor Insurance",
+          "policy_status": "Client Confirmation Pending",
+          "submit_date": "2026-04-29",
+          "estimated_approval_days": {
+            "min": 4,
+            "max": 7
+          },
+          "client_tags": [
+            "Pre-retirement",
+            "High Value",
+            "Motor"
+          ],
+          "action_signal": "Quoted terms are ready and the client must confirm acceptance.",
+          "action_deadline": "2026-06-04",
+          "expected_realization_date": "2026-06-06",
+          "expected_realization_source": {
+            "type": "synthetic_timeline_assumption",
+            "rule_id": "M2_REALIZATION_V4_1",
+            "reference": "data/config/m2_horizon_v4_rules.json",
+            "assumption": "confirmation",
+            "source_record_id": "POL-00949-001",
+            "action_deadline": "2026-06-04",
+            "source_submit_date": "2026-04-29",
+            "source_max_approval_days": 7,
+            "is_synthetic": true
+          },
+          "within_planning_horizon": true,
+          "out_of_horizon_reason": null,
+          "realization_group": "in_horizon"
+        },
+        {
+          "candidate_id": "POL-00949-002",
+          "candidate_type": "policy",
+          "premium": 1320.0,
+          "currency": "USD",
+          "product_type": "Home Contents Insurance",
+          "policy_status": "Underwriting",
+          "submit_date": "2026-04-18",
+          "estimated_approval_days": {
+            "min": 5,
+            "max": 8
+          },
+          "client_tags": [
+            "Retiree",
+            "High Value",
+            "Property"
+          ],
+          "action_signal": "The case is being reviewed and has no outstanding request.",
+          "action_deadline": "2026-06-08",
+          "expected_realization_date": "2026-04-26",
+          "expected_realization_source": {
+            "type": "synthetic_timeline_assumption",
+            "rule_id": "M2_REALIZATION_V4_1",
+            "reference": "data/config/m2_horizon_v4_rules.json",
+            "assumption": "passive_underwriting",
+            "source_record_id": "POL-00949-002",
+            "action_deadline": "2026-06-08",
+            "source_submit_date": "2026-04-18",
+            "source_max_approval_days": 8,
+            "is_synthetic": true
+          },
+          "within_planning_horizon": false,
+          "out_of_horizon_reason": "Estimated credit date precedes the prospective window; do not count again.",
+          "realization_group": "before_horizon"
+        },
+        {
+          "candidate_id": "CLI-00949-014",
+          "candidate_type": "client",
+          "premium": 8530.0,
+          "currency": "USD",
+          "product_type": "SME Business Package",
+          "policy_status": null,
+          "submit_date": null,
+          "estimated_approval_days": null,
+          "client_tags": [
+            "Pre-retirement",
+            "Standard",
+            "Commercial"
+          ],
+          "action_signal": "The client requested a quotation within five days.",
+          "action_deadline": "2026-06-05",
+          "expected_realization_date": "2026-07-10",
+          "expected_realization_source": {
+            "type": "synthetic_timeline_assumption",
+            "rule_id": "M2_REALIZATION_V4_1",
+            "reference": "data/config/m2_horizon_v4_rules.json",
+            "assumption": "quotation",
+            "source_record_id": "CLI-00949-014",
+            "action_deadline": "2026-06-05",
+            "source_submit_date": null,
+            "source_max_approval_days": null,
+            "is_synthetic": true
+          },
+          "within_planning_horizon": false,
+          "out_of_horizon_reason": "Expected credit is after the horizon; retain as a separate future opportunity.",
+          "realization_group": "future_follow_up"
+        },
+        {
+          "candidate_id": "CLI-00949-016",
+          "candidate_type": "client",
+          "premium": 4010.0,
+          "currency": "USD",
+          "product_type": "Private Motor Insurance",
+          "policy_status": null,
+          "submit_date": null,
+          "estimated_approval_days": null,
+          "client_tags": [
+            "Young Professional",
+            "Standard",
+            "Motor"
+          ],
+          "action_signal": "The client requested a callback today.",
+          "action_deadline": "2026-05-31",
+          "expected_realization_date": "2026-06-10",
+          "expected_realization_source": {
+            "type": "synthetic_timeline_assumption",
+            "rule_id": "M2_REALIZATION_V4_1",
+            "reference": "data/config/m2_horizon_v4_rules.json",
+            "assumption": "callback",
+            "source_record_id": "CLI-00949-016",
+            "action_deadline": "2026-05-31",
+            "source_submit_date": null,
+            "source_max_approval_days": null,
+            "is_synthetic": true
+          },
+          "within_planning_horizon": true,
+          "out_of_horizon_reason": null,
+          "realization_group": "in_horizon"
+        },
+        {
+          "candidate_id": "CLI-00949-018",
+          "candidate_type": "client",
+          "premium": 5820.0,
+          "currency": "USD",
+          "product_type": "Public Liability Insurance",
+          "policy_status": null,
+          "submit_date": null,
+          "estimated_approval_days": null,
+          "client_tags": [
+            "Family Builder",
+            "Standard",
+            "Liability"
+          ],
+          "action_signal": "A coverage review is scheduled within fourteen days.",
+          "action_deadline": "2026-06-14",
+          "expected_realization_date": null,
+          "expected_realization_source": {
+            "type": "synthetic_timeline_assumption",
+            "rule_id": "M2_REALIZATION_V4_1",
+            "reference": "data/config/m2_horizon_v4_rules.json",
+            "assumption": "review",
+            "source_record_id": "CLI-00949-018",
+            "action_deadline": "2026-06-14",
+            "source_submit_date": null,
+            "source_max_approval_days": null,
+            "is_synthetic": true
+          },
+          "within_planning_horizon": false,
+          "out_of_horizon_reason": "No supported realization date; follow-up evidence does not establish credited premium.",
+          "realization_group": "realization_unavailable"
+        },
+        {
+          "candidate_id": "CLI-00949-006",
+          "candidate_type": "client",
+          "premium": 7630.0,
+          "currency": "USD",
+          "product_type": "Private Motor Insurance",
+          "policy_status": null,
+          "submit_date": null,
+          "estimated_approval_days": null,
+          "client_tags": [
+            "Family Builder",
+            "Growth",
+            "Motor"
+          ],
+          "action_signal": "Renewal decision is due within three days.",
+          "action_deadline": "2026-06-03",
+          "expected_realization_date": "2026-06-08",
+          "expected_realization_source": {
+            "type": "synthetic_timeline_assumption",
+            "rule_id": "M2_REALIZATION_V4_1",
+            "reference": "data/config/m2_horizon_v4_rules.json",
+            "assumption": "renewal",
+            "source_record_id": "CLI-00949-006",
+            "action_deadline": "2026-06-03",
+            "source_submit_date": null,
+            "source_max_approval_days": null,
+            "is_synthetic": true
+          },
+          "within_planning_horizon": true,
+          "out_of_horizon_reason": null,
+          "realization_group": "in_horizon"
+        }
+      ],
+      "formal_ranking_candidate_ids": [
+        "POL-00949-001",
+        "CLI-00949-016",
+        "CLI-00949-006"
+      ]
+    },
+    {
+      "scenario_id": "SCN-AGT01191",
+      "agent_id": "AGT01191",
+      "objective": {
+        "metric": "written_premium",
+        "unit": "USD",
+        "as_of_date": "2026-05-31",
+        "annual_open_gap": 270930.0,
+        "annual_deadline": "2026-12-31",
+        "planning_horizon_start": "2026-06-01",
+        "planning_horizon_end": "2026-06-30",
+        "business_timezone": "Asia/Hong_Kong",
+        "data_cutoff": "2026-05-31T23:59:59+08:00",
+        "horizon_target": 12600,
+        "horizon_current": 0,
+        "horizon_open_gap": 12600,
+        "status": "available",
+        "is_synthetic": true,
+        "horizon_target_source": {
+          "type": "synthetic_planning_rule",
+          "rule_id": "M2_HORIZON_PLAN_V4_1",
+          "version": 1,
+          "reference": "data/config/m2_horizon_v4_rules.json",
+          "scenario_index": 4,
+          "inputs": {
+            "planned_bound_cases": 3,
+            "planned_average_written_premium_usd": 4200
+          },
+          "rationale": "Predetermined synthetic 30-day capacity plan: planned bound cases times planned case premium. Neither annual gaps, model weights, rankings nor evaluation results are inputs. These are assumptions, not company-approved targets."
+        },
+        "horizon_current_source": {
+          "type": "synthetic_credit_ledger",
+          "reference": "data/config/m2_horizon_v4_rules.json#known_horizon_credit_ledger",
+          "entries": [],
+          "verified_in_window_credit_count": 0,
+          "crediting_rule": "Count only confirmed written-premium credits dated within the horizon and recorded at or before the snapshot cutoff. This synthetic future-window ledger has no such records.",
+          "known_at_cutoff": "2026-05-31T23:59:59+08:00",
+          "rationale": "The horizon is wholly after the cutoff; no confirmed in-window credit exists in this synthetic ledger. Annual YTD and forecasts are not current horizon production."
+        }
+      },
+      "agent_specialties": [
+        "Private Motor Insurance",
+        "Home Contents Insurance",
+        "Private Motor Insurance - Annual"
+      ],
+      "candidates": [
+        {
+          "candidate_id": "POL-01191-001",
+          "candidate_type": "policy",
+          "premium": 1050.0,
+          "currency": "USD",
+          "product_type": "Private Motor Insurance",
+          "policy_status": "Awaiting Documents",
+          "submit_date": "2026-04-20",
+          "estimated_approval_days": {
+            "min": 4,
+            "max": 7
+          },
+          "client_tags": [
+            "Retiree",
+            "High Value",
+            "Motor"
+          ],
+          "action_signal": "Customer documents are incomplete; the agent can request them now.",
+          "action_deadline": "2026-06-01",
+          "expected_realization_date": "2026-06-08",
+          "expected_realization_source": {
+            "type": "synthetic_timeline_assumption",
+            "rule_id": "M2_REALIZATION_V4_1",
+            "reference": "data/config/m2_horizon_v4_rules.json",
+            "assumption": "documents",
+            "source_record_id": "POL-01191-001",
+            "action_deadline": "2026-06-01",
+            "source_submit_date": "2026-04-20",
+            "source_max_approval_days": 7,
+            "is_synthetic": true
+          },
+          "within_planning_horizon": true,
+          "out_of_horizon_reason": null,
+          "realization_group": "in_horizon"
+        },
+        {
+          "candidate_id": "POL-01191-002",
+          "candidate_type": "policy",
+          "premium": 1330.0,
+          "currency": "USD",
+          "product_type": "Home Contents Insurance",
+          "policy_status": "Underwriter Query",
+          "submit_date": "2026-04-09",
+          "estimated_approval_days": {
+            "min": 5,
+            "max": 8
+          },
+          "client_tags": [
+            "Young Professional",
+            "High Value",
+            "Property"
+          ],
+          "action_signal": "The underwriter has an unanswered question for the agent.",
+          "action_deadline": "2026-06-02",
+          "expected_realization_date": "2026-06-12",
+          "expected_realization_source": {
+            "type": "synthetic_timeline_assumption",
+            "rule_id": "M2_REALIZATION_V4_1",
+            "reference": "data/config/m2_horizon_v4_rules.json",
+            "assumption": "query",
+            "source_record_id": "POL-01191-002",
+            "action_deadline": "2026-06-02",
+            "source_submit_date": "2026-04-09",
+            "source_max_approval_days": 8,
+            "is_synthetic": true
+          },
+          "within_planning_horizon": true,
+          "out_of_horizon_reason": null,
+          "realization_group": "in_horizon"
+        },
+        {
+          "candidate_id": "POL-01191-003",
+          "candidate_type": "policy",
+          "premium": 1620.0,
+          "currency": "USD",
+          "product_type": "Private Motor Insurance - Annual",
+          "policy_status": "Underwriting",
+          "submit_date": "2026-03-29",
+          "estimated_approval_days": {
+            "min": 6,
+            "max": 9
+          },
+          "client_tags": [
+            "Family Builder",
+            "Growth",
+            "Liability"
+          ],
+          "action_signal": "The case is being reviewed and has no outstanding request.",
+          "action_deadline": "2026-06-08",
+          "expected_realization_date": "2026-04-07",
+          "expected_realization_source": {
+            "type": "synthetic_timeline_assumption",
+            "rule_id": "M2_REALIZATION_V4_1",
+            "reference": "data/config/m2_horizon_v4_rules.json",
+            "assumption": "passive_underwriting",
+            "source_record_id": "POL-01191-003",
+            "action_deadline": "2026-06-08",
+            "source_submit_date": "2026-03-29",
+            "source_max_approval_days": 9,
+            "is_synthetic": true
+          },
+          "within_planning_horizon": false,
+          "out_of_horizon_reason": "Estimated credit date precedes the prospective window; do not count again.",
+          "realization_group": "before_horizon"
+        },
+        {
+          "candidate_id": "CLI-01191-017",
+          "candidate_type": "client",
+          "premium": 5090.0,
+          "currency": "USD",
+          "product_type": "Home Contents Insurance",
+          "policy_status": null,
+          "submit_date": null,
+          "estimated_approval_days": null,
+          "client_tags": [
+            "Family Builder",
+            "Standard",
+            "Property"
+          ],
+          "action_signal": "The client requested a callback today.",
+          "action_deadline": "2026-05-31",
+          "expected_realization_date": "2026-06-10",
+          "expected_realization_source": {
+            "type": "synthetic_timeline_assumption",
+            "rule_id": "M2_REALIZATION_V4_1",
+            "reference": "data/config/m2_horizon_v4_rules.json",
+            "assumption": "callback",
+            "source_record_id": "CLI-01191-017",
+            "action_deadline": "2026-05-31",
+            "source_submit_date": null,
+            "source_max_approval_days": null,
+            "is_synthetic": true
+          },
+          "within_planning_horizon": true,
+          "out_of_horizon_reason": null,
+          "realization_group": "in_horizon"
+        },
+        {
+          "candidate_id": "CLI-01191-005",
+          "candidate_type": "client",
+          "premium": 6960.0,
+          "currency": "USD",
+          "product_type": "Personal Liability Insurance",
+          "policy_status": null,
+          "submit_date": null,
+          "estimated_approval_days": null,
+          "client_tags": [
+            "Pre-retirement",
+            "Growth",
+            "Specialty"
+          ],
+          "action_signal": "The client requested a quotation within five days.",
+          "action_deadline": "2026-06-05",
+          "expected_realization_date": "2026-07-10",
+          "expected_realization_source": {
+            "type": "synthetic_timeline_assumption",
+            "rule_id": "M2_REALIZATION_V4_1",
+            "reference": "data/config/m2_horizon_v4_rules.json",
+            "assumption": "quotation",
+            "source_record_id": "CLI-01191-005",
+            "action_deadline": "2026-06-05",
+            "source_submit_date": null,
+            "source_max_approval_days": null,
+            "is_synthetic": true
+          },
+          "within_planning_horizon": false,
+          "out_of_horizon_reason": "Expected credit is after the horizon; retain as a separate future opportunity.",
+          "realization_group": "future_follow_up"
+        },
+        {
+          "candidate_id": "CLI-01191-007",
+          "candidate_type": "client",
+          "premium": 8840.0,
+          "currency": "USD",
+          "product_type": "Home Contents Insurance",
+          "policy_status": null,
+          "submit_date": null,
+          "estimated_approval_days": null,
+          "client_tags": [
+            "Retiree",
+            "Growth",
+            "Property"
+          ],
+          "action_signal": "Renewal decision is due within three days.",
+          "action_deadline": "2026-06-03",
+          "expected_realization_date": "2026-06-08",
+          "expected_realization_source": {
+            "type": "synthetic_timeline_assumption",
+            "rule_id": "M2_REALIZATION_V4_1",
+            "reference": "data/config/m2_horizon_v4_rules.json",
+            "assumption": "renewal",
+            "source_record_id": "CLI-01191-007",
+            "action_deadline": "2026-06-03",
+            "source_submit_date": null,
+            "source_max_approval_days": null,
+            "is_synthetic": true
+          },
+          "within_planning_horizon": true,
+          "out_of_horizon_reason": null,
+          "realization_group": "in_horizon"
+        }
+      ],
+      "formal_ranking_candidate_ids": [
+        "POL-01191-001",
+        "POL-01191-002",
+        "CLI-01191-017",
+        "CLI-01191-007"
+      ]
+    },
+    {
+      "scenario_id": "SCN-AGT01448",
+      "agent_id": "AGT01448",
+      "objective": {
+        "metric": "written_premium",
+        "unit": "USD",
+        "as_of_date": "2026-05-31",
+        "annual_open_gap": 671640.0,
+        "annual_deadline": "2026-12-31",
+        "planning_horizon_start": "2026-06-01",
+        "planning_horizon_end": "2026-06-30",
+        "business_timezone": "Asia/Hong_Kong",
+        "data_cutoff": "2026-05-31T23:59:59+08:00",
+        "horizon_target": 15000,
+        "horizon_current": 0,
+        "horizon_open_gap": 15000,
+        "status": "available",
+        "is_synthetic": true,
+        "horizon_target_source": {
+          "type": "synthetic_planning_rule",
+          "rule_id": "M2_HORIZON_PLAN_V4_1",
+          "version": 1,
+          "reference": "data/config/m2_horizon_v4_rules.json",
+          "scenario_index": 5,
+          "inputs": {
+            "planned_bound_cases": 5,
+            "planned_average_written_premium_usd": 3000
+          },
+          "rationale": "Predetermined synthetic 30-day capacity plan: planned bound cases times planned case premium. Neither annual gaps, model weights, rankings nor evaluation results are inputs. These are assumptions, not company-approved targets."
+        },
+        "horizon_current_source": {
+          "type": "synthetic_credit_ledger",
+          "reference": "data/config/m2_horizon_v4_rules.json#known_horizon_credit_ledger",
+          "entries": [],
+          "verified_in_window_credit_count": 0,
+          "crediting_rule": "Count only confirmed written-premium credits dated within the horizon and recorded at or before the snapshot cutoff. This synthetic future-window ledger has no such records.",
+          "known_at_cutoff": "2026-05-31T23:59:59+08:00",
+          "rationale": "The horizon is wholly after the cutoff; no confirmed in-window credit exists in this synthetic ledger. Annual YTD and forecasts are not current horizon production."
+        }
+      },
+      "agent_specialties": [
+        "Private Motor Insurance",
+        "Private Motor Insurance - Annual",
+        "Home Contents Insurance"
+      ],
+      "candidates": [
+        {
+          "candidate_id": "POL-01448-001",
+          "candidate_type": "policy",
+          "premium": 1900.0,
+          "currency": "USD",
+          "product_type": "Private Motor Insurance",
+          "policy_status": "Underwriter Query",
+          "submit_date": "2026-04-11",
+          "estimated_approval_days": {
+            "min": 4,
+            "max": 7
+          },
+          "client_tags": [
+            "Family Builder",
+            "High Value",
+            "Motor"
+          ],
+          "action_signal": "The underwriter has an unanswered question for the agent.",
+          "action_deadline": "2026-06-02",
+          "expected_realization_date": "2026-06-11",
+          "expected_realization_source": {
+            "type": "synthetic_timeline_assumption",
+            "rule_id": "M2_REALIZATION_V4_1",
+            "reference": "data/config/m2_horizon_v4_rules.json",
+            "assumption": "query",
+            "source_record_id": "POL-01448-001",
+            "action_deadline": "2026-06-02",
+            "source_submit_date": "2026-04-11",
+            "source_max_approval_days": 7,
+            "is_synthetic": true
+          },
+          "within_planning_horizon": true,
+          "out_of_horizon_reason": null,
+          "realization_group": "in_horizon"
+        },
+        {
+          "candidate_id": "POL-01448-002",
+          "candidate_type": "policy",
+          "premium": 2420.0,
+          "currency": "USD",
+          "product_type": "Private Motor Insurance - Annual",
+          "policy_status": "Client Confirmation Pending",
+          "submit_date": "2026-03-31",
+          "estimated_approval_days": {
+            "min": 5,
+            "max": 8
+          },
+          "client_tags": [
+            "Family Builder",
+            "High Value",
+            "Property"
+          ],
+          "action_signal": "Quoted terms are ready and the client must confirm acceptance.",
+          "action_deadline": "2026-06-04",
+          "expected_realization_date": "2026-06-06",
+          "expected_realization_source": {
+            "type": "synthetic_timeline_assumption",
+            "rule_id": "M2_REALIZATION_V4_1",
+            "reference": "data/config/m2_horizon_v4_rules.json",
+            "assumption": "confirmation",
+            "source_record_id": "POL-01448-002",
+            "action_deadline": "2026-06-04",
+            "source_submit_date": "2026-03-31",
+            "source_max_approval_days": 8,
+            "is_synthetic": true
+          },
+          "within_planning_horizon": true,
+          "out_of_horizon_reason": null,
+          "realization_group": "in_horizon"
+        },
+        {
+          "candidate_id": "POL-01448-003",
+          "candidate_type": "policy",
+          "premium": 2940.0,
+          "currency": "USD",
+          "product_type": "Home Contents Insurance",
+          "policy_status": "Underwriting",
+          "submit_date": "2026-03-20",
+          "estimated_approval_days": {
+            "min": 6,
+            "max": 9
+          },
+          "client_tags": [
+            "Family Builder",
+            "Growth",
+            "Liability"
+          ],
+          "action_signal": "The case is being reviewed and has no outstanding request.",
+          "action_deadline": "2026-06-08",
+          "expected_realization_date": "2026-03-29",
+          "expected_realization_source": {
+            "type": "synthetic_timeline_assumption",
+            "rule_id": "M2_REALIZATION_V4_1",
+            "reference": "data/config/m2_horizon_v4_rules.json",
+            "assumption": "passive_underwriting",
+            "source_record_id": "POL-01448-003",
+            "action_deadline": "2026-06-08",
+            "source_submit_date": "2026-03-20",
+            "source_max_approval_days": 9,
+            "is_synthetic": true
+          },
+          "within_planning_horizon": false,
+          "out_of_horizon_reason": "Estimated credit date precedes the prospective window; do not count again.",
+          "realization_group": "before_horizon"
+        },
+        {
+          "candidate_id": "POL-01448-004",
+          "candidate_type": "policy",
+          "premium": 3460.0,
+          "currency": "USD",
+          "product_type": "Commercial Motor Insurance",
+          "policy_status": "Awaiting Documents",
+          "submit_date": "2026-03-09",
+          "estimated_approval_days": {
+            "min": 7,
+            "max": 12
+          },
+          "client_tags": [
+            "Pre-retirement",
+            "Growth",
+            "Commercial"
+          ],
+          "action_signal": "Customer documents are incomplete; the agent can request them now.",
+          "action_deadline": "2026-06-01",
+          "expected_realization_date": "2026-06-13",
+          "expected_realization_source": {
+            "type": "synthetic_timeline_assumption",
+            "rule_id": "M2_REALIZATION_V4_1",
+            "reference": "data/config/m2_horizon_v4_rules.json",
+            "assumption": "documents",
+            "source_record_id": "POL-01448-004",
+            "action_deadline": "2026-06-01",
+            "source_submit_date": "2026-03-09",
+            "source_max_approval_days": 12,
+            "is_synthetic": true
+          },
+          "within_planning_horizon": true,
+          "out_of_horizon_reason": null,
+          "realization_group": "in_horizon"
+        },
+        {
+          "candidate_id": "CLI-01448-006",
+          "candidate_type": "client",
+          "premium": 12920.0,
+          "currency": "USD",
+          "product_type": "Private Motor Insurance",
+          "policy_status": null,
+          "submit_date": null,
+          "estimated_approval_days": null,
+          "client_tags": [
+            "Young Professional",
+            "Growth",
+            "Motor"
+          ],
+          "action_signal": "Renewal decision is due within three days.",
+          "action_deadline": "2026-06-03",
+          "expected_realization_date": "2026-06-08",
+          "expected_realization_source": {
+            "type": "synthetic_timeline_assumption",
+            "rule_id": "M2_REALIZATION_V4_1",
+            "reference": "data/config/m2_horizon_v4_rules.json",
+            "assumption": "renewal",
+            "source_record_id": "CLI-01448-006",
+            "action_deadline": "2026-06-03",
+            "source_submit_date": null,
+            "source_max_approval_days": null,
+            "is_synthetic": true
+          },
+          "within_planning_horizon": true,
+          "out_of_horizon_reason": null,
+          "realization_group": "in_horizon"
+        },
+        {
+          "candidate_id": "CLI-01448-008",
+          "candidate_type": "client",
+          "premium": 5260.0,
+          "currency": "USD",
+          "product_type": "Public Liability Insurance",
+          "policy_status": null,
+          "submit_date": null,
+          "estimated_approval_days": null,
+          "client_tags": [
+            "Family Builder",
+            "Standard",
+            "Liability"
+          ],
+          "action_signal": "A coverage review is scheduled within fourteen days.",
+          "action_deadline": "2026-06-14",
+          "expected_realization_date": null,
+          "expected_realization_source": {
+            "type": "synthetic_timeline_assumption",
+            "rule_id": "M2_REALIZATION_V4_1",
+            "reference": "data/config/m2_horizon_v4_rules.json",
+            "assumption": "review",
+            "source_record_id": "CLI-01448-008",
+            "action_deadline": "2026-06-14",
+            "source_submit_date": null,
+            "source_max_approval_days": null,
+            "is_synthetic": true
+          },
+          "within_planning_horizon": false,
+          "out_of_horizon_reason": "No supported realization date; follow-up evidence does not establish credited premium.",
+          "realization_group": "realization_unavailable"
+        }
+      ],
+      "formal_ranking_candidate_ids": [
+        "POL-01448-001",
+        "POL-01448-002",
+        "POL-01448-004",
+        "CLI-01448-006"
+      ]
+    },
+    {
+      "scenario_id": "SCN-AGT01525",
+      "agent_id": "AGT01525",
+      "objective": {
+        "metric": "written_premium",
+        "unit": "USD",
+        "as_of_date": "2026-05-31",
+        "annual_open_gap": 168720.0,
+        "annual_deadline": "2026-12-31",
+        "planning_horizon_start": "2026-06-01",
+        "planning_horizon_end": "2026-06-30",
+        "business_timezone": "Asia/Hong_Kong",
+        "data_cutoff": "2026-05-31T23:59:59+08:00",
+        "horizon_target": 9600,
+        "horizon_current": 0,
+        "horizon_open_gap": 9600,
+        "status": "available",
+        "is_synthetic": true,
+        "horizon_target_source": {
+          "type": "synthetic_planning_rule",
+          "rule_id": "M2_HORIZON_PLAN_V4_1",
+          "version": 1,
+          "reference": "data/config/m2_horizon_v4_rules.json",
+          "scenario_index": 6,
+          "inputs": {
+            "planned_bound_cases": 4,
+            "planned_average_written_premium_usd": 2400
+          },
+          "rationale": "Predetermined synthetic 30-day capacity plan: planned bound cases times planned case premium. Neither annual gaps, model weights, rankings nor evaluation results are inputs. These are assumptions, not company-approved targets."
+        },
+        "horizon_current_source": {
+          "type": "synthetic_credit_ledger",
+          "reference": "data/config/m2_horizon_v4_rules.json#known_horizon_credit_ledger",
+          "entries": [],
+          "verified_in_window_credit_count": 0,
+          "crediting_rule": "Count only confirmed written-premium credits dated within the horizon and recorded at or before the snapshot cutoff. This synthetic future-window ledger has no such records.",
+          "known_at_cutoff": "2026-05-31T23:59:59+08:00",
+          "rationale": "The horizon is wholly after the cutoff; no confirmed in-window credit exists in this synthetic ledger. Annual YTD and forecasts are not current horizon production."
+        }
+      },
+      "agent_specialties": [
+        "Private Motor Insurance",
+        "Home Contents Insurance",
+        "Public Liability Insurance"
+      ],
+      "candidates": [
+        {
+          "candidate_id": "POL-01525-001",
+          "candidate_type": "policy",
+          "premium": 1430.0,
+          "currency": "USD",
+          "product_type": "Private Motor Insurance",
+          "policy_status": "Awaiting Documents",
+          "submit_date": "2026-04-02",
+          "estimated_approval_days": {
+            "min": 4,
+            "max": 7
+          },
+          "client_tags": [
+            "Family Builder",
+            "High Value",
+            "Motor"
+          ],
+          "action_signal": "Customer documents are incomplete; the agent can request them now.",
+          "action_deadline": "2026-06-01",
+          "expected_realization_date": "2026-06-08",
+          "expected_realization_source": {
+            "type": "synthetic_timeline_assumption",
+            "rule_id": "M2_REALIZATION_V4_1",
+            "reference": "data/config/m2_horizon_v4_rules.json",
+            "assumption": "documents",
+            "source_record_id": "POL-01525-001",
+            "action_deadline": "2026-06-01",
+            "source_submit_date": "2026-04-02",
+            "source_max_approval_days": 7,
+            "is_synthetic": true
+          },
+          "within_planning_horizon": true,
+          "out_of_horizon_reason": null,
+          "realization_group": "in_horizon"
+        },
+        {
+          "candidate_id": "POL-01525-002",
+          "candidate_type": "policy",
+          "premium": 1820.0,
+          "currency": "USD",
+          "product_type": "Home Contents Insurance",
+          "policy_status": "Underwriting",
+          "submit_date": "2026-03-22",
+          "estimated_approval_days": {
+            "min": 5,
+            "max": 8
+          },
+          "client_tags": [
+            "Pre-retirement",
+            "High Value",
+            "Property"
+          ],
+          "action_signal": "The case is being reviewed and has no outstanding request.",
+          "action_deadline": "2026-06-08",
+          "expected_realization_date": "2026-03-30",
+          "expected_realization_source": {
+            "type": "synthetic_timeline_assumption",
+            "rule_id": "M2_REALIZATION_V4_1",
+            "reference": "data/config/m2_horizon_v4_rules.json",
+            "assumption": "passive_underwriting",
+            "source_record_id": "POL-01525-002",
+            "action_deadline": "2026-06-08",
+            "source_submit_date": "2026-03-22",
+            "source_max_approval_days": 8,
+            "is_synthetic": true
+          },
+          "within_planning_horizon": false,
+          "out_of_horizon_reason": "Estimated credit date precedes the prospective window; do not count again.",
+          "realization_group": "before_horizon"
+        },
+        {
+          "candidate_id": "CLI-01525-009",
+          "candidate_type": "client",
+          "premium": 3200.0,
+          "currency": "USD",
+          "product_type": "SME Business Package",
+          "policy_status": null,
+          "submit_date": null,
+          "estimated_approval_days": null,
+          "client_tags": [
+            "Pre-retirement",
+            "Standard",
+            "Commercial"
+          ],
+          "action_signal": "A coverage review is scheduled within fourteen days.",
+          "action_deadline": "2026-06-14",
+          "expected_realization_date": null,
+          "expected_realization_source": {
+            "type": "synthetic_timeline_assumption",
+            "rule_id": "M2_REALIZATION_V4_1",
+            "reference": "data/config/m2_horizon_v4_rules.json",
+            "assumption": "review",
+            "source_record_id": "CLI-01525-009",
+            "action_deadline": "2026-06-14",
+            "source_submit_date": null,
+            "source_max_approval_days": null,
+            "is_synthetic": true
+          },
+          "within_planning_horizon": false,
+          "out_of_horizon_reason": "No supported realization date; follow-up evidence does not establish credited premium.",
+          "realization_group": "realization_unavailable"
+        },
+        {
+          "candidate_id": "CLI-01525-011",
+          "candidate_type": "client",
+          "premium": 4650.0,
+          "currency": "USD",
+          "product_type": "Private Motor Insurance",
+          "policy_status": null,
+          "submit_date": null,
+          "estimated_approval_days": null,
+          "client_tags": [
+            "Young Professional",
+            "Standard",
+            "Motor"
+          ],
+          "action_signal": "The client requested a quotation within five days.",
+          "action_deadline": "2026-06-05",
+          "expected_realization_date": "2026-07-10",
+          "expected_realization_source": {
+            "type": "synthetic_timeline_assumption",
+            "rule_id": "M2_REALIZATION_V4_1",
+            "reference": "data/config/m2_horizon_v4_rules.json",
+            "assumption": "quotation",
+            "source_record_id": "CLI-01525-011",
+            "action_deadline": "2026-06-05",
+            "source_submit_date": null,
+            "source_max_approval_days": null,
+            "is_synthetic": true
+          },
+          "within_planning_horizon": false,
+          "out_of_horizon_reason": "Expected credit is after the horizon; retain as a separate future opportunity.",
+          "realization_group": "future_follow_up"
+        },
+        {
+          "candidate_id": "CLI-01525-013",
+          "candidate_type": "client",
+          "premium": 6090.0,
+          "currency": "USD",
+          "product_type": "Public Liability Insurance",
+          "policy_status": null,
+          "submit_date": null,
+          "estimated_approval_days": null,
+          "client_tags": [
+            "Family Builder",
+            "Standard",
+            "Liability"
+          ],
+          "action_signal": "The client requested a callback today.",
+          "action_deadline": "2026-05-31",
+          "expected_realization_date": "2026-06-10",
+          "expected_realization_source": {
+            "type": "synthetic_timeline_assumption",
+            "rule_id": "M2_REALIZATION_V4_1",
+            "reference": "data/config/m2_horizon_v4_rules.json",
+            "assumption": "callback",
+            "source_record_id": "CLI-01525-013",
+            "action_deadline": "2026-05-31",
+            "source_submit_date": null,
+            "source_max_approval_days": null,
+            "is_synthetic": true
+          },
+          "within_planning_horizon": true,
+          "out_of_horizon_reason": null,
+          "realization_group": "in_horizon"
+        },
+        {
+          "candidate_id": "CLI-01525-015",
+          "candidate_type": "client",
+          "premium": 2480.0,
+          "currency": "USD",
+          "product_type": "Personal Liability Insurance",
+          "policy_status": null,
+          "submit_date": null,
+          "estimated_approval_days": null,
+          "client_tags": [
+            "Pre-retirement",
+            "Standard",
+            "Specialty"
+          ],
+          "action_signal": "Renewal decision is due within three days.",
+          "action_deadline": "2026-06-03",
+          "expected_realization_date": "2026-06-08",
+          "expected_realization_source": {
+            "type": "synthetic_timeline_assumption",
+            "rule_id": "M2_REALIZATION_V4_1",
+            "reference": "data/config/m2_horizon_v4_rules.json",
+            "assumption": "renewal",
+            "source_record_id": "CLI-01525-015",
+            "action_deadline": "2026-06-03",
+            "source_submit_date": null,
+            "source_max_approval_days": null,
+            "is_synthetic": true
+          },
+          "within_planning_horizon": true,
+          "out_of_horizon_reason": null,
+          "realization_group": "in_horizon"
+        }
+      ],
+      "formal_ranking_candidate_ids": [
+        "POL-01525-001",
+        "CLI-01525-013",
+        "CLI-01525-015"
+      ]
+    },
+    {
+      "scenario_id": "SCN-AGT01569",
+      "agent_id": "AGT01569",
+      "objective": {
+        "metric": "written_premium",
+        "unit": "USD",
+        "as_of_date": "2026-05-31",
+        "annual_open_gap": 248880.0,
+        "annual_deadline": "2026-12-31",
+        "planning_horizon_start": "2026-06-01",
+        "planning_horizon_end": "2026-06-30",
+        "business_timezone": "Asia/Hong_Kong",
+        "data_cutoff": "2026-05-31T23:59:59+08:00",
+        "horizon_target": 22800,
+        "horizon_current": 0,
+        "horizon_open_gap": 22800,
+        "status": "available",
+        "is_synthetic": true,
+        "horizon_target_source": {
+          "type": "synthetic_planning_rule",
+          "rule_id": "M2_HORIZON_PLAN_V4_1",
+          "version": 1,
+          "reference": "data/config/m2_horizon_v4_rules.json",
+          "scenario_index": 7,
+          "inputs": {
+            "planned_bound_cases": 6,
+            "planned_average_written_premium_usd": 3800
+          },
+          "rationale": "Predetermined synthetic 30-day capacity plan: planned bound cases times planned case premium. Neither annual gaps, model weights, rankings nor evaluation results are inputs. These are assumptions, not company-approved targets."
+        },
+        "horizon_current_source": {
+          "type": "synthetic_credit_ledger",
+          "reference": "data/config/m2_horizon_v4_rules.json#known_horizon_credit_ledger",
+          "entries": [],
+          "verified_in_window_credit_count": 0,
+          "crediting_rule": "Count only confirmed written-premium credits dated within the horizon and recorded at or before the snapshot cutoff. This synthetic future-window ledger has no such records.",
+          "known_at_cutoff": "2026-05-31T23:59:59+08:00",
+          "rationale": "The horizon is wholly after the cutoff; no confirmed in-window credit exists in this synthetic ledger. Annual YTD and forecasts are not current horizon production."
+        }
+      },
+      "agent_specialties": [
+        "Private Motor Insurance",
+        "Home Contents Insurance",
+        "Private Motor Insurance - Annual"
+      ],
+      "candidates": [
+        {
+          "candidate_id": "POL-01569-001",
+          "candidate_type": "policy",
+          "premium": 310.0,
+          "currency": "USD",
+          "product_type": "Private Motor Insurance",
+          "policy_status": "Underwriter Query",
+          "submit_date": "2026-03-24",
+          "estimated_approval_days": {
+            "min": 4,
+            "max": 7
+          },
+          "client_tags": [
+            "Pre-retirement",
+            "High Value",
+            "Motor"
+          ],
+          "action_signal": "The underwriter has an unanswered question for the agent.",
+          "action_deadline": "2026-06-02",
+          "expected_realization_date": "2026-06-11",
+          "expected_realization_source": {
+            "type": "synthetic_timeline_assumption",
+            "rule_id": "M2_REALIZATION_V4_1",
+            "reference": "data/config/m2_horizon_v4_rules.json",
+            "assumption": "query",
+            "source_record_id": "POL-01569-001",
+            "action_deadline": "2026-06-02",
+            "source_submit_date": "2026-03-24",
+            "source_max_approval_days": 7,
+            "is_synthetic": true
+          },
+          "within_planning_horizon": true,
+          "out_of_horizon_reason": null,
+          "realization_group": "in_horizon"
+        },
+        {
+          "candidate_id": "POL-01569-002",
+          "candidate_type": "policy",
+          "premium": 400.0,
+          "currency": "USD",
+          "product_type": "Home Contents Insurance",
+          "policy_status": "Client Confirmation Pending",
+          "submit_date": "2026-03-13",
+          "estimated_approval_days": {
+            "min": 5,
+            "max": 8
+          },
+          "client_tags": [
+            "Retiree",
+            "High Value",
+            "Property"
+          ],
+          "action_signal": "Quoted terms are ready and the client must confirm acceptance.",
+          "action_deadline": "2026-06-04",
+          "expected_realization_date": "2026-06-06",
+          "expected_realization_source": {
+            "type": "synthetic_timeline_assumption",
+            "rule_id": "M2_REALIZATION_V4_1",
+            "reference": "data/config/m2_horizon_v4_rules.json",
+            "assumption": "confirmation",
+            "source_record_id": "POL-01569-002",
+            "action_deadline": "2026-06-04",
+            "source_submit_date": "2026-03-13",
+            "source_max_approval_days": 8,
+            "is_synthetic": true
+          },
+          "within_planning_horizon": true,
+          "out_of_horizon_reason": null,
+          "realization_group": "in_horizon"
+        },
+        {
+          "candidate_id": "POL-01569-003",
+          "candidate_type": "policy",
+          "premium": 480.0,
+          "currency": "USD",
+          "product_type": "Private Motor Insurance - Annual",
+          "policy_status": "Underwriting",
+          "submit_date": "2026-03-02",
+          "estimated_approval_days": {
+            "min": 6,
+            "max": 9
+          },
+          "client_tags": [
+            "Young Professional",
+            "Growth",
+            "Liability"
+          ],
+          "action_signal": "The case is being reviewed and has no outstanding request.",
+          "action_deadline": "2026-06-08",
+          "expected_realization_date": "2026-03-11",
+          "expected_realization_source": {
+            "type": "synthetic_timeline_assumption",
+            "rule_id": "M2_REALIZATION_V4_1",
+            "reference": "data/config/m2_horizon_v4_rules.json",
+            "assumption": "passive_underwriting",
+            "source_record_id": "POL-01569-003",
+            "action_deadline": "2026-06-08",
+            "source_submit_date": "2026-03-02",
+            "source_max_approval_days": 9,
+            "is_synthetic": true
+          },
+          "within_planning_horizon": false,
+          "out_of_horizon_reason": "Estimated credit date precedes the prospective window; do not count again.",
+          "realization_group": "before_horizon"
+        },
+        {
+          "candidate_id": "CLI-01569-012",
+          "candidate_type": "client",
+          "premium": 6520.0,
+          "currency": "USD",
+          "product_type": "Home Contents Insurance",
+          "policy_status": null,
+          "submit_date": null,
+          "estimated_approval_days": null,
+          "client_tags": [
+            "Family Builder",
+            "Standard",
+            "Property"
+          ],
+          "action_signal": "The client requested a quotation within five days.",
+          "action_deadline": "2026-06-05",
+          "expected_realization_date": "2026-07-10",
+          "expected_realization_source": {
+            "type": "synthetic_timeline_assumption",
+            "rule_id": "M2_REALIZATION_V4_1",
+            "reference": "data/config/m2_horizon_v4_rules.json",
+            "assumption": "quotation",
+            "source_record_id": "CLI-01569-012",
+            "action_deadline": "2026-06-05",
+            "source_submit_date": null,
+            "source_max_approval_days": null,
+            "is_synthetic": true
+          },
+          "within_planning_horizon": false,
+          "out_of_horizon_reason": "Expected credit is after the horizon; retain as a separate future opportunity.",
+          "realization_group": "future_follow_up"
+        },
+        {
+          "candidate_id": "CLI-01569-014",
+          "candidate_type": "client",
+          "premium": 8270.0,
+          "currency": "USD",
+          "product_type": "SME Business Package",
+          "policy_status": null,
+          "submit_date": null,
+          "estimated_approval_days": null,
+          "client_tags": [
+            "Pre-retirement",
+            "Standard",
+            "Commercial"
+          ],
+          "action_signal": "Renewal decision is due within three days.",
+          "action_deadline": "2026-06-03",
+          "expected_realization_date": "2026-06-08",
+          "expected_realization_source": {
+            "type": "synthetic_timeline_assumption",
+            "rule_id": "M2_REALIZATION_V4_1",
+            "reference": "data/config/m2_horizon_v4_rules.json",
+            "assumption": "renewal",
+            "source_record_id": "CLI-01569-014",
+            "action_deadline": "2026-06-03",
+            "source_submit_date": null,
+            "source_max_approval_days": null,
+            "is_synthetic": true
+          },
+          "within_planning_horizon": true,
+          "out_of_horizon_reason": null,
+          "realization_group": "in_horizon"
+        },
+        {
+          "candidate_id": "CLI-01569-016",
+          "candidate_type": "client",
+          "premium": 3890.0,
+          "currency": "USD",
+          "product_type": "Private Motor Insurance",
+          "policy_status": null,
+          "submit_date": null,
+          "estimated_approval_days": null,
+          "client_tags": [
+            "Young Professional",
+            "Standard",
+            "Motor"
+          ],
+          "action_signal": "A coverage review is scheduled within fourteen days.",
+          "action_deadline": "2026-06-14",
+          "expected_realization_date": null,
+          "expected_realization_source": {
+            "type": "synthetic_timeline_assumption",
+            "rule_id": "M2_REALIZATION_V4_1",
+            "reference": "data/config/m2_horizon_v4_rules.json",
+            "assumption": "review",
+            "source_record_id": "CLI-01569-016",
+            "action_deadline": "2026-06-14",
+            "source_submit_date": null,
+            "source_max_approval_days": null,
+            "is_synthetic": true
+          },
+          "within_planning_horizon": false,
+          "out_of_horizon_reason": "No supported realization date; follow-up evidence does not establish credited premium.",
+          "realization_group": "realization_unavailable"
+        }
+      ],
+      "formal_ranking_candidate_ids": [
+        "POL-01569-001",
+        "POL-01569-002",
+        "CLI-01569-014"
+      ]
+    },
+    {
+      "scenario_id": "SCN-AGT01662",
+      "agent_id": "AGT01662",
+      "objective": {
+        "metric": "written_premium",
+        "unit": "USD",
+        "as_of_date": "2026-05-31",
+        "annual_open_gap": 564540.0,
+        "annual_deadline": "2026-12-31",
+        "planning_horizon_start": "2026-06-01",
+        "planning_horizon_end": "2026-06-30",
+        "business_timezone": "Asia/Hong_Kong",
+        "data_cutoff": "2026-05-31T23:59:59+08:00",
+        "horizon_target": 8400,
+        "horizon_current": 0,
+        "horizon_open_gap": 8400,
+        "status": "available",
+        "is_synthetic": true,
+        "horizon_target_source": {
+          "type": "synthetic_planning_rule",
+          "rule_id": "M2_HORIZON_PLAN_V4_1",
+          "version": 1,
+          "reference": "data/config/m2_horizon_v4_rules.json",
+          "scenario_index": 8,
+          "inputs": {
+            "planned_bound_cases": 3,
+            "planned_average_written_premium_usd": 2800
+          },
+          "rationale": "Predetermined synthetic 30-day capacity plan: planned bound cases times planned case premium. Neither annual gaps, model weights, rankings nor evaluation results are inputs. These are assumptions, not company-approved targets."
+        },
+        "horizon_current_source": {
+          "type": "synthetic_credit_ledger",
+          "reference": "data/config/m2_horizon_v4_rules.json#known_horizon_credit_ledger",
+          "entries": [],
+          "verified_in_window_credit_count": 0,
+          "crediting_rule": "Count only confirmed written-premium credits dated within the horizon and recorded at or before the snapshot cutoff. This synthetic future-window ledger has no such records.",
+          "known_at_cutoff": "2026-05-31T23:59:59+08:00",
+          "rationale": "The horizon is wholly after the cutoff; no confirmed in-window credit exists in this synthetic ledger. Annual YTD and forecasts are not current horizon production."
+        }
+      },
+      "agent_specialties": [
+        "Private Motor Insurance",
+        "Home Contents Insurance",
+        "Private Motor Insurance - Annual"
+      ],
+      "candidates": [
+        {
+          "candidate_id": "POL-01662-001",
+          "candidate_type": "policy",
+          "premium": 1720.0,
+          "currency": "USD",
+          "product_type": "Private Motor Insurance",
+          "policy_status": "Awaiting Documents",
+          "submit_date": "2026-03-15",
+          "estimated_approval_days": {
+            "min": 4,
+            "max": 7
+          },
+          "client_tags": [
+            "Retiree",
+            "High Value",
+            "Motor"
+          ],
+          "action_signal": "Customer documents are incomplete; the agent can request them now.",
+          "action_deadline": "2026-06-01",
+          "expected_realization_date": "2026-06-08",
+          "expected_realization_source": {
+            "type": "synthetic_timeline_assumption",
+            "rule_id": "M2_REALIZATION_V4_1",
+            "reference": "data/config/m2_horizon_v4_rules.json",
+            "assumption": "documents",
+            "source_record_id": "POL-01662-001",
+            "action_deadline": "2026-06-01",
+            "source_submit_date": "2026-03-15",
+            "source_max_approval_days": 7,
+            "is_synthetic": true
+          },
+          "within_planning_horizon": true,
+          "out_of_horizon_reason": null,
+          "realization_group": "in_horizon"
+        },
+        {
+          "candidate_id": "POL-01662-002",
+          "candidate_type": "policy",
+          "premium": 2190.0,
+          "currency": "USD",
+          "product_type": "Home Contents Insurance",
+          "policy_status": "Underwriter Query",
+          "submit_date": "2026-03-04",
+          "estimated_approval_days": {
+            "min": 5,
+            "max": 8
+          },
+          "client_tags": [
+            "Young Professional",
+            "High Value",
+            "Property"
+          ],
+          "action_signal": "The underwriter has an unanswered question for the agent.",
+          "action_deadline": "2026-06-02",
+          "expected_realization_date": "2026-06-12",
+          "expected_realization_source": {
+            "type": "synthetic_timeline_assumption",
+            "rule_id": "M2_REALIZATION_V4_1",
+            "reference": "data/config/m2_horizon_v4_rules.json",
+            "assumption": "query",
+            "source_record_id": "POL-01662-002",
+            "action_deadline": "2026-06-02",
+            "source_submit_date": "2026-03-04",
+            "source_max_approval_days": 8,
+            "is_synthetic": true
+          },
+          "within_planning_horizon": true,
+          "out_of_horizon_reason": null,
+          "realization_group": "in_horizon"
+        },
+        {
+          "candidate_id": "POL-01662-003",
+          "candidate_type": "policy",
+          "premium": 2660.0,
+          "currency": "USD",
+          "product_type": "Private Motor Insurance - Annual",
+          "policy_status": "Client Confirmation Pending",
+          "submit_date": "2026-05-20",
+          "estimated_approval_days": {
+            "min": 6,
+            "max": 9
+          },
+          "client_tags": [
+            "Family Builder",
+            "Growth",
+            "Liability"
+          ],
+          "action_signal": "Quoted terms are ready and the client must confirm acceptance.",
+          "action_deadline": "2026-06-04",
+          "expected_realization_date": "2026-06-06",
+          "expected_realization_source": {
+            "type": "synthetic_timeline_assumption",
+            "rule_id": "M2_REALIZATION_V4_1",
+            "reference": "data/config/m2_horizon_v4_rules.json",
+            "assumption": "confirmation",
+            "source_record_id": "POL-01662-003",
+            "action_deadline": "2026-06-04",
+            "source_submit_date": "2026-05-20",
+            "source_max_approval_days": 9,
+            "is_synthetic": true
+          },
+          "within_planning_horizon": true,
+          "out_of_horizon_reason": null,
+          "realization_group": "in_horizon"
+        },
+        {
+          "candidate_id": "POL-01662-004",
+          "candidate_type": "policy",
+          "premium": 3140.0,
+          "currency": "USD",
+          "product_type": "Residential Fire Insurance",
+          "policy_status": "Underwriting",
+          "submit_date": "2026-05-09",
+          "estimated_approval_days": {
+            "min": 7,
+            "max": 12
+          },
+          "client_tags": [
+            "Family Builder",
+            "Growth",
+            "Commercial"
+          ],
+          "action_signal": "The case is being reviewed and has no outstanding request.",
+          "action_deadline": "2026-06-08",
+          "expected_realization_date": "2026-05-21",
+          "expected_realization_source": {
+            "type": "synthetic_timeline_assumption",
+            "rule_id": "M2_REALIZATION_V4_1",
+            "reference": "data/config/m2_horizon_v4_rules.json",
+            "assumption": "passive_underwriting",
+            "source_record_id": "POL-01662-004",
+            "action_deadline": "2026-06-08",
+            "source_submit_date": "2026-05-09",
+            "source_max_approval_days": 12,
+            "is_synthetic": true
+          },
+          "within_planning_horizon": false,
+          "out_of_horizon_reason": "Estimated credit date precedes the prospective window; do not count again.",
+          "realization_group": "before_horizon"
+        },
+        {
+          "candidate_id": "CLI-01662-015",
+          "candidate_type": "client",
+          "premium": 4820.0,
+          "currency": "USD",
+          "product_type": "Personal Liability Insurance",
+          "policy_status": null,
+          "submit_date": null,
+          "estimated_approval_days": null,
+          "client_tags": [
+            "Young Professional",
+            "Standard",
+            "Specialty"
+          ],
+          "action_signal": "The client requested a callback today.",
+          "action_deadline": "2026-05-31",
+          "expected_realization_date": "2026-06-10",
+          "expected_realization_source": {
+            "type": "synthetic_timeline_assumption",
+            "rule_id": "M2_REALIZATION_V4_1",
+            "reference": "data/config/m2_horizon_v4_rules.json",
+            "assumption": "callback",
+            "source_record_id": "CLI-01662-015",
+            "action_deadline": "2026-05-31",
+            "source_submit_date": null,
+            "source_max_approval_days": null,
+            "is_synthetic": true
+          },
+          "within_planning_horizon": true,
+          "out_of_horizon_reason": null,
+          "realization_group": "in_horizon"
+        },
+        {
+          "candidate_id": "CLI-01662-017",
+          "candidate_type": "client",
+          "premium": 7620.0,
+          "currency": "USD",
+          "product_type": "Home Contents Insurance",
+          "policy_status": null,
+          "submit_date": null,
+          "estimated_approval_days": null,
+          "client_tags": [
+            "Family Builder",
+            "Standard",
+            "Property"
+          ],
+          "action_signal": "A coverage review is scheduled within fourteen days.",
+          "action_deadline": "2026-06-14",
+          "expected_realization_date": null,
+          "expected_realization_source": {
+            "type": "synthetic_timeline_assumption",
+            "rule_id": "M2_REALIZATION_V4_1",
+            "reference": "data/config/m2_horizon_v4_rules.json",
+            "assumption": "review",
+            "source_record_id": "CLI-01662-017",
+            "action_deadline": "2026-06-14",
+            "source_submit_date": null,
+            "source_max_approval_days": null,
+            "is_synthetic": true
+          },
+          "within_planning_horizon": false,
+          "out_of_horizon_reason": "No supported realization date; follow-up evidence does not establish credited premium.",
+          "realization_group": "realization_unavailable"
+        }
+      ],
+      "formal_ranking_candidate_ids": [
+        "POL-01662-001",
+        "POL-01662-002",
+        "POL-01662-003",
+        "CLI-01662-015"
+      ]
+    },
+    {
+      "scenario_id": "SCN-AGT01876",
+      "agent_id": "AGT01876",
+      "objective": {
+        "metric": "written_premium",
+        "unit": "USD",
+        "as_of_date": "2026-05-31",
+        "annual_open_gap": 120190.0,
+        "annual_deadline": "2026-12-31",
+        "planning_horizon_start": "2026-06-01",
+        "planning_horizon_end": "2026-06-30",
+        "business_timezone": "Asia/Hong_Kong",
+        "data_cutoff": "2026-05-31T23:59:59+08:00",
+        "horizon_target": 23000,
+        "horizon_current": 0,
+        "horizon_open_gap": 23000,
+        "status": "available",
+        "is_synthetic": true,
+        "horizon_target_source": {
+          "type": "synthetic_planning_rule",
+          "rule_id": "M2_HORIZON_PLAN_V4_1",
+          "version": 1,
+          "reference": "data/config/m2_horizon_v4_rules.json",
+          "scenario_index": 9,
+          "inputs": {
+            "planned_bound_cases": 5,
+            "planned_average_written_premium_usd": 4600
+          },
+          "rationale": "Predetermined synthetic 30-day capacity plan: planned bound cases times planned case premium. Neither annual gaps, model weights, rankings nor evaluation results are inputs. These are assumptions, not company-approved targets."
+        },
+        "horizon_current_source": {
+          "type": "synthetic_credit_ledger",
+          "reference": "data/config/m2_horizon_v4_rules.json#known_horizon_credit_ledger",
+          "entries": [],
+          "verified_in_window_credit_count": 0,
+          "crediting_rule": "Count only confirmed written-premium credits dated within the horizon and recorded at or before the snapshot cutoff. This synthetic future-window ledger has no such records.",
+          "known_at_cutoff": "2026-05-31T23:59:59+08:00",
+          "rationale": "The horizon is wholly after the cutoff; no confirmed in-window credit exists in this synthetic ledger. Annual YTD and forecasts are not current horizon production."
+        }
+      },
+      "agent_specialties": [
+        "Home Contents Insurance",
+        "Private Motor Insurance",
+        "Private Motor Insurance - Annual"
+      ],
+      "candidates": [
+        {
+          "candidate_id": "POL-01876-001",
+          "candidate_type": "policy",
+          "premium": 1050.0,
+          "currency": "USD",
+          "product_type": "Home Contents Insurance",
+          "policy_status": "Awaiting Documents",
+          "submit_date": "2026-03-06",
+          "estimated_approval_days": {
+            "min": 4,
+            "max": 7
+          },
+          "client_tags": [
+            "Young Professional",
+            "High Value",
+            "Motor"
+          ],
+          "action_signal": "Customer documents are incomplete; the agent can request them now.",
+          "action_deadline": "2026-06-01",
+          "expected_realization_date": "2026-06-08",
+          "expected_realization_source": {
+            "type": "synthetic_timeline_assumption",
+            "rule_id": "M2_REALIZATION_V4_1",
+            "reference": "data/config/m2_horizon_v4_rules.json",
+            "assumption": "documents",
+            "source_record_id": "POL-01876-001",
+            "action_deadline": "2026-06-01",
+            "source_submit_date": "2026-03-06",
+            "source_max_approval_days": 7,
+            "is_synthetic": true
+          },
+          "within_planning_horizon": true,
+          "out_of_horizon_reason": null,
+          "realization_group": "in_horizon"
+        },
+        {
+          "candidate_id": "POL-01876-002",
+          "candidate_type": "policy",
+          "premium": 1340.0,
+          "currency": "USD",
+          "product_type": "Private Motor Insurance",
+          "policy_status": "Client Confirmation Pending",
+          "submit_date": "2026-05-22",
+          "estimated_approval_days": {
+            "min": 5,
+            "max": 8
+          },
+          "client_tags": [
+            "Family Builder",
+            "High Value",
+            "Property"
+          ],
+          "action_signal": "Quoted terms are ready and the client must confirm acceptance.",
+          "action_deadline": "2026-06-04",
+          "expected_realization_date": "2026-06-06",
+          "expected_realization_source": {
+            "type": "synthetic_timeline_assumption",
+            "rule_id": "M2_REALIZATION_V4_1",
+            "reference": "data/config/m2_horizon_v4_rules.json",
+            "assumption": "confirmation",
+            "source_record_id": "POL-01876-002",
+            "action_deadline": "2026-06-04",
+            "source_submit_date": "2026-05-22",
+            "source_max_approval_days": 8,
+            "is_synthetic": true
+          },
+          "within_planning_horizon": true,
+          "out_of_horizon_reason": null,
+          "realization_group": "in_horizon"
+        },
+        {
+          "candidate_id": "POL-01876-003",
+          "candidate_type": "policy",
+          "premium": 1620.0,
+          "currency": "USD",
+          "product_type": "Private Motor Insurance - Annual",
+          "policy_status": "Underwriting",
+          "submit_date": "2026-05-11",
+          "estimated_approval_days": {
+            "min": 6,
+            "max": 9
+          },
+          "client_tags": [
+            "Family Builder",
+            "Growth",
+            "Liability"
+          ],
+          "action_signal": "The case is being reviewed and has no outstanding request.",
+          "action_deadline": "2026-06-08",
+          "expected_realization_date": "2026-05-20",
+          "expected_realization_source": {
+            "type": "synthetic_timeline_assumption",
+            "rule_id": "M2_REALIZATION_V4_1",
+            "reference": "data/config/m2_horizon_v4_rules.json",
+            "assumption": "passive_underwriting",
+            "source_record_id": "POL-01876-003",
+            "action_deadline": "2026-06-08",
+            "source_submit_date": "2026-05-11",
+            "source_max_approval_days": 9,
+            "is_synthetic": true
+          },
+          "within_planning_horizon": false,
+          "out_of_horizon_reason": "Estimated credit date precedes the prospective window; do not count again.",
+          "realization_group": "before_horizon"
+        },
+        {
+          "candidate_id": "CLI-01876-018",
+          "candidate_type": "client",
+          "premium": 4370.0,
+          "currency": "USD",
+          "product_type": "Public Liability Insurance",
+          "policy_status": null,
+          "submit_date": null,
+          "estimated_approval_days": null,
+          "client_tags": [
+            "Retiree",
+            "Standard",
+            "Liability"
+          ],
+          "action_signal": "Renewal decision is due within three days.",
+          "action_deadline": "2026-06-03",
+          "expected_realization_date": "2026-06-08",
+          "expected_realization_source": {
+            "type": "synthetic_timeline_assumption",
+            "rule_id": "M2_REALIZATION_V4_1",
+            "reference": "data/config/m2_horizon_v4_rules.json",
+            "assumption": "renewal",
+            "source_record_id": "CLI-01876-018",
+            "action_deadline": "2026-06-03",
+            "source_submit_date": null,
+            "source_max_approval_days": null,
+            "is_synthetic": true
+          },
+          "within_planning_horizon": true,
+          "out_of_horizon_reason": null,
+          "realization_group": "in_horizon"
+        },
+        {
+          "candidate_id": "CLI-01876-006",
+          "candidate_type": "client",
+          "premium": 5730.0,
+          "currency": "USD",
+          "product_type": "Private Motor Insurance",
+          "policy_status": null,
+          "submit_date": null,
+          "estimated_approval_days": null,
+          "client_tags": [
+            "Retiree",
+            "Growth",
+            "Motor"
+          ],
+          "action_signal": "The client requested a callback today.",
+          "action_deadline": "2026-05-31",
+          "expected_realization_date": "2026-06-10",
+          "expected_realization_source": {
+            "type": "synthetic_timeline_assumption",
+            "rule_id": "M2_REALIZATION_V4_1",
+            "reference": "data/config/m2_horizon_v4_rules.json",
+            "assumption": "callback",
+            "source_record_id": "CLI-01876-006",
+            "action_deadline": "2026-05-31",
+            "source_submit_date": null,
+            "source_max_approval_days": null,
+            "is_synthetic": true
+          },
+          "within_planning_horizon": true,
+          "out_of_horizon_reason": null,
+          "realization_group": "in_horizon"
+        },
+        {
+          "candidate_id": "CLI-01876-008",
+          "candidate_type": "client",
+          "premium": 2330.0,
+          "currency": "USD",
+          "product_type": "Public Liability Insurance",
+          "policy_status": null,
+          "submit_date": null,
+          "estimated_approval_days": null,
+          "client_tags": [
+            "Family Builder",
+            "Standard",
+            "Liability"
+          ],
+          "action_signal": "The client requested a quotation within five days.",
+          "action_deadline": "2026-06-05",
+          "expected_realization_date": "2026-07-10",
+          "expected_realization_source": {
+            "type": "synthetic_timeline_assumption",
+            "rule_id": "M2_REALIZATION_V4_1",
+            "reference": "data/config/m2_horizon_v4_rules.json",
+            "assumption": "quotation",
+            "source_record_id": "CLI-01876-008",
+            "action_deadline": "2026-06-05",
+            "source_submit_date": null,
+            "source_max_approval_days": null,
+            "is_synthetic": true
+          },
+          "within_planning_horizon": false,
+          "out_of_horizon_reason": "Expected credit is after the horizon; retain as a separate future opportunity.",
+          "realization_group": "future_follow_up"
+        }
+      ],
+      "formal_ranking_candidate_ids": [
+        "POL-01876-001",
+        "POL-01876-002",
+        "CLI-01876-018",
+        "CLI-01876-006"
+      ]
+    }
+  ],
+  "task": "Independently rank only supported in-horizon candidates for reducing this exact 30-day gap. Other evidence is displayed separately, not silently scored as horizon premium."
+}

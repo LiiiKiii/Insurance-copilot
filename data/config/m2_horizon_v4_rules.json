@@ -1,0 +1,29 @@
+{
+  "rule_id": "M2_HORIZON_PLAN_V4_1",
+  "version": 1,
+  "metric": "written_premium",
+  "currency": "USD",
+  "timezone": "Asia/Hong_Kong",
+  "horizon_calendar_days": 30,
+  "as_of_date": "2026-05-31",
+  "planned_bound_cases": [3, 5, 4, 6, 3, 5, 4, 6, 3, 5],
+  "planned_average_written_premium_usd": [1800, 2600, 3400, 2200, 4200, 3000, 2400, 3800, 2800, 4600],
+  "target_rationale": "Predetermined synthetic 30-day capacity plan: planned bound cases times planned case premium. Neither annual gaps, model weights, rankings nor evaluation results are inputs. These are assumptions, not company-approved targets.",
+  "known_horizon_credit_ledger": [],
+  "crediting_rule": "Count only confirmed written-premium credits dated within the horizon and recorded at or before the snapshot cutoff. This synthetic future-window ledger has no such records.",
+  "realization_rule_id": "M2_REALIZATION_V4_1",
+  "realization_assumptions": {
+    "documents": "Action deadline plus source maximum approval days; synthetic assumption that obtaining the documents restarts the review clock.",
+    "query": "Action deadline plus source maximum approval days plus 2 calendar days.",
+    "confirmation": "Action deadline plus 2 calendar days.",
+    "passive_underwriting": "Source submit date plus source maximum approval days. An already elapsed estimate is retained as before-horizon evidence, not moved into the window.",
+    "callback": "Action deadline plus 10 calendar days, synthetic sales-to-credit cycle.",
+    "renewal": "Action deadline plus 5 calendar days, synthetic renewal-to-credit cycle.",
+    "quotation": "Action deadline plus 35 calendar days, synthetic quote-to-credit cycle; usually a future opportunity.",
+    "review": "No supported crediting date from a scheduled review alone. Do not invent a realization date."
+  },
+  "contribution_rule_id": "M2_EXPECTED_WRITTEN_PREMIUM_V4_1",
+  "contribution_rule": "In-window source premium times historical conversion rate; renewal clients use historical retention. This is an uncalibrated synthetic coursework estimate, not confirmed revenue.",
+  "partition_policy": "Only candidates passing the unchanged three gates and having supported in-window realization enter the formal horizon ranking. Later realizations form a separate future_follow_up group; earlier and unknown realizations are separately disclosed, not scored as horizon money.",
+  "non_duplication_policy": "Each source record ID occurs once per scenario; policy-linked client IDs are disjoint from client-only candidates. Do not sum estimates across scenarios or describe correlated forecasts as guaranteed income."
+}
