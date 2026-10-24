@@ -10,12 +10,14 @@ from __future__ import annotations
 
 import json
 import math
+from datetime import date
 from typing import Any
 
 from nanobot.agent.tools.base import Tool
 
 
 RANKING_VERSION = "m4-weighted-v1"
+HORIZON_RANKING_VERSION = "m4-horizon-weighted-v2"
 DEFAULT_WEIGHTS = {
     "expected_contribution": 0.40,
     "urgency": 0.25,
@@ -70,7 +72,75 @@ def _priority_level(score: float) -> str:
     return "P2"
 
 
-def _exclusion_reason(candidate: Any, seen_ids: set[str]) -> tuple[str | None, str | None]:
+def _iso_date(value: Any) -> date | None:
+    if not isinstance(value, str):
+        return None
+    try:
+        return date.fromisoformat(value)
+    except ValueError:
+        return None
+
+
+def _objective_gap(objective: dict[str, Any]) -> tuple[float, str, bool]:
+    """Resolve the declared denominator without an annual-gap fallback."""
+    horizon_fields = {
+        "planning_horizon_start",
+        "planning_horizon_end",
+        "horizon_target",
+        "horizon_current",
+        "horizon_open_gap",
+    }
+    horizon_mode = bool(horizon_fields & objective.keys())
+    if horizon_mode:
+        missing = sorted(horizon_fields - objective.keys())
+        if missing:
+            raise PrioritizationInputError(
+                "Horizon objective is incomplete; missing: " + ", ".join(missing)
+            )
+        gap = _finite_number(objective.get("horizon_open_gap"))
+        if gap is None or gap < 0:
+            raise PrioritizationInputError(
+                "objective.horizon_open_gap must be non-negative."
+            )
+        start = _iso_date(objective.get("planning_horizon_start"))
+        end = _iso_date(objective.get("planning_horizon_end"))
+        if start is None or end is None or end < start:
+            raise PrioritizationInputError(
+                "objective planning horizon must contain valid inclusive ISO dates."
+            )
+        target = _finite_number(objective.get("horizon_target"))
+        current = _finite_number(objective.get("horizon_current"))
+        if target is None or current is None or target < 0 or current < 0:
+            raise PrioritizationInputError(
+                "objective horizon target and current values must be non-negative."
+            )
+        expected_gap = max(target - current, 0.0)
+        if not math.isclose(gap, expected_gap, rel_tol=0, abs_tol=0.005):
+            raise PrioritizationInputError(
+                "objective.horizon_open_gap must equal max(horizon_target - "
+                "horizon_current, 0)."
+            )
+        metric = objective.get("metric")
+        unit = objective.get("unit")
+        if not isinstance(metric, str) or not metric.strip():
+            raise PrioritizationInputError("objective.metric is required in horizon mode.")
+        if not isinstance(unit, str) or not unit.strip():
+            raise PrioritizationInputError("objective.unit is required in horizon mode.")
+        return gap, "horizon_open_gap", True
+
+    gap = _finite_number(objective.get("open_gap"))
+    if gap is None or gap < 0:
+        raise PrioritizationInputError("objective.open_gap must be non-negative.")
+    return gap, "open_gap", False
+
+
+def _exclusion_reason(
+    candidate: Any,
+    seen_ids: set[str],
+    *,
+    objective: dict[str, Any],
+    horizon_mode: bool,
+) -> tuple[str | None, str | None]:
     if not isinstance(candidate, dict):
         return None, "candidate_must_be_an_object"
 
@@ -88,6 +158,24 @@ def _exclusion_reason(candidate: Any, seen_ids: set[str]) -> tuple[str | None, s
         return candidate_id, "permission_denied"
     if candidate.get("compliance_allowed", True) is not True:
         return candidate_id, "compliance_excluded"
+
+    if horizon_mode:
+        if candidate.get("horizon_ranking_eligible") is not True:
+            return candidate_id, "not_horizon_ranking_eligible"
+        if candidate.get("within_planning_horizon") is not True:
+            return candidate_id, "outside_planning_horizon"
+        if candidate.get("metric") != objective.get("metric"):
+            return candidate_id, "objective_metric_mismatch"
+        if candidate.get("currency") != objective.get("unit"):
+            return candidate_id, "objective_unit_mismatch"
+        realization = _iso_date(candidate.get("expected_realization_date"))
+        start = _iso_date(objective.get("planning_horizon_start"))
+        end = _iso_date(objective.get("planning_horizon_end"))
+        if realization is None:
+            return candidate_id, "missing_expected_realization_date"
+        assert start is not None and end is not None
+        if not start <= realization <= end:
+            return candidate_id, "expected_realization_outside_horizon"
 
     expected = _finite_number(candidate.get("expected_contribution"))
     if expected is None or expected < 0:
@@ -116,9 +204,7 @@ def prioritize_followups(payload: dict[str, Any]) -> dict[str, Any]:
     objective = payload.get("objective")
     if not isinstance(objective, dict):
         raise PrioritizationInputError("objective must be an object.")
-    open_gap = _finite_number(objective.get("open_gap"))
-    if open_gap is None or open_gap < 0:
-        raise PrioritizationInputError("objective.open_gap must be non-negative.")
+    normalisation_gap, denominator_field, horizon_mode = _objective_gap(objective)
 
     candidates = payload.get("candidates")
     if not isinstance(candidates, list):
@@ -136,7 +222,8 @@ def prioritize_followups(payload: dict[str, Any]) -> dict[str, Any]:
     eligible: list[dict[str, Any]] = []
     seen_ids: set[str] = set()
 
-    if open_gap == 0:
+    ranking_version = HORIZON_RANKING_VERSION if horizon_mode else RANKING_VERSION
+    if normalisation_gap == 0:
         for candidate in candidates:
             candidate_id = candidate.get("candidate_id") if isinstance(candidate, dict) else None
             excluded.append({
@@ -146,7 +233,12 @@ def prioritize_followups(payload: dict[str, Any]) -> dict[str, Any]:
         return {
             "agent_id": agent_id.strip(),
             "objective": dict(objective),
-            "ranking_version": RANKING_VERSION,
+            "ranking_version": ranking_version,
+            "normalization_denominator": {
+                "field": denominator_field,
+                "value": normalisation_gap,
+                "annual_gap_fallback": False,
+            },
             "weights": weights,
             "recommendations": [],
             "excluded_candidates": excluded,
@@ -155,7 +247,12 @@ def prioritize_followups(payload: dict[str, Any]) -> dict[str, Any]:
         }
 
     for index, candidate in enumerate(candidates):
-        candidate_id, reason = _exclusion_reason(candidate, seen_ids)
+        candidate_id, reason = _exclusion_reason(
+            candidate,
+            seen_ids,
+            objective=objective,
+            horizon_mode=horizon_mode,
+        )
         if reason:
             excluded.append({
                 "candidate_id": candidate_id or f"input[{index}]",
@@ -171,7 +268,7 @@ def prioritize_followups(payload: dict[str, Any]) -> dict[str, Any]:
             candidate.get("business_fit", _OPTIONAL_DEFAULTS["business_fit"])
         )
         components = {
-            "expected_contribution": min(expected / open_gap, 1.0),
+            "expected_contribution": min(expected / normalisation_gap, 1.0),
             "urgency": urgency,
             "actionability": actionability,
             "business_fit": business_fit,
@@ -228,7 +325,12 @@ def prioritize_followups(payload: dict[str, Any]) -> dict[str, Any]:
     return {
         "agent_id": agent_id.strip(),
         "objective": dict(objective),
-        "ranking_version": RANKING_VERSION,
+        "ranking_version": ranking_version,
+        "normalization_denominator": {
+            "field": denominator_field,
+            "value": normalisation_gap,
+            "annual_gap_fallback": False,
+        },
         "weights": {name: round(value, 4) for name, value in weights.items()},
         "recommendations": recommendations,
         "excluded_candidates": excluded,
@@ -259,8 +361,20 @@ class PrioritizeFollowupsTool(Tool):
                 "agent_id": {"type": "string", "minLength": 1},
                 "objective": {
                     "type": "object",
-                    "properties": {"open_gap": {"type": "number", "minimum": 0}},
-                    "required": ["open_gap"],
+                    "description": (
+                        "Use open_gap for the legacy annual-gap contract, or the "
+                        "complete horizon fields for formal short-horizon ranking."
+                    ),
+                    "properties": {
+                        "open_gap": {"type": "number", "minimum": 0},
+                        "metric": {"type": "string", "minLength": 1},
+                        "unit": {"type": "string", "minLength": 1},
+                        "planning_horizon_start": {"type": "string", "minLength": 10},
+                        "planning_horizon_end": {"type": "string", "minLength": 10},
+                        "horizon_target": {"type": "number", "minimum": 0},
+                        "horizon_current": {"type": "number", "minimum": 0},
+                        "horizon_open_gap": {"type": "number", "minimum": 0},
+                    },
                 },
                 "candidates": {
                     "type": "array",
@@ -283,7 +397,8 @@ class PrioritizeFollowupsTool(Tool):
                                 "minimum": 0,
                                 "description": (
                                     "Non-negative expected contribution in the "
-                                    "same unit as objective.open_gap."
+                                    "same metric, unit, and crediting period as "
+                                    "the selected objective gap."
                                 ),
                             },
                             "urgency": {
@@ -312,6 +427,13 @@ class PrioritizeFollowupsTool(Tool):
                             "eligible": {"type": "boolean"},
                             "permission_allowed": {"type": "boolean"},
                             "compliance_allowed": {"type": "boolean"},
+                            "metric": {"type": "string"},
+                            "currency": {"type": "string"},
+                            "within_planning_horizon": {"type": "boolean"},
+                            "horizon_ranking_eligible": {"type": "boolean"},
+                            "expected_realization_date": {
+                                "type": ["string", "null"]
+                            },
                             "recommended_action": {"type": "string"},
                             "evidence": {"type": "object"},
                         },

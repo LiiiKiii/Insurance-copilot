@@ -105,7 +105,9 @@ def _validated_relevance(
     scenario: Mapping[str, Any], annotation: Mapping[str, Any], max_k: int
 ) -> dict[str, float]:
     candidates = scenario.get("candidates")
-    eligible_ids = annotation.get("eligible_candidate_ids")
+    eligible_ids = annotation.get(
+        "ranking_candidate_ids", annotation.get("eligible_candidate_ids")
+    )
     relevance = annotation.get("consensus_relevance")
     if not isinstance(candidates, list):
         raise ExperimentInputError("Scenario candidates must be an array.")
@@ -167,7 +169,11 @@ def _feature_diagnostics(
         }
         payload["constraints"] = {**payload["constraints"], "top_k": 50}
         result = prioritize_followups(payload)
-        gap = float(scenario["objective"]["open_gap"])
+        objective = scenario["objective"]
+        gap_field = (
+            "horizon_open_gap" if "horizon_open_gap" in objective else "open_gap"
+        )
+        gap = float(objective[gap_field])
         open_gaps.append(gap)
         for recommendation in result["recommendations"]:
             raw_expected.append(float(recommendation["expected_contribution"]))
@@ -176,12 +182,17 @@ def _feature_diagnostics(
                 normalised[name].append(float(component["normalised_value"]))
                 weighted_points[name].append(float(component["weighted_points"]))
 
+    horizon_mode = all(
+        "horizon_open_gap" in scenario.get("objective", {})
+        for scenario in candidates_by_id.values()
+    )
+    gap_field = "horizon_open_gap" if horizon_mode else "open_gap"
     return {
         "eligible_candidate_count": len(raw_expected),
         "expected_contribution_normalisation": (
-            "min(expected_contribution / objective.open_gap, 1)"
+            f"min(expected_contribution / objective.{gap_field}, 1)"
         ),
-        "objective_open_gap": _distribution_summary(open_gaps),
+        f"objective_{gap_field}": _distribution_summary(open_gaps),
         "raw_expected_contribution": _distribution_summary(raw_expected),
         "normalised_components": {
             name: _distribution_summary(values)
@@ -242,7 +253,9 @@ def _annotation_agreement(
 
     for scenario_id in sorted(annotations_by_id):
         scenario = annotations_by_id[scenario_id]
-        eligible_ids = scenario.get("eligible_candidate_ids")
+        eligible_ids = scenario.get(
+            "ranking_candidate_ids", scenario.get("eligible_candidate_ids")
+        )
         annotation_rows = scenario.get("annotations")
         if not isinstance(eligible_ids, list) or not isinstance(annotation_rows, list):
             raise ExperimentInputError("Annotation rankings are unavailable.")
@@ -338,7 +351,9 @@ def _evaluate_scenarios(
             payload["weights"] = dict(weights)
         ranking = prioritize_followups(payload)
         proposed = [row["candidate_id"] for row in ranking["recommendations"]]
-        eligible_ids = annotation["eligible_candidate_ids"]
+        eligible_ids = annotation.get(
+            "ranking_candidate_ids", annotation["eligible_candidate_ids"]
+        )
         baseline = expected_contribution_baseline(scenario["candidates"], eligible_ids)
         if ranking["eligible_count"] != len(eligible_ids):
             raise ExperimentInputError(
@@ -364,11 +379,43 @@ def evaluate_coursework_dataset(
     dataset: Mapping[str, Any],
     annotations: Mapping[str, Any],
     *,
-    k_values: Sequence[int] = DEFAULT_K_VALUES,
+    k_values: Sequence[int] | None = None,
 ) -> dict[str, Any]:
     """Evaluate default M4 weights, baseline, and fixed sensitivity profiles."""
-    ks = _validate_k_values(k_values)
     candidates_by_id, annotations_by_id = _scenario_maps(dataset, annotations)
+    requested_ks = _validate_k_values(
+        k_values
+        if k_values is not None
+        else dataset.get("evaluation_k", DEFAULT_K_VALUES)
+    )
+    ranking_candidate_counts = {
+        scenario_id: len(
+            annotation.get(
+                "ranking_candidate_ids",
+                annotation.get("eligible_candidate_ids", []),
+            )
+        )
+        for scenario_id, annotation in annotations_by_id.items()
+    }
+    minimum_candidate_count = min(ranking_candidate_counts.values())
+    ks = tuple(k for k in requested_ks if k <= minimum_candidate_count)
+    unavailable_k = [
+        {
+            "k": k,
+            "status": "not_applicable",
+            "reason": (
+                "At least one scenario has fewer than K formal ranking candidates; "
+                "out-of-horizon candidates are not used as padding."
+            ),
+            "minimum_formal_candidate_count": minimum_candidate_count,
+        }
+        for k in requested_ks
+        if k > minimum_candidate_count
+    ]
+    if not ks:
+        raise ExperimentInputError(
+            "No requested K is supported by every scenario's formal candidate set."
+        )
     default_rows = _evaluate_scenarios(
         candidates_by_id, annotations_by_id, ks, DEFAULT_WEIGHTS
     )
@@ -415,14 +462,22 @@ def evaluate_coursework_dataset(
         else {}
     )
     return {
-        "evaluation_id": "m4-coursework-evaluation-v1",
+        "evaluation_id": (
+            "m4-coursework-evaluation-v2"
+            if "horizon_open_gap"
+            in next(iter(candidates_by_id.values())).get("objective", {})
+            else "m4-coursework-evaluation-v1"
+        ),
         "dataset_id": dataset.get("dataset_id"),
         "annotation_version": annotations.get("annotation_version"),
         "annotation_status": annotations.get("annotation_status"),
         "annotation_provenance": provenance,
         "annotation_agreement": _annotation_agreement(annotations_by_id),
         "feature_diagnostics": _feature_diagnostics(candidates_by_id),
+        "requested_k_values": list(requested_ks),
         "k_values": list(ks),
+        "unavailable_k": unavailable_k,
+        "formal_candidate_counts": ranking_candidate_counts,
         "scenario_count": len(default_rows),
         "raw_candidate_count": sum(
             len(row.get("candidates", [])) for row in candidates_by_id.values()

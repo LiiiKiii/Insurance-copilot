@@ -126,6 +126,83 @@ class PrioritizationTests(unittest.IsolatedAsyncioTestCase):
             for row in result["excluded_candidates"]
         ))
 
+    def test_horizon_mode_uses_only_the_horizon_gap_and_formal_candidates(self) -> None:
+        payload = copy.deepcopy(self.payload)
+        payload["objective"] = {
+            "metric": "written_premium",
+            "unit": "USD",
+            "annual_open_gap": 100_000,
+            "planning_horizon_start": "2026-06-01",
+            "planning_horizon_end": "2026-06-30",
+            "horizon_target": 10_000,
+            "horizon_current": 2_000,
+            "horizon_open_gap": 8_000,
+        }
+        payload["candidates"] = [
+            {
+                **payload["candidates"][0],
+                "expected_contribution": 4_000,
+                "metric": "written_premium",
+                "currency": "USD",
+                "within_planning_horizon": True,
+                "horizon_ranking_eligible": True,
+                "expected_realization_date": "2026-06-15",
+            },
+            {
+                **payload["candidates"][1],
+                "metric": "written_premium",
+                "currency": "USD",
+                "within_planning_horizon": False,
+                "horizon_ranking_eligible": False,
+                "expected_realization_date": "2026-07-02",
+            },
+        ]
+
+        result = prioritize_followups(payload)
+
+        self.assertEqual(result["ranking_version"], "m4-horizon-weighted-v2")
+        self.assertEqual(
+            result["normalization_denominator"],
+            {
+                "field": "horizon_open_gap",
+                "value": 8_000.0,
+                "annual_gap_fallback": False,
+            },
+        )
+        self.assertEqual(
+            result["recommendations"][0]["score_components"]
+            ["expected_contribution"]["normalised_value"],
+            0.5,
+        )
+        self.assertEqual(result["eligible_count"], 1)
+        self.assertEqual(
+            result["excluded_candidates"],
+            [{"candidate_id": "B", "reason": "not_horizon_ranking_eligible"}],
+        )
+
+    def test_horizon_mode_never_falls_back_to_annual_gap(self) -> None:
+        payload = copy.deepcopy(self.payload)
+        payload["objective"] = {
+            "metric": "written_premium",
+            "unit": "USD",
+            "annual_open_gap": 100_000,
+            "planning_horizon_start": "2026-06-01",
+            "planning_horizon_end": "2026-06-30",
+            "horizon_target": 10_000,
+            "horizon_current": 10_000,
+            "horizon_open_gap": 0,
+        }
+
+        result = prioritize_followups(payload)
+
+        self.assertEqual(result["recommendations"], [])
+        self.assertEqual(result["normalization_denominator"]["value"], 0)
+        self.assertFalse(result["normalization_denominator"]["annual_gap_fallback"])
+
+        del payload["objective"]["horizon_open_gap"]
+        with self.assertRaisesRegex(PrioritizationInputError, "incomplete"):
+            prioritize_followups(payload)
+
     def test_requested_top_k_controls_recommendation_count(self) -> None:
         for top_k in (1, 3):
             payload = copy.deepcopy(self.payload)

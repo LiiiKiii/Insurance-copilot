@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import copy
 import json
 import unittest
 from pathlib import Path
@@ -24,6 +25,12 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 FIXTURE = PROJECT_ROOT / "data" / "evaluation" / "prioritization_synthetic.json"
 SCENARIOS = PROJECT_ROOT / "data" / "evaluation" / "m2_candidate_scenarios.json"
 ANNOTATIONS = PROJECT_ROOT / "data" / "evaluation" / "m2_candidate_annotations_v3.json"
+HORIZON_SCENARIOS = (
+    PROJECT_ROOT / "data" / "evaluation" / "m2_candidate_scenarios_v4.json"
+)
+HORIZON_ANNOTATIONS = (
+    PROJECT_ROOT / "data" / "evaluation" / "m2_candidate_annotations_v4.json"
+)
 
 
 class PrioritizationEvaluationTests(unittest.TestCase):
@@ -135,6 +142,39 @@ class PrioritizationEvaluationTests(unittest.TestCase):
 
         with self.assertRaisesRegex(ExperimentInputError, "complete"):
             evaluate_coursework_dataset(dataset, annotations)
+
+    def test_horizon_evaluation_reports_unsupported_k_without_padding(self) -> None:
+        dataset = json.loads(HORIZON_SCENARIOS.read_text(encoding="utf-8"))
+        annotations = json.loads(HORIZON_ANNOTATIONS.read_text(encoding="utf-8"))
+        annotations = copy.deepcopy(annotations)
+        annotations["annotation_status"] = "complete"
+        for scenario in annotations["scenarios"]:
+            ranking = scenario["ranking_candidate_ids"]
+            for annotation in scenario["annotations"]:
+                annotation["ranking"] = list(ranking)
+            scenario["consensus_relevance"] = {
+                candidate_id: len(ranking) - index
+                for index, candidate_id in enumerate(ranking)
+            }
+
+        result = evaluate_coursework_dataset(dataset, annotations)
+
+        self.assertEqual(result["evaluation_id"], "m4-coursework-evaluation-v2")
+        self.assertEqual(result["requested_k_values"], [1, 3, 5])
+        self.assertEqual(result["k_values"], [1, 3])
+        self.assertEqual(result["unavailable_k"][0]["k"], 5)
+        self.assertEqual(
+            result["unavailable_k"][0]["minimum_formal_candidate_count"], 3
+        )
+        self.assertEqual(result["eligible_candidate_count"], 37)
+        self.assertEqual(
+            result["feature_diagnostics"]["expected_contribution_normalisation"],
+            "min(expected_contribution / objective.horizon_open_gap, 1)",
+        )
+        self.assertNotIn("5", result["aggregate"]["proposed"])
+        self.assertTrue(all(
+            len(row["proposed_ranking"]) <= 4 for row in result["scenarios"]
+        ))
 
 
 if __name__ == "__main__":
