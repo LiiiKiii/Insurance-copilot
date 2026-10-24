@@ -90,6 +90,10 @@ export type ChatResult =
       scenario_id?: string
       as_of_date?: string
       tool_call_id?: string
+      ranking_version?: string
+      normalization_denominator?: { field?: string; value?: number; annual_gap_fallback?: boolean }
+      planning_horizon_start?: string
+      planning_horizon_end?: string
     }
 
 /**
