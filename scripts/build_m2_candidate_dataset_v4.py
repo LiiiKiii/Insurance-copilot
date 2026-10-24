@@ -230,7 +230,8 @@ def build_dataset():
         "business_timezone": timezone,
         "currency": "USD",
         "rules_reference": rules_ref,
-        "rules_sha256": hashlib.sha256(RULES.read_bytes()).hexdigest(),
+        "rules_sha256": canonical_rules_sha256(rules),
+        "rules_hash_method": "sha256_canonical_json_utf8_v1",
         "formal_normalization_denominator": "objective.horizon_open_gap",
         "annual_gap_usage": "Annual monitoring and annual feasibility only; never a short-horizon fallback.",
         "partition_policy": rules["partition_policy"],
@@ -249,6 +250,10 @@ def build_dataset():
 
 
 def validate(data):
+    if data.get("rules_hash_method") != "sha256_canonical_json_utf8_v1" or data.get(
+        "rules_sha256"
+    ) != canonical_rules_sha256(json.loads(RULES.read_text(encoding="utf-8"))):
+        raise ValueError("Rules canonical hash mismatch")
     if data.get("dataset_id") != DATASET_ID or len(data.get("scenarios", [])) != 10:
         raise ValueError("Expected independent v4 dataset with ten scenarios")
     seen_scenarios = set()
@@ -402,6 +407,19 @@ def build_blind(data):
         "scenarios": scenarios,
         "task": "Independently rank only supported in-horizon candidates for reducing this exact 30-day gap. Other evidence is displayed separately, not silently scored as horizon premium.",
     }
+
+
+def canonical_rules_sha256(rules):
+    """Hash parsed rules independently of whitespace, line endings and key order."""
+    return hashlib.sha256(
+        json.dumps(
+            rules,
+            ensure_ascii=False,
+            sort_keys=True,
+            separators=(",", ":"),
+            allow_nan=False,
+        ).encode("utf-8")
+    ).hexdigest()
 
 
 def fingerprint(data):

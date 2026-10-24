@@ -209,3 +209,28 @@ def test_http_annotation_roundtrip(tmp_path):
         server.shutdown()
         server.server_close()
         thread.join(timeout=2)
+
+
+def test_rule_hash_and_full_fingerprint_ignore_json_formatting(tmp_path, monkeypatch):
+    rules = json.loads(v4.RULES.read_text(encoding="utf-8"))
+    original = v4.build_dataset()
+    path = tmp_path / "data/config/m2_horizon_v4_rules.json"
+    path.parent.mkdir(parents=True)
+    path.write_bytes(
+        json.dumps(rules, ensure_ascii=True, sort_keys=True, indent=4)
+        .replace("\n", "\r\n")
+        .encode("utf-8")
+    )
+    monkeypatch.setattr(v4, "RULES", path)
+    monkeypatch.setattr(v4, "ROOT", tmp_path)
+    rebuilt = v4.build_dataset()
+    assert rebuilt == original
+    assert v4.fingerprint(rebuilt) == v4.fingerprint(original)
+    rules["horizon_calendar_days"] = 31
+    assert v4.canonical_rules_sha256(rules) != original["rules_sha256"]
+
+
+def test_invalid_rules_hash_rejected(data):
+    data["rules_sha256"] = "0" * 64
+    with pytest.raises(ValueError, match="Rules canonical hash mismatch"):
+        v4.validate(data)
