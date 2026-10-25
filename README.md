@@ -143,18 +143,23 @@ The completed project's unrelated upload-cleanup job remains outside the A3 M3 s
   timing, evidence, and ranking reasons;
 - `POST /api/planning/prioritization` exposes the ranking contract through the
   authenticated planning API without querying or changing M2-owned data;
-- the current offline evaluation compares the weighted ranking with an
-  expected-contribution-only baseline at K=1, 3, and 5 across 10 tracked M2
-  scenarios, and includes fixed weight-sensitivity profiles;
-- the evaluation uses synthetic case-level data and AI-assisted adjudication
-  of two independent human rankings, so it is not evidence of production
-  effectiveness or improved sales outcomes; and
+- the final offline evaluation compares the weighted ranking with an
+  expected-contribution-only baseline at `K = 1, 3` across 10 frozen M2 v4
+  scenarios and includes fixed weight-sensitivity profiles; `K = 5` is
+  reported as not applicable because the formal in-horizon sets contain only
+  three or four candidates and are never padded with out-of-horizon records;
+- the evaluation uses synthetic case-level data and a deterministic consensus
+  derived from three independent non-M4 human rankings, so it is not evidence
+  of production effectiveness or improved sales outcomes; and
 - `prioritize_followups` is registered. For an authenticated, configured
   coursework demo agent, the model sees a no-argument facade; M1 prepares and
   validates M2 v4 horizon candidates server-side before invoking the unchanged M4
-  ranker. Other scopes remain fail closed. This synthetic adapter is not a
-  production candidate retrieval service, and live autonomous LLM E2E has not
-  been verified.
+  ranker. Other scopes remain fail closed. A final manual coursework-demo run
+  verified the authenticated browser-to-WebSocket flow for explicit Top-K
+  follow-up requests: the configured model selected the facade, the server
+  supplied the trusted v4 candidates, M4 returned the requested number of
+  recommendations, and the text response and structured cards agreed. This
+  synthetic adapter is still not a production candidate retrieval service.
 
 ## Insurance workflow Skills (M1)
 
@@ -164,7 +169,7 @@ On an authenticated `/ws/chat` turn, the server verifies the JWT and that the re
 
 Examples: “我离 MDRT 还差多少？”, “请做业绩诊断”, “目标还来得及吗？”, “请拆解我的目标做每周计划”, “业绩为什么没达标？”; “What's my MDRT gap?”, “Analyze my performance gap.”, “Can I still achieve my target?”, “Create a weekly target plan.”, “Why am I underperforming?”. Skills refer only to currently registered Tools. The old `calc_gap_analysis`, `calc_run_rate`, `calc_feasibility`, `calc_attribution_gap`, `get_period_comparison`, and `get_ranking` Tool names are unavailable; prompts either use compatible New Repo Tools or omit those claims. Pending-adjusted chase-plan gaps are planning estimates, not verified open gaps. Feasibility guidance uses the current USD premium baseline only; it does not assess HKD or policy-count goals with that baseline.
 
-Offline scripted-provider tests cover selection, integration, authorization, audit, and fallback. Real LLM Tool selection and answer quality still require an approved isolated end-to-end run. Generic Markdown `SKILL.md` loading and proactive alerts are **DEFERRED**.
+Offline scripted-provider tests cover selection, integration, authorization, audit, and fallback. The final manual browser acceptance additionally covered the configured-provider `prioritize_followups` path in the isolated coursework demo. It does not benchmark answer quality across all five Skills or establish production readiness. Generic Markdown `SKILL.md` loading and proactive alerts are **DEFERRED**.
 
 ## Knowledge Corpus
 
@@ -271,8 +276,12 @@ The dataset's `coursework-demo` tenant label records synthetic source provenance
 it is not the database tenant. This demo does not authorize production customer
 candidate retrieval.
 The dataset is a dated `2026-05-31` coursework snapshot, not live customer
-data. The WebSocket result card is supported by the current M5 hook; a browser
-or live-provider E2E has not been established by the offline tests.
+data. On 2026-10-24, the team completed a manual browser acceptance run of the
+isolated demo with the configured provider. It verified Top-K tool routing,
+server-prepared candidates, the WebSocket `result`, matching text/card counts,
+and recommendation-card rendering. This manual demonstration complements the
+offline automated tests; it does not validate production data or business
+outcomes.
 
 Start the backend from the repository root, then start the frontend in a second terminal:
 
@@ -297,7 +306,15 @@ Run the complete backend suites from the repository root with:
 .\.venv\Scripts\python.exe -m pytest tests -q
 ```
 
-For frontend checks, run `pnpm install --frozen-lockfile` followed by `pnpm lint` from `web/`. Set `ADMIN_DATABASE_URL` to a disposable SQLite database for integration runs; never point tests at a production database. The PDF chunker tests need the public `cl100k_base` tokenizer data cached by `tiktoken` on first use.
+For frontend checks, run `pnpm install --frozen-lockfile`, `pnpm lint`, and
+`pnpm build` from `web/`. Set `ADMIN_DATABASE_URL` to a disposable SQLite
+database for integration runs; never point tests at a production database. The
+PDF chunker tests need the public `cl100k_base` tokenizer data cached by
+`tiktoken` on first use.
+
+Final validation of commit `99f5d18` completed the full backend suite with
+`535 passed` and `216 subtests passed`. The frontend production build also
+completed successfully; lint reported no errors and five non-blocking warnings.
 
 Run the focused A6 M3 acceptance scope with:
 
